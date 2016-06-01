@@ -11,16 +11,6 @@
 		</head>
 		<body>
 			<%
-			// idから目的のファイル名を取得
-			int id = 1;
-			stmt = conn.createStatement();
-			String sql = "SELECT * FROM file_table where id = " + id;
-			ResultSet rs = stmt.executeQuery(sql);
-			String fileName;
-
-			rs.next();
-			fileName = rs.getString("filename");
-
 			// セッションからユーザーIDを取得
 			String userID = (String)session.getAttribute("userid");
 			String username = (String)session.getAttribute("username");
@@ -58,50 +48,8 @@
 			  addPageBreak();
 			  Focus.addFocusRow();
 			  printInfomation();
-			  //readFile(<%= id %>);
 			  getFileList(<%= userID %>);
 			  }());
 			</script>
 		</body>
 	</html>
-
-	<%!
-	// インスタンス変数
-	Connection conn = null;
-	Statement stmt;
-	// jsp起動時の処理
-	// データベースへの接続
-	public void jspInit() {
-	String url = "jdbc:mysql://localhost/blog_app";
-	String user = "sampleuser";
-	String password = "digk473";
-
-	try {
-	// 指定したクラスのインスタンスを作成してJDBCドライバをロードする
-	Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-	// Drivermanagerに接続(データベースへの接続)
-	conn = DriverManager.getConnection(url,user,password);
-
-
-	} catch (ClassNotFoundException e) {
-	log("ClassNotFoundException:" + e.getMessage());
-	} catch (SQLException e) {
-	log("SQLException:" + e.getMessage());
-	} catch (Exception e) {
-	log("Exception:" + e.getMessage());
-	} 
-	}
-	// jsp破棄時の処理
-	// ConnectionとStatementをcloseしている
-	public void jspDestroy(){
-	try{
-	if(conn != null){
-	conn.close();
-	stmt.close();
-	}
-	}catch(SQLException e){
-	log("SQLException:" + e.getMessage());
-	}
-	}
-	%>
