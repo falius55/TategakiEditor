@@ -1,13 +1,9 @@
 var key_table = {
-	charset: "jpn",
-	setCharset : function (charset) {
-		this.charset = charset;
-	},
-	getString : function (buffer_string,keyCode) {
+	getString : function (buffer_string,keycode) {
 		if (buffer_string.length === 0) {
 			// bufferに文字なし
 			// キーコードの文字をそのまま返す
-			return this.key_table_jpn[(new Number(keyCode)).toString()];
+			return this.key_table_jpn[String(keycode)];
 		}else if(buffer_string.length === 1){
 			// bufferに一文字のみ
 			if (this.alphabet.indexOf(buffer_string) !== -1) {
@@ -15,11 +11,11 @@ var key_table = {
 				// keytableからオブジェクト取得
 				var s = this.key_table_jpn[buffer_string];
 				// オブジェクトにキーコードを与えて、変換文字取得
-				var str =  s[(new Number(keyCode)).toString()];
+				var str =  s[String(keycode)];
 				if ( str == null) {
 					// 変換文字が取得できないということは、アルファベット二文字が変換可能な組み合わせではないということ
-					var typestr = this.key_table_jpn[(new Number(keyCode)).toString()];
-					if (buffer_string === typestr) { // miss: コピペしたことでbuffer_stringではなく未定義変数のsecondを比較していた。そのため無条件にelseとなって変換せず連結していた
+					var typestr = this.key_table_jpn[String(keycode)];
+					if (buffer_string === typestr) {
 						// 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
 						return "っ" + typestr;
 					}else{
@@ -33,29 +29,28 @@ var key_table = {
 				}
 			}else{
 				// bufferの文字がアルファベットでなければbufferの文字とキーコード文字を連結した文字列を返す
-				return buffer_string + this.key_table_jpn[(new Number(keyCode)).toString()];
+				return buffer_string + this.key_table_jpn[String(keycode)];
 			}
 		}
 		// 以下はbufferの文字列が二文字以上であることが保証されている
 		var noEncode = buffer_string.substring(0,buffer_string.length - 2); // 変換しない文字
-		var first = buffer_string.substring(buffer_string.length - 2,buffer_string.length -1); // miss: substringの第二引数で、.lengthを付け忘れ。
+		var first = buffer_string.substring(buffer_string.length - 2,buffer_string.length -1);
 		var second = buffer_string.substring(buffer_string.length -1,buffer_string.length);
 		if (this.alphabet.indexOf(first) === -1) {
 			// 最後から二文字目がアルファベットではない
 			if (this.alphabet.indexOf(second) === -1) {
 				// bufferに変換するアルファベットがない
 				// キーコード文字列をbufferに連結した文字列を返す
-				return buffer_string + this.key_table_jpn[(new Number(keyCode)).toString()];
+				return buffer_string + this.key_table_jpn[String(keycode)];
 			}else{
 				// bufferの最終文字だけがアルファベット
 				var s = this.key_table_jpn[second];
-				var str =  s[(new Number(keyCode)).toString()];
+				var str =  s[String(keycode)];
 				if ( str == null) {
 					// 変換文字が取得できないということは、アルファベット二文字が変換可能な組み合わせではないということ
-					var typestr = this.key_table_jpn[(new Number(keyCode)).toString()];
+					var typestr = this.key_table_jpn[String(keycode)];
 					if (second === typestr) {
 						// 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
-						// miss: first入れ忘れ
 						return noEncode + first + "っ" + typestr;
 					}else{
 						// 異なるアルファベットの場合、そのまま連結
@@ -64,7 +59,6 @@ var key_table = {
 				}else{
 					// 最後から二文字目はアルファベット以外で、最終文字だけがアルファベット
 					// 変換文字取得成功
-					// miss: first入れ忘れ
 					// 無変換文字 + first + buffer文字をkeytableに与えて返ってきたオブジェクトにkeycodeを与えて得た文字を返す
 					return noEncode + first + str;
 				}
@@ -72,13 +66,13 @@ var key_table = {
 		}else{
 			// bufferの後ろから二文字目がアルファベット
 			// 最後の文字がアルファベットでないならそのまま連結 "sた + r"などの場合
-			if(this.alphabet.indexOf(second) === -1) return buffer_string + this.key_table_jpn[(new Number(keyCode)).toString()];
+			if(this.alphabet.indexOf(second) === -1) return buffer_string + this.key_table_jpn[String(keycode)];
 			// bufferの最後にアルファベット二文字
 			// 第一添字がアルファベットなら必ず第二添字のためのオブジェクトは返ってくる
 			//
 			var o = this.key_table_jpn[first][second];
 			if (o != null) {
-				var str = o[(new Number(keyCode)).toString()];
+				var str = o[String(keycode)];
 				// 三文字で１文字が完成した場合
 				// sy + a →  "しゃ" など
 				if (str != null) return noEncode + str;
@@ -86,10 +80,9 @@ var key_table = {
 			// 三文字で一文字が完成しない場合、後ろ二文字で１文字が完成する可能性があるので再帰
 			// staの三文字で"sた"となる場合がある
 			// 後ろ二文字で１文字が完成しなければそのまま二文字が返ってくるので、やはりfirstを挟んで連結
-			return noEncode + first + this.getString(second,keyCode);
+			return noEncode + first + this.getString(second,keycode);
 		}
 	},
-	// alphabetの追加
 	alphabet : ["k","s","t","n","h","m","y","r","w","g","z","d","b","p","j","f","l","x","c","v","q"],
 	dotList : ["。","、",",","."],
 	lineList : ["-","ー","―"],
@@ -188,9 +181,6 @@ var key_table = {
 		"221" : "{"
 	},
 	key_table_jpn : {
-		// x ... key_table_jpn[preStr][keyCode];
-		// var mixLiteral = key_table_jpn[preStr]();
-		// var str =  mixliteral[keyCode];
 		"48": "０",
 		"49": "１",
 		"50": "２",
@@ -235,10 +225,10 @@ var key_table = {
 		"220" : "「",
 		"221" : "」",
 		"k": { "65": "か", "73": "き", "85": "く", "69": "け", "79": "こ",
-				"y":{
-					"65": "きゃ", "73": "きぃ", "85": "きゅ", "69": "きぇ", "79": "きょ"
-				}
-					},
+			"y":{
+				"65": "きゃ", "73": "きぃ", "85": "きゅ", "69": "きぇ", "79": "きょ"
+			}
+		},
 		"s": {
 			"65": "さ", "73": "し", "85": "す", "69": "せ", "79": "そ",
 			"y" : {

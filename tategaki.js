@@ -160,7 +160,9 @@ function repositionConvertView() {
 	var focusPosObj = getFocusPos();
 	var x = focusPosObj.x;
 	var y = focusPosObj.y;
-	$convertViews.css('top',y + 'px').css('left',(x - parseInt($convertViews.css('width').substring(0,$convertViews.css('width').length -2))) + 'px');
+	$convertViews.each(function () {
+		$(this).css('top',y + 'px').css('left',(x - parseInt($(this).css('width'))) + 'px');
+	});
 }
 function resetPhraseNum() {
 	// input_bufferの文節番号を振り直す
@@ -1097,7 +1099,7 @@ function keyEvent(e) {
 				var inputStr = getStringFromRow($input_buffer); //もともとの文字列
 				var newInputStr;
 				if (e.shiftKey) {
-					newInputStr = inputStr + key_table.shift_key[(new Number(keycode)).toString()];
+					newInputStr = inputStr + key_table.shift_key[String(keycode)];
 				}else{
 					newInputStr = key_table.getString(inputStr,keycode); //keycodeを加えた新しい文字列
 				}
@@ -1212,7 +1214,7 @@ function keyEvent(e) {
 					// bufferの更新
 					var newInputStr;
 					if (e.shiftKey) {
-						newInputStr = key_table.shift_key[(new Number(keycode)).toString()];
+						newInputStr = key_table.shift_key[String(keycode)];
 					}else{
 						newInputStr = key_table.getString("",keycode);
 					}

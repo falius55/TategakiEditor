@@ -36,8 +36,6 @@ public class KanjiProxy extends HttpServlet {
 		try{
 			// Google CGI API for Japanese Input(Google日本語入力API)
 		String strUrl = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + str;
-		// Yahooデベロッパーネットワーク かな漢字変換
-		//String strUrl = "http://jlp.yahooapis.jp/JIMService/V1/conversion?appid=dj0zaiZpPTZqSXRTQURJbUI3eCZzPWNvbnN1bWVyc2VjcmV0Jng9ZTg-&sentence=" + str;
 		URL url = new URL(strUrl);
 		InputStream in = url.openStream();
 		BufferedInputStream br = new BufferedInputStream(in);
@@ -49,7 +47,6 @@ public class KanjiProxy extends HttpServlet {
 		}catch(IOException e){
 			System.err.println(e);
 		}
-		// miss:どこまで入ったのかを数えなければ、文字化けでbyte配列いっぱいまで埋められてしまう
 		int i;
 		for(i = 0;b[i] != 0 && i<b.length;i++); // 読み込みバイト数を数える
 		return new String(b,0,i);

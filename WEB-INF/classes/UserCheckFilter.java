@@ -14,22 +14,15 @@ public class UserCheckFilter implements Filter {
 			HttpServletRequest servletrequest = (HttpServletRequest)request;
 			HttpServletResponse servletresponse= (HttpServletResponse)response;
 
-			//String target = ((HttpServletRequest)request).getRequestURI();
-			//String target = servletrequest.getRequestURI();
-
-			//HttpSession session = ((HttpServletRequest)request).getSession();
 			HttpSession session = servletrequest.getSession();
 
 			if (session == null) {
-				//session = ((HttpServletRequest)request).getSession(true);
 				session = servletrequest.getSession(true);
 
-				//(HttpServletResponse)response).sendRedirect("/tategaki/loginpage.jsp");
 				servletresponse.sendRedirect("/tategaki/loginpage.jsp");
 			}else{
 				Boolean loginCheck = (Boolean)session.getAttribute("login");
 				if (loginCheck == null || loginCheck.equals(Boolean.FALSE)) {
-					//((HttpServletResponse)response).sendRedirect("/tategaki/loginpage.jsp");
 					servletresponse.sendRedirect("/tategaki/loginpage.jsp");
 				}
 			}
