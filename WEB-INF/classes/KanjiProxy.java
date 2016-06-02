@@ -19,6 +19,7 @@ public class KanjiProxy extends HttpServlet {
 		sentence = request.getParameter("sentence");
 		rtnString = getData(sentence);
 
+		log("rtnKanjiJson:"+ rtnString);
 		out.println(rtnString);
 		out.close();
 		}catch(IOException e){

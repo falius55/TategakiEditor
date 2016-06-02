@@ -1,7 +1,61 @@
-// 以下、jquery
 console.log("in jsfile");
-function getKanji(str,$firstConvertView,$secondConvertView,bl) {
+function getKanjiForFullString(str) {
 	// 漢字変換
+	// 初変換時
+	console.log('getKanjiに渡した文字列:' + str);
+	$.ajax({
+		type : "POST",
+		url : "/tategaki/KanjiProxy",
+		data : {
+			sentence: str
+		},
+		dataType : "json",
+		context: {
+		},
+		success : function (json) {
+			// 表示データを受け取ってからの処理
+			console.log("communication success!");
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('初変換:');
+			var $input_buffer = $('.input_buffer');
+			var $characters = $input_buffer.children('.vertical_character');
+			var $convertView = $('.convertView');
+			var count = 0;
+			for (var i = 0; i < json.length; i++) {
+				var hiragana = json[i][0];
+				var hiraLen = hiragana.length;
+				// 文節番号をつける(同じ文節には同じ番号)
+				for (var j = count; j < (count + hiraLen); j++) {
+					$characters.eq(j).attr('data-phrase_num',i);
+				}
+				count += hiraLen;
+				insertPhraseToInputBuffer(i,json[i][1][0]); // 第一候補の漢字でinput_bufferの文字列を置き換える
+				// 変換候補表示
+				// convertviewを文節分作成する
+				var $convertView = createConvertView(i,json[i]);
+				$('#vertical_draft').before($convertView);
+			}
+			var $convertViews = $('.convertView');
+			$('.convertView:eq(0)').attr('data-alternativeList','select');
+			$('.convertView[data-alternativeList="select"] > .vertical_row:first-of-type').addClass('alternative_focus');
+			repositionConvertView();
+
+			// 現在選択中の文節にselectphraseクラスを設定する
+			var phraseNum = $('.alternative_focus').siblings('.phrase_num').text(); // 現在選択中の文節番号
+			$('.input_buffer > .vertical_character[data-phrase_num='+ phraseNum + ']').addClass('selectPhrase');
+			// 最後にinput_bufferの高さ調整
+			resizeInputBuffer();
+		},
+		error : function (XMLHttpRequest, textStatus, errorThrown) {
+			alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in getKanji");
+		}
+	});
+}
+function getKanjiForChangePhrase(str,$firstConvertView,$secondConvertView) {
+	// 漢字変換
+	// 文節総数に変化なし(文節の区切り目のみ変更)
 	console.log('getKanjiに渡した文字列:' + str);
 	$.ajax({
 		type : "POST",
@@ -13,7 +67,6 @@ function getKanji(str,$firstConvertView,$secondConvertView,bl) {
 		context: {
 			$first: $firstConvertView,
 			$second: $secondConvertView,
-			bool: bl
 		},
 		success : function (json) {
 			// 表示データを受け取ってからの処理
@@ -21,110 +74,155 @@ function getKanji(str,$firstConvertView,$secondConvertView,bl) {
 			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
 			// json[0][0]; // ひらがな
 			// json[0][1][0]; // 変換候補１つ目
-			if (this.$second && this.bool) {
-				// 統合
-				// getkanji(str,$first,$second,true)
-				console.log('統合:');
-				var fphrase_num = this.$first.children('.phrase_num').text();
-				var $newConvertView = createConvertView(fphrase_num,json[0]).attr('data-alternativeList','select');
-				this.$first.before($newConvertView);
-				// 第一候補の文字でinput_bufferの該当文字を置き換える
-				insertPhraseToInputBuffer(fphrase_num,getStringFromRow($newConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus')));
-				$('.input_buffer > .vertical_character[data-phrase_num='+ this.$second.children('.phrase_num').text() +']').remove();
-				// selectphraseクラスの付け替え
-				$('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num +']').addClass('selectPhrase');
-				repositionConvertView();
-				this.$first.remove();
-				this.$second.remove();
-				resetPhraseNum();
-			}else if(this.bool){
-				console.log('一文節のみ変換:');
-				// 一文節のみ変換
-				// getKanji(str,$firstconvertview,null,true)
-				var $newConvertView = createConvertView(fphrase_num,json[0]).attr('data-alternativeList','select');
-				var fphrase_num = this.$first.children('.phrase_num').text();
-				this.$first.before($newConvertView);
-				// 第一候補の文字でinput_bufferの該当文字を置き換える
-				insertPhraseToInputBuffer(fphrase_num,getStringFromRow($newConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus')));
-				// selectphraseクラスの付け替え
-				$('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num +']').addClass('selectPhrase');
-				repositionConvertView();
-				this.$first.remove();
-			}else if (this.$second) {
-				console.log('文節総数に変化なし:');
-				// getKanji(str,$first,$second,false)
-				var fphrase_num = this.$first.children('.phrase_num').text();
-				var sphrase_num = this.$second.children('.phrase_num').text();
-				var $newFirstConvertView = createConvertView(fphrase_num,json[0]).attr('data-alternativeList','select');
-				var $newSecondConvertView = createConvertView(sphrase_num,json[1]);
-				this.$first.before($newFirstConvertView);
-				this.$second.before($newSecondConvertView);
+			console.log('文節総数に変化なし:');
+			var fphrase_num = this.$first.children('.phrase_num').text();
+			var sphrase_num = this.$second.children('.phrase_num').text();
+			var $newFirstConvertView = createConvertView(fphrase_num,json[0]).attr('data-alternativeList','select');
+			var $newSecondConvertView = createConvertView(sphrase_num,json[1]);
+			this.$first.before($newFirstConvertView);
+			this.$second.before($newSecondConvertView);
 
-				// 第一候補の文字でinput_bufferの該当文字を置き換える
-				insertPhraseToInputBuffer(fphrase_num,getStringFromRow($newFirstConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus')));
-				insertPhraseToInputBuffer(sphrase_num,getStringFromRow($newSecondConvertView.children('.vertical_row:first-of-type')));
+			// 第一候補の文字でinput_bufferの該当文字を置き換える
+			insertPhraseToInputBuffer(fphrase_num,getStringFromRow($newFirstConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus')));
+			insertPhraseToInputBuffer(sphrase_num,getStringFromRow($newSecondConvertView.children('.vertical_row:first-of-type')));
 
-				// selectphraseクラスの付け替え
-				$('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num +']').addClass('selectPhrase');
-				repositionConvertView();
-				this.$first.remove();
-				this.$second.remove();
-			}else if(this.$first){
-				console.log('分離:');
-				// 分離
-				// getKanji(str,$first,null,false)
-				var fphrase_num = this.$first.children('.phrase_num').text();
-				var sphrase_num = $('.convertView').length;
-				var $newFirstConvertView = createConvertView(fphrase_num,json[0]).attr('data-alternativeList','select');
-				var $newSecondConvertView = createConvertView(sphrase_num,json[1]);
-				this.$first.before($newFirstConvertView);
-				this.$first.before($newSecondConvertView);
+			// selectphraseクラスの付け替え
+			$('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num +']').addClass('selectPhrase');
+			repositionConvertView();
+			this.$first.remove();
+			this.$second.remove();
+			// 最後にinput_bufferの高さ調整
+			resizeInputBuffer();
+		},
+		error : function (XMLHttpRequest, textStatus, errorThrown) {
+			alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in getKanji");
+		}
+	});
+}
+function getKanjiForFusion(str,$firstConvertView,$secondConvertView) {
+	// 漢字変換
+	// 統合時
+	// 選択中の文節の次の文節が一文字の場合にShift+Down
+	console.log('getKanjiに渡した文字列:' + str);
+	$.ajax({
+		type : "POST",
+		url : "/tategaki/KanjiProxy",
+		data : {
+			sentence: str
+		},
+		dataType : "json",
+		context: {
+			$first: $firstConvertView,
+			$second: $secondConvertView,
+		},
+		success : function (json) {
+			// 表示データを受け取ってからの処理
+			console.log("communication success!");
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('統合:');
+			var fphrase_num = this.$first.children('.phrase_num').text();
+			var $newConvertView = createConvertView(fphrase_num,json[0]).attr('data-alternativeList','select');
+			this.$first.before($newConvertView);
+			// 第一候補の文字でinput_bufferの該当文字を置き換える
+			insertPhraseToInputBuffer(fphrase_num,getStringFromRow($newConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus')));
+			$('.input_buffer > .vertical_character[data-phrase_num='+ this.$second.children('.phrase_num').text() +']').remove();
+			// selectphraseクラスの付け替え
+			$('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num +']').addClass('selectPhrase');
+			repositionConvertView();
+			this.$first.remove();
+			this.$second.remove();
+			resetPhraseNum();
+			// 最後にinput_bufferの高さ調整
+			resizeInputBuffer();
+		},
+		error : function (XMLHttpRequest, textStatus, errorThrown) {
+			alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in getKanji");
+		}
+	});
+}
+function getKanjiForSplit(str,$firstConvertView) {
+	// 漢字変換
+	// 分離時
+	// 最後の文節からshift+Up
+	console.log('getKanjiに渡した文字列:' + str);
+	$.ajax({
+		type : "POST",
+		url : "/tategaki/KanjiProxy",
+		data : {
+			sentence: str
+		},
+		dataType : "json",
+		context: {
+			$first: $firstConvertView,
+		},
+		success : function (json) {
+			// 表示データを受け取ってからの処理
+			console.log("communication success!");
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('分離:');
+			var fphrase_num = this.$first.children('.phrase_num').text();
+			var sphrase_num = $('.convertView').length;
+			var $newFirstConvertView = createConvertView(fphrase_num,json[0]).attr('data-alternativeList','select');
+			var $newSecondConvertView = createConvertView(sphrase_num,json[1]);
+			this.$first.before($newFirstConvertView);
+			this.$first.before($newSecondConvertView);
 
-				// 第一候補の文字でinput_bufferの該当文字を置き換える
-				insertPhraseToInputBuffer(fphrase_num,getStringFromRow($newFirstConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus')));
-				var secondFirstStr = json[1][1][0];
-				var $insertPosObj = $('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num + ']:last');
-				for (var i = secondFirstStr.length -1; i >= 0; i--) {
-					var $character = createCharacter(secondFirstStr.charAt(i)).attr('data-phrase_num',sphrase_num);
-					$insertPosObj.after($character);
-				}
-
-				// selectphraseクラスの付け替え
-				$('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num +']').addClass('selectPhrase');
-				repositionConvertView();
-				this.$first.remove();
-				resetPhraseNum();
-			}else{
-				console.log('初変換:');
-				// 初変換
-				// getKanji(str,null,null,false)
-				var $input_buffer = $('.input_buffer');
-				var $characters = $input_buffer.children('.vertical_character');
-				var $convertView = $('.convertView');
-				var count = 0;
-				for (var i = 0; i < json.length; i++) {
-					var hiragana = json[i][0];
-					var hiraLen = hiragana.length;
-					// 文節番号をつける(同じ文節には同じ番号)
-					for (var j = count; j < (count + hiraLen); j++) {
-						$characters.eq(j).attr('data-phrase_num',i);
-					}
-					count += hiraLen;
-					insertPhraseToInputBuffer(i,json[i][1][0]); // 第一候補の漢字でinput_bufferの文字列を置き換える
-					// 変換候補表示
-					// convertviewを文節分作成する
-					var $convertView = createConvertView(i,json[i]);
-					$('#vertical_draft').before($convertView);
-				}
-				var $convertViews = $('.convertView');
-				$('.convertView:eq(0)').attr('data-alternativeList','select');
-				$('.convertView[data-alternativeList="select"] > .vertical_row:first-of-type').addClass('alternative_focus');
-				repositionConvertView();
-
-				// 現在選択中の文節にselectphraseクラスを設定する
-				var phraseNum = $('.alternative_focus').siblings('.phrase_num').text(); // 現在選択中の文節番号
-				$('.input_buffer > .vertical_character[data-phrase_num='+ phraseNum + ']').addClass('selectPhrase');
+			// 第一候補の文字でinput_bufferの該当文字を置き換える
+			insertPhraseToInputBuffer(fphrase_num,getStringFromRow($newFirstConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus')));
+			var secondFirstStr = json[1][1][0];
+			var $insertPosObj = $('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num + ']:last');
+			for (var i = secondFirstStr.length -1; i >= 0; i--) {
+				var $character = createCharacter(secondFirstStr.charAt(i)).attr('data-phrase_num',sphrase_num);
+				$insertPosObj.after($character);
 			}
+
+			// selectphraseクラスの付け替え
+			$('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num +']').addClass('selectPhrase');
+			repositionConvertView();
+			this.$first.remove();
+			resetPhraseNum();
+			// 最後にinput_bufferの高さ調整
+			resizeInputBuffer();
+		},
+		error : function (XMLHttpRequest, textStatus, errorThrown) {
+			alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in getKanji");
+		}
+	});
+}
+function getKanjiForOnePhrase(str,$firstConvertView) {
+	// 漢字変換
+	// 一文節のみ変換
+	console.log('getKanjiに渡した文字列:' + str + ",");
+	$.ajax({
+		type : "POST",
+		url : "/tategaki/KanjiProxy",
+		data : {
+			sentence: str+"," // 文節を区切られないよう、,を末尾に追加
+		},
+		dataType : "json",
+		context: {
+			$first: $firstConvertView,
+		},
+		success : function (json) {
+			// 表示データを受け取ってからの処理
+			console.log("communication success!");
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('一文節のみ変換:');
+			var fphrase_num = this.$first.children('.phrase_num').text();
+			var $newConvertView = createConvertView(fphrase_num,json[0]).attr('data-alternativeList','select');
+			this.$first.before($newConvertView);
+			// 第一候補の文字でinput_bufferの該当文字を置き換える
+			insertPhraseToInputBuffer(fphrase_num,getStringFromRow($newConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus')));
+			// selectphraseクラスの付け替え
+			$('.input_buffer > .vertical_character[data-phrase_num='+ fphrase_num +']').addClass('selectPhrase');
+			repositionConvertView();
+			this.$first.remove();
 			// 最後にinput_bufferの高さ調整
 			resizeInputBuffer();
 		},
@@ -200,7 +298,7 @@ function readFile(file_id){
 			// 表示データを受け取ってからの処理
 			if(data.literaArray) console.log("communication success!");
 			// ファイル名を表示
-			$('#title').val(data.filename).attr('data-file_id',this.id);
+			$('#file_title').val(data.filename).attr('data-file_id',this.id);
 			// 文章のhtml書き出し
 			printString(data.literaArray,getStrLenOfRow());
 			// 禁則処理
@@ -247,9 +345,9 @@ function printString(strArray,strLen) {
 }
 function saveFile() {
 	"use strict";
-	var $title = $('#title');
+	var $file_title = $('#file_title');
 	var user_id = getUserID();
-	var filename = $title.val();
+	var filename = $file_title.val();
 	if (filename.length === 0) {
 		alert("ファイル名を入力してください");
 		return;
@@ -258,7 +356,7 @@ function saveFile() {
 		alert("ファイル名に使用不可能文字が含まれています。");
 		return;
 	}
-	var file_id = $title.attr('data-file_id');
+	var file_id = $file_title.attr('data-file_id');
 	if (file_id === "-1") {
 		saveAs(filename);
 		return;
@@ -270,8 +368,8 @@ function saveFile() {
 		contentsArray.push(getStringFromParagraph($paragraphs.eq(i)));
 	}
 	var contentsJson = JSON.stringify(contentsArray);
-	var date = Date.now() + "";
-	console.log(date);
+	var nowDate_ms = Date.now() + "";
+	console.log(nowDate_ms);
 
 	console.log("communication start point");
 	$.ajax({
@@ -281,7 +379,7 @@ function saveFile() {
 			file_id: file_id,
 			filename: filename,
 			json: contentsJson,
-			saved: date
+			saved: nowDate_ms
 		},
 		context : {
 			user_id : user_id,
@@ -292,7 +390,7 @@ function saveFile() {
 			// 表示データを受け取ってからの処理
 			console.log("communication success!");
 			console.log(data.result);
-			$('.saved').text(data.date);
+			$('.saved').text(data.strDate);
 			getFileList(this.user_id);
 			console.log('保存しました:file_id=' + this.file_id);
 		},
@@ -301,15 +399,15 @@ function saveFile() {
 		}
 	});
 }
-function getFileList(userId){
+function getFileList(userID){
 	"use strict";
-	console.log("communication start point in getFileList(userID:"+ userId +")");
+	console.log("communication start point in getFileList(userID:"+ userID +")");
 	$('.file_list').empty();
 	$.ajax({
 		type : "POST",
 		url : "/tategaki/GetFileList",
 		data : {
-			user_id: userId
+			user_id: userID
 		},
 		dataType : "json",
 		success : function (data) {
@@ -346,14 +444,14 @@ function newFile(filename){
 	console.log("communication start point");
 	$('#vertical_draft > .vertical_paragraph').remove();
 	var user_id = getUserID();
-	var date = Date.now() + "";
+	var nowDate_ms = Date.now() + "";
 	$.ajax({
 		type : "POST",
 		url : "/tategaki/NewFile",
 		data : {
 			filename: filename,
 			user_id: user_id,
-			saved: date
+			saved: nowDate_ms
 		},
 		context : {
 			user_id: user_id
@@ -363,7 +461,7 @@ function newFile(filename){
 			// 表示データを受け取ってからの処理
 			if(data.newFileID) console.log("communication success!");
 			// ファイル名を表示
-			$('#title').val(data.filename).attr('data-file_id',data.newFileID);
+			$('#file_title').val(data.filename).attr('data-file_id',data.newFileID);
 			readFile(data.newFileID);
 			getFileList(this.user_id);
 		},
@@ -381,14 +479,14 @@ function saveAs(filename) {
 	}
 	console.log("communication start point");
 	var user_id = getUserID();
-	var date = Date.now() + "";
+	var nowDate_ms = Date.now() + "";
 	$.ajax({
 		type : "POST",
 		url : "/tategaki/NewFile",
 		data : {
 			filename: filename,
 			user_id: user_id,
-			saved: date
+			saved: nowDate_ms
 		},
 		context : {
 			user_id: user_id
@@ -398,7 +496,7 @@ function saveAs(filename) {
 			// 表示データを受け取ってからの処理
 			if(data.newFileID) console.log("communication success!");
 			// ファイル名を表示
-			$('#title').val(data.filename).attr('data-file_id',data.newFileID);
+			$('#file_title').val(data.filename).attr('data-file_id',data.newFileID);
 			saveFile();
 		},
 		error : function (XMLHttpRequest, textStatus, errorThrown) {
@@ -407,7 +505,7 @@ function saveAs(filename) {
 	});
 }
 function defaultDeleteFile() {
-	var file_id = $('input#title').attr('data-file_id');
+	var file_id = $('input#file_title').attr('data-file_id');
 	deleteFile(file_id);
 }
 function deleteFile(file_id) {
@@ -460,13 +558,15 @@ function getStringFromRow($row) {
 }
 function getStringFromParagraph($paragraph) {
 	var $rows = $paragraph.children('.vertical_row');
-	var rtn = "";
+	var rtnStr = "";
 	for (var i = 0; i < $rows.length; ++i) {
-		rtn += getStringFromRow($rows.eq(i));
+		rtnStr += getStringFromRow($rows.eq(i));
 	}
-	return rtn;
+	return rtnStr;
 }
-function init() {
+function setNOCLine() {
+	// フォーカスのある文字が何文字目かを記憶する要素群を作成する
+	// フォーカスを左右に動かすときに利用する
 	var $container = $('#container');
 
 	var strLen = getStrLenOfRow();
@@ -478,13 +578,13 @@ function init() {
 	}
 	$('#vertical_draft').prepend($NOC_line);
 }
-document.getElementById("title").addEventListener("focus",function (e) {
+document.getElementById("file_title").addEventListener("focus",function (e) {
 	document.removeEventListener("keydown",keyEvent,false);
 },false);
-document.getElementById("title").addEventListener("blur",function (e) {
+document.getElementById("file_title").addEventListener("blur",function (e) {
 	document.addEventListener("keydown",keyEvent,false);
 });
-document.getElementById("title").addEventListener("keyup",function (e) {
+document.getElementById("file_title").addEventListener("keyup",function (e) {
 	var keycode;
 	if (document.all) {
 		// IE
@@ -495,7 +595,7 @@ document.getElementById("title").addEventListener("keyup",function (e) {
 	}
 	if (keycode === 13) {
 		// enter
-		$('#title').blur();
+		$('#file_title').blur();
 		document.addEventListener("keydown",keyEvent,false);
 	}
 });
@@ -566,10 +666,10 @@ function createRow(str) {
 	"use strict";
 	if(str == null) return;
 	var $row = $('<div>').addClass('vertical_row');
-	var count = str.length;
 	var $EOL = $('<span>').addClass('vertical_character').addClass('EOL');
 	$row.append($EOL);
-	for (var i = 0; i < count; i++) {
+	var count;
+	for (var i = 0; i < count = str.length; i++) {
 		var $c = createCharacter(str.charAt(i));
 		$EOL.before($c);
 	}
@@ -587,8 +687,7 @@ function createCharacter(c) {
 // 改行
 function lineBreak() {
 	var $focus = $('.focus');
-	var $focusRow = $focus.closest('.vertical_row');
-	var $div; // 改行以降の文字を入れる(次の行になる)
+	var $focusRow = $('.focus_row');
 	var $nextRow = $focusRow.nextAll('.vertical_row:first'); //改行前の次の行
 	var $prevChar = $focus.prev(); //移動しない文字の最後
 	if (!($prevChar[0])) {
@@ -609,18 +708,15 @@ function lineBreak() {
 		return;
 	}
 
-	// 同じ段落内で次の行が存在するか
-	if ($nextRow[0]) {
-		$div = $nextRow;
-	}else{
+	if (!($nextRow[0])) {
 		// 次の行がなければ新しく作る
-		$div = createRow("");
-		$focusRow.after($div);
+		$nextRow = createRow("");
+		$focusRow.after($nextRow);
 	}
-	var $insertPosObj = $div.children('.vertical_character:first-of-type'); //挿入先の最初の文字
+	var $insertPosObj = $nextRow.children('.vertical_character:first-of-type'); //挿入先の最初の文字
 	var $vChar = $focus; // 移動文字
 	while($vChar[0] && !($vChar.hasClass('EOL'))){ // EOLは移動しない
-		// $divの先頭にある$insertPosObjに、$prevCharの次の文字を挿入していく
+		// $nextRowの先頭にある$insertPosObjに、$prevCharの次の文字を挿入していく
 		$vChar.remove();
 		$insertPosObj.before($vChar);
 		$vChar = $prevChar.nextAll('.vertical_character:first');
@@ -628,14 +724,14 @@ function lineBreak() {
 	if ($focus.hasClass('EOL')) { // EOLにフォーカスがあると、EOLが動かないために、フォーカスが次の行に行かないので強制的に動かす必要あり
 		// = 行末での改行
 		$focus.removeClass('focus');
-		$div.children('.vertical_character:first-of-type').addClass('focus');
+		$nextRow.children('.vertical_character:first-of-type').addClass('focus');
 	}
 	// 移動文字列を次の行に入れた結果規定文字数を超えた場合のために、次の行を文字数調整
-	cordinateStringNumber($div,getStrLenOfRow());
+	cordinateStringNumber($nextRow,getStrLenOfRow());
 
-	// $div以降を新しい段落とする
-	var $currentParagraph = $div.closest('.vertical_paragraph');
-	var $newParagraph = createDevideParagraph($div);
+	// $nextRow以降を新しい段落とする
+	var $currentParagraph = $nextRow.closest('.vertical_paragraph');
+	var $newParagraph = createDevideParagraph($nextRow);
 	$currentParagraph.after($newParagraph);
 
 	Focus.repositionCharNum();
@@ -647,11 +743,10 @@ function createDevideParagraph($row) {
 	var $newParagraph = $('<div>').addClass('vertical_paragraph');
 	var $nextRow;
 	do{
-		// ここでの$rowは移動対象行
 		// $rowを新しい段落に移動していく
 		$nextRow = $row.next(); // $rowを移動すると次の移動対象選択には使えないので、次の行を保持しておく
-		$row.remove(); // 旧段落の$rowを削除して
-		$newParagraph.append($row); // 削除した$rowを新しい段落に
+		$row.remove();
+		$newParagraph.append($row);
 		$row = $nextRow;
 	}while($row[0]);
 
@@ -659,21 +754,19 @@ function createDevideParagraph($row) {
 }
 function cordinateStringNumber($vRow,strLen) {
 	// 入力などの結果規定文字数を超えた行の文字数を調整する
+	// 超えた分を次の行に移動する
 	// 同一段落内で完結
 	// $vRow: 調整行
 	// strLen: １行の文字数
 	if($vRow.children().length <= (strLen +1)) return; //調整行の文字数が規定値以下なら調整の必要なし(EOL含めると31個)
-	var $div;
 	var $nextRow = $vRow.nextAll('.vertical_row:first');
-	if ($nextRow[0]) {
-		$div = $nextRow;
-	}else{
+	if (!($nextRow[0])) {
 		// 次の行がなければ新しく作る
-		$div = createRow("");
-		$vRow.after($div);
+		$nextRow = createRow("");
+		$vRow.after($nextRow);
 	}
 	var $prevChar = $vRow.children('.vertical_character').eq(strLen -1); //移動しない文字の最後
-	var $insertPosObj = $div.children('.vertical_character:first-of-type'); //挿入先の最初の文字
+	var $insertPosObj = $nextRow.children('.vertical_character:first-of-type'); //挿入先の最初の文字
 	var $vChar = $prevChar.nextAll('.vertical_character:first'); // 移動文字
 	while($vChar[0] && !($vChar.hasClass('EOL'))){ // EOLは移動しない
 		$vChar.remove();
@@ -681,7 +774,7 @@ function cordinateStringNumber($vRow,strLen) {
 		$vChar = $prevChar.nextAll('.vertical_character:first');
 	}
 	// 移動先の行がstrlen文字を超えている時のために再帰
-	cordinateStringNumber($div,strLen);
+	cordinateStringNumber($nextRow,strLen);
 	// focusが調整行の最後にあれば動いてくれないので、強制的に動かす
 	if ($prevChar.nextAll('.vertical_character:first').hasClass('focus')) {
 		$('.focus').removeClass('focus');
@@ -933,6 +1026,7 @@ $('body').on('click','.vertical_paragraph > .vertical_row',function (e) {
 });
 $('body').on('mousewheel','#vertical_draft',wheelEvent);
 function wheelEvent(e,delta,deltaX,deltaY) {
+	// マウスホイールを動かすと、ページが左右に動く
 	var $nextRow;
 	if (delta > 0) {
 		// ホイールを上に動かす
@@ -1033,11 +1127,11 @@ function keyEvent(e) {
 					if(secondKana.length < 2){
 						//二番目の文字列が１文字しかないので、２つを統合する
 						newString = firstKana + secondKana + ",";
-						getKanji(newString,$firstConvertView,$secondConvertView,true);
+						getKanjiForFusion(newString,$firstConvertView,$secondConvertView);
 						break;
 					}
 					newString = firstKana + secondKana.charAt(0) + "," + secondKana.substring(1);
-					getKanji(newString,$firstConvertView,$secondConvertView);
+					getKanjiForChangePhrase(newString,$firstConvertView,$secondConvertView);
 				}else{
 					// Down のみ
 					// 選択文節の変更
@@ -1077,7 +1171,6 @@ function keyEvent(e) {
 					$input_buffer.children('.EOL').remove();
 					$input_buffer.hide();
 				}
-
 				break;
 			case 13:
 				// Enter
@@ -1089,7 +1182,7 @@ function keyEvent(e) {
 				// space
 				$('.convertView').show();
 				var inputStr = getStringFromRow($input_buffer);
-				getKanji(inputStr);
+				getKanjiForFullString(inputStr);
 				break;
 			case 118:
 				changeKatakanaAtInput();
@@ -1110,7 +1203,6 @@ function keyEvent(e) {
 				insertStringToInputBuffer(newInputStr);
 				break;
 		}
-
 	}else{
 		// 非入力(通常)状態
 		var textcheck = true;
@@ -1284,7 +1376,7 @@ function backSpaceOnConvert() {
 		}
 		return;
 	}
-	getKanji(hira.substring(0,hira.length-1),$selectConvertView,null,true);
+	getKanjiForOnePhrase(hira.substring(0,hira.length-1),$selectConvertView);
 
 }
 function shiftUpOnConvert() {
@@ -1298,13 +1390,13 @@ function shiftUpOnConvert() {
 		// 最後の文節の場合
 		// 分離
 		newString = firstKana.substring(0,firstKana.length-1) + "," + firstKana.substring(firstKana.length-1,firstKana.length);
-		getKanji(newString,$firstConvertView);
+		getKanjiForSplit(newString,$firstConvertView);
 		return;
 	}else{
 		secondKana = getStringFromRow($secondConvertView.children('.vertical_row:last'));
 	}
 	newString = firstKana.substring(0,firstKana.length-1) + ","+ firstKana.substring(firstKana.length-1,firstKana.length) + secondKana;
-	getKanji(newString,$firstConvertView,$secondConvertView);
+	getKanjiForChangePhrase(newString,$firstConvertView,$secondConvertView);
 }
 function shiftLeftAlternativeFocus() {
 	// 漢字変換候補一覧のフォーカスを左にシフトさせる
@@ -1415,19 +1507,19 @@ function changeKatakanaAtInput() {
 	insertStringToInputBuffer(getKatakana(str)).children('.vertical_character:not(.EOL)').addClass('selectPhrase');
 }
 function getKatakana(str) {
-	var rtn = "";
-	var c;
+	var rtnKatakana = "";
+	var cKatakana;
 	var len = str.length;
 	for (var i = 0; i < len; i++) {
-		c = key_table.katakana[str.charAt(i)];
-		if (c) {
-			rtn += c;
+		cKatakana = key_table.katakana[str.charAt(i)];
+		if (cKatakana) {
+			rtnKatakana += cKatakana;
 		}else{
 			// 変換できなければ元の文字をそのまま連結
-			rtn += str.charAt(i);
+			rtnKatakana += str.charAt(i);
 		}
 	}
-	return rtn;
+	return rtnKatakana;
 }
 function startCommandMode() {
 	console.log('startCommandMode');
@@ -1550,18 +1642,18 @@ function runCommand() {
 		case ':name':
 		case ':t':
 				 if (command[1]) {
-					 setTitle(command[1]);
+					 setFileTitle(command[1]);
 				 }
 		default:
 				 break;
 	}
 }
-function setTitle(filename) {
-	$('input#title').val(filename);
+function setFileTitle(filename) {
+	$('input#file_title').val(filename);
 }
 function openNextFile() {
 	console.log('openNextFile()');
-	var $currentFileLi = $('.file_list > li').has('.file_name[data-file_id="'+ $('input#title').attr('data-file_id') +'"]');
+	var $currentFileLi = $('.file_list > li').has('.file_name[data-file_id="'+ $('input#file_title').attr('data-file_id') +'"]');
 	var $nextFile;
 	if ($currentFileLi[0]) {
 		$nextFile = $currentFileLi.nextAll('li:first').children('.file_name');
@@ -1572,7 +1664,7 @@ function openNextFile() {
 }
 function openPrevFile() {
 	console.log('openPrevFile()');
-	var $currentFileLi = $('.file_list > li').has('.file_name[data-file_id="'+ $('input#title').attr('data-file_id') +'"]');
+	var $currentFileLi = $('.file_list > li').has('.file_name[data-file_id="'+ $('input#file_title').attr('data-file_id') +'"]');
 	var $nextFile = $currentFileLi.prevAll('li:first').children('.file_name');
 	if($nextFile[0]) readFile($nextFile.attr('data-file_id'));
 }
@@ -1662,8 +1754,8 @@ function getDisplayRowLen() {
 }
 
 function getCurrentFileID() {
-	var $title = $('#title');
-	var file_id = $title.attr('data-file_id');
+	var $file_title = $('#file_title');
+	var file_id = $file_title.attr('data-file_id');
 	return file_id;
 }
 function getRowLen() {

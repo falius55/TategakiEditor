@@ -17,7 +17,7 @@
 			%>
 			<h1 id="site_title" data-user_id="<%= userID %>">縦書きエディタ</h1>
 			<div id="container">
-				<input type="text" id="title" data-file_id="-1"></input>
+				<input type="text" id="file_title" data-file_id="-1"></input>
 				<div id="vertical_draft"> 
 					<div class="infomation">
 						文字:<span class="str_num">-</span>/<span class="str_len">-</span>　行:<span class="row_num">1</span>/<span class="row_len">-</span>　ページ:<span class="page_num">-</span>/<span class="page_len">-</span>　最終更新日時:<span class="saved">-</span>
@@ -42,7 +42,7 @@
 			<script src="/tategaki/tategaki.js"></script>
 			<script>
 			  (function(){
-			  init();
+			  setNOCLine();
 			  appendParagraph("縦書きテキストエディタ");
 			  $('.vertical_row').addClass('displayRow').children('.vertical_character:first').addClass('focus');
 			  addPageBreak();

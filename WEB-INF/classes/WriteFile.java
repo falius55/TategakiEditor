@@ -79,34 +79,16 @@ public class WriteFile extends HttpServlet  {
 			// ==================================================================
 			long savedMillis = Long.parseLong(request.getParameter("saved"));
 			java.util.Date d = new java.util.Date(savedMillis);
-			//Calendar cal = new GregorianCalendar();
-			//cal.setTimeInMillis(savedMillis);
-			//StringBuffer sb = new StringBuffer();
-			//sb.append(String.format("%1$tF %1$tT",d)); // 2011-11-08 11:05:20 の書式
 			String strDate = String.format("%1$tF %1$tT",d); // 2011-11-08 11:05:20 の書式
-			//sb.append(cal.get(Calendar.YEAR));
-			//sb.append("-");
-			//sb.append(String.format("%02d",(cal.get(Calendar.MONTH) + 1)));
-			//sb.append("-");
-			//sb.append(String.format("%02d",cal.get(Calendar.DATE)));
-			//sb.append(" ");
-			//sb.append(String.format("%02d",cal.get(Calendar.HOUR_OF_DAY)));
-			//sb.append(":");
-			//sb.append(cal.get(Calendar.MINUTE));
-			//sb.append(":");
-			//sb.append(cal.get(Calendar.SECOND));
 			// ========================================================================
 			// 	ファイル名、最終更新日の更新
 			// ========================================================================
-			// init()がjspInit()となっていたため、connがnullになってnullPointerExceptionが発生していた
 			stmt = conn.createStatement();
 			// ファイル名
 			String fileName = request.getParameter("filename");
-			//String sql = "update file_table set filename = \'" + fileName + "\' where id = " + fileId;
 			String sql = String.format("update file_table set filename = \'%s\' where id = %d",fileName,fileId);
 			stmt.executeUpdate(sql);
 			// 更新日
-			//sql = "update file_table set saved = \'" + sb.toString() + "\' where id = " + fileId;
 			sql = String.format("update file_table set saved = \'%s\' where id = %d",strDate,fileId);
 			stmt.executeUpdate(sql);
 
@@ -129,11 +111,7 @@ public class WriteFile extends HttpServlet  {
 			// =============================================================================
 			// 	レスポンス
 			// =============================================================================
-			//String rtn = "{\"result\":\"save success\",\"date\":\""+ sb.toString() + "\"}";
-			String rtn = String.format("{\"result\":\"save success\",\"date\":\"%s\"}",strDate);
-			// エラーの原因
-			// ストリームを取得したなら、何かしらを返さなければならない
-			// また、受け手がdatatypeをjsonにしているなら、jsonで返さなければならない
+			String rtn = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",strDate);
 			out.println(rtn);
 
 
