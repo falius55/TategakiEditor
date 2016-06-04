@@ -15,8 +15,8 @@ public class Login extends HttpServlet {
 	// ====================================================================
 	// データベースへの接続
 	public void init() {
-		String url = "jdbc:mysql://localhost/blog_app";
-		String user = "sampleuser";
+		String url = "jdbc:mysql://localhost/tategaki_editor";
+		String user = "serveruser";
 		String password = "digk473";
 
 		try {

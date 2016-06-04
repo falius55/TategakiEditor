@@ -21,8 +21,8 @@ public class ReadFile extends HttpServlet  {
 	// ====================================================================
 	// データベースへの接続
 	public void init() {
-		String url = "jdbc:mysql://localhost/blog_app";
-		String user = "sampleuser";
+		String url = "jdbc:mysql://localhost/tategaki_editor";
+		String user = "serveruser";
 		String password = "digk473";
 
 		try {
@@ -74,22 +74,24 @@ public class ReadFile extends HttpServlet  {
 			// ======================================================
 			//	 idから目的のファイル名、最終更新日を取得
 			// ======================================================
-			int fileId = Integer.parseInt(request.getParameter("file_id"));
+			String fileID = request.getParameter("file_id");
 			stmt = conn.createStatement();
-			String sql = "SELECT * FROM file_table where id = " + fileId;
+			String sql = "SELECT * FROM file_table where id = " + fileID;
 			ResultSet rs = stmt.executeQuery(sql);
 			String fileName;
 			Timestamp tSaved;
 			String saved;
 
-			rs.next();
+			if (rs.next()) {
 			fileName = rs.getString("filename");
 			// 最終更新日はナノ秒も文字列で表されるので切り捨てる
 			tSaved = rs.getTimestamp("saved");
 			tSaved.setNanos(0);
 			saved = tSaved.toString();
 			saved = saved.substring(0,saved.length()-2);
-
+			}else{
+				throw new SQLException();	
+			}
 			StringBuffer sb = new StringBuffer();
 			sb.append("{\"filename\":\"");
 			sb.append(fileName);
@@ -103,7 +105,8 @@ public class ReadFile extends HttpServlet  {
 			// ========================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(fileId + ".txt");	// ルートディレクトリ/fileId.txtとなる
+			String userID = request.getParameter("user_id");
+			String path = context.getRealPath(String.format("data/%s/%s.txt",userID,fileID));	// ルートディレクトリ/data/userID/fileId.txtとなる
 			br = new BufferedReader(new FileReader(new File(path)));
 
 			// 複数行読み出し、配列で返している
@@ -130,6 +133,8 @@ public class ReadFile extends HttpServlet  {
 			log("fileName is " + fileName);
 		}catch(IOException e){
 			log("ReadFile's IOException:'" + e.getMessage());
+		}catch(SQLException e){
+			log("ReadFile's SQLException:'" + e.getMessage());
 		}catch(NullPointerException e){
 			log("ReadFile's NullPointerException:'" + e.getMessage());
 		}catch(Exception e){

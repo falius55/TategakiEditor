@@ -21,8 +21,8 @@ public class DeleteFile extends HttpServlet  {
 	// ====================================================================
 	// データベースへの接続
 	public void init() {
-		String url = "jdbc:mysql://localhost/blog_app";
-		String user = "sampleuser";
+		String url = "jdbc:mysql://localhost/tategaki_editor";
+		String user = "serveruser";
 		String password = "digk473";
 
 		try {
@@ -84,7 +84,8 @@ public class DeleteFile extends HttpServlet  {
 			// ========================================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(String.format("%s.txt",strFileID));	// ルートディレクトリ/fileId.txtとなる
+			String userID = request.getParameter("user_id");
+			String path = context.getRealPath(String.format("data/%s/%s.txt",userID,strFileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
 			File delFile = new File(path);
 			boolean b = deleteFile(delFile);
 

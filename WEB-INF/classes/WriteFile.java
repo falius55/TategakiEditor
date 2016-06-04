@@ -23,8 +23,8 @@ public class WriteFile extends HttpServlet  {
 	// =======================================================================
 	// データベースへの接続
 	public void init() {
-		String url = "jdbc:mysql://localhost/blog_app";
-		String user = "sampleuser";
+		String url = "jdbc:mysql://localhost/tategaki_editor";
+		String user = "serveruser";
 		String password = "digk473";
 
 		try {
@@ -73,23 +73,23 @@ public class WriteFile extends HttpServlet  {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 
-			int fileId = Integer.parseInt(request.getParameter("file_id"));
+			String fileID = request.getParameter("file_id");
 			// ==================================================================
 			//	 	更新日時文字列の作成
 			// ==================================================================
 			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			java.util.Date d = new java.util.Date(savedMillis);
-			String strDate = String.format("%1$tF %1$tT",d); // 2011-11-08 11:05:20 の書式
+			java.util.Date date = new java.util.Date(savedMillis);
+			String strDate = String.format("%1$tF %1$tT",date); // 2011-11-08 11:05:20 の書式
 			// ========================================================================
 			// 	ファイル名、最終更新日の更新
 			// ========================================================================
 			stmt = conn.createStatement();
 			// ファイル名
 			String fileName = request.getParameter("filename");
-			String sql = String.format("update file_table set filename = \'%s\' where id = %d",fileName,fileId);
+			String sql = String.format("update file_table set filename = \'%s\' where id = %s",fileName,fileID);
 			stmt.executeUpdate(sql);
 			// 更新日
-			sql = String.format("update file_table set saved = \'%s\' where id = %d",strDate,fileId);
+			sql = String.format("update file_table set saved = \'%s\' where id = %s",strDate,fileID);
 			stmt.executeUpdate(sql);
 
 			// ==========================================================================
@@ -97,7 +97,8 @@ public class WriteFile extends HttpServlet  {
 			// ==========================================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(fileId + ".txt");	// ルートディレクトリ/fileId.txtとなる
+			String userID = request.getParameter("user_id");
+			String path = context.getRealPath(String.format("data/%s/%s.txt",userID,fileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
 			bw = new BufferedWriter(new FileWriter(new File(path),false));
 
 			String json = request.getParameter("json");
@@ -111,8 +112,8 @@ public class WriteFile extends HttpServlet  {
 			// =============================================================================
 			// 	レスポンス
 			// =============================================================================
-			String rtn = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",strDate);
-			out.println(rtn);
+			String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",strDate);
+			out.println(rtnJson);
 
 
 			bw.close();
@@ -127,16 +128,6 @@ public class WriteFile extends HttpServlet  {
 		}catch(Exception e){
 			log("Exception");
 			log("getMessage is " + e.getMessage());
-		}
-	}
-	// 別クラスにして使うなら、JavaBeensにする必要あり
-	public static <T> T parse(Class<T> dto, String json)  {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			//return Arrays.asList(mapper.readValue(json,dto)).toArray(new String[]);
-			return (T)mapper.readValue(json,dto);
-		} catch (IOException e) {
-			return null;
 		}
 	}
 }

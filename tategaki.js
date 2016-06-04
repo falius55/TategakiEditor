@@ -283,11 +283,13 @@ function resetPhraseNum() {
 function readFile(file_id){
 	"use strict";
 	console.log("communication start point");
+	var user_id = getUserID();
 	$('#vertical_draft > .vertical_paragraph').remove();
 	$.ajax({
 		type : "POST",
 		url : "/tategaki/ReadFile",
 		data : {
+			user_id: user_id,
 			file_id: file_id
 		},
 		context : {
@@ -376,6 +378,7 @@ function saveFile() {
 		type : "POST",
 		url : "/tategaki/WriteFile",
 		data : {
+			user_id : user_id,
 			file_id: file_id,
 			filename: filename,
 			json: contentsJson,
@@ -414,13 +417,13 @@ function getFileList(userID){
 			// 表示データを受け取ってからの処理
 			// data.fileid_list[] : ファイルid
 			// data.filename_list[] : ファイル名
-			if(data.fileId_list) console.log("communication success! in getFileList()");
+			if(data.fileID_list) console.log("communication success! in getFileList()");
 			var $fileList = $('.file_list').text('ファイルを開く');
 			var file_id;
 			var filename;
 			var $filename;
-			for (var i = 0; i < data.fileId_list.length; i++) {
-				file_id = data.fileId_list[i];
+			for (var i = 0; i < data.fileID_list.length; i++) {
+				file_id = data.fileID_list[i];
 				filename = data.filename_list[i];
 				$filename = $('<a>').addClass('file_name').attr('href','#').attr('data-file_id',file_id).attr('data-file_name',filename).text(filename);
 				$fileList.append($('<li>').append($filename));
@@ -511,11 +514,13 @@ function defaultDeleteFile() {
 function deleteFile(file_id) {
 	"use strict";
 	console.log("communication start point");
+	var user_id = getUserID();
 	if(window.confirm('本当に削除しますか:'+ getFileNameFromFileID(file_id) + '('+ file_id +')')){
 		$.ajax({
 			type : "POST",
 			url : "/tategaki/DeleteFile",
 			data : {
+				user_id: user_id,
 				file_id : file_id
 			},
 			context : {
@@ -669,7 +674,7 @@ function createRow(str) {
 	var $EOL = $('<span>').addClass('vertical_character').addClass('EOL');
 	$row.append($EOL);
 	var count;
-	for (var i = 0; i < count = str.length; i++) {
+	for (var i = 0; i < (count = str.length); i++) {
 		var $c = createCharacter(str.charAt(i));
 		$EOL.before($c);
 	}
@@ -1246,8 +1251,6 @@ function keyEvent(e) {
 					break;
 				case 78:
 					// n
-					openNextFile();
-					textcheck = false;
 					break;
 				case 83:
 					// s

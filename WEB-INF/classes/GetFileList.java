@@ -19,8 +19,8 @@ public class GetFileList extends HttpServlet  {
 	// ====================================================================
 	// データベースへの接続
 	public void init() {
-		String url = "jdbc:mysql://localhost/blog_app";
-		String user = "sampleuser";
+		String url = "jdbc:mysql://localhost/tategaki_editor";
+		String user = "serveruser";
 		String password = "digk473";
 
 		try {
@@ -67,27 +67,16 @@ public class GetFileList extends HttpServlet  {
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 
-			// ======================================================
-			//	 user_idから目的のユーザー名を取得
-			// ======================================================
-			String userId = request.getParameter("user_id");
+			String userID = request.getParameter("user_id");
 			stmt = conn.createStatement();
-			String sql = "SELECT * FROM edit_users where id = " + userId;
-			//log("getuserName sql:" + sql);
-			ResultSet rs = stmt.executeQuery(sql);
-			String userName;
-
-			rs.next();
-			userName = rs.getString("name");
 
 			// =====================================================
 			// fileId一覧の作成
-			// ====================================================
-			sql = "SELECT * FROM file_table where written_by = \"" + userName + "\"";
-			//log("create fileId sql:" + sql);
-			rs = stmt.executeQuery(sql);
+			// =====================================================
+			String sql = "SELECT * FROM file_table where user_id = \"" + userID + "\"";
+			ResultSet rs = stmt.executeQuery(sql);
 			StringBuffer sb = new StringBuffer();
-			sb.append("{\"fileId_list\":[");
+			sb.append("{\"fileID_list\":[");
 			String id;
 			for(int i=0;rs.next();i++){
 				id = rs.getString("id");
@@ -101,8 +90,6 @@ public class GetFileList extends HttpServlet  {
 			// =====================================================
 			// filename一覧の作成
 			// ====================================================
-			sql = "SELECT * FROM file_table where written_by = \"" + userName + "\"";
-			//log("create filename sql:" + sql);
 			rs = stmt.executeQuery(sql);
 			sb.append("\"filename_list\":[");
 			String filename;

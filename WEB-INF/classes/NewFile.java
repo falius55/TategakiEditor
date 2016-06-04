@@ -18,8 +18,8 @@ public class NewFile extends HttpServlet  {
 	// ====================================================================
 	// データベースへの接続
 	public void init() {
-		String url = "jdbc:mysql://localhost/blog_app";
-		String user = "sampleuser";
+		String url = "jdbc:mysql://localhost/tategaki_editor";
+		String user = "serveruser";
 		String password = "digk473";
 
 		try {
@@ -66,18 +66,8 @@ public class NewFile extends HttpServlet  {
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 
-			// ================================================================
-			//	 user_idから目的のユーザー名を取得
-			// ================================================================
 			String userID = request.getParameter("user_id");
 			stmt = conn.createStatement();
-			String sql = String.format("SELECT * FROM edit_users where id = %s",userID);
-			ResultSet rs = stmt.executeQuery(sql);
-			String userName;
-
-			rs.next();
-			userName = rs.getString("name");
-
 			// ==================================================================
 			//	 	更新日時文字列の作成
 			// ==================================================================
@@ -89,22 +79,26 @@ public class NewFile extends HttpServlet  {
 			// ===================================================================
 			// ファイル名
 			String fileName = request.getParameter("filename");
-			sql = String.format("insert into file_table (filename,written_by,saved) values (\'%s\',\'%s\',\'%s\')",fileName,userName,strDate);
+			String sql = String.format("insert into file_table (filename,user_id,saved) values (\'%s\',\'%s\',\'%s\')",fileName,userID,strDate);
 			stmt.executeUpdate(sql);
 			// ====================================================================
 			// 	新しいfileIDを取得
 			// ====================================================================
-			sql = String.format("SELECT * FROM file_table where saved = \'%s\' and written_by = \'%s\'",strDate,userName);
-			rs = stmt.executeQuery(sql);
+			sql = String.format("SELECT * FROM file_table where saved = \'%s\' and user_id = \'%s\'",strDate,userID);
+			ResultSet rs = stmt.executeQuery(sql);
 
-			rs.next();
-			int fileID = rs.getInt("id");
+			int fileID;
+			if (rs.next()) {
+				fileID = rs.getInt("id");
+			}else{
+				throw new SQLException();
+			}
 			// =====================================================================
 			// 	ファイルを作成
 			// =====================================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(fileID + ".txt");	// ルートディレクトリ/fileId.txtとなる
+			String path = context.getRealPath(String.format("data/%s/%d.txt",userID,fileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
 			File newFile = new File(path);
 			newFile.createNewFile(); // ファイル作成
 
@@ -117,9 +111,11 @@ public class NewFile extends HttpServlet  {
 			log("NewID return is " + rtn);
 			out.close();
 		}catch(IOException e){
-			log(e.getMessage());
+			log("IOException:" + e.getMessage());
+		}catch(SQLException e){
+			log("SQLException:" + e.getMessage());
 		}catch(Exception e){
-			log(e.getMessage());
+			log("Exception:" + e.getMessage());
 		}
 	}
 }
