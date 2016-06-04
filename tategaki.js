@@ -699,7 +699,7 @@ function lineBreak() {
 		// 行頭フォーカスで改行
 		var $baseParagraph = $focusRow.closest('.vertical_paragraph');
 		var $paragraph = $('<div>').addClass('vertical_paragraph');
-		var $row = createRow("");
+		var $row = createRow("").addClass('displayRow');
 		$paragraph.append($row);
 		if (($focusRow.prev())[0]) {
 			// 段落途中での行頭改行では、段落を２つに分ける
@@ -709,7 +709,7 @@ function lineBreak() {
 			return;
 		}
 		// 段落最初での改行では、その前のところに空行挿入
-		$baseParagraph.before($paragraph.addClass('displayRow'));
+		$baseParagraph.before($paragraph);
 		return;
 	}
 
@@ -1080,6 +1080,12 @@ function keyEvent(e) {
 				$('.convertView').remove();
 				insertStrFromFocus($input_buffer.text());
 				$input_buffer.empty().hide(); // input_bufferを空にして隠す
+				// 禁則処理
+				checkKinsoku();
+				// displayrow
+				reDisplay();
+				addPageBreak();
+				printInfomation();
 				break;
 			case 32:
 			case 37:
@@ -1580,6 +1586,7 @@ function runCommand() {
 					 saveFile();
 				 }
 				 break;
+		case ':e':
 		case ':o':
 		case ':open':
 				 if (command[1]) {
