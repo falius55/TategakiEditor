@@ -3,8 +3,10 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>ログイン</title>
 		<link rel="stylesheet" href="loginpage.css">
+		<link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css" media="screen">
 	</head>
 	<body>
 		<h1>縦書きエディタ　ログイン</h1>
@@ -24,34 +26,21 @@
 		%>
 		<form method="POST" action="/tategaki/Login" name="loginform">
 			<fieldset>
-				<table>
-					<tr>
-						<td>
-							<label for="username">名前: </label>
-						</td>
-						<td>
-							<input type="text" name="username"></input>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="password">パスワード:</label>
-						</td>
-						<td>
-							<input type="password" name="password"></input>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<button type="submit">Login</button>
-							</td>
-						<td>
-							<button type="reset">Reset</button>
-							</td>
-						</tr>
-				</table>
-								<a href="/tategaki/register.jsp">新規登録</a>
+					<div class="form-group">
+								<label for="username" class="control-label">名前 </label>
+								<input type="text" name="username" class="form-control"></input>
+					</div>
+					<div class="form-group">
+								<label for="password" class="control-label">パスワード</label>
+								<input type="password" name="password" class="form-control"></input>
+					</div>
+					<div class="form-group">
+								<button type="submit" class="btn btn-primary">Login</button>
+								<button type="reset" class="btn btn-primary">Reset</button>
+					</div>
+				<a href="/tategaki/register.jsp">新規登録</a>
 			</fieldset>
 		</form>
-	</body>
+		<script src="/tategaki/bootstrap-3.3.6-dist/js/bootstrap.min.js">
+</body>
 </html>

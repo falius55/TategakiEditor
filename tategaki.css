@@ -33,7 +33,7 @@ input#command {
 	background-color: yellow;
 	z-index: 50;
 }
-#container {
+#app_container {
 	/*background-color: rgba(165,42,42,.7);*/
 	background-color: #FFFACD;
 	background-color: rgba(245,245,245,.8);
@@ -77,12 +77,18 @@ input#command {
 	background-color: rgba(211,211,211,.8);
 	border-bottom-color: rgba(169,169,169,.8);
 }
+menu[type="toolbar"] {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: grey;
+}
 #vertical_draft {
 	border: 1px brown;
-	width: 85%;
+	/*width: 85%;*/
 	/*max-width: 1400px;*/
 	height: 750px;
-	position: fixed;
+	position: relative;
 	top: 10%;
 	right: 0px;
 	background-color: yellowgreen;
@@ -179,10 +185,6 @@ input#command {
 }
 .character_line {
 	transform: rotate(90deg);
-	position: relative;
-	right: 3px;
-	padding-top: 2px;
-	height: 18px;
 }
 .character_line.focus {
 	border-top: 1px yellowgreen dashed;
@@ -192,13 +194,11 @@ input#command {
 	transform: rotate(90deg);
 	position: relative;
 	top: 5px;
-	width: 15px;
 }
 .vertical_after_bracket {
 	transform: rotate(90deg);
 	position: relative;
 	bottom: 5px;
-	width: 15px;
 }
 .focus.vertical_before_bracket::before{
 	content: '';

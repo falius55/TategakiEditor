@@ -1,3 +1,4 @@
+console.log('key_table.js');
 var key_table = {
 	getString : function (buffer_string,keycode) {
 		if (buffer_string.length === 0) {
@@ -86,8 +87,8 @@ var key_table = {
 	alphabet : ["k","s","t","n","h","m","y","r","w","g","z","d","b","p","j","f","l","x","c","v","q"],
 	dotList : ["。","、",",","."],
 	lineList : ["-","ー","―"],
-	beforeBracketList : ["（","[","<","{","「"],
-	afterBracketList : ["）","]",">","}","」"],
+	beforeBracketList : ["（","[","<","{","「","『","【","(","［","〈"],
+	afterBracketList : ["）","]",">","}","」","』","】",")","］","〉"],
 	katakana : {
 		"あ" : "ア",
 		"い" : "イ",
@@ -174,8 +175,8 @@ var key_table = {
 		"55" : "\’",
 		"56" : "（",
 		"57" : "）",
-		"188" : "<",
-		"190" : ">",
+		"188" : "〈",
+		"190" : "〉",
 		"191" : "？",
 		"220" : "}",
 		"221" : "{"
