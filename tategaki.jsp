@@ -24,17 +24,13 @@
 						<div class="btn-group">
 							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">ファイル<span class="caret"></span></button>
 							<ul class="dropdown-menu">
-								<li><a onclick="saveFile()"> 保存 </a></li>
-								<li><a onclick="defaultNewFile()"> new </a></li>
-								<li><a onclick="defaultDeleteFile()"> 削除 </a></li>
+								<li><a id="menu-new"> 新規作成 </a></li>
+								<li> <a data-toggle="modal" href="#file_list_modal"> 開く </a> </li>
+								<li><a id="menu-save"> 保存 </a></li>
+								<li><a id="menu-delete"> 削除 </a></li>
 							</ul>
 						</div>
 					</li>
-					<li>
-						<button class="btn btn-primary" data-toggle="modal" href="#file_list_modal">
-							開く
-							</button>
-						</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/tategaki/Logout">Logout</a></li>

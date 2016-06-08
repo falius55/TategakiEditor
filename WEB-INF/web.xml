@@ -30,8 +30,8 @@
 			<servlet-class>KanjiProxy</servlet-class>
 		</servlet>
 		<servlet>
-			<servlet-name>NewFile</servlet-name>
-			<servlet-class>NewFile</servlet-class>
+			<servlet-name>CreateFile</servlet-name>
+			<servlet-class>CreateFile</servlet-class>
 		</servlet>
 		<servlet>
 			<servlet-name>DeleteFile</servlet-name>
@@ -80,8 +80,8 @@
 			<url-pattern>/KanjiProxy</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
-			<servlet-name>NewFile</servlet-name>
-			<url-pattern>/NewFile</url-pattern>
+			<servlet-name>CreateFile</servlet-name>
+			<url-pattern>/CreateFile</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
 			<servlet-name>DeleteFile</servlet-name>

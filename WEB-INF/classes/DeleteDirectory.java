@@ -84,7 +84,7 @@ public class DeleteDirectory extends HttpServlet  {
 					pstmt.executeUpdate();
 					rtnJson = "{\"result\":\"success(file in)\"}";
 				}
-					rtnJson = "{\"result\":\"failed\"}";
+					rtnJson = "{\"result\":\"within\"}";
 			}else{
 				// ディレクトリ内にファイルが存在しない		
 					String sql = "delete from file_table where id = ?;";
@@ -115,10 +115,9 @@ public class DeleteDirectory extends HttpServlet  {
 	private boolean isFileInDirectory(int directoryID) {
 		// ディレクトリ内にファイルがあればtrue
 		try{
-			String sql = "select * from file_table where type = ? and parent_dir = ?";
+			String sql = "select * from file_table where parent_dir = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,"file");
-			pstmt.setInt(2,directoryID);
+			pstmt.setInt(1,directoryID);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				return true;

@@ -6,7 +6,7 @@ console.log("tategaki.js");
  * 字句検索
  * ディレクトリ
  */
-(function(){
+$(function(){
 	function getKanjiForFullString(str) {
 		// 漢字変換
 		// 初変換時
@@ -451,22 +451,22 @@ console.log("tategaki.js");
 		 */
 		var $filename;
 		var filename;
-		var dircount = 0;
 		for (var fileID in data) {
 			filename = data[fileID]; // filenameは、対象fileIDのファイル名か、ディレクトリならば再帰的にオブジェクトが入っている
 			if (typeof filename === "string" && fileID !==  "directoryname") {
 				// file
-				$filename = $('<a>').addClass('file_name').attr('href','#').attr('data-file_id',fileID).attr('data-file_name',filename).text(filename);
+				$filename = $('<a>').addClass('file').attr('href','#').attr('data-type','file').attr('data-file_id',fileID).attr('data-file_name',filename).text(filename);
 				$parentUl.append($('<li>').append($filename));
 			}else if(typeof filename === "object"){
 				// dir
 				// 再帰的にリストを作成し、コラプスで開けるようにする
+				var dirID = fileID;
 				var $inner_directory = $('<ul>');
 				setFileListFromObject(filename,$inner_directory);
-				var $collapse = $('<div>').addClass('collapse').attr('id','directory'+(++dircount));
+				var $collapse = $('<div>').addClass('collapse').attr('id','directory'+dirID);
 				var $inner_collapse = $('<div>').addClass('well').append($inner_directory);
 				$collapse.append($inner_collapse);
-				var $directory_link = $('<a>').addClass('directory').attr('data-toggle','collapse').attr('href','#directory'+(dircount)).attr('data-directory_id',fileID).attr('data-directory_name',filename.directoryname).html('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'+filename.directoryname);
+				var $directory_link = $('<a>').addClass('directory').attr('data-toggle','collapse').attr('href','#directory'+dirID).attr('data-type','directory').attr('data-directory_id',fileID).attr('data-directory_name',filename.directoryname).html('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'+filename.directoryname);
 				$parentUl.append($('<li>').append($directory_link));
 				$directory_link.after($collapse);
 			}
@@ -505,7 +505,7 @@ console.log("tategaki.js");
 			setFileListFromArray($matchFilesArray);
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + " in getFileList");
+				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + " in serchFile");
 			}
 		});
 	}
@@ -525,7 +525,7 @@ console.log("tategaki.js");
 				$obj = $array[i];
 				fileID = $obj.attr('data-file_id');
 				filename = $obj.attr('data-file_name');
-				$filename = $('<a>').addClass('file_name').attr('href','#').attr('data-file_id',fileID).attr('data-file_name',filename).text(filename);
+				$filename = $('<a>').addClass('file').attr('href','#').attr('data-file_id',fileID).attr('data-file_name',filename).text(filename);
 				$fileList.append($('<li>').append($filename));
 			}
 		}
@@ -534,7 +534,7 @@ console.log("tategaki.js");
 		// ファイル検索
 		var regexp = new RegExp('.*'+ str +'.*'); // 正規表現オブジェクト
 		var $array = new Array(); // マッチしたjqueryオブジェクトを入れる配列
-		var $filenames = $('.file_name');
+		var $filenames = $('.file');
 		$filenames.each(function () {
 			var $self = $(this);
 			var filename = $self.attr('data-file_name');
@@ -547,7 +547,16 @@ console.log("tategaki.js");
 	function defaultNewFile() {
 		newFile('newfile');
 	}
-	function newFile(filename){
+	function newFile(filename) {
+		$('.vertical_paragraph').remove();
+		appendParagraph("");
+		$('.vertical_row').addClass('displayRow').children('.vertical_character:first').addClass('focus');
+		$('#file_title').val(filename).attr('data-file_id','-1');
+		addPageBreak();
+		Focus.addFocusRow();
+		printInfomation();
+	}
+	function createFile(filename){
 		"use strict";
 		console.log("communication start point");
 		$('#vertical_draft > .vertical_paragraph').remove();
@@ -555,7 +564,7 @@ console.log("tategaki.js");
 		var nowDate_ms = Date.now() + "";
 		$.ajax({
 			type : "POST",
-			url : "/tategaki/NewFile",
+			url : "/tategaki/CreateFile",
 			data : {
 				filename: filename,
 				user_id: user_id,
@@ -573,7 +582,7 @@ console.log("tategaki.js");
 				getFileList(this.user_id);
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in newFile");
+				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in createFile");
 			}
 		});
 	}
@@ -589,7 +598,7 @@ console.log("tategaki.js");
 		var nowDate_ms = Date.now() + "";
 		$.ajax({
 			type : "POST",
-			url : "/tategaki/NewFile",
+			url : "/tategaki/CreateFile",
 			data : {
 				filename: filename,
 				user_id: user_id,
@@ -611,7 +620,11 @@ console.log("tategaki.js");
 		});
 	}
 	function defaultDeleteFile() {
-		var file_id = $('input#file_title').attr('data-file_id');
+		var file_id = $('#file_title').attr('data-file_id');
+		if (file_id === '-1') {
+			alert('保存していないファイルです。');
+			return;
+		}
 		deleteFile(file_id);
 	}
 	function deleteFile(file_id) {
@@ -635,7 +648,7 @@ console.log("tategaki.js");
 					var result = data.result; // true or false の文字列
 					if (successRecord === "1" && result) {
 						// 別ファイルに移動
-						var $filenames = $('.file_list .file_name');
+						var $filenames = $('.file_list .file');
 						for (var i = 0; i < $filenames.length; i++) {
 							if ($filenames.eq(i).attr('data-file_id') !== this.file_id) {
 								readFile($filenames.eq(i).attr('data-file_id'));
@@ -1634,6 +1647,7 @@ console.log("tategaki.js");
 			// enter
 			runCommand();
 			endCommandMode();
+			$('#file_list_modal').modal('hide');
 			e.stopPropagation(); // 親要素へのイベントの伝播(バブリング)を止める。そうしなければ先にaddeventlistenerをしてしまっているので、documentにまでエンターキーが渡ってしまい改行されてしまう。
 		}else if(keycode == 27 || $(this).val() == ""){
 			// Esc
@@ -1737,12 +1751,14 @@ console.log("tategaki.js");
 					 }
 					 break;
 			case ':mv':
-					 var $file = $('.file_name[data-file_name="'+ command[1] +'"]');
+					 var $file = $('.file[data-file_name="'+ command[1] +'"],.directory[data-directory_name="'+ command[1] +'"]');
 					 var $newParentDir = $('.directory[data-directory_name="'+ command[2] +'"]');
 					 console.log('$file[0]'+ $file[0]);
 					 console.log('$newParentDir[0]'+ $newParentDir[0]);
 					 if ($file[0] && $newParentDir[0]) {
-						 moveFileIntoDirectory($file.attr('data-file_id'),$newParentDir.attr('data-directory_id'));
+						 var fileID = $file.attr('data-type')==='file'?$file.attr('data-file_id'):$file.attr('data-directory_id');
+						 var newParentDirID = $newParentDir.attr('data-directory_id');
+						 moveFileIntoDirectory(fileID,newParentDirID);
 					 }
 					 break;
 			case ':mkdir':
@@ -1764,34 +1780,34 @@ console.log("tategaki.js");
 	}
 	function openNextFile() {
 		console.log('openNextFile()');
-		var $currentFileLi = $('.file_list > li').has('.file_name[data-file_id="'+ $('input#file_title').attr('data-file_id') +'"]');
+		var $currentFileLi = $('.file_list > li').has('.file[data-file_id="'+ $('input#file_title').attr('data-file_id') +'"]');
 		var $nextFile;
 		if ($currentFileLi[0]) {
-			$nextFile = $currentFileLi.nextAll('li:first').children('.file_name');
+			$nextFile = $currentFileLi.nextAll('li:first').children('.file');
 		}else{
-			$nextFile = $('.file_list .file_name:first');
+			$nextFile = $('.file_list .file:first');
 		}
 		if($nextFile[0]) readFile($nextFile.attr('data-file_id'));
 	}
 	function openPrevFile() {
 		console.log('openPrevFile()');
-		var $currentFileLi = $('.file_list > li').has('.file_name[data-file_id="'+ $('input#file_title').attr('data-file_id') +'"]');
-		var $nextFile = $currentFileLi.prevAll('li:first').children('.file_name');
+		var $currentFileLi = $('.file_list > li').has('.file[data-file_id="'+ $('input#file_title').attr('data-file_id') +'"]');
+		var $nextFile = $currentFileLi.prevAll('li:first').children('.file');
 		if($nextFile[0]) readFile($nextFile.attr('data-file_id'));
 	}
 	function openFile(filename) {
-		console.log('openFile()');
+		console.log('openFile('+ filename +')');
 		var $file = getFileObjectFromFileName(filename);
 		if (!$file[0]) { return; }
 		readFile($file.attr('data-file_id'));
 	}
 	function getFileObjectFromFileName(filename) {
 		// 同一名ファイルが複数存在する可能性を忘れずに
-		var $filename = $('.file_list .file_name[data-file_name="'+ filename +'"]');
+		var $filename = $('.file_list .file[data-file_name="'+ filename +'"]');
 		return $filename;
 	}
 	function getFileNameFromFileID(file_id) {
-		return $('.file_list .file_name[data-file_id="'+ file_id +'"]').attr('data-file_name');
+		return $('.file_list .file[data-file_id="'+ file_id +'"]').attr('data-file_name');
 	}
 	function deleteFileFromFileName(filename) {
 		console.log('deleteFileFromFileName');
@@ -1830,6 +1846,7 @@ console.log("tategaki.js");
 		}
 	}
 	function moveFileIntoDirectory(fileID,newParentDirID) {
+		// ディレクトリをディレクトリに入れるのも可
 		console.log('moveFileIntoDirectory:file['+ fileID +'],newParentDir['+ newParentDirID +']');
 		var userID = getUserID();
 		$.ajax({
@@ -1898,6 +1915,9 @@ console.log("tategaki.js");
 				// 表示データを受け取ってからの処理
 				console.log("communication success!");
 				getFileList(this.user_id);
+				if (json.result === "within") {
+					alert("ディレクトリが空ではないので削除できませんでした。");
+				}
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
 				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
@@ -2125,18 +2145,14 @@ console.log("tategaki.js");
 	// 	initialize
 	// ====================================================
 	setNOCLine();
-	appendParagraph("縦書きテキストエディタ");
-	$('.vertical_row').addClass('displayRow').children('.vertical_character:first').addClass('focus');
-	addPageBreak();
-	Focus.addFocusRow();
-	printInfomation();
+	defaultNewFile();
 	getFileList(globalUserID);
 	// Event
 	document.addEventListener("keydown",keyEvent ,false);
 	addFocusEvent("file_title");
 	addFocusEvent("serch_file");
 	$('body').on('keyup','#serch_file',keyupInSerchFileInput);
-	$('body').on('click','.file_list .file_name',function (e) {
+	$('body').on('click','.file_list .file',function (e) {
 		console.log('file name click');
 		var file_id = $(this).attr('data-file_id');
 		readFile(file_id);
@@ -2145,4 +2161,7 @@ console.log("tategaki.js");
 	// クリック箇所にフォーカスを移動する
 	$('body').on('click','.vertical_paragraph > .vertical_row',moveFocusToClickPos);
 	$('body').on('mousewheel','#vertical_draft',wheelEvent);
-})();
+	document.getElementById('menu-new').addEventListener("click",function (e) { defaultNewFile(); },false);
+	document.getElementById('menu-save').addEventListener("click",function (e) { saveFile(); },false);
+	document.getElementById('menu-delete').addEventListener("click",function (e) { defaultDeleteFile(); },false);
+});
