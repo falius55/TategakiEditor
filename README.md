@@ -25,12 +25,15 @@ TomcatとMySQLを利用します。
        name varchar(255) unique not null,
        email varchar(255) unique,
        password varchar(32) not null,
+		 root_file_id int,
        registered datetime
        );`
 
      `create table file_table(
       id int not null auto_increment primary key,
       filename varchar(255),
+		type enum('root','dir','file') default 'file',
+		parent_dir int,
       user_id int not null,
       saved datetime
       );`
@@ -58,19 +61,22 @@ TomcatとMySQLを利用します。
        * \<CTL-H\>  カーソル移動[Left]
        * \<CTL-D\>  カーソルの前にある文字を１文字削除[BackSpace]
        * \<CTL-S\>  ファイルを上書き保存
-       * \<CTL-I\>  次のファイルを開く
-       * \<CTL-O\>  前のファイルを開く
+       * \<CTL-I\>  同じディレクトリ内の次のファイルを開く
+       * \<CTL-O\>  同じディレクトリ内の前のファイルを開く
 
 * コマンドモード（「：」キーで開始）
        * \<:(w|s|save)\>                            ファイルを上書き保存
-       * \<:(w|s|save) ファイル名\>                   名前をつけて保存
+       * \<:(w|s|save) ファイル名\>                  名前をつけて保存
        * \<:(o|open|e|n(ew)?)\>                    「newfile」という名前でファイルを新規作成する
-       * \<:(o|open|e) ファイル名\>                   ファイルを開く
-       * \<:n(ew)? ファイル名\>                      「ファイル名」という名前でファイルを新規作成する
-       * \<:(jr|jumpr|jumprow) [1-9]+[0-9]*\>         (指定した数値)行目にジャンプする
-       * \<:(jp|jumpp|jumppage) [1-9]+[0-9]*\>       （指定した数値)ページ目の１行目にジャンプする
-       * \<:(d|del|delete)\>                           今開いているファイルを削除する
-       * \<:(d|del|delete) ファイル名\>                「ファイル名」という名前のファイルを削除する
+       * \<:(o|open|e) ファイル名\>                  ファイルを開く
+       * \<:n(ew)? ファイル名\>                    「ファイル名」という名前でファイルを新規作成する
+       * \<:(jr|jumpr|jumprow) [1-9]+[0-9]*\>       (指定した数値)行目にジャンプする
+       * \<:(jp|jumpp|jumppage) [1-9]+[0-9]*\>     （指定した数値)ページ目の１行目にジャンプする
+       * \<:(d|del|delete)\>                         今開いているファイルを削除する
+       * \<:(d|del|delete) ファイル名\>            「ファイル名」という名前のファイルを削除する
        * \<:next\>                                   次のファイルを開く
        * \<:prev\>                                   前のファイルを開く
-       * \<:(t|title|name) ファイル名\>               現在開いているファイルの名前を「ファイル名」に変更する(これだけでは保存されません)
+       * \<:(t|title|name) ファイル名\>              現在開いているファイルの名前を「ファイル名」に変更する(これだけでは保存されません)
+       * \<:mkdir ディレクトリ名\>                 「ディレクトリ名」という名前でディレクトリを作成する
+       * \<:mv ファイル名 ディレクトリ名\>         「ファイル名」を「ディレクトリ名」の中に移動する
+       * \<:deldir ディレクトリ名\>                  ディレクトリ「ディレクトリ名」を削除する

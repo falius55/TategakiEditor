@@ -16,6 +16,7 @@ public class ReadFile extends HttpServlet  {
 	// インスタンス変数
 	Connection conn = null;
 	Statement stmt;
+	PreparedStatement pstmt;
 	// ====================================================================
 	// 	jsp起動時の処理
 	// ====================================================================
@@ -74,7 +75,7 @@ public class ReadFile extends HttpServlet  {
 			// ======================================================
 			//	 idから目的のファイル名、最終更新日を取得
 			// ======================================================
-			String fileID = request.getParameter("file_id");
+			int fileID = Integer.parseInt(request.getParameter("file_id"));
 			stmt = conn.createStatement();
 			String sql = "SELECT * FROM file_table where id = " + fileID;
 			ResultSet rs = stmt.executeQuery(sql);
@@ -100,13 +101,28 @@ public class ReadFile extends HttpServlet  {
 			sb.append(saved);
 			sb.append("\",");
 
+			// =======================================================
+			// 	userIDから、ルートディレクトリのidを取得
+			// =======================================================
+			int userID = Integer.parseInt(request.getParameter("user_id"));
+			sql = "select * from edit_users where id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,userID);
+			rs = pstmt.executeQuery();
+			int rootID;
+			if (rs.next()) {
+				rootID = rs.getInt("root_file_id");
+			}else{
+				log("database has no new data");
+				throw new SQLException();	
+			}
+			
 			// ========================================================
 			//	 ファイル読込
 			// ========================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String userID = request.getParameter("user_id");
-			String path = context.getRealPath(String.format("data/%s/%s.txt",userID,fileID));	// ルートディレクトリ/data/userID/fileId.txtとなる
+			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
 			br = new BufferedReader(new FileReader(new File(path)));
 
 			// 複数行読み出し、配列で返している

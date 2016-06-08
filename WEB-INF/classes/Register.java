@@ -87,7 +87,9 @@ public class Register extends HttpServlet {
 		if (user == null || user.length() == 0 || email == null || email.length() == 0 || pass == null || pass.length() == 0) {
 			return false;
 		}	
+		java.util.Date nowDate = new java.util.Date();
 		try {
+
 			// ========================================================
 			// 	データベースへの登録
 			//	========================================================
@@ -97,7 +99,7 @@ public class Register extends HttpServlet {
 			pstmt.setString(1,user);
 			pstmt.setString(2,email);
 			pstmt.setString(3,pass);
-			pstmt.setString(4,String.format("%1$tF %1$tT",new java.util.Date()));
+			pstmt.setString(4,String.format("%1$tF %1$tT",nowDate));
 			pstmt.executeUpdate();
 
 			// =========================================================
@@ -110,7 +112,7 @@ public class Register extends HttpServlet {
 			pstmt.setString(1,user);
 			pstmt.setString(2,email);
 			pstmt.setString(3,pass);
-			pstmt.setString(4,String.format("%1$tF %1$tT",new java.util.Date()));
+			pstmt.setString(4,String.format("%1$tF %1$tT",nowDate));
 			ResultSet rs = pstmt.executeQuery();
 			int userID;
 			if (rs.next()) {
@@ -120,12 +122,44 @@ public class Register extends HttpServlet {
 				throw new SQLException();	
 			}
 
+			// データベースへのディレクトリ情報登録
+			sql = "insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1,"root");
+			pstmt.setString(2,"root");
+			pstmt.setInt(3,0);
+			pstmt.setInt(4,userID);
+			pstmt.setString(5,String.format("%1$tF %1$tT",nowDate));
+			pstmt.executeUpdate();
+
+			// rootIDの取得
+			sql = "select * from file_table where user_id = ? and type = ? ";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1,userID);
+			pstmt.setString(2,"root");
+			rs = pstmt.executeQuery();
+			int rootID;
+			if (rs.next()) {
+				rootID = rs.getInt("id");
+			}else{
+				log("database has no new data");
+				throw new SQLException();	
+			}
+
+			// edit_usersへのrootディレクトリ情報の登録
+			sql = "update edit_users set root_file_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,rootID);
+			pstmt.executeUpdate();
+
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(String.format("data/%d",userID));	// ルートディレクトリ/data/userIDとなる
-			File userDir = new File(path);
-			userDir.mkdirs(); // dataディレクトリが存在しない場合は同時に作成される
-
+			String path = context.getRealPath(String.format("data/%d",rootID));	// ルートディレクトリ/data/userIDとなる
+			File userRootDir = new File(path);
+			userRootDir.mkdirs(); // dataディレクトリが存在しない場合は同時に作成される
+			
 			return true;
 
 		} catch (SQLException e) {

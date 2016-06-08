@@ -1,4 +1,12 @@
 console.log("tategaki.js");
+/*
+ * 実装目標
+ * コピーアンドペースト
+ * アンドゥ
+ * 字句検索
+ * ファイル検索(each()と正規表現を使い、配列に入れて返す関数)
+ * ディレクトリ
+ */
 (function(){
 	function getKanjiForFullString(str) {
 		// 漢字変換
@@ -418,22 +426,69 @@ console.log("tategaki.js");
 				// 表示データを受け取ってからの処理
 				// data.fileid_list[] : ファイルid
 				// data.filename_list[] : ファイル名
-				if(data.fileID_list) console.log("communication success! in getFileList()");
-				var $fileList = $('.file_list').text('ファイルを開く');
-				var file_id;
-				var filename;
-				var $filename;
-				for (var i = 0; i < data.fileID_list.length; i++) {
-					file_id = data.fileID_list[i];
-					filename = data.filename_list[i];
-					$filename = $('<a>').addClass('file_name').attr('href','#').attr('data-file_id',file_id).attr('data-file_name',filename).text(filename);
-					$fileList.append($('<li>').append($filename));
-				}
+				//if(data.fileID_list) console.log("communication success! in getFileList()");
+				////var $fileList = $('.file_list').text('ファイルを開く');
+				//var $fileList = $('.file_list');
+				//var file_id;
+				//var filename;
+				//var $filename;
+				//for (var i = 0; i < data.fileID_list.length; i++) {
+				//	file_id = data.fileID_list[i];
+				//	filename = data.filename_list[i];
+				//	$filename = $('<a>').addClass('file_name').attr('href','#').attr('data-file_id',file_id).attr('data-file_name',filename).text(filename);
+				//	$fileList.append($('<li>').append($filename));
+				//}
+
+				// ===========================================
+
+				setFileList(data,$('.file_list'));
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
 				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + " in getFileList");
 			}
 		});
+	}
+	function setFileList(data,$parentUl) {
+		/*
+		 * dataの中身例
+		 * data = {
+		 * 	"directoryname": "root",
+		 * 	"1":"sample",
+		 * 	"8":"file",
+		 * 	"6": {
+		 * 		"directoryname": "dirname",
+		 * 		"4":"indirfile",
+		 * 		"9":"file",
+		 * 		"12": {
+		 * 			"directoryname": "seconddir",
+		 * 			"17": "file"
+		 * 		}
+		 * 	}
+		 * }
+		 * fileID:filename
+		 */
+		var $filename;
+		var filename;
+		var dircount = 0;
+		for (var fileID in data) {
+			filename = data[fileID]; // filenameは、対象fileIDのファイル名か、ディレクトリならば再帰的にオブジェクトが入っている
+			if (typeof filename === "string" && fileID !==  "directoryname") {
+				// file
+				$filename = $('<a>').addClass('file_name').attr('href','#').attr('data-file_id',fileID).attr('data-file_name',filename).text(filename);
+				$parentUl.append($('<li>').append($filename));
+			}else if(typeof filename === "object"){
+				// dir
+				// 再帰的にリストを作成し、コラプスで開けるようにする
+				var $inner_directory = $('<ul>');
+				setFileList(filename,$inner_directory);
+				var $collapse = $('<div>').addClass('collapse').attr('id','directory'+(++dircount));
+				var $inner_collapse = $('<div>').addClass('well').append($inner_directory);
+				$collapse.append($inner_collapse);
+				var $directory_link = $('<a>').addClass('directory').attr('data-toggle','collapse').attr('href','#directory'+(dircount)).attr('data-directory_id',fileID).attr('data-directory_name',filename.directoryname).html('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'+filename.directoryname);
+				$parentUl.append($('<li>').append($directory_link));
+				$directory_link.after($collapse);
+			}
+		}
 	}
 	function defaultNewFile() {
 		newFile('newfile');
@@ -1540,6 +1595,9 @@ console.log("tategaki.js");
 	function runCommand() {
 		var $command = $('input#command');
 		var command = $command.val().split(' ');
+		console.log('command[0]:'+ command[0]);
+		console.log('command[1]:'+ command[1]);
+		console.log('command[2]:'+ command[2]);
 		switch (command[0]) {
 			case ':w':
 			case ':save':
@@ -1618,6 +1676,26 @@ console.log("tategaki.js");
 					 if (command[1]) {
 						 setFileTitle(command[1]);
 					 }
+					 break;
+			case ':mv':
+					 var $file = $('.file_name[data-file_name="'+ command[1] +'"]');
+					 var $newParentDir = $('.directory[data-directory_name="'+ command[2] +'"]');
+					 console.log('$file[0]'+ $file[0]);
+					 console.log('$newParentDir[0]'+ $newParentDir[0]);
+					 if ($file[0] && $newParentDir[0]) {
+						 moveFileIntoDirectory($file.attr('data-file_id'),$newParentDir.attr('data-directory_id'));
+					 }
+					 break;
+			case ':mkdir':
+					 if (command[1]) {
+						 makeDirectory(command[1]);
+					 }
+					 break;
+			case ':deldir':
+					 if (command[1]) {
+						 deleteDirectoryFromDirectoryName(command[1],false);
+					 }
+					 break;
 			default:
 					 break;
 		}
@@ -1692,6 +1770,107 @@ console.log("tategaki.js");
 			});
 		}
 	}
+	function moveFileIntoDirectory(fileID,newParentDirID) {
+		console.log('moveFileIntoDirectory:file['+ fileID +'],newParentDir['+ newParentDirID +']');
+		var userID = getUserID();
+		$.ajax({
+			type : "POST",
+			url : "/tategaki/MoveFile",
+			data : {
+				user_id: userID,
+				file_id: fileID,
+				directory_id: newParentDirID
+			},
+			dataType : "json",
+			context: {
+				user_id: userID
+			},
+			success : function (json) {
+				// 表示データを受け取ってからの処理
+				console.log("communication success!");
+				getFileList(this.user_id);
+			},
+			error : function (XMLHttpRequest, textStatus, errorThrown) {
+				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in moveFileIntoDirectory");
+			}
+		});
+	}
+	function makeDirectory(directoryname) {
+		console.log('make directory:'+ directoryname);
+		var userID = getUserID();
+		var nowDate_ms = Date.now() + "";
+		$.ajax({
+			type : "POST",
+			url : "/tategaki/MakeDirectory",
+			data : {
+				user_id: userID,
+				directoryname: directoryname,
+				saved: nowDate_ms
+			},
+			dataType : "json",
+			context: {
+				user_id: userID
+			},
+			success : function (json) {
+				// 表示データを受け取ってからの処理
+				console.log("communication success!");
+				getFileList(this.user_id);
+			},
+			error : function (XMLHttpRequest, textStatus, errorThrown) {
+				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
+			}
+		});
+	}
+	function deleteDirectory(directoryID,option) {
+		// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
+		var userID = getUserID();
+		$.ajax({
+			type : "POST",
+			url : "/tategaki/DeleteDirectory",
+			data : {
+				directory_id: directoryID,
+				option: option
+			},
+			dataType : "json",
+			context: {
+				user_id: userID
+			},
+			success : function (json) {
+				// 表示データを受け取ってからの処理
+				console.log("communication success!");
+				getFileList(this.user_id);
+			},
+			error : function (XMLHttpRequest, textStatus, errorThrown) {
+				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
+			}
+		});
+	}
+	function deleteDirectoryFromDirectoryName(directoryname,option) {
+		var $dir = $('.directory[data-directory_name="'+ directoryname +'"]');
+		if (!$dir[0]) { return; }
+		var dir_id;
+		if ($dir.size() === 1) {
+			directoryID = $dir.attr('data-directory_id');
+			deleteDirectory(directoryID,option);
+		}else if($dir.size() > 1){
+			if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
+				$dir.each(function () {
+					directoryID = $(this).attr('data-directory_id');
+					deleteFile(directory_id,option);
+				});
+			}else{
+				console.log('[存在しないディレクトリ]削除できませんでした。:' + directoryname);
+			}
+		}
+	}
+	function moveFocusToClickPos(e) {
+		if ($('.input_buffer').text() !== "") { return; }
+		var prev = $('.focus');
+		prev.removeClass('focus');
+		getCharOnRowClick($(this),e).addClass('focus'); // クリックした行のうち最も近い文字にフォーカスが当たる
+		Focus.repositionCharNum();
+		printInfomation();
+	}
 	function getUserID() {
 		var userID = $('h1#site_title').attr('data-user_id');
 		return userID;
@@ -1713,7 +1892,7 @@ console.log("tategaki.js");
 	}
 	function getDisplayRowLen() {
 		// 表示する行数
-		var dispWidth = parseInt($('#vertical_draft').css('width'))-50;
+		var dispWidth = parseInt($('#vertical_draft').css('width'));
 		if (dispWidth <= 0) { return 0; }
 		var rowWidth = parseInt($('.vertical_paragraph > .vertical_row').css('width'));
 		console.log('rowBodyWidth:' + rowWidth);
@@ -1897,15 +2076,9 @@ console.log("tategaki.js");
 		console.log('file name click');
 		var file_id = $(this).attr('data-file_id');
 		readFile(file_id);
+		$('#file_list_modal').modal('hide');
 	});
 	// クリック箇所にフォーカスを移動する
-	$('body').on('click','.vertical_paragraph > .vertical_row',function (e) {
-		if ($('.input_buffer').text() !== "") { return; }
-		var prev = $('.focus');
-		prev.removeClass('focus');
-		getCharOnRowClick($(this),e).addClass('focus'); // クリックした行のうち最も近い文字にフォーカスが当たる
-		Focus.repositionCharNum();
-		printInfomation();
-	});
+	$('body').on('click','.vertical_paragraph > .vertical_row',moveFocusToClickPos);
 	$('body').on('mousewheel','#vertical_draft',wheelEvent);
 })();

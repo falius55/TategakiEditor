@@ -49,6 +49,18 @@
 			<servlet-name>Logout</servlet-name>
 			<servlet-class>Logout</servlet-class>
 		</servlet>
+		<servlet>
+			<servlet-name>MoveFile</servlet-name>
+			<servlet-class>MoveFile</servlet-class>
+		</servlet>
+		<servlet>
+			<servlet-name>MakeDirectory</servlet-name>
+			<servlet-class>MakeDirectory</servlet-class>
+		</servlet>
+		<servlet>
+			<servlet-name>DeleteDirectory</servlet-name>
+			<servlet-class>DeleteDirectory</servlet-class>
+		</servlet>
 
 
 		<servlet-mapping>
@@ -86,6 +98,18 @@
 		<servlet-mapping>
 			<servlet-name>Logout</servlet-name>
 			<url-pattern>/Logout</url-pattern>
+		</servlet-mapping>
+		<servlet-mapping>
+			<servlet-name>MoveFile</servlet-name>
+			<url-pattern>/MoveFile</url-pattern>
+		</servlet-mapping>
+		<servlet-mapping>
+			<servlet-name>MakeDirectory</servlet-name>
+			<url-pattern>/MakeDirectory</url-pattern>
+		</servlet-mapping>
+		<servlet-mapping>
+			<servlet-name>DeleteDirectory</servlet-name>
+			<url-pattern>/DeleteDirectory</url-pattern>
 		</servlet-mapping>
 
 

@@ -16,6 +16,7 @@ public class DeleteFile extends HttpServlet  {
 	// インスタンス変数
 	Connection conn = null;
 	Statement stmt;
+	PreparedStatement pstmt;
 	// ====================================================================
 	// 	jsp起動時の処理
 	// ====================================================================
@@ -73,19 +74,33 @@ public class DeleteFile extends HttpServlet  {
 			// ========================================================================
 			// 	データベースから該当idのファイルレコードを削除
 			// ========================================================================
-			// init()がjspInit()となっていたため、connがnullになってnullPointerExceptionが発生していた
-			String strFileID = request.getParameter("file_id");
+			int fileID = Integer.parseInt(request.getParameter("file_id"));
 			stmt = conn.createStatement();
-			String sql = String.format("delete from file_table where id = %s",strFileID);
+			String sql = String.format("delete from file_table where id = %d",fileID);
 			int num = stmt.executeUpdate(sql);
 
 			// ========================================================================
 			// 	該当ファイルを削除
 			// ========================================================================
+			int userID = Integer.parseInt(request.getParameter("user_id"));
+			// rootIDの取得
+			sql = "select * from file_table where user_id = ? and type = ? ";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1,userID);
+			pstmt.setString(2,"root");
+			ResultSet rs = pstmt.executeQuery();
+			int rootID;
+			if (rs.next()) {
+				rootID = rs.getInt("id");
+			}else{
+				log("database has no new data");
+				throw new SQLException();	
+			}
+
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String userID = request.getParameter("user_id");
-			String path = context.getRealPath(String.format("data/%s/%s.txt",userID,strFileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
+			String path = context.getRealPath(String.format("data/%d/%d.txt",userID,fileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
 			File delFile = new File(path);
 			boolean b = deleteFile(delFile);
 

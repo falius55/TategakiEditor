@@ -10,14 +10,13 @@ import com.google.gson.Gson;
 
 // ajax通信用
 // Post
-// @param file_id,filename,json,saved
-// @return resule,date
 // file_id.txtという名前のファイルにjsonの中身を書き出し、データベースにファイル名と更新日時を保存します。
 public class WriteFile extends HttpServlet  {
 	BufferedWriter bw;
 	// インスタンス変数
 	Connection conn = null;
 	Statement stmt;
+	PreparedStatement pstmt;
 	// ========================================================================
 	// jsp起動時の処理
 	// =======================================================================
@@ -52,6 +51,7 @@ public class WriteFile extends HttpServlet  {
 			if(conn != null){
 				conn.close();
 				stmt.close();
+				pstmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -73,7 +73,7 @@ public class WriteFile extends HttpServlet  {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 
-			String fileID = request.getParameter("file_id");
+			int fileID = Integer.parseInt(request.getParameter("file_id"));
 			// ==================================================================
 			//	 	更新日時文字列の作成
 			// ==================================================================
@@ -86,19 +86,34 @@ public class WriteFile extends HttpServlet  {
 			stmt = conn.createStatement();
 			// ファイル名
 			String fileName = request.getParameter("filename");
-			String sql = String.format("update file_table set filename = \'%s\' where id = %s",fileName,fileID);
+			String sql = String.format("update file_table set filename = \'%s\' where id = %d",fileName,fileID);
 			stmt.executeUpdate(sql);
 			// 更新日
-			sql = String.format("update file_table set saved = \'%s\' where id = %s",strDate,fileID);
+			sql = String.format("update file_table set saved = \'%s\' where id = %d",strDate,fileID);
 			stmt.executeUpdate(sql);
 
+			// =======================================================
+			// 	userIDから、ルートディレクトリのidを取得
+			// =======================================================
+			int userID = Integer.parseInt(request.getParameter("user_id"));
+			sql = "select * from edit_users where id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,userID);
+			ResultSet rs = pstmt.executeQuery();
+			int rootID;
+			if (rs.next()) {
+				rootID = rs.getInt("root_file_id");
+			}else{
+				log("database has no new data");
+				throw new SQLException();	
+			}
+			
 			// ==========================================================================
 			// 	テキストファイルへの書き込み
 			// ==========================================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String userID = request.getParameter("user_id");
-			String path = context.getRealPath(String.format("data/%s/%s.txt",userID,fileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
+			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
 			bw = new BufferedWriter(new FileWriter(new File(path),false));
 
 			String json = request.getParameter("json");
