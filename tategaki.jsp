@@ -48,10 +48,13 @@
 							<h4 class="modal-title">ファイルを開く</h4>
 							</div>
 							<div class="modal-body">
-							<ul class="file_list">
-							</ul>
+							<ul class="file_list"> </ul>
 								</div>
 								<div class="modal-footer">
+					<div class="form-group">
+								<label for="serch_file" class="control-label">ファイルを検索 </label>
+								<input type="text" name="serch_file" id="serch_file" class="form-control" placeholder="ファイル名"></input>
+					</div>
 									</div>
 						</div>
 					</div>
@@ -60,7 +63,10 @@
 				<div id="vertical_draft" class="container"> 
 					<input type="text" id="file_title" data-file_id="-1" value="newfile"></input>
 					<div class="infomation">
-						文字:<span class="str_num">-</span>/<span class="str_len">-</span>　行:<span class="row_num">1</span>/<span class="row_len">-</span>　ページ:<span class="page_num">-</span>/<span class="page_len">-</span>　最終更新日時:<span class="saved">-</span>
+						文字:<span class="str_num">-</span>/<span class="str_len">-</span>&nbsp;
+						行:<span class="row_num">-</span>/<span class="row_len">-</span>&nbsp;
+						ページ:<span class="page_num">-</span>/<span class="page_len">-</span>&nbsp;
+						最終更新日時:<span class="saved">-</span>
 					</div>
 				</div>
 				<div class="input_buffer"></div>

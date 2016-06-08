@@ -11,8 +11,6 @@
 	<body>
 		<h1>縦書きエディタ　ログイン</h1>
 		<%
-		//HttpSession session = request.getSession(true);
-
 		// 認証失敗から呼び出されたのかどうか
 		Boolean checked = (Boolean)session.getAttribute("login");
 
