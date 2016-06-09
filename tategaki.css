@@ -94,10 +94,15 @@ menu[type="toolbar"] {
 	top: 0px;
 	right: 0px;
 	background-color: yellowgreen;
+	background-image: url(img/old-paper02-768x480.jpg);
+	/*
+	background-image: url(img/gatag-00006130.png);
+	background-position: 20% 20%;
+	*/
 	overflow: auto;
 	display: table;
 	z-index: 5;
-	margin:0 auto;
+	margin:auto auto;
 }
 .vertical_paragraph {
 	/* border: 1px red dashed; */
@@ -315,6 +320,31 @@ button {
 	/*overflow: auto;*/
 */
 }
-.file_name {
-	color: blue;
+#user-info {
+	background-color: yellow;
+	width: 400px;
+	height: 40px;
+}
+.modal-backdrop.fade.in.none_modal-backdrop {
+	opacity: 0;
+}
+.modal-title-open {
+}
+#file_list_modal.command_modal .modal-title-open {
+	display: none;
+}
+.modal-title-command {
+	display: none;
+}
+#file_list_modal.command_modal .modal-title-command {
+	display: block;
+}
+#file_list_modal.command_modal .form-group {
+	display: none;
+}
+#file_list_modal.command_modal .modal-dialog {
+	position: absolute;
+	bottom: 0px;
+}
+#file_list_modal.command_modal .modal-content {
 }

@@ -4,6 +4,7 @@ console.log("tategaki.js");
  * コピーアンドペースト
  * アンドゥ
  * 字句検索
+ * 文字の装飾機能
  */
 $(function(){
 	// ===================================================================
@@ -179,6 +180,7 @@ $(function(){
 					case 18:
 					case 70:
 						// f
+						readyFileModal();
 						$('#file_list_modal').modal();
 						break;
 					case 66:
@@ -419,8 +421,8 @@ $(function(){
 		$command.focus();
 		$command.val(':');
 
-		$('body').on('keyup','input#command',keyupEventOnCommandMode);
-		$('body').on('blur','input#command',endCommandMode);
+		$('body').on('keyup','#command',keyupEventOnCommandMode);
+		$('body').on('blur','#command',endCommandMode);
 	}
 	function keyupEventOnCommandMode(e) {
 		console.log('keyup on #command');
@@ -436,46 +438,66 @@ $(function(){
 			// enter
 			runCommand();
 			endCommandMode();
-			$('#file_list_modal').modal('hide');
 			e.stopPropagation(); // 親要素へのイベントの伝播(バブリング)を止める。そうしなければ先にaddeventlistenerをしてしまっているので、documentにまでエンターキーが渡ってしまい改行されてしまう。
 		}else if(keycode == 27 || $(this).val() == ""){
 			// Esc
 			// あるいは全文字削除
 			endCommandMode();
 			e.stopPropagation();
+		}else{
+			// :eなどの後に途中まで引数を打てばファイルの検索ダイアログが出るようにする
+			var $command = $(this);
+			var command = $command.val().split(' ');
+			switch (command[0]) {
+				case ':e':
+				case ':o':
+				case ':open':
+				case ':mv':
+				case ':delete':
+				case ':del':
+				case ':d':
+						 if (keycode !== 8 && command[1] && !($('body').hasClass('modal-open'))) {
+							 // モーダルウィンドウを表示する
+							 console.log('modal open');
+							 displayFileModalOnCommandMode();
+							 serchFile(command[1]);
+						 }else if(keycode === 8 && !(command[1])){
+							 // BSを押した結果、引数がなくなった
+							 // モーダルウィンドウを非表示にする
+							 noneDisplayFileModalOnCommandMode();
+						 }else if(command[1] && command[2]){
+							 // 引数ふたつ目
+							 serchFile(command[2]);
+						 }else if(command[1]){
+							 // 引数ひとつ
+							 serchFile(command[1]);
+						 }
+						 break;
+				default:
+						 break;
+			}
 		}
 		e.preventDefault();
 	}
+	function displayFileModalOnCommandMode() {
+		$('#file_list_modal').addClass('command_modal').modal();
+		$('.modal-backdrop.fade.in').addClass('none_modal-backdrop'); // モーダルウィンドウ表示時の半透明背景を見えなくする
+	}
+	function noneDisplayFileModalOnCommandMode() {
+		if ($('body').hasClass('modal-open')) {
+			$('#file_list_modal').attr('style','display: none;').removeClass('command_modal').modal('hide'); // あらかじめbootstrapより先回りしてstyle適用で非表示にして置かなければ、消える前に一瞬中央表示になってしまう
+		}
+		getFileList(getUserID);
+	}
 	function endCommandMode() {
 		console.log('endCommandMode');
-		var $command = $('input#command');
-		$('body').off('keyup','input#command',keyupEventOnCommandMode);
-		$('body').off('blur','input#command',endCommandMode);
+		var $body = $('body');
+		var $command = $('#command');
+		$body.off('keyup','#command',keyupEventOnCommandMode);
+		$body.off('blur','#command',endCommandMode);
 		$command.remove();
 		document.addEventListener("keydown",keyEvent,false);
-	}
-	function addFocusEvent(id) {
-		document.getElementById(id).addEventListener("focus",function (e) {
-			document.removeEventListener("keydown",keyEvent,false);
-		},false);
-		document.getElementById(id).addEventListener("blur",function (e) {
-			document.addEventListener("keydown",keyEvent,false);
-		});
-		document.getElementById(id).addEventListener("keyup",function (e) {
-			var keycode;
-			if (document.all) {
-				// IE
-				keycode = e.keyCode
-			}else{
-				// IE以外
-				keycode = e.which;
-			}
-			if (keycode === 13) {
-				// enter
-				$('#'+id).blur();
-				document.addEventListener("keydown",keyEvent,false);
-			}
-		});
+		noneDisplayFileModalOnCommandMode();
 	}
 	// ===================================================================
 	// 		文章操作(label:string)
@@ -940,7 +962,7 @@ $(function(){
 		var $nextRow = $cursorRow.nextAll('.vertical_row:first'); //改行前の次の行
 		var $prevChar = $cursor.prev(); //移動しない文字の最後
 		if (!($prevChar[0])) {
-			// 行頭フォーカスで改行
+			// 行頭カーソルで改行
 			var $baseParagraph = $cursorRow.closest('.vertical_paragraph');
 			var $paragraph = $('<div>').addClass('vertical_paragraph');
 			var $row = createRow("").addClass('displayRow');
@@ -970,7 +992,7 @@ $(function(){
 			$insertPosObj.before($vChar);
 			$vChar = $prevChar.nextAll('.vertical_character:first');
 		}
-		if ($cursor.hasClass('EOL')) { // EOLにフォーカスがあると、EOLが動かないために、フォーカスが次の行に行かないので強制的に動かす必要あり
+		if ($cursor.hasClass('EOL')) { // EOLにカーソルがあると、EOLが動かないために、カーソルが次の行に行かないので強制的に動かす必要あり
 			// = 行末での改行
 			$cursor.removeClass('cursor');
 			$nextRow.children('.vertical_character:first-of-type').addClass('cursor');
@@ -1089,7 +1111,7 @@ $(function(){
 		var character = $vCharacter.text();
 		$vCharacter.remove();
 		if ($rowOfDelChar.children('.vertical_character:first-of-type').hasClass('EOL') && ($rowOfDelChar.prev())[0]) {
-			// 先にフォーカスの調整($rowOfDelChar削除前にフォーカス位置取得)
+			// 先にカーソルの調整($rowOfDelChar削除前にカーソル位置取得)
 			var $newCursor = $rowOfDelChar.prev().children('.vertical_character:last-of-type');
 			$newCursor.addClass('cursor');
 			// 最後の１文字を削除した場合はbackCharが反応しないので、その空行を削除(それが段落最後の行でなければ)
@@ -1216,6 +1238,58 @@ $(function(){
 		$input_buffer.css('top',y + 'px').css('left',x + 'px');
 		resizeInputBuffer();
 	}
+	function resizeInputBuffer() {
+		// input_bufferの高さ調整
+		var $input_buffer = $('.input_buffer');
+		var $character = $input_buffer.children('.vertical_character:first-of-type');
+		// borderは上下合わせて２つある
+		var height = (parseInt($character.css('height')) + parseInt($character.css('border-width'))*2) * ($input_buffer.children('.vertical_character').length-1);
+		$input_buffer.css('height',height + 'px');
+	}
+
+	function getJsonFromString() {
+		/*
+		 * example
+		 * array[paragraph[{charObj},{charobj}],paragraph[{charObj}]]
+		 * data = [
+		 * 				[
+		 * 					{
+		 * 						"char":"あ"
+		 * 					},
+		 * 					{
+		 * 						"char":"い"
+		 * 					}
+		 * 				],
+		 * 				[
+		 * 					{
+		 * 						"char":"う"
+		 * 					}
+		 * 				],
+		 * 				[]		// 段落配列が空　＝　空行
+		 * 			]
+		 */
+		var paragraphArrays = new Array();
+		var $paragraphs = $('#vertical_draft > .vertical_paragraph');
+		for (var i = 0; i < $paragraphs.length; ++i) {
+			paragraphArrays[i] = getParagraphDataArray($paragraphs.eq(i));
+		}
+		return JSON.stringify(paragraphArrays);
+	}
+	function getParagraphDataArray($paragraph) {
+		var $characters = $paragraph.find('.vertical_character').not('.EOL');
+		var charLen = $characters.length;
+		var charArray = new Array();
+		for (var i = 0; i < charLen; i++) {
+			charArray[i] = new CharacterData($characters.eq(i));
+		}
+		return charArray;
+	}
+	function CharacterData($character) {
+		// constructor
+		this["char"] = $character.text();
+		this["color"] = "black";
+	}
+	// 文章ゲッター(label:strgetter)
 	function getRowLen() {
 		// 文書内の行数
 		var $rows = $('#vertical_draft > .vertical_paragraph > .vertical_row');
@@ -1264,7 +1338,7 @@ $(function(){
 		return strNum;
 	}
 	function getStrLenOfCursorRow() {
-		// フォーカス行の全文字数
+		// カーソル行の全文字数
 		var strLen = $('.cursor_row > .vertical_character').length;
 		console.log('getStrLenOfCursorRow()' + strLen);
 		return strLen - 1; // EOLの分を除く
@@ -1303,19 +1377,19 @@ $(function(){
 		return 30;
 	}
 	// ===================================================================
-	// 		フォーカス操作(label:cursor)
+	// 		カーソル操作(label:cursor)
 	// ===================================================================
 	function moveCursorToClickPos(e) {
 		if ($('.input_buffer').text() !== "") { return; }
 		var prev = $('.cursor');
 		prev.removeClass('cursor');
-		getCharOnRowClick($(this),e).addClass('cursor'); // クリックした行のうち最も近い文字にフォーカスが当たる
+		getCharOnRowClick($(this),e).addClass('cursor'); // クリックした行のうち最も近い文字にカーソルが当たる
 		Cursor.repositionCharNum();
 		printInfomation();
 	}
 	function setNOCLine() {
-		// フォーカスのある文字が何文字目かを記憶する要素群を作成する
-		// フォーカスを左右に動かすときに利用する
+		// カーソルのある文字が何文字目かを記憶する要素群を作成する
+		// カーソルを左右に動かすときに利用する
 		var $container = $('#app_container');
 
 		var strLen = getStrLenOfRow();
@@ -1507,7 +1581,7 @@ $(function(){
 			this.addCursorRow();
 		},
 		jumpForRow: function (rowNum) {
-			// 指定行にジャンプする。画面中央に指定行及びフォーカスが来るように調整
+			// 指定行にジャンプする。画面中央に指定行及びカーソルが来るように調整
 			var $targetRow = $('.vertical_paragraph > .vertical_row').eq(rowNum-1);
 			if (!$targetRow[0]) { return; }
 			// cursor
@@ -1522,7 +1596,7 @@ $(function(){
 			printInfomation();
 		},
 		jumpForPage: function (pageNum) {
-			// 指定ページにジャンプする。フォーカスは１行目
+			// 指定ページにジャンプする。カーソルは１行目
 			var startDispNum = $('.vertical_paragraph > .vertical_row').index($('.page_break').eq(pageNum-1));
 			var $targetRow = $('.vertical_paragraph > .vertical_row').eq(startDispNum);
 			if (!$targetRow[0]) { return; }
@@ -1544,13 +1618,13 @@ $(function(){
 		addDisplayRow(startDispNum,startDispNum+getDisplayRowLen()); // 途中行数変化
 		if (getRowLen() >= getDisplayRowLen()) {
 			// 全行数が表示行数より多い
-			changeDisplayRow(); // フォーカス移動
+			changeDisplayRow(); // カーソル移動
 		}else{
 			$('.vertical_paragraph > .vertical_row').addClass('displayRow');
 		}
 	}
 	function changeDisplayRow() {
-		// フォーカスが移動した時の、表示領域の調整
+		// カーソルが移動した時の、表示領域の調整
 		var $cursor = $('#vertical_draft > .vertical_paragraph > .vertical_row > .cursor');
 		var $parentRow = $cursor.closest('.vertical_row');
 		if($parentRow.hasClass('displayRow')) return;
@@ -1742,7 +1816,6 @@ $(function(){
 		});
 	}
 	function setFileListFromObject(data,$parentUl) {
-		$parentUl.empty();
 		/*
 		 * dataの中身例
 		 * data = {
@@ -1761,6 +1834,7 @@ $(function(){
 		 * }
 		 * fileID:filename
 		 */
+		$parentUl.empty();
 		var $file;
 		var filename;
 		for (var fileID in data) {
@@ -1786,10 +1860,26 @@ $(function(){
 	}
 	function keyupInSerchFileInput(e) {
 		console.log('keyup');
+		var keycode;
+		if (document.all) {
+			// IE
+			keycode = e.keyCode
+		}else{
+			// IE以外
+			keycode = e.which;
+		}
 		var $serch_file = $('#serch_file');
 		var serchWord = $serch_file.val();
 		console.log('serchWord:'+ serchWord);
-		if (serchWord.length === 0) {
+		if (keycode == 13) {
+			// enter
+				var $file = getFileObjectFromFileName(serchWord);
+				if ($file[0] && $file.length === 1) {
+					readFile($file.attr('data-file_id'));
+				}
+					$('#file_list_modal').modal('hide');
+					document.addEventListener('keydown',keyEvent,false);
+		}else if (serchWord.length === 0) {
 			getFileList(getUserID);
 		}else{
 			serchFile(serchWord);
@@ -1841,6 +1931,14 @@ $(function(){
 				$fileList.append($('<li>').append($file));
 			}
 		}
+	}
+	function readyFileModal() {
+		// Ctrl + F
+		// 開くボタンを押した時
+		console.log('readyFileModal');
+		getFileList(getUserID());
+		$('#serch_file').val('').focus();
+		//document.removeEventListener("keydown",keyEvent,false);
 	}
 	function getFileObjectsFromFileNameMatch(str) {
 		// ファイル検索
@@ -1980,16 +2078,6 @@ $(function(){
 		}
 	}
 
-
-
-	function resizeInputBuffer() {
-		// input_bufferの高さ調整
-		var $input_buffer = $('.input_buffer');
-		var $character = $input_buffer.children('.vertical_character:first-of-type');
-		// borderは上下合わせて２つある
-		var height = (parseInt($character.css('height')) + parseInt($character.css('border-width'))*2) * ($input_buffer.children('.vertical_character').length-1);
-		$input_buffer.css('height',height + 'px');
-	}
 	function printInfomation() {
 		console.log('printInfomation()');
 		$('.infomation > .str_num').text(getCurrentStrPosOnRow());
@@ -2025,159 +2113,203 @@ $(function(){
 				if (!$file[0]) { return; }
 				readFile($file.attr('data-file_id'));
 				}
-				function getFileObjectFromFileName(filename) {
-					// 同一名ファイルが複数存在する可能性を忘れずに
-					var $file = $('.file_list .file[data-file_name="'+ filename +'"]');
-					return $file;
-				}
-				function getFileNameFromFileID(file_id) {
-					return $('.file_list .file[data-file_id="'+ file_id +'"]').attr('data-file_name');
-				}
-				function deleteFileFromFileName(filename) {
-					console.log('deleteFileFromFileName');
-					var $file = getFileObjectFromFileName(filename);
-					if (!$file[0]) { return; }
-					var file_id;
-					if ($file.size() === 1) {
-						file_id = $file.attr('data-file_id');
-						deleteFile(file_id);
-					}else if($file.size() > 1){
-						if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
-							$file.each(function () {
-								file_id = $(this).attr('data-file_id');
-								deleteFile(file_id);
-							});
-						}else{
-							console.log('[存在しないファイル]削除できませんでした。:' + filename);
-						}
-					}
-				}
-				function moveFileIntoDirectory(fileID,newParentDirID) {
-					// ディレクトリをディレクトリに入れるのも可
-					console.log('moveFileIntoDirectory:file['+ fileID +'],newParentDir['+ newParentDirID +']');
-					var userID = getUserID();
-					$.ajax({
-						type : "POST",
-						url : "/tategaki/MoveFile",
-						data : {
-							user_id: userID,
-							file_id: fileID,
-							directory_id: newParentDirID
-						},
-						dataType : "json",
-						context: {
-							user_id: userID
-						},
-						success : function (json) {
-							// 表示データを受け取ってからの処理
-							console.log("communication success!");
-							getFileList(this.user_id);
-						},
-						error : function (XMLHttpRequest, textStatus, errorThrown) {
-							alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in moveFileIntoDirectory");
-						}
-					});
-				}
-				function makeDirectory(directoryname) {
-					console.log('make directory:'+ directoryname);
-					var userID = getUserID();
-					var nowDate_ms = Date.now() + "";
-					$.ajax({
-						type : "POST",
-						url : "/tategaki/MakeDirectory",
-						data : {
-							user_id: userID,
-							directoryname: directoryname,
-							saved: nowDate_ms
-						},
-						dataType : "json",
-						context: {
-							user_id: userID
-						},
-						success : function (json) {
-							// 表示データを受け取ってからの処理
-							console.log("communication success!");
-							getFileList(this.user_id);
-						},
-						error : function (XMLHttpRequest, textStatus, errorThrown) {
-							alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
-						}
-					});
-				}
-				function deleteDirectory(directoryID,option) {
-					// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
-					var userID = getUserID();
-					$.ajax({
-						type : "POST",
-						url : "/tategaki/DeleteDirectory",
-						data : {
-							directory_id: directoryID,
-							option: option
-						},
-						dataType : "json",
-						context: {
-							user_id: userID
-						},
-						success : function (json) {
-							// 表示データを受け取ってからの処理
-							console.log("communication success!");
-							getFileList(this.user_id);
-							if (json.result === "within") {
-								alert("ディレクトリが空ではないので削除できませんでした。");
-							}
-						},
-						error : function (XMLHttpRequest, textStatus, errorThrown) {
-							alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
-						}
-					});
-				}
-				function deleteDirectoryFromDirectoryName(directoryname,option) {
-					var $dir = $('.directory[data-directory_name="'+ directoryname +'"]');
-					if (!$dir[0]) { return; }
-					var dir_id;
-					if ($dir.size() === 1) {
-						directoryID = $dir.attr('data-directory_id');
-						deleteDirectory(directoryID,option);
-					}else if($dir.size() > 1){
-						if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
-							$dir.each(function () {
-								directoryID = $(this).attr('data-directory_id');
-								deleteFile(directory_id,option);
-							});
-						}else{
-							console.log('[存在しないディレクトリ]削除できませんでした。:' + directoryname);
-						}
-					}
-				}
-				function getUserID() {
-					var userID = $('h1#site_title').attr('data-user_id');
-					return userID;
-				}
-				function getCurrentFileID() {
-					var $file_title = $('#file_title');
-					var file_id = $file_title.attr('data-file_id');
-					return file_id;
-				}
-				// ====================================================
-				// 	initialize(label:init)
-				// ====================================================
-				setNOCLine();
-				defaultNewFile();
-				getFileList(globalUserID);
-				// Event
-				document.addEventListener("keydown",keyEvent ,false);
-				addFocusEvent("file_title");
-				addFocusEvent("serch_file");
-				$('body').on('keyup','#serch_file',keyupInSerchFileInput);
-				$('body').on('click','.file_list .file',function (e) {
-					console.log('file name click');
-					var file_id = $(this).attr('data-file_id');
-					readFile(file_id);
-					$('#file_list_modal').modal('hide');
+	function getFileObjectFromFileName(filename) {
+		// 同一名ファイルが複数存在する可能性を忘れずに
+		var $file = $('.file_list .file[data-file_name="'+ filename +'"]');
+		return $file;
+	}
+	function getFileNameFromFileID(file_id) {
+		return $('.file_list .file[data-file_id="'+ file_id +'"]').attr('data-file_name');
+	}
+	function deleteFileFromFileName(filename) {
+		console.log('deleteFileFromFileName');
+		var $file = getFileObjectFromFileName(filename);
+		if (!$file[0]) { return; }
+		var file_id;
+		if ($file.size() === 1) {
+			file_id = $file.attr('data-file_id');
+			deleteFile(file_id);
+		}else if($file.size() > 1){
+			if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
+				$file.each(function () {
+					file_id = $(this).attr('data-file_id');
+					deleteFile(file_id);
 				});
-				$('body').on('click','.vertical_paragraph > .vertical_row',moveCursorToClickPos);
-				$('body').on('mousewheel','#vertical_draft',wheelEvent);
-				document.getElementById('menu-new').addEventListener("click",function (e) { defaultNewFile(); },false);
-				document.getElementById('menu-save').addEventListener("click",function (e) { saveFile(); },false);
-				document.getElementById('menu-delete').addEventListener("click",function (e) { defaultDeleteFile(); },false);
+			}else{
+				console.log('[存在しないファイル]削除できませんでした。:' + filename);
+			}
+		}
+	}
+	function moveFileIntoDirectory(fileID,newParentDirID) {
+		// ディレクトリをディレクトリに入れるのも可
+		console.log('moveFileIntoDirectory:file['+ fileID +'],newParentDir['+ newParentDirID +']');
+		var userID = getUserID();
+		$.ajax({
+			type : "POST",
+			url : "/tategaki/MoveFile",
+			data : {
+				user_id: userID,
+				file_id: fileID,
+				directory_id: newParentDirID
+			},
+			dataType : "json",
+			context: {
+				user_id: userID
+			},
+			success : function (json) {
+				// 表示データを受け取ってからの処理
+				console.log("communication success!");
+				getFileList(this.user_id);
+			},
+			error : function (XMLHttpRequest, textStatus, errorThrown) {
+				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in moveFileIntoDirectory");
+			}
+		});
+	}
+	function makeDirectory(directoryname) {
+		console.log('make directory:'+ directoryname);
+		var userID = getUserID();
+		var nowDate_ms = Date.now() + "";
+		$.ajax({
+			type : "POST",
+			url : "/tategaki/MakeDirectory",
+			data : {
+				user_id: userID,
+				directoryname: directoryname,
+				saved: nowDate_ms
+			},
+			dataType : "json",
+			context: {
+				user_id: userID
+			},
+			success : function (json) {
+				// 表示データを受け取ってからの処理
+				console.log("communication success!");
+				getFileList(this.user_id);
+			},
+			error : function (XMLHttpRequest, textStatus, errorThrown) {
+				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
+			}
+		});
+	}
+	function deleteDirectory(directoryID,option) {
+		// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
+		var userID = getUserID();
+		$.ajax({
+			type : "POST",
+			url : "/tategaki/DeleteDirectory",
+			data : {
+				directory_id: directoryID,
+				option: option
+			},
+			dataType : "json",
+			context: {
+				user_id: userID
+			},
+			success : function (json) {
+				// 表示データを受け取ってからの処理
+				console.log("communication success!");
+				getFileList(this.user_id);
+				if (json.result === "within") {
+					alert("ディレクトリが空ではないので削除できませんでした。");
+				}
+			},
+			error : function (XMLHttpRequest, textStatus, errorThrown) {
+				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
+			}
+		});
+	}
+	function deleteDirectoryFromDirectoryName(directoryname,option) {
+		var $dir = $('.directory[data-directory_name="'+ directoryname +'"]');
+		if (!$dir[0]) { return; }
+		var dir_id;
+		if ($dir.size() === 1) {
+			directoryID = $dir.attr('data-directory_id');
+			deleteDirectory(directoryID,option);
+		}else if($dir.size() > 1){
+			if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
+				$dir.each(function () {
+					directoryID = $(this).attr('data-directory_id');
+					deleteFile(directory_id,option);
+				});
+			}else{
+				console.log('[存在しないディレクトリ]削除できませんでした。:' + directoryname);
+			}
+		}
+	}
+	function getCurrentFileID() {
+		var $file_title = $('#file_title');
+		var file_id = $file_title.attr('data-file_id');
+		return file_id;
+	}
+	// ====================================================
+	// 	ユーティリティ(label:utility)
+	// ====================================================
+	function getUserID() {
+		var userID = $('#site_title').attr('data-user_id');
+		return userID;
+	}
+	// ====================================================
+	// 	initialize(label:init)
+	// ====================================================
+	setNOCLine();
+	defaultNewFile();
+	getFileList(globalUserID);
+	// Event
+	document.addEventListener("keydown",keyEvent ,false);
+	addFocusEvent("file_title");
+	$('body').on('keyup','#serch_file',keyupInSerchFileInput);
+	$('body').on('click','.file_list .file',function (e) {
+		console.log('file name click');
+		var file_id = $(this).attr('data-file_id');
+		readFile(file_id);
+		$('#file_list_modal').modal('hide');
+		document.addEventListener("keydown",keyEvent,false);
+	});
+	$('body').on('click','.vertical_paragraph > .vertical_row',moveCursorToClickPos);
+	$('body').on('mousewheel','#vertical_draft',wheelEvent);
+	document.getElementById('menu-new').addEventListener("click",function (e) { defaultNewFile(); },false);
+	document.getElementById('menu-save').addEventListener("click",function (e) { saveFile(); },false);
+	document.getElementById('menu-delete').addEventListener("click",function (e) { defaultDeleteFile(); },false);
+	document.getElementById('modal-fileopen-link').addEventListener("click",function (e) { readyFileModal(); },false);
+	document.getElementById('test').addEventListener("click",function (e) { console.log(getJsonFromString()); },false);
+	//$('#file_list_modal').on('show.bs.modal',function (e) {
+	//		document.removeEventListener("keydown",keyEvent,false);
+	//		$('#serch_file').focus();
+	//});
+	$('#file_list_modal').on('shown.bs.modal',function (e) {
+		// modalが完全に表示されてからのイベント
+			document.removeEventListener("keydown",keyEvent,false);
+			$('#serch_file').focus();
+	});
+	//$('#file_list_modal').on('hide.bs.modal',function (e) {
+	//		document.addEventListener("keydown",keyEvent,false);
+	//});
+	$('body').on('click','#file-modal-close',function (e) {
+			console.log('close button click!');
+			document.addEventListener("keydown",keyEvent,false);
+	});
+	function addFocusEvent(id) {
+		document.getElementById(id).addEventListener("focus",function (e) {
+			document.removeEventListener("keydown",keyEvent,false);
+		},false);
+		document.getElementById(id).addEventListener("blur",function (e) {
+			document.addEventListener("keydown",keyEvent,false);
+		});
+		document.getElementById(id).addEventListener("keyup",function (e) {
+			var keycode;
+			if (document.all) {
+				// IE
+				keycode = e.keyCode
+			}else{
+				// IE以外
+				keycode = e.which;
+			}
+			if (keycode === 13) {
+				// enter
+				//$('#'+id).blur();
+				//document.addEventListener("keydown",keyEvent,false);
+			}
+		});
+	}
 });

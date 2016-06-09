@@ -25,33 +25,75 @@
 							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">ファイル<span class="caret"></span></button>
 							<ul class="dropdown-menu">
 								<li><a id="menu-new"> 新規作成 </a></li>
-								<li> <a data-toggle="modal" href="#file_list_modal"> 開く </a> </li>
+								<li> <a data-toggle="modal" href="#file_list_modal" id="modal-fileopen-link"> 開く </a> </li>
 								<li><a id="menu-save"> 保存 </a></li>
 								<li><a id="menu-delete"> 削除 </a></li>
 							</ul>
 						</div>
 					</li>
+					<li><button class="btn btn-primary" href="#help-modal" data-toggle="modal">ヘルプ</button></li>
+					<li><button class="btn btn-primary" id="test">test</button></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/tategaki/Logout">Logout</a></li>
+					<li><span class="navbar-brand" id="user-info">おしらせ</span></li>
+					<li><a class="navbar-brand" href="/tategaki/Logout">Logout</a></li>
 				</ul>
 			</nav>
-			<div class="modal fade" id="file_list_modal">
+
+			<div class="modal fade" id="file_list_modal" data-backdrop="static">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
-							<button class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">ファイルを開く</h4>
-							</div>
-							<div class="modal-body">
+							<button id="file-modal-close" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title modal-title-open">ファイルを開く</h4>
+							<h4 class="modal-title modal-title-command">検索結果</h4>
+						</div>
+						<div class="modal-body">
 							<ul class="file_list"> </ul>
-								</div>
-								<div class="modal-footer">
-					<div class="form-group">
+						</div>
+						<div class="modal-footer">
+							<div class="form-group">
 								<label for="serch_file" class="control-label">ファイルを検索 </label>
 								<input type="text" name="serch_file" id="serch_file" class="form-control" placeholder="ファイル名"></input>
+							</div>
+						</div>
 					</div>
-									</div>
+				</div>
+			</div>
+			<div class="modal fade" id="configue-modal" data-backdrop="static">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title modal-title-open">設定</h4>
+							</div>
+						<div class="modal-body">
+							</div>
+						<div class="modal-footer">
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="modal fade" id="help-modal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title modal-title-open">ヘルプ</h4>
+							</div>
+						<div class="modal-body">
+							<ul>
+								<li> &lt;CTL-J&gt;&nbsp;カーソル移動[Down]</li>
+								<li> &lt;CTL-K&gt;&nbsp;カーソル移動[Up]</li>
+								<li> &lt;CTL-L&gt;&nbsp;カーソル移動[Right]</li>
+								<li> &lt;CTL-H&gt;&nbsp;カーソル移動[Left]</li>
+								<li> &lt;CTL-D&gt;&nbsp;カーソルの前にある文字を１文字削除[BackSpace]</li>
+								<li> &lt;CTL-S&gt;&nbsp;ファイルを上書き保存</li>
+								<li> &lt;CTL-I&gt;&nbsp;同じディレクトリ内の次のファイルを開く</li>
+								<li> &lt;CTL-O&gt;&nbsp;同じディレクトリ内の前のファイルを開く</li>
+								<li> &lt;CTL-F&gt;&nbsp;「ファイルを開く」ダイアログを開く</li>
+							</ul>
+							</div>
+						<div class="modal-footer">
+							</div>
 						</div>
 					</div>
 				</div>

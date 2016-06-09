@@ -91,10 +91,12 @@ public class GetFileList extends HttpServlet  {
 
 			log("getFileList return is " + rtnJson);
 			out.close();
+		}catch(NullPointerException e){
+			log("NullPointerException(main):"+ e.getMessage());
 		}catch(IOException e){
-			log(e.getMessage());
+			log("IOException(main):"+ e.getMessage());
 		}catch(Exception e){
-			log(e.getMessage());
+			log("Exception(main):"+ e.getMessage());
 		}
 	}
 	private String getJsonFileTree(int userID,int parentID){
@@ -126,7 +128,7 @@ public class GetFileList extends HttpServlet  {
 			}
 			sb.append("}");
 		}catch(SQLException e){
-			log(e.getMessage());
+			log("SQLException(getJsonFileTree):"+ e.getMessage());
 		}
 		return sb.toString();
 	}

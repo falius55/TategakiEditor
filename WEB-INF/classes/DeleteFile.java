@@ -100,7 +100,7 @@ public class DeleteFile extends HttpServlet  {
 
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(String.format("data/%d/%d.txt",userID,fileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
+			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
 			File delFile = new File(path);
 			boolean b = deleteFile(delFile);
 
