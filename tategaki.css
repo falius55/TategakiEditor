@@ -35,11 +35,12 @@ input#command {
 	z-index: 50;
 }
 #app_container {
-	/*background-color: rgba(165,42,42,.7);*/
+	background-color: rgba(165,42,42,.7);
 	/*background-color: #FFFACD;*/
-	background-color: rgba(245,245,245,.8);
+	/*background-color: rgba(245,245,245,.8);*/
 	/*border: 1px gray dashed;*/
-	width: 100%;
+	width: 85%;
+	height: 90%;
 	position: absolute;
 	top: 50px;
 	left: 0px;
@@ -89,24 +90,33 @@ menu[type="toolbar"] {
 	border: 1px brown;
 	/*width: 85%;*/
 	/*max-width: 1400px;*/
-	height: 750px;
-	position: relative;
+	width: 90%;
+	height: 85%;
+	position: absolute;
 	top: 0px;
 	right: 0px;
+	left: 0px;
+	bottom: 0px;
 	background-color: yellowgreen;
 	background-image: url(img/old-paper02-768x480.jpg);
 	/*
 	background-image: url(img/gatag-00006130.png);
 	background-position: 20% 20%;
-	*/
-	overflow: auto;
 	display: table;
-	z-index: 5;
 	margin:auto auto;
+	*/
+	overflow: visible;
+	z-index: 5;
+	margin: auto;
+	-webkit-writing-mode: vertical-rl;
+	-ms-writing-mode: tb-rl;
+	writing-mode: vertical-rl;
 }
 .vertical_paragraph {
 	/* border: 1px red dashed; */
+	/*
 	float: right;
+	  */
 	position: relative;
 	margin: 0 0 0 0;
 	/*top: 20px;*/
@@ -116,19 +126,25 @@ menu[type="toolbar"] {
 	border-bottom: 2px grey solid;
 }
 .vertical_row {
+	/*
+	float: right;
+	overflow: hidden;
+	display: table-cell;
+	 */
 	border: 1px gray dashed;
 	width: 30px;
-	height: 675px;
-	float: right;
+	height: 95%;
 	position: relative;
-	overflow: hidden;
 	color: black;
 	padding: 0 0 0 0;
-	text-align: center;
-	display: table-cell;
+	text-align: left;
+}
+.vertical_row.displayRow {
+	display: table;
 }
 .vertical_character{
 	border: 1px yellowgreen dashed;
+	/*
 	display: table-column;
 	float: left;
 	clear: left;
@@ -136,6 +152,7 @@ menu[type="toolbar"] {
 	left: 5px;
 	width: 20px;
 	height: 20px;
+	*/
 }
 #vertical_draft > .vertical_paragraph > .vertical_row {
 	display: none;
@@ -146,21 +163,25 @@ menu[type="toolbar"] {
 }
 .EOL{
 	/* border: 1px gray dashed; */
+	/*
 	display: table-column;
 	float: left;
 	clear: left;
-	position: relative;
 	left: 5px;
+	 */
+	position: relative;
 	width: 20px;
 	height: 20px;
 }
 .cursor{
 	border-top: 1px black solid;
+	/*
 	display: table-column;
 	float: left;
 	clear: left;
-	position: relative;
 	left: 5px;
+	position: relative;
+	*/
 	width: 20px;
 	height: 20px;
 }
@@ -174,15 +195,20 @@ menu[type="toolbar"] {
 	right: 3px;
 }
 .vertical_dot {
+	/*
 	position: relative;
 	top: -10px;
 	right: -8px;
 	padding-left: 5px;
+	*/
 }
 .cursor.vertical_dot {
+	/*
 	border-top: 1px yellowgreen dashed;
+	*/
 }
 .cursor.vertical_dot::before{
+	/*
 	content: '';
 	border-top: 1px black solid;
 	position: absolute;
@@ -190,25 +216,35 @@ menu[type="toolbar"] {
 	right: 5px;
 	width: 20px;
 	height: 5px;
+	*/
 }
 .character_line {
+	/*
 	transform: rotate(90deg);
+	*/
 }
 .character_line.cursor {
+	/*
 	border-top: 1px yellowgreen dashed;
 	border-left: 1px black solid;
+	*/
 }
 .vertical_before_bracket {
+	/*
 	transform: rotate(90deg);
 	position: relative;
 	top: 5px;
+	*/
 }
 .vertical_after_bracket {
+	/*
 	transform: rotate(90deg);
 	position: relative;
 	bottom: 5px;
+	*/
 }
 .cursor.vertical_before_bracket::before{
+	/*
 	content: '';
 	transform: rotate(-90deg);
 	border-top: 1px black solid;
@@ -216,11 +252,15 @@ menu[type="toolbar"] {
 	top: 7px;
 	right: 5px;
 	width: 20px;
+	*/
 }
 .vertical_before_bracket.cursor {
+	/*
 	border-top: 1px yellowgreen dashed;
+	*/
 }
 .cursor.vertical_after_bracket::before{
+	/*
 	content: '';
 	transform: rotate(-90deg);
 	border-top: 1px black solid;
@@ -228,9 +268,12 @@ menu[type="toolbar"] {
 	top: 7px;
 	right: 5px;
 	width: 20px;
+	*/
 }
 .vertical_after_bracket.cursor {
+	/*
 	border-top: 1px yellowgreen dashed;
+	*/
 }
 #vertical_draft > .vertical_paragraph > .vertical_row:first-child {
 }
@@ -253,6 +296,9 @@ menu[type="toolbar"] {
 	z-index: 10;
 	box-shadow: 3px 2px;
 	display: none;
+	-webkit-writing-mode: vertical-rl;
+	-ms-writing-mode: tb-rl;
+	writing-mode: vertical-rl;
 }
 .input_buffer .vertical_character {
 	left: 0px;
@@ -297,6 +343,9 @@ button {
 }
 .convertView > .vertical_row {
 	border: none;
+	-webkit-writing-mode: vertical-rl;
+	-ms-writing-mode: tb-rl;
+	writing-mode: vertical-rl;
 }
 .convertView > .vertical_row > .vertical_character {
 	border: none;

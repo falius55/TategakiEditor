@@ -18,8 +18,16 @@
 			<servlet-class>ReadFile</servlet-class>
 		</servlet>
 		<servlet>
+			<servlet-name>ReadJsonFile</servlet-name>
+			<servlet-class>ReadJsonFile</servlet-class>
+		</servlet>
+		<servlet>
 			<servlet-name>WriteFile</servlet-name>
 			<servlet-class>WriteFile</servlet-class>
+		</servlet>
+		<servlet>
+			<servlet-name>WriteJsonFile</servlet-name>
+			<servlet-class>WriteJsonFile</servlet-class>
 		</servlet>
 		<servlet>
 			<servlet-name>GetFileList</servlet-name>
@@ -68,8 +76,16 @@
 			<url-pattern>/ReadFile</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
+			<servlet-name>ReadJsonFile</servlet-name>
+			<url-pattern>/ReadJsonFile</url-pattern>
+		</servlet-mapping>
+		<servlet-mapping>
 			<servlet-name>WriteFile</servlet-name>
 			<url-pattern>/WriteFile</url-pattern>
+		</servlet-mapping>
+		<servlet-mapping>
+			<servlet-name>WriteJsonFile</servlet-name>
+			<url-pattern>/WriteJsonFile</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
 			<servlet-name>GetFileList</servlet-name>

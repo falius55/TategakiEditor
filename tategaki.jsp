@@ -9,6 +9,7 @@
 			<title>縦書きエディタ</title>
 			<link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css" media="screen">
 			<link rel="stylesheet" href="tategaki.css">
+			<link rel="stylesheet" href="tategaki-character-decolation.css">
 			<link rel="stylesheet" href="verticalprint.css" media="print">
 		</head>
 		<body>
@@ -98,15 +99,15 @@
 					</div>
 				</div>
 			<div id="app_container">
-				<div id="vertical_draft" class="container"> 
 					<input type="text" id="file_title" data-file_id="-1" value="newfile"></input>
+				<div id="vertical_draft" class="container"> 
+				</div>
 					<div class="infomation">
 						文字:<span class="str_num">-</span>/<span class="str_len">-</span>&nbsp;
 						行:<span class="row_num">-</span>/<span class="row_len">-</span>&nbsp;
 						ページ:<span class="page_num">-</span>/<span class="page_len">-</span>&nbsp;
 						最終更新日時:<span class="saved">-</span>
 					</div>
-				</div>
 				<div class="input_buffer"></div>
 			</div>
 
