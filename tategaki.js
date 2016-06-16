@@ -24,276 +24,17 @@ $(function(){
 		var $input_buffer = $('.input_buffer');
 		if ($('.convertView')[0]) {
 			// 漢字変換候補を選んでいるとき
-			switch (keycode) {
-				case 8:
-					// backspace
-					backSpaceOnConvert();
-					break;
-				case 13:
-					// Enter
-					// input_bufferの文字を挿入
-					$('.convertView').remove();
-					insertStrFromCursor($input_buffer.text());
-					$input_buffer.empty().hide(); // input_bufferを空にして隠す
-					// 禁則処理
-					checkKinsoku();
-					// displayrow
-					reDisplay();
-					addPageBreak();
-					printInfomation();
-					break;
-				case 32:
-				case 37:
-					// space
-					// Left
-					// 候補のフォーカスを移動する
-					shiftLeftAlternativeFocus();
-					break;
-				case 38:
-					// Up
-					if (e.shiftKey) {
-						// shift & Up
-						shiftUpOnConvert();
-					}else{
-						// Up のみ
-						// 選択文節の変更
-						// 表示convertviewの変更、alternative_focusの変更、selectphraseの変更
-						var prevPhraseNum = $('.alternative_focus').siblings('.phrase_num').text();
-						var $prevSelectConvertView = $('.convertView[data-alternativeList="select"]');
-						var $newSelectConvertView = $prevSelectConvertView.prev('.convertView');
-						var newPhraseNum = $newSelectConvertView.children('.phrase_num').text();
-						// 最初に達していたら最後に戻る
-						if(!($newSelectConvertView[0])){
-							$newSelectConvertView = $('.convertView:last');
-							newPhraseNum = $newSelectConvertView.children('.phrase_num').text();
-						} 
-						var $newPhrases = $('.input_buffer > .vertical_character[data-phrase_num='+ newPhraseNum + ']');
-						$prevSelectConvertView.attr('data-alternativeList','nonselect');
-						$newSelectConvertView.attr('data-alternativeList','select');
-						$('.input_buffer > .vertical_character.selectPhrase').removeClass('selectPhrase');
-						$newPhrases.addClass('selectPhrase');
-						$('.alternative_focus').removeClass('alternative_focus');
-						$newSelectConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus');
-					}
-					break;
-				case 39:
-					// Right
-					shiftRightAlternativeFocus();
-					break;
-				case 40:
-					// Down
-					if (e.shiftKey) {
-						// shift + Down
-						var $firstConvertView = $('.convertView[data-alternativeList="select"]');
-						var $secondConvertView = $firstConvertView.next('.convertView');
-						if(!($secondConvertView[0])) break;
-						var firstKana = getStringFromRow($firstConvertView.children('.vertical_row:last'));
-						var secondKana = getStringFromRow($secondConvertView.children('.vertical_row:last'));
-						var newString;
-						if(secondKana.length < 2){
-							//二番目の文字列が１文字しかないので、２つを統合する
-							newString = firstKana + secondKana + ",";
-							getKanjiForFusion(newString,$firstConvertView,$secondConvertView);
-							break;
-						}
-						newString = firstKana + secondKana.charAt(0) + "," + secondKana.substring(1);
-						getKanjiForChangePhrase(newString,$firstConvertView,$secondConvertView);
-					}else{
-						// Down のみ
-						// 選択文節の変更
-						// 表示convertviewの変更、alternative_focusの変更、selectphraseの変更
-						var prevPhraseNum = $('.alternative_focus').siblings('.phrase_num').text();
-						var $prevSelectConvertView = $('.convertView[data-alternativeList="select"]');
-						var $newSelectConvertView = $prevSelectConvertView.next('.convertView');
-						var newPhraseNum = $newSelectConvertView.children('.phrase_num').text();
-						// 最後に達していたら最初に戻る
-						if(!($newSelectConvertView[0])){
-							$newSelectConvertView = $('.convertView:first');
-							newPhraseNum = $newSelectConvertView.children('.phrase_num').text();
-						} 
-						var $newPhrases = $('.input_buffer > .vertical_character[data-phrase_num='+ newPhraseNum + ']');
-						$prevSelectConvertView.attr('data-alternativeList','nonselect');
-						$newSelectConvertView.attr('data-alternativeList','select');
-						$('.input_buffer > .vertical_character.selectPhrase').removeClass('selectPhrase');
-						$newPhrases.addClass('selectPhrase');
-						$('.alternative_focus').removeClass('alternative_focus');
-						$newSelectConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus');
-					}
-					break;
-				case 118:
-					// F7
-					changeKatakanaAtConvert();
-					break;
-				default:
-					break;
-			}
+			keyEventOnConvertView(e,keycode);
 		}else if($input_buffer.text() !== "") {
 			// input_bufferへの入力中
-			switch (keycode) {
-				case 8:
-					// backspace
-					$input_buffer.children('.EOL').prev().remove();
-					moveInput();
-					if($input_buffer.children('.vertical_character:first-of-type').hasClass('EOL')){
-						$input_buffer.children('.EOL').remove();
-						$input_buffer.hide();
-					}
-					break;
-				case 13:
-					// Enter
-					// input_bufferの文字を挿入
-					insertStrFromCursor($input_buffer.text());
-					$input_buffer.empty().hide(); // input_bufferを空にして隠す
-					break;
-				case 32:
-					// space
-					$('.convertView').show();
-					var inputStr = getStringFromRow($input_buffer);
-					getKanjiForFullString(inputStr);
-					break;
-				case 118:
-					// F7
-					changeKatakanaAtInput();
-					break;
-				default:
-					// input_bufferの更新
-					var inputStr = getStringFromRow($input_buffer); //もともとの文字列
-					var newInputStr;
-					if (e.shiftKey) {
-						newInputStr = inputStr + key_table.shift_key[String(keycode)];
-					}else{
-						newInputStr = key_table.getString(inputStr,keycode); //keycodeを加えた新しい文字列
-					}
-					if(newInputStr.indexOf("undefined") !== -1){
-						// 未定義文字(alt,ctrl,tabなど)はbreak
-						break;
-					}
-					insertStringToInputBuffer(newInputStr);
-					break;
-			}
+			keyEventOnInputBuffer(e,keycode);
 		}else{
 			// 非入力(通常)状態
-			var textcheck = true;
 			if (e.ctrlKey) {
 				// ctrlキーを使ったショートカットキー
-				switch (keycode) {
-					case 18:
-					case 70:
-						// f
-						readyFileModal();
-						$('#file_list_modal').modal();
-						break;
-					case 66:
-						// b
-					case 68:
-						// d
-						var $delChar = $('.cursor').prev();
-						deleteCharacter($delChar,$('.cursor_row'));
-						break;
-					case 79:
-						// o
-						console.log('C + O');
-						openPrevFile();
-						textcheck = false;
-						break;
-					case 73:
-						// i
-						console.log('C + I');
-						openNextFile();
-						textcheck = false;
-						break;
-					case 72:
-						// h
-						Cursor.shiftLeft();
-						break;
-					case 74:
-						// j
-						Cursor.next();
-						break;
-					case 75:
-						// k
-						Cursor.prev();
-						break;
-					case 76:
-						// l
-						Cursor.shiftRight();
-						break;
-					case 78:
-						// n
-						break;
-					case 83:
-						// s
-						saveJsonFile();
-						textcheck = false;
-						break;
-					default:
-						break;
-				}
-				// 非同期通信を伴う処理を行う場合はタイムラグが生じてしまうので、文章チェックはしない
-				if (textcheck) {
-					// 禁則処理
-					checkKinsoku();
-					// displayrow
-					reDisplay();
-					addPageBreak();
-					printInfomation();
-				}
+				keyEventWithCTRL(e,keycode);
 			}else{
-				switch (keycode) {
-					case 8:
-						// backspace
-						var $delChar = $('.cursor').prev();
-						deleteCharacter($delChar,$('.cursor_row'));
-						break;
-					case 13:
-						// Enter
-						lineBreak();
-						break;
-					case 32:
-						// space
-						insertStrFromCursor("　");
-						break;
-					case 37:
-						// Left
-						Cursor.shiftLeft();
-						break;
-					case 38:
-						// Up
-						Cursor.prev();
-						break;
-					case 39:
-						// Right
-						Cursor.shiftRight();
-						break;
-					case 40:
-						// Down
-						Cursor.next();
-						break;
-					case 58: // firefox developer edition
-					case 186: // chrome
-						// :
-						startCommandMode();
-						break;
-					default:
-						// bufferの更新
-						var newInputStr;
-						if (e.shiftKey) {
-							newInputStr = key_table.shift_key[String(keycode)];
-						}else{
-							newInputStr = key_table.getString("",keycode);
-						}
-						if(newInputStr == null){
-							break;
-						}
-						insertStringToInputBuffer(newInputStr);
-						break;
-				}
-				// 禁則処理
-				checkKinsoku();
-				// displayrow
-				reDisplay();
-				addPageBreak();
-				printInfomation();
+				keyEventOnDraft(e,keycode);
 			}
 		}
 
@@ -301,13 +42,290 @@ $(function(){
 		// デフォルトの動作を無効化する
 		e.preventDefault();
 	}
+	function keyEventOnConvertView(e,keycode) {
+		var $input_buffer = $('.input_buffer');
+		switch (keycode) {
+			case 8:
+				// backspace
+				backSpaceOnConvert();
+				break;
+			case 13:
+				// Enter
+				// input_bufferの文字を挿入
+				$('.convertView').remove();
+				insertStringFromCursor($input_buffer.text());
+				$input_buffer.empty().hide(); // input_bufferを空にして隠す
+				// 禁則処理
+				checkKinsoku();
+				// displayrow
+				reDisplay();
+				addPageBreak();
+				printDocInfo();
+				break;
+			case 32:
+			case 37:
+				// space
+				// Left
+				// 候補のフォーカスを移動する
+				shiftLeftAlternativeFocus();
+				break;
+			case 38:
+				// Up
+				if (e.shiftKey) {
+					// shift & Up
+					shiftUpOnConvert();
+				}else{
+					// Up のみ
+					// 選択文節の変更
+					// 表示convertviewの変更、alternative_focusの変更、selectphraseの変更
+					var prevPhraseNum = $('.alternative_focus').siblings('.phrase_num').text();
+					var $prevSelectConvertView = $('.convertView[data-alternativeList="select"]');
+					var $newSelectConvertView = $prevSelectConvertView.prev('.convertView');
+					var newPhraseNum = $newSelectConvertView.children('.phrase_num').text();
+					// 最初に達していたら最後に戻る
+					if(!($newSelectConvertView[0])){
+						$newSelectConvertView = $('.convertView:last');
+						newPhraseNum = $newSelectConvertView.children('.phrase_num').text();
+					} 
+					var $newPhrases = $('.input_buffer > .vertical_character[data-phrase_num='+ newPhraseNum + ']');
+					$prevSelectConvertView.attr('data-alternativeList','nonselect');
+					$newSelectConvertView.attr('data-alternativeList','select');
+					$('.input_buffer > .vertical_character.selectPhrase').removeClass('selectPhrase');
+					$newPhrases.addClass('selectPhrase');
+					$('.alternative_focus').removeClass('alternative_focus');
+					$newSelectConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus');
+				}
+				break;
+			case 39:
+				// Right
+				shiftRightAlternativeFocus();
+				break;
+			case 40:
+				// Down
+				if (e.shiftKey) {
+					// shift + Down
+					var $firstConvertView = $('.convertView[data-alternativeList="select"]');
+					var $secondConvertView = $firstConvertView.next('.convertView');
+					if(!($secondConvertView[0])) break;
+					var firstKana = getStringFromRow($firstConvertView.children('.vertical_row:last'));
+					var secondKana = getStringFromRow($secondConvertView.children('.vertical_row:last'));
+					var newStr;
+					if(secondKana.length < 2){
+						//二番目の文字列が１文字しかないので、２つを統合する
+						newStr = firstKana + secondKana + ",";
+						getKanjiForFusion(newStr,$firstConvertView,$secondConvertView);
+						break;
+					}
+					newStr = firstKana + secondKana.charAt(0) + "," + secondKana.substring(1);
+					getKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
+				}else{
+					// Down のみ
+					// 選択文節の変更
+					// 表示convertviewの変更、alternative_focusの変更、selectphraseの変更
+					var prevPhraseNum = $('.alternative_focus').siblings('.phrase_num').text();
+					var $prevSelectConvertView = $('.convertView[data-alternativeList="select"]');
+					var $newSelectConvertView = $prevSelectConvertView.next('.convertView');
+					var newPhraseNum = $newSelectConvertView.children('.phrase_num').text();
+					// 最後に達していたら最初に戻る
+					if(!($newSelectConvertView[0])){
+						$newSelectConvertView = $('.convertView:first');
+						newPhraseNum = $newSelectConvertView.children('.phrase_num').text();
+					} 
+					var $newPhrases = $('.input_buffer > .vertical_character[data-phrase_num='+ newPhraseNum + ']');
+					$prevSelectConvertView.attr('data-alternativeList','nonselect');
+					$newSelectConvertView.attr('data-alternativeList','select');
+					$('.input_buffer > .vertical_character.selectPhrase').removeClass('selectPhrase');
+					$newPhrases.addClass('selectPhrase');
+					$('.alternative_focus').removeClass('alternative_focus');
+					$newSelectConvertView.children('.vertical_row:first-of-type').addClass('alternative_focus');
+				}
+				break;
+			case 118:
+				// F7
+				changeKatakanaAtConvert();
+				break;
+			default:
+				break;
+		}
+	}
+	function keyEventOnInputBuffer(e,keycode) {
+		var $input_buffer = $('.input_buffer');
+		switch (keycode) {
+			case 8:
+				// backspace
+				$input_buffer.children('.EOL').prev().remove();
+				moveInput();
+				if($input_buffer.children('.vertical_character:first-of-type').hasClass('EOL')){
+					$input_buffer.children('.EOL').remove();
+					$input_buffer.hide();
+				}
+				break;
+			case 13:
+				// Enter
+				// input_bufferの文字を挿入
+				console.log('push enter');
+				insertStringFromCursor($input_buffer.text());
+				$input_buffer.empty().hide(); // input_bufferを空にして隠す
+				// displayrow
+				reDisplay();
+				addPageBreak();
+				printDocInfo();
+				break;
+			case 32:
+				// space
+				$('.convertView').show();
+				var inputStr = getStringFromRow($input_buffer);
+				getKanjiForFullString(inputStr);
+				break;
+			case 118:
+				// F7
+				changeKatakanaAtInput();
+				break;
+			default:
+				// input_bufferの更新
+				var inputStr = getStringFromRow($input_buffer); //もともとの文字列
+				var newInputStr;
+				if (e.shiftKey) {
+					newInputStr = inputStr + key_table.shift_key[String(keycode)];
+				}else{
+					newInputStr = key_table.getString(inputStr,keycode); //keycodeを加えた新しい文字列
+				}
+				if(newInputStr.indexOf("undefined") !== -1){
+					// 未定義文字(alt,ctrl,tabなど)はbreak
+					break;
+				}
+				insertStringToInputBuffer(newInputStr);
+				break;
+		}
+	}
+	function keyEventWithCTRL(e,keycode) {
+		var $input_buffer = $('.input_buffer');
+		var textcheck = true;
+		switch (keycode) {
+			case 18:
+			case 70:
+				// f
+				readyFileModal();
+				$('#file_list_modal').modal();
+				break;
+			case 66:
+				// b
+			case 68:
+				// d
+				var $delChar = $('.cursor').prev();
+				deleteCharacter($delChar,$('.cursor_row'));
+				break;
+			case 79:
+				// o
+				console.log('C + O');
+				openPrevFile();
+				textcheck = false;
+				break;
+			case 73:
+				// i
+				console.log('C + I');
+				openNextFile();
+				textcheck = false;
+				break;
+			case 72:
+				// h
+				Cursor.shiftLeft();
+				break;
+			case 74:
+				// j
+				Cursor.next();
+				break;
+			case 75:
+				// k
+				Cursor.prev();
+				break;
+			case 76:
+				// l
+				Cursor.shiftRight();
+				break;
+			case 78:
+				// n
+				break;
+			case 83:
+				// s
+				saveJsonFile();
+				textcheck = false;
+				break;
+			default:
+				break;
+		}
+		// 非同期通信を伴う処理を行う場合はタイムラグが生じてしまうので、文章チェックはしない
+		if (textcheck) {
+			// 禁則処理
+			checkKinsoku();
+			// displayrow
+			reDisplay();
+			addPageBreak();
+			printDocInfo();
+		}
+	}
+	function keyEventOnDraft(e,keycode) {
+		var $input_buffer = $('.input_buffer');
+		switch (keycode) {
+			case 8:
+				// backspace
+				var $delChar = $('.cursor').prev();
+				deleteCharacter($delChar,$('.cursor_row'));
+				break;
+			case 13:
+				// Enter
+				lineBreak();
+				break;
+			case 32:
+				// space
+				insertStringFromCursor("　");
+				break;
+			case 37:
+				// Left
+				Cursor.shiftLeft();
+				break;
+			case 38:
+				// Up
+				Cursor.prev();
+				break;
+			case 39:
+				// Right
+				Cursor.shiftRight();
+				break;
+			case 40:
+				// Down
+				Cursor.next();
+				break;
+			case 58: // firefox developer edition
+			case 186: // chrome
+				// :
+				startCommandMode();
+				break;
+			default:
+				// bufferの更新
+				var newInputStr;
+				if (e.shiftKey) {
+					newInputStr = key_table.shift_key[String(keycode)];
+				}else{
+					newInputStr = key_table.getString("",keycode);
+				}
+				if(newInputStr == null){
+					break;
+				}
+				insertStringToInputBuffer(newInputStr);
+				break;
+		}
+		// 禁則処理
+		checkKinsoku();
+		// displayrow
+		reDisplay();
+		addPageBreak();
+		printDocInfo();
+	}
 	// commandモード
 	function runCommand() {
 		var $command = $('input#command');
 		var command = $command.val().split(' ');
-		console.log('command[0]:'+ command[0]);
-		console.log('command[1]:'+ command[1]);
-		console.log('command[2]:'+ command[2]);
 		switch (command[0]) {
 			case ':w':
 			case ':save':
@@ -390,8 +408,6 @@ $(function(){
 			case ':mv':
 					 var $file = $('.file[data-file_name="'+ command[1] +'"],.directory[data-directory_name="'+ command[1] +'"]');
 					 var $newParentDir = $('.directory[data-directory_name="'+ command[2] +'"]');
-					 console.log('$file[0]'+ $file[0]);
-					 console.log('$newParentDir[0]'+ $newParentDir[0]);
 					 if ($file[0] && $newParentDir[0]) {
 						 var fileID = $file.attr('data-type')==='file'?$file.attr('data-file_id'):$file.attr('data-directory_id');
 						 var newParentDirID = $newParentDir.attr('data-directory_id');
@@ -458,7 +474,6 @@ $(function(){
 				case ':d':
 						 if (keycode !== 8 && command[1] && !($('body').hasClass('modal-open'))) {
 							 // モーダルウィンドウを表示する
-							 console.log('modal open');
 							 displayFileModalOnCommandMode();
 							 serchFile(command[1]);
 						 }else if(keycode === 8 && !(command[1])){
@@ -521,17 +536,17 @@ $(function(){
 	function createParagraph(str) {
 		"use strict";
 		// 文字列をstrLen文字ごとに区切って行にして、paragraphにappendする
-		var strLen = getStrLenOfRow();
-		var $p = $('<div>').addClass('vertical_paragraph');
+		var strLen = getStringLenOfRow();
+		var $para = $('<div>').addClass('vertical_paragraph');
 		var pos = 0;
-		var outputString;
+		var outputStr;
 		do{
-			outputString = pos+strLen>str.length?str.slice(pos):str.substring(pos,pos+strLen);
-			var $row = createRow(outputString);
-			$p.append($row);
+			outputStr = pos+strLen>str.length?str.slice(pos):str.substring(pos,pos+strLen);
+			var $row = createRow(outputStr);
+			$para.append($row);
 			pos += strLen;
 		}while(pos<str.length);
-		return $p;
+		return $para;
 	}
 
 	function createRow(str) {
@@ -542,18 +557,19 @@ $(function(){
 		$row.append($EOL);
 		var count;
 		for (var i = 0; i < (count = str.length); i++) {
-			var $c = createCharacter(str.charAt(i));
-			$EOL.before($c);
+			var $char = createCharacter(str.charAt(i));
+			$EOL.before($char);
 		}
 		return $row;
 	}
 	function createCharacter(c) {
-		var $character = $('<span>').addClass('vertical_character').text(c);
+		var $character = $('<span>').addClass('vertical_character').addClass('displayChar').text(c);
 		//// 特殊クラスの付与
 		//if(key_table.dotList.indexOf(c) !== -1) $character.addClass("vertical_dot"); // 句点
 		//if(key_table.beforeBracketList.indexOf(c) !== -1) $character.addClass("vertical_before_bracket"); // 前括弧
 		//if(key_table.afterBracketList.indexOf(c) !== -1) $character.addClass("vertical_after_bracket"); // 後括弧
 		//if(key_table.lineList.indexOf(c) !== -1) $character.addClass("character_line"); // 伸ばし棒
+		if (/[a-zA-Z]/.test(c)) { $character.addClass("alphabet"); }
 		return $character;
 	}
 	function getKanjiForFullString(str) {
@@ -571,13 +587,12 @@ $(function(){
 			},
 			success : function (json) {
 				// 表示データを受け取ってからの処理
-				console.log("communication success!");
 				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
 				// json[0][0]; // ひらがな
 				// json[0][1][0]; // 変換候補１つ目
 				console.log('初変換:');
 				var $input_buffer = $('.input_buffer');
-				var $characters = $input_buffer.children('.vertical_character');
+				var $chars = $input_buffer.children('.vertical_character');
 				var $convertView = $('.convertView');
 				var count = 0;
 				for (var i = 0; i < json.length; i++) {
@@ -585,7 +600,7 @@ $(function(){
 					var hiraLen = hiragana.length;
 					// 文節番号をつける(同じ文節には同じ番号)
 					for (var j = count; j < (count + hiraLen); j++) {
-						$characters.eq(j).attr('data-phrase_num',i);
+						$chars.eq(j).attr('data-phrase_num',i);
 					}
 					count += hiraLen;
 					insertPhraseToInputBuffer(i,json[i][1][0]); // 第一候補の漢字でinput_bufferの文字列を置き換える
@@ -627,7 +642,6 @@ $(function(){
 			},
 			success : function (json) {
 				// 表示データを受け取ってからの処理
-				console.log("communication success!");
 				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
 				// json[0][0]; // ひらがな
 				// json[0][1][0]; // 変換候補１つ目
@@ -674,7 +688,6 @@ $(function(){
 			},
 			success : function (json) {
 				// 表示データを受け取ってからの処理
-				console.log("communication success!");
 				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
 				// json[0][0]; // ひらがな
 				// json[0][1][0]; // 変換候補１つ目
@@ -716,7 +729,6 @@ $(function(){
 			},
 			success : function (json) {
 				// 表示データを受け取ってからの処理
-				console.log("communication success!");
 				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
 				// json[0][0]; // ひらがな
 				// json[0][1][0]; // 変換候補１つ目
@@ -766,7 +778,6 @@ $(function(){
 			},
 			success : function (json) {
 				// 表示データを受け取ってからの処理
-				console.log("communication success!");
 				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
 				// json[0][0]; // ひらがな
 				// json[0][1][0]; // 変換候補１つ目
@@ -818,8 +829,6 @@ $(function(){
 		// jsonArrayはひらがなと漢字配列が入るように、json[i]の形で渡す
 		var $convertView = $('<div>').addClass('convertView').attr('data-alternativeList','nonselect');
 		if (jsonArray[1] != null) {
-			console.log('no undefined');
-			console.log('jsonArray:'+ jsonArray[1]);
 			for (var i = 0; i < jsonArray[1].length; i++) {
 				$convertView.append(createRow(jsonArray[1][i]));
 			}
@@ -895,7 +904,6 @@ $(function(){
 		}
 	}
 	function getStringFromRow($row) {
-		if (!$row[0]) console.log('$row is null in getStringFromRow');
 		var rtnStr = "";
 		var $c = $row.children('.vertical_character:first-of-type');
 		while ($c[0] && !($c.hasClass('EOL'))) {
@@ -912,16 +920,22 @@ $(function(){
 		}
 		return rtnStr;
 	}
-	function insertStrFromCursor(str) {
+	function insertStringFromCursor(str) {
+		console.log('ins string from cursor');
 		var count = str.length;
 		var $cursor = $('.cursor');
 		var $character;
-		for (var i = 0; i < count; ++i) {
+		var $cursorRow = $('#vertical_draft .cursor_row')
+		for (var i = 0; i < count; i++) {
 			$character = createCharacter(str.charAt(i));
 			$cursor.before($character);
 		}
-		cordinateStringNumber($cursor.closest('.vertical_row'),getStrLenOfRow());
+		cordinateStringNumber($cursorRow,getStringLenOfRow());
 		Cursor.repositionCharNum();
+		// 行をまたぐと非displayCharがdisplayCharに挟まれ、かつカーソル文字がdisplayCharであるという状態となるので、
+		// 一度resetDisplayCharで埋めてからchangeDisplayをする
+		resetDisplayChar();
+		changeDisplayChar();
 	}
 	function insertStringToInputBuffer(str) {
 		var $input_buffer = $('.input_buffer');
@@ -998,7 +1012,7 @@ $(function(){
 			$nextRow.children('.vertical_character:first-of-type').addClass('cursor');
 		}
 		// 移動文字列を次の行に入れた結果規定文字数を超えた場合のために、次の行を文字数調整
-		cordinateStringNumber($nextRow,getStrLenOfRow());
+		cordinateStringNumber($nextRow,getStringLenOfRow());
 
 		// $nextRow以降を新しい段落とする
 		var $currentParagraph = $nextRow.closest('.vertical_paragraph');
@@ -1058,10 +1072,8 @@ $(function(){
 		// $rowofdelchar: 削除文字のある行
 		if (!($vCharacter[0])) {
 			// 行頭からのBS
-			console.log('deleteCharacter(): !($vCharacter[0])');
 			var $preRow = $rowOfDelChar.prevAll('.vertical_row:first');
 			if (!($preRow[0])) {
-				console.log('deleteCharacter(): !($preRow[0])');
 				// 前の行が見つからない　＝　段落の最初
 				// 段落をつなげて次の処理へ
 				var $delParagraph = $rowOfDelChar.closest('.vertical_paragraph');
@@ -1073,7 +1085,6 @@ $(function(){
 					return;
 				}
 				if ($mvRow.children('.vertical_character:first-of-type').hasClass('EOL')) {
-					console.log('deleteCharacter(): $mvRow\'s children has .EOL');
 					// 空段落でBSを押した時、段落を削除するのみ
 					$delParagraph.remove();
 					// cursorの調整
@@ -1090,12 +1101,12 @@ $(function(){
 					$mvRow = $delParagraph.children('.vertical_row:first-of-type');
 				}while($mvRow[0]);
 				$delParagraph.remove();
-				if($preRow.children().length >= getStrLenOfRow()) return; // 前の段落の最終行が規定文字数あるようなら、段落をつなげて終わり
+				if($preRow.children().length >= getStringLenOfRow()) return; // 前の段落の最終行が規定文字数あるようなら、段落をつなげて終わり
 			}
 			// 行頭からのBSかつ段落の最初ではない
-			if ($preRow.children('.vertical_character').length < getStrLenOfRow()) {
+			if ($preRow.children('.vertical_character').length < getStringLenOfRow()) {
 				// 前の行の文字数が規定数(30)文字ないとき、$rowOfDelCharの文字を前の行に持って行って埋める
-				var count = getStrLenOfRow() - ($preRow.children('.vertical_character').length -1); // lengthではEOLも含まれるので-1
+				var count = getStringLenOfRow() - ($preRow.children('.vertical_character').length -1); // lengthではEOLも含まれるので-1
 				for (var i = 0; i < count; i++) {
 					backChar($preRow);
 				}
@@ -1182,19 +1193,19 @@ $(function(){
 		var $secondConvertView = $firstConvertView.next('.convertView');
 		var firstKana = getStringFromRow($firstConvertView.children('.vertical_row:last'));
 		if(firstKana.length < 2) return;
-		var newString;
+		var newStr;
 		var secondKana;
 		if(!($secondConvertView[0])){
 			// 最後の文節の場合
 			// 分離
-			newString = firstKana.substring(0,firstKana.length-1) + "," + firstKana.substring(firstKana.length-1,firstKana.length);
-			getKanjiForSplit(newString,$firstConvertView);
+			newStr = firstKana.substring(0,firstKana.length-1) + "," + firstKana.substring(firstKana.length-1,firstKana.length);
+			getKanjiForSplit(newStr,$firstConvertView);
 			return;
 		}else{
 			secondKana = getStringFromRow($secondConvertView.children('.vertical_row:last'));
 		}
-		newString = firstKana.substring(0,firstKana.length-1) + ","+ firstKana.substring(firstKana.length-1,firstKana.length) + secondKana;
-		getKanjiForChangePhrase(newString,$firstConvertView,$secondConvertView);
+		newStr = firstKana.substring(0,firstKana.length-1) + ","+ firstKana.substring(firstKana.length-1,firstKana.length) + secondKana;
+		getKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
 	}
 	function shiftLeftAlternativeFocus() {
 		// 漢字変換候補一覧のフォーカスを左にシフトさせる
@@ -1282,11 +1293,11 @@ $(function(){
 		return paragraphArrays;
 	}
 	function getParagraphDataArray($paragraph) {
-		var $characters = $paragraph.find('.vertical_character').not('.EOL');
-		var charLen = $characters.length;
+		var $chars = $paragraph.find('.vertical_character').not('.EOL');
+		var charLen = $chars.length;
 		var charArray = new Array();
 		for (var i = 0; i < charLen; i++) {
-			charArray[i] = new CharacterData($characters.eq(i));
+			charArray[i] = new CharacterData($chars.eq(i));
 		}
 		return charArray;
 	}
@@ -1320,7 +1331,7 @@ $(function(){
 	function createParagraphFromObj(paraObj) {
 		"use strict";
 		// 文字列をstrLen文字ごとに区切って行にして、paragraphにappendする
-		var strLen = getStrLenOfRow();
+		var strLen = getStringLenOfRow();
 		var $p = $('<div>').addClass('vertical_paragraph');
 		var objArray = splitArray(paraObj,strLen);
 		for (var i = 0; i < objArray.length; i++) {
@@ -1359,6 +1370,7 @@ $(function(){
 		if(key_table.beforeBracketList.indexOf(c) !== -1) $character.addClass("vertical_before_bracket"); // 前括弧
 		if(key_table.afterBracketList.indexOf(c) !== -1) $character.addClass("vertical_after_bracket"); // 後括弧
 		if(key_table.lineList.indexOf(c) !== -1) $character.addClass("character_line"); // 伸ばし棒
+		if (/[a-zA-Z]/.test(c)) { $character.addClass("alphabet"); }
 		return $character;
 	}
 	function setDecolation(obj) {
@@ -1408,17 +1420,15 @@ $(function(){
 		}
 		return count;
 	}
-	function getCurrentStrPosOnRow() {
+	function getCurrentStringPosOnRow() {
 		// 現在文字位置
 		var $cursor = $('.cursor');
 		var strNum = $('.cursor_row').children('.vertical_character').index($cursor);
-		console.log('getCurrentStrPosOnRow():' + strNum);
 		return strNum;
 	}
-	function getStrLenOfCursorRow() {
+	function getStringLenOfCursorRow() {
 		// カーソル行の全文字数
 		var strLen = $('.cursor_row > .vertical_character').length;
-		console.log('getStrLenOfCursorRow()' + strLen);
 		return strLen - 1; // EOLの分を除く
 	}
 	function getCurrentPagePos() {
@@ -1450,7 +1460,7 @@ $(function(){
 		// 1ページの行数
 		return 40;
 	}
-	function getStrLenOfRow() {
+	function getStringLenOfRow() {
 		// 1行の文字数
 		return 30;
 	}
@@ -1463,14 +1473,14 @@ $(function(){
 		prev.removeClass('cursor');
 		getCharOnRowClick($(this),e).addClass('cursor'); // クリックした行のうち最も近い文字にカーソルが当たる
 		Cursor.repositionCharNum();
-		printInfomation();
+		printDocInfo();
 	}
 	function setNOCLine() {
 		// カーソルのある文字が何文字目かを記憶する要素群を作成する
 		// カーソルを左右に動かすときに利用する
 		var $container = $('#app_container');
 
-		var strLen = getStrLenOfRow();
+		var strLen = getStringLenOfRow();
 		var $NOC_line = $('<div>').addClass('NOC_line');
 		var $number_of_char;
 		for (var i = 0; i < strLen; i++) {
@@ -1499,7 +1509,6 @@ $(function(){
 				$resultObj = $self;
 			}
 		});
-		console.log('min_distance:'+ min);
 		return $resultObj;
 	}
 	// ２つの要素の中心点同士の距離を求める
@@ -1558,96 +1567,57 @@ $(function(){
 		},
 		next : function() {
 			// カーソルを次の文字に移動する
-			var prev = $('.cursor');
-			var next = prev.nextAll('.vertical_character:first');
-			if (!(next[0])) {
-				// 行末に達していたら、次の行の１文字目に移る
-				next = prev.closest('.vertical_row').nextAll('.vertical_row:first').children('.vertical_character:first-of-type');
-			}
-			if (!(next[0])) {
-				// 段落の最後に達していたら、次の段落の最初に
-				next = prev.parents('.vertical_paragraph').nextAll('.vertical_paragraph:first').find('.vertical_character:first');
-			}
-			if (!(next[0])) {
+			var $prev = $('.cursor');
+			var $next = nextObj('#vertical_draft .vertical_character',$prev);
+			if (!($next[0])) {
 				// 文章の最後に達していたら、何もしない
 				return;
 			}
-			prev.removeClass('cursor');
-			next.addClass('cursor');
+			$prev.removeClass('cursor');
+			$next.addClass('cursor');
 			// markしたまま別の行に移り、そのまま上下キーを押してmarkを動かすこともあるので、markを１文字ずつ動かすのでは期待通りの動きをしてくれない
 			this.repositionCharNum();
 			this.addCursorRow();
+			changeDisplayChar();
 		},
 		prev : function () {
 			// カーソルを前の文字に移動する
-			var prev = $('.cursor');
-			var next = prev.prevAll('.vertical_character:first');
-			if (!(next[0])) {
-				next = prev.closest('.vertical_row').prevAll('.vertical_row:first').children('.vertical_character:last-of-type');
-			}
-			if (!(next[0])) {
-				// 段落の最後に達していたら、次の段落の最初に
-				next = prev.parents('.vertical_paragraph').prevAll('.vertical_paragraph:first').find('.vertical_character:last');
-			}
-			if (!(next[0])) {
+			var $prev = $('.cursor');
+			var $next = prevObj('#vertical_draft .vertical_character',$prev);
+			if (!($next[0])) {
 				return;
 			}
-			prev.removeClass('cursor');
-			next.addClass('cursor');
+			$prev.removeClass('cursor');
+			$next.addClass('cursor');
 			this.repositionCharNum();
 			this.addCursorRow();
+			changeDisplayChar();
 		},
 		shiftRight: function () {
 			// カーソルを前の行に移動する
-			var prev = $('.cursor');
+			var $prev = $('.cursor');
 			var NOC_Num = $('.NOC_line').children('.number_of_char').index($('.cursor_char'));
-			var next = prev
-				.closest('.vertical_row')
-				.prevAll('.vertical_row:first')
-				.children('.vertical_character')
-				.eq(NOC_Num);
-			if (!(next[0])) {
+			var $next = prevObj('#vertical_draft .vertical_row',$('#vertical_draft .cursor_row')).children('.vertical_character').eq(NOC_Num);
+			if (!($next[0])) {
 				// 右の行の文字数が現在文字より小さい
-				next = prev
-					.closest('.vertical_row')
-					.prevAll('.vertical_row:first')
-					.children('.vertical_character:last-of-type');
+			var $next = prevObj('#vertical_draft .vertical_row',$('#vertical_draft .cursor_row')).children('.vertical_character:last-of-type');
 			}
-			if (!(next[0])) {
-				// 段落の最後に達していたら、次の段落
-				next = prev.parents('.vertical_paragraph').prevAll('.vertical_paragraph:first').children('.vertical_row:last-of-type').children('.vertical_character').eq(NOC_Num);
-			}
-			if (!(next[0])) {
-				// 段落の最後かつ右行の文字数が少ない
-				next = prev.parents('.vertical_paragraph').prevAll('.vertical_paragraph:first').children('.vertical_row:last-of-type').children('.vertical_character:last-of-type');
-			}
-			if (!(next[0])) {
-				return;
-			}
-			prev.removeClass('cursor');
-			next.addClass('cursor');
+			if (!($next[0])) { return; }
+			$prev.removeClass('cursor');
+			$next.addClass('cursor');
 			this.addCursorRow();
 		},
 		shiftLeft: function () {
 			// カーソルを次の行に移動する
-			var prev = $('.cursor');
+			var $prev = $('.cursor');
 			var NOC_Num = $('.NOC_line').children('.number_of_char').index($('.cursor_char'));
-			var next = prev.closest('.vertical_row').nextAll('.vertical_row:first').children('.vertical_character').eq(NOC_Num);
-			if (!(next[0])) {
-				next = prev.closest('.vertical_row').nextAll('.vertical_row:first').children('.vertical_character:last-of-type');
+			var $next = nextObj('#vertical_draft .vertical_row',$prev.closest('.vertical_row')).children('.vertical_character').eq(NOC_Num);
+			if (!($next[0])) {
+			 $next = nextObj('#vertical_draft .vertical_row',$prev.closest('.vertical_row')).children('.vertical_character:last-of-type');
 			}
-			if (!(next[0])) {
-				// 段落の最後に達していたら、次の段落
-				next = prev.parents('.vertical_paragraph').nextAll('.vertical_paragraph:first').children('.vertical_row:first-of-type').children('.vertical_character').eq(NOC_Num);
-			}
-			if (!(next[0])) {
-				next = prev.parents('.vertical_paragraph').nextAll('.vertical_paragraph:first').children('.vertical_row:first-of-type').children('.EOL');
-			}
-			if (!(next[0])) {
-				return;
-			}
-			prev.removeClass('cursor');
-			next.addClass('cursor');
+			if (!($next[0])) { return; }
+			$prev.removeClass('cursor');
+			$next.addClass('cursor');
 			this.addCursorRow();
 		},
 		repositionCharNum: function () {
@@ -1671,7 +1641,8 @@ $(function(){
 			var cursorRowPos = $('.vertical_paragraph > .vertical_row').index($('.cursor_row'));
 			var startDispNum = (cursorRowPos-getDisplayRowLen()/2)>=0?cursorRowPos-getDisplayRowLen()/2:$('.vertical_paragraph > .vertical_row').index($('.vertical_paragraph > .vertical_row:first-of-type'));
 			addDisplayRow(startDispNum,startDispNum+getDisplayRowLen());
-			printInfomation();
+			resetDisplayChar();
+			printDocInfo();
 		},
 		jumpForPage: function (pageNum) {
 			// 指定ページにジャンプする。カーソルは１行目
@@ -1685,7 +1656,8 @@ $(function(){
 			this.repositionCharNum();
 			// display
 			addDisplayRow(startDispNum,startDispNum+getDisplayRowLen());
-			printInfomation();
+			resetDisplayChar();
+			printDocInfo();
 		}
 	};
 	// =====================================================================
@@ -1708,8 +1680,7 @@ $(function(){
 		if($parentRow.hasClass('displayRow')) return;
 		$parentRow.addClass('displayRow');
 		if($('.displayRow').length <= getDisplayRowLen()) return;
-		var $nextRow = $parentRow.next('.vertical_row');
-		if(!($nextRow[0])) $nextRow = $parentRow.closest('.vertical_paragraph').next('.vertical_paragraph').children('.vertical_row:first-of-type');
+		var $nextRow = nextObj('#vertical_draft .vertical_row',$parentRow);
 		if ($nextRow.hasClass('displayRow')) {
 			$('.displayRow:last').removeClass('displayRow');
 		}else{
@@ -1727,19 +1698,99 @@ $(function(){
 			$row.addClass('displayRow');
 		}
 	}
+	function changeDisplayChar() {
+		var $cursor = $('#vertical_draft > .vertical_paragraph > .vertical_row > .cursor');
+		var $cursorRow = $cursor.closest('.vertical_row');
+		var $chars = $cursorRow.children('.vertical_character');
+		if($cursor.hasClass('displayChar')){
+			console.log('cursor has displayChar');
+			return;
+		}
+		var start;
+		var currentStart = $chars.index($cursorRow.children('.displayChar').first());
+		var cursorIndex = $chars.index($cursor);
+		var currentEnd = $chars.index($cursorRow.children('.displayChar').last());
+		if (cursorIndex < currentStart) {
+			// カーソルが前にある
+			start = cursorIndex;
+		}else if(cursorIndex > currentEnd){
+			// カーソルが後ろにある
+			start = currentStart + (cursorIndex - currentEnd);
+		}else{
+			// displayCharに囲まれた部分にdisplayCharでない文字がある場合
+			resetDisplayChar();
+			changeDisplayChar();
+			return;
+		}
+		var $displayRow = $('#vertical_draft .displayRow');
+		$displayRow.each(function () {
+			dispCharOfRow(start,$(this));
+		});
+	}
+	function resetDisplayChar() {
+		var oldDisplayChar = $('#vertical_draft .displayRow > .displayChar');
+		var $displayRow = $('#vertical_draft .displayRow');
+		if (oldDisplayChar[0]) {
+			oldDisplayChar.removeClass('displayChar');
+		}
+		$displayRow.each(function () {
+			dispCharOfRow(0,$(this));
+		});
+	}
+	function addDisplayChar() {
+		// 適正位置の文字にdisplayCharクラスを付与して表示する
+
+		// 何文字目から表示するかを計算
+		var $cursorRow = $('#vertical_draft .cursor_row');
+		var $cursorChars = $cursorRow.children('.vertical_character');
+		var $cursor = $cursorRow.children('.cursor');
+		var rowHeight = parseInt($cursorRow.css('height'));
+		var charsHeight = 0;
+		var start = 0;
+		for (var i = $cursorChars.index($cursor); i >= 0; i--) {
+			var $char = $cursorChars.eq(i);
+			charsHeight += parseInt($char.css('height'));
+			if (charsHeight <= rowHeight) {
+				start = i;
+			}else{
+				break;
+			}
+		}
+
+		var oldDisplayChar = $('#vertical_draft .displayRow > .displayChar');
+		var $displayRow = $('#vertical_draft .displayRow');
+		if (oldDisplayChar[0]) {
+			oldDisplayChar.removeClass('displayChar');
+		}
+		$displayRow.each(function () {
+			dispCharOfRow(start,$(this));
+		});
+	}
+	function dispCharOfRow(start,$row) {
+		// $rowのstart文字目以降の各文字を$rowの高さに収まるだけdisplaycharクラスを付与する
+		var dispHeight = parseInt($row.css('height'));
+		var $chars = $row.children('.vertical_character').removeClass('displayChar');
+		var charLen = $chars.size();
+		if (start > charLen) { return; }
+		var htcnt = 0;
+		for (var i = start; i < charLen; i++) {
+			$char = $chars.eq(i);
+			htcnt += parseInt($char.css('height'));
+			if (htcnt <= dispHeight) {
+				$char.addClass('displayChar');
+			}else{
+				break;
+			}
+		}
+	}
 	function getDisplayRowLen() {
 		// 表示する行数
 		var dispWidth = parseInt($('#vertical_draft').css('width'));
 		if (dispWidth <= 0) { return 0; }
 		var rowWidth = parseInt($('.vertical_paragraph > .vertical_row').css('width'));
-		console.log('rowBodyWidth:' + rowWidth);
 		var rowBorderWidth = 2;
-		console.log('rowBorderWidth:'+ rowBorderWidth);
 		rowWidth += rowBorderWidth;
 		var dispLen = dispWidth / rowWidth;
-		console.log('dispWidth:'+ dispWidth);
-		console.log('rowWidth:'+ rowWidth);
-		console.log('getDisplayRowLen:' + dispLen);
 		return dispLen -1; // 一行だけ余裕をもたせる
 	}
 	function wheelEvent(e,delta,deltaX,deltaY) {
@@ -1766,7 +1817,7 @@ $(function(){
 				if (!($('.cursor_row').hasClass('displayRow'))) { Cursor.shiftLeft(); }
 			}
 		}
-		printInfomation();
+		printDocInfo();
 	}
 	function getRowPadding(rowLen) {
 		var dispWidth = parseInt($('#vertical_draft').css('width'))-50; // 負の数になることも考慮すること
@@ -1782,25 +1833,25 @@ $(function(){
 	function getSelectObjArray() {
 		// 選択範囲のvertical_characterを配列に入れて返す
 		var retObjArray = new Array();
-		var $characters = $('#vertical_draft .vertical_character').not('.EOL');
+		var $chars = $('#vertical_draft .vertical_character').not('.EOL');
 		var selection = getSelection();
 		var selRange;
 		var charRange = document.createRange();
 		if(selection.rangeCount === 1){
 			// 選択範囲が一箇所の場合
 			selRange = selection.getRangeAt(0); // 選択範囲のRange
-			for (var i = 0; i < $characters.length; i++) {
+			for (var i = 0; i < $chars.length; i++) {
 				// そのcharacterが選択範囲内にある場合に配列に入れている
-				charRange.selectNodeContents($characters.eq(i).get(0).childNodes.item(0)); // 現在の要素を囲む範囲をcharRangeとして設定(jqueryオブジェクトからDOM要素を取得し、引数に渡している)
+				charRange.selectNodeContents($chars.eq(i).get(0).childNodes.item(0)); // 現在の要素を囲む範囲をcharRangeとして設定(jqueryオブジェクトからDOM要素を取得し、引数に渡している)
 				// 開始位置が同じかselectの開始位置より文字の開始位置が後ろにあり、
 				// 終了位置が同じかselectの終了位置より文字の終了位置が前にある
 				if ((charRange.compareBoundaryPoints(Range.START_TO_START,selRange) >= 0
-						&& charRange.compareBoundaryPoints(Range.END_TO_END,selRange) <= 0)
-					 	) {
-					retObjArray.push($characters.eq(i));
+							&& charRange.compareBoundaryPoints(Range.END_TO_END,selRange) <= 0)
+					) {
+					retObjArray.push($chars.eq(i));
 				}
 			}
-		selRange.detach();
+			selRange.detach();
 		}
 		charRange.detach();
 		selection.removeAllRanges(); // 選択を解除する
@@ -1812,12 +1863,9 @@ $(function(){
 		var $objArray = getSelectObjArray();
 		var kind = (strClass.match(/(decolation-.+)-.+/))[1];
 		var regexp = new RegExp(kind +'-\\S+'); // 正規表現オブジェクト
-		console.log(regexp);
-		console.log('kind:'+ kind);
 		for (var i = 0; i < $objArray.length; i++) {
 			var rmClass = ($objArray[i].attr('class').match(regexp));
 			$objArray[i].addClass(strClass);
-			console.log('rmClass:'+rmClass);
 			if (rmClass) { $objArray[i].removeClass(rmClass[0]); }
 		}
 	}
@@ -1825,13 +1873,13 @@ $(function(){
 	function setColor(color) {
 		switch (color) {
 			case 'red':
-					setClass('decolation-color-red');
-							break;
+				setClass('decolation-color-red');
+				break;
 			case 'blue':
-							setClass('decolation-color-blue');
-							break;
+				setClass('decolation-color-blue');
+				break;
 			default:
-							break;
+				break;
 		}
 	}
 	// =====================================================================
@@ -1839,7 +1887,6 @@ $(function(){
 	// =====================================================================
 	function readFile(file_id){
 		"use strict";
-		console.log("communication start point");
 		var user_id = getUserID();
 		$('#vertical_draft > .vertical_paragraph').remove();
 		$.ajax({
@@ -1855,20 +1902,20 @@ $(function(){
 			dataType : "json",
 			success : function (data) {
 				// 表示データを受け取ってからの処理
-				if(data.literaArray) console.log("communication success!");
 				// ファイル名を表示
 				$('#file_title').val(data.filename).attr('data-file_id',this.id);
 				// 文章のhtml書き出し
-				printString(data.literaArray,getStrLenOfRow());
+				printString(data.literaArray,getStringLenOfRow());
 				// 禁則処理
 				checkKinsoku();
 				// 最初の４０行のみ表示する
 				addDisplayRow(0,getDisplayRowLen());
 				Cursor.init();
-				$('.infomation > .saved').text(data.saved);
+				resetDisplayChar();
+				$('.doc-info > .saved').text(data.saved);
 
 				addPageBreak();
-				printInfomation();
+				printDocInfo();
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
 				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in readFile");
@@ -1877,7 +1924,6 @@ $(function(){
 	}
 	function readJsonFile(file_id){
 		"use strict";
-		console.log("communication start point");
 		var user_id = getUserID();
 		$('#vertical_draft > .vertical_paragraph').remove();
 		$.ajax({
@@ -1893,7 +1939,6 @@ $(function(){
 			dataType : "json",
 			success : function (data) {
 				// 表示データを受け取ってからの処理
-				if(data.literaArray) console.log("communication success!");
 				// ファイル名を表示
 				$('#file_title').val(data.filename).attr('data-file_id',this.id);
 				// 文章のhtml書き出し
@@ -1906,10 +1951,11 @@ $(function(){
 				// 最初の４０行のみ表示する
 				addDisplayRow(0,getDisplayRowLen());
 				Cursor.init();
-				$('.infomation > .saved').text(data.saved);
+				resetDisplayChar();
+				$('.doc-info > .saved').text(data.saved);
 
 				addPageBreak();
-				printInfomation();
+				printDocInfo();
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
 				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in readJsonFile");
@@ -1942,9 +1988,7 @@ $(function(){
 		}
 		var contentsJson = JSON.stringify(contentsArray);
 		var nowDate_ms = Date.now() + "";
-		console.log(nowDate_ms);
 
-		console.log("communication start point");
 		$.ajax({
 			type : "POST",
 			url : "/tategaki/WriteFile",
@@ -1962,7 +2006,6 @@ $(function(){
 			dataType : "json",
 			success : function (data) {
 				// 表示データを受け取ってからの処理
-				console.log("communication success!");
 				console.log(data.result);
 				$('.saved').text(data.strDate);
 				getFileList(this.user_id);
@@ -1992,12 +2035,8 @@ $(function(){
 			return;
 		}
 		var contentsJson = getData();
-		console.log('user id:'+ user_id);
-		console.log('save data:'+ contentsJson);
-		console.log('file name:'+ filename);
 		var nowDate_ms = Date.now() + "";
 
-		console.log("communication start point");
 		$.ajax({
 			type : "POST",
 			url : "/tategaki/WriteJsonFile",
@@ -2015,11 +2054,11 @@ $(function(){
 			dataType : "json",
 			success : function (data) {
 				// 表示データを受け取ってからの処理
-				console.log("communication success!");
 				console.log(data.result);
 				$('.saved').text(data.strDate);
 				getFileList(this.user_id);
 				console.log('保存しました:file_id=' + this.file_id);
+				$('#user-info').text('保存しました');
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
 				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in saveJsonFile");
@@ -2028,7 +2067,6 @@ $(function(){
 	}
 	function getFileList(userID){
 		"use strict";
-		console.log("communication start point in getFileList(userID:"+ userID +")");
 		$.ajax({
 			type : "POST",
 			url : "/tategaki/GetFileList",
@@ -2089,7 +2127,6 @@ $(function(){
 		}
 	}
 	function keyupInSerchFileInput(e) {
-		console.log('keyup');
 		var keycode;
 		if (document.all) {
 			// IE
@@ -2100,15 +2137,14 @@ $(function(){
 		}
 		var $serch_file = $('#serch_file');
 		var serchWord = $serch_file.val();
-		console.log('serchWord:'+ serchWord);
 		if (keycode == 13) {
 			// enter
-				var $file = getFileObjectFromFileName(serchWord);
-				if ($file[0] && $file.length === 1) {
-					readJsonFile($file.attr('data-file_id'));
-				}
-					$('#file_list_modal').modal('hide');
-					document.addEventListener('keydown',keyEvent,false);
+			var $file = getFileObjectFromFileName(serchWord);
+			if ($file[0] && $file.length === 1) {
+				readJsonFile($file.attr('data-file_id'));
+			}
+			$('#file_list_modal').modal('hide');
+			document.addEventListener('keydown',keyEvent,false);
 		}else if (serchWord.length === 0) {
 			getFileList(getUserID);
 		}else{
@@ -2117,7 +2153,6 @@ $(function(){
 	}
 	function serchFile(serchWord){
 		"use strict";
-		console.log("communication start point in serchFile(userID:"+ userID +")");
 		var userID = getUserID();
 		$.ajax({
 			type : "POST",
@@ -2149,7 +2184,6 @@ $(function(){
 		var filename;
 		var $file;
 		var matchObjLength = $array.length;
-		console.log('matchObjLength:'+ matchObjLength);
 		if (matchObjLength === 0) {
 			$fileList.append($('<li>').text('該当するファイルは見つかりませんでした。'));
 		}else{
@@ -2163,12 +2197,9 @@ $(function(){
 		}
 	}
 	function readyFileModal() {
-		// Ctrl + F
 		// 開くボタンを押した時
-		console.log('readyFileModal');
 		getFileList(getUserID());
 		$('#serch_file').val('').focus();
-		//document.removeEventListener("keydown",keyEvent,false);
 	}
 	function getFileObjectsFromFileNameMatch(str) {
 		// ファイル検索
@@ -2194,7 +2225,7 @@ $(function(){
 		$('#file_title').val(filename).attr('data-file_id','-1');
 		addPageBreak();
 		Cursor.addCursorRow();
-		printInfomation();
+		printDocInfo();
 	}
 	//function createFile(filename){
 	//	"use strict";
@@ -2233,7 +2264,6 @@ $(function(){
 			alert("ファイル名に使用不可能文字が含まれています。");
 			return;
 		}
-		console.log("communication start point");
 		var user_id = getUserID();
 		var nowDate_ms = Date.now() + "";
 		$.ajax({
@@ -2250,7 +2280,6 @@ $(function(){
 			dataType : "json",
 			success : function (data) {
 				// 表示データを受け取ってからの処理
-				if(data.newFileID) console.log("communication success!");
 				$('#file_title').val(data.filename).attr('data-file_id',data.newFileID);
 				saveJsonFile();
 			},
@@ -2262,14 +2291,13 @@ $(function(){
 	function defaultDeleteFile() {
 		var file_id = $('#file_title').attr('data-file_id');
 		if (file_id === '-1') {
-			alert('保存していないファイルです。');
+			$('#user-info').text('保存していないファイルです。');
 			return;
 		}
 		deleteFile(file_id);
 	}
 	function deleteFile(file_id) {
 		"use strict";
-		console.log("communication start point");
 		var user_id = getUserID();
 		if(window.confirm('本当に削除しますか:'+ getFileNameFromFileID(file_id) + '('+ file_id +')')){
 			$.ajax({
@@ -2308,14 +2336,14 @@ $(function(){
 		}
 	}
 
-	function printInfomation() {
-		console.log('printInfomation()');
-		$('.infomation > .str_num').text(getCurrentStrPosOnRow());
-		$('.infomation > .str_len').text(getStrLenOfCursorRow());
-		$('.infomation > .row_num').text(getCurrentRowOnPage());
-		$('.infomation > .row_len').text(getRowLenOnCursorPage());
-		$('.infomation > .page_num').text(getCurrentPagePos());
-		$('.infomation > .page_len').text(getPageLen());
+	function printDocInfo() {
+		console.log('printDocInfo()');
+		$('.doc-info > .str_num').text(getCurrentStringPosOnRow());
+		$('.doc-info > .str_len').text(getStringLenOfCursorRow());
+		$('.doc-info > .row_num').text(getCurrentRowOnPage());
+		$('.doc-info > .row_len').text(getRowLenOnCursorPage());
+		$('.doc-info > .page_num').text(getCurrentPagePos());
+		$('.doc-info > .page_len').text(getPageLen());
 	}
 	function setFileTitle(filename) {
 		$('input#file_title').val(filename);
@@ -2343,207 +2371,212 @@ $(function(){
 				if (!$file[0]) { return; }
 				readJsonFile($file.attr('data-file_id'));
 				}
-	function getFileObjectFromFileName(filename) {
-		// 同一名ファイルが複数存在する可能性を忘れずに
-		var $file = $('.file_list .file[data-file_name="'+ filename +'"]');
-		return $file;
-	}
-	function getFileNameFromFileID(file_id) {
-		return $('.file_list .file[data-file_id="'+ file_id +'"]').attr('data-file_name');
-	}
-	function deleteFileFromFileName(filename) {
-		console.log('deleteFileFromFileName');
-		var $file = getFileObjectFromFileName(filename);
-		if (!$file[0]) { return; }
-		var file_id;
-		if ($file.size() === 1) {
-			file_id = $file.attr('data-file_id');
-			deleteFile(file_id);
-		}else if($file.size() > 1){
-			if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
-				$file.each(function () {
-					file_id = $(this).attr('data-file_id');
-					deleteFile(file_id);
-				});
-			}else{
-				console.log('[存在しないファイル]削除できませんでした。:' + filename);
-			}
-		}
-	}
-	function moveFileIntoDirectory(fileID,newParentDirID) {
-		// ディレクトリをディレクトリに入れるのも可
-		console.log('moveFileIntoDirectory:file['+ fileID +'],newParentDir['+ newParentDirID +']');
-		var userID = getUserID();
-		$.ajax({
-			type : "POST",
-			url : "/tategaki/MoveFile",
-			data : {
-				user_id: userID,
-				file_id: fileID,
-				directory_id: newParentDirID
-			},
-			dataType : "json",
-			context: {
-				user_id: userID
-			},
-			success : function (json) {
-				// 表示データを受け取ってからの処理
-				console.log("communication success!");
-				getFileList(this.user_id);
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in moveFileIntoDirectory");
-			}
-		});
-	}
-	function makeDirectory(directoryname) {
-		console.log('make directory:'+ directoryname);
-		var userID = getUserID();
-		var nowDate_ms = Date.now() + "";
-		$.ajax({
-			type : "POST",
-			url : "/tategaki/MakeDirectory",
-			data : {
-				user_id: userID,
-				directoryname: directoryname,
-				saved: nowDate_ms
-			},
-			dataType : "json",
-			context: {
-				user_id: userID
-			},
-			success : function (json) {
-				// 表示データを受け取ってからの処理
-				console.log("communication success!");
-				getFileList(this.user_id);
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
-			}
-		});
-	}
-	function deleteDirectory(directoryID,option) {
-		// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
-		var userID = getUserID();
-		$.ajax({
-			type : "POST",
-			url : "/tategaki/DeleteDirectory",
-			data : {
-				directory_id: directoryID,
-				option: option
-			},
-			dataType : "json",
-			context: {
-				user_id: userID
-			},
-			success : function (json) {
-				// 表示データを受け取ってからの処理
-				console.log("communication success!");
-				getFileList(this.user_id);
-				if (json.result === "within") {
-					alert("ディレクトリが空ではないので削除できませんでした。");
+				function getFileObjectFromFileName(filename) {
+					// 同一名ファイルが複数存在する可能性を忘れずに
+					var $file = $('.file_list .file[data-file_name="'+ filename +'"]');
+					return $file;
 				}
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
-			}
-		});
-	}
-	function deleteDirectoryFromDirectoryName(directoryname,option) {
-		var $dir = $('.directory[data-directory_name="'+ directoryname +'"]');
-		if (!$dir[0]) { return; }
-		var dir_id;
-		if ($dir.size() === 1) {
-			directoryID = $dir.attr('data-directory_id');
-			deleteDirectory(directoryID,option);
-		}else if($dir.size() > 1){
-			if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
-				$dir.each(function () {
-					directoryID = $(this).attr('data-directory_id');
-					deleteFile(directory_id,option);
+				function getFileNameFromFileID(file_id) {
+					return $('.file_list .file[data-file_id="'+ file_id +'"]').attr('data-file_name');
+				}
+				function deleteFileFromFileName(filename) {
+					console.log('deleteFileFromFileName()');
+					var $file = getFileObjectFromFileName(filename);
+					if (!$file[0]) { return; }
+					var file_id;
+					if ($file.size() === 1) {
+						file_id = $file.attr('data-file_id');
+						deleteFile(file_id);
+					}else if($file.size() > 1){
+						if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
+							$file.each(function () {
+								file_id = $(this).attr('data-file_id');
+								deleteFile(file_id);
+							});
+						}else{
+							console.log('[存在しないファイル]削除できませんでした。:' + filename);
+						}
+					}
+				}
+				function moveFileIntoDirectory(fileID,newParentDirID) {
+					// ディレクトリをディレクトリに入れるのも可
+					console.log('moveFileIntoDirectory:file['+ fileID +'],newParentDir['+ newParentDirID +']');
+					var userID = getUserID();
+					$.ajax({
+						type : "POST",
+						url : "/tategaki/MoveFile",
+						data : {
+							user_id: userID,
+							file_id: fileID,
+							directory_id: newParentDirID
+						},
+						dataType : "json",
+						context: {
+							user_id: userID
+						},
+						success : function (json) {
+							// 表示データを受け取ってからの処理
+							getFileList(this.user_id);
+						},
+						error : function (XMLHttpRequest, textStatus, errorThrown) {
+							alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in moveFileIntoDirectory");
+						}
+					});
+				}
+				function makeDirectory(directoryname) {
+					console.log('make directory:'+ directoryname);
+					var userID = getUserID();
+					var nowDate_ms = Date.now() + "";
+					$.ajax({
+						type : "POST",
+						url : "/tategaki/MakeDirectory",
+						data : {
+							user_id: userID,
+							directoryname: directoryname,
+							saved: nowDate_ms
+						},
+						dataType : "json",
+						context: {
+							user_id: userID
+						},
+						success : function (json) {
+							// 表示データを受け取ってからの処理
+							getFileList(this.user_id);
+						},
+						error : function (XMLHttpRequest, textStatus, errorThrown) {
+							alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
+						}
+					});
+				}
+				function deleteDirectory(directoryID,option) {
+					// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
+					var userID = getUserID();
+					$.ajax({
+						type : "POST",
+						url : "/tategaki/DeleteDirectory",
+						data : {
+							directory_id: directoryID,
+							option: option
+						},
+						dataType : "json",
+						context: {
+							user_id: userID
+						},
+						success : function (json) {
+							// 表示データを受け取ってからの処理
+							getFileList(this.user_id);
+							if (json.result === "within") {
+								$('#user-info').text("ディレクトリが空ではないので削除できませんでした。");
+							}
+						},
+						error : function (XMLHttpRequest, textStatus, errorThrown) {
+							alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + "in makeDirectory");
+						}
+					});
+				}
+				function deleteDirectoryFromDirectoryName(directoryname,option) {
+					var $dir = $('.directory[data-directory_name="'+ directoryname +'"]');
+					if (!$dir[0]) { return; }
+					var dir_id;
+					if ($dir.size() === 1) {
+						directoryID = $dir.attr('data-directory_id');
+						deleteDirectory(directoryID,option);
+					}else if($dir.size() > 1){
+						if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
+							$dir.each(function () {
+								directoryID = $(this).attr('data-directory_id');
+								deleteFile(directory_id,option);
+							});
+						}else{
+							console.log('[存在しないディレクトリ]削除できませんでした。:' + directoryname);
+						}
+					}
+				}
+				function getCurrentFileID() {
+					var $file_title = $('#file_title');
+					var file_id = $file_title.attr('data-file_id');
+					return file_id;
+				}
+				// ====================================================
+				// 	ユーティリティ(label:utility)
+				// ====================================================
+				function nextObj(selector,$obj) {
+					// selectorに合致するオブジェクト群の中で、$objの次のオブジェクトを返す
+					var $objs = $(selector);
+					var currentIndex = $objs.index($obj);
+					return $objs.eq(currentIndex + 1);
+				}
+				function prevObj(selector,$obj) {
+					var $objs = $(selector);
+					var currentIndex = $objs.index($obj);
+					var newObj = $objs.eq(currentIndex - 1);
+					if (newObj[0] === $objs.last()[0]) {
+						// eq()に負の引数を渡すと、最後の要素に戻ってしまうのを防止
+						return $();
+					}else{
+						return newObj;
+					}
+				}
+				function getUserID() {
+					var userID = $('#site_title').attr('data-user_id');
+					return userID;
+				}
+				// ====================================================
+				// 	initialize(label:init)
+				// ====================================================
+				setNOCLine();
+				defaultNewFile();
+				getFileList(globalUserID);
+				// Event
+				document.addEventListener("keydown",keyEvent ,false);
+				addFocusEvent("file_title");
+				$('body').on('keyup','#serch_file',keyupInSerchFileInput);
+				$('body').on('click','.file_list .file',function (e) {
+					var file_id = $(this).attr('data-file_id');
+					readJsonFile(file_id);
+					$('#file_list_modal').modal('hide');
+					document.addEventListener("keydown",keyEvent,false);
 				});
-			}else{
-				console.log('[存在しないディレクトリ]削除できませんでした。:' + directoryname);
-			}
-		}
-	}
-	function getCurrentFileID() {
-		var $file_title = $('#file_title');
-		var file_id = $file_title.attr('data-file_id');
-		return file_id;
-	}
-	// ====================================================
-	// 	ユーティリティ(label:utility)
-	// ====================================================
-	function getUserID() {
-		var userID = $('#site_title').attr('data-user_id');
-		return userID;
-	}
-	// ====================================================
-	// 	initialize(label:init)
-	// ====================================================
-	setNOCLine();
-	defaultNewFile();
-	getFileList(globalUserID);
-	// Event
-	document.addEventListener("keydown",keyEvent ,false);
-	addFocusEvent("file_title");
-	$('body').on('keyup','#serch_file',keyupInSerchFileInput);
-	$('body').on('click','.file_list .file',function (e) {
-		console.log('file name click');
-		var file_id = $(this).attr('data-file_id');
-		readJsonFile(file_id);
-		$('#file_list_modal').modal('hide');
-		document.addEventListener("keydown",keyEvent,false);
-	});
-	$('body').on('click','.vertical_paragraph > .vertical_row',moveCursorToClickPos);
-	$('body').on('mousewheel','#vertical_draft',wheelEvent);
-	document.getElementById('menu-new').addEventListener("click",function (e) { defaultNewFile(); },false);
-	document.getElementById('menu-save').addEventListener("click",function (e) { saveJsonFile(); },false);
-	document.getElementById('menu-delete').addEventListener("click",function (e) { defaultDeleteFile(); },false);
-	document.getElementById('modal-fileopen-link').addEventListener("click",function (e) { readyFileModal(); },false);
-	document.getElementById('test').addEventListener("click",function (e) {
-		//console.log(getTextJsonFromString());
-		setColor('blue');
-		//readJsonFile(17);
-	},false);
-	//$('#file_list_modal').on('show.bs.modal',function (e) {
-	//		document.removeEventListener("keydown",keyEvent,false);
-	//		$('#serch_file').focus();
-	//});
-	$('#file_list_modal').on('shown.bs.modal',function (e) {
-		// modalが完全に表示されてからのイベント
-			document.removeEventListener("keydown",keyEvent,false);
-			$('#serch_file').focus();
-	});
-	//$('#file_list_modal').on('hide.bs.modal',function (e) {
-	//		document.addEventListener("keydown",keyEvent,false);
-	//});
-	$('body').on('click','#file-modal-close',function (e) {
-			console.log('close button click!');
-			document.addEventListener("keydown",keyEvent,false);
-	});
-	function addFocusEvent(id) {
-		document.getElementById(id).addEventListener("focus",function (e) {
-			document.removeEventListener("keydown",keyEvent,false);
-		},false);
-		document.getElementById(id).addEventListener("blur",function (e) {
-			document.addEventListener("keydown",keyEvent,false);
-		});
-		document.getElementById(id).addEventListener("keyup",function (e) {
-			var keycode;
-			if (document.all) {
-				// IE
-				keycode = e.keyCode
-			}else{
-				// IE以外
-				keycode = e.which;
-			}
-			if (keycode === 13) {
-				// enter
-				//$('#'+id).blur();
-				//document.addEventListener("keydown",keyEvent,false);
-			}
-		});
-	}
+				$('body').on('click','.vertical_paragraph > .vertical_row',moveCursorToClickPos);
+				$('body').on('mousewheel','#vertical_draft',wheelEvent);
+				document.getElementById('menu-new').addEventListener("click",function (e) { defaultNewFile(); },false);
+				document.getElementById('menu-save').addEventListener("click",function (e) { saveJsonFile(); },false);
+				document.getElementById('menu-delete').addEventListener("click",function (e) { defaultDeleteFile(); },false);
+				document.getElementById('modal-fileopen-link').addEventListener("click",function (e) { readyFileModal(); },false);
+				document.getElementById('test').addEventListener("click",function (e) {
+					setColor('blue');
+					//readJsonFile(17);
+				},false);
+				$(window).resize(function () {
+					resetDisplayChar();
+				});
+				$('#file_list_modal').on('shown.bs.modal',function (e) {
+					// modalが完全に表示されてからのイベント
+					document.removeEventListener("keydown",keyEvent,false);
+					$('#serch_file').focus();
+				});
+				$('body').on('click','#file-modal-close',function (e) {
+					document.addEventListener("keydown",keyEvent,false);
+				});
+				function addFocusEvent(id) {
+					document.getElementById(id).addEventListener("focus",function (e) {
+						document.removeEventListener("keydown",keyEvent,false);
+					},false);
+					document.getElementById(id).addEventListener("blur",function (e) {
+						document.addEventListener("keydown",keyEvent,false);
+					});
+					document.getElementById(id).addEventListener("keyup",function (e) {
+						var keycode;
+						if (document.all) {
+							// IE
+							keycode = e.keyCode
+						}else{
+							// IE以外
+							keycode = e.which;
+						}
+						if (keycode === 13) {
+							// enter
+						}
+					});
+				}
 });

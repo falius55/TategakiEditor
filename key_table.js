@@ -7,8 +7,8 @@ var key_table = {
 			return this.key_table_jpn[String(keycode)];
 		}else if(buffer_string.length === 1){
 			// bufferに一文字のみ
-			if (this.alphabet.indexOf(buffer_string) !== -1) {
-				// bufferの文字がアルファベット
+			if (this.convertable.indexOf(buffer_string) !== -1) {
+				// bufferの文字が変換可能アルファベット
 				// keytableからオブジェクト取得
 				var s = this.key_table_jpn[buffer_string];
 				// オブジェクトにキーコードを与えて、変換文字取得
@@ -37,10 +37,10 @@ var key_table = {
 		var noEncode = buffer_string.substring(0,buffer_string.length - 2); // 変換しない文字
 		var first = buffer_string.substring(buffer_string.length - 2,buffer_string.length -1);
 		var second = buffer_string.substring(buffer_string.length -1,buffer_string.length);
-		if (this.alphabet.indexOf(first) === -1) {
-			// 最後から二文字目がアルファベットではない
-			if (this.alphabet.indexOf(second) === -1) {
-				// bufferに変換するアルファベットがない
+		if (this.convertable.indexOf(first) === -1) {
+			// 最後から二文字目が変換可能アルファベットではない
+			if (this.convertable.indexOf(second) === -1) {
+				// bufferに変換する変換可能アルファベットがない
 				// キーコード文字列をbufferに連結した文字列を返す
 				return buffer_string + this.key_table_jpn[String(keycode)];
 			}else{
@@ -67,8 +67,8 @@ var key_table = {
 		}else{
 			// bufferの後ろから二文字目がアルファベット
 			// 最後の文字がアルファベットでないならそのまま連結 "sた + r"などの場合
-			if(this.alphabet.indexOf(second) === -1) return buffer_string + this.key_table_jpn[String(keycode)];
-			// bufferの最後にアルファベット二文字
+			if(this.convertable.indexOf(second) === -1) return buffer_string + this.key_table_jpn[String(keycode)];
+			// bufferの最後に変換可能アルファベット二文字
 			// 第一添字がアルファベットなら必ず第二添字のためのオブジェクトは返ってくる
 			//
 			var o = this.key_table_jpn[first][second];
@@ -84,7 +84,7 @@ var key_table = {
 			return noEncode + first + this.getString(second,keycode);
 		}
 	},
-	alphabet : ["k","s","t","n","h","m","y","r","w","g","z","d","b","p","j","f","l","x","c","v","q"],
+	convertable : ["k","s","t","n","h","m","y","r","w","g","z","d","b","p","j","f","l","x","c","v","q"],
 	dotList : ["。","、",",","."],
 	lineList : ["-","ー","―"],
 	beforeBracketList : ["（","[","<","{","「","『","【","(","［","〈"],

@@ -36,10 +36,23 @@
 					<li><button class="btn btn-primary" id="test">test</button></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><span class="navbar-brand" id="user-info">おしらせ</span></li>
+					<li><div class="navbar-brand alert alert-info" role="alert" id="user-info">おしらせ</div></li>
 					<li><a class="navbar-brand" href="/tategaki/Logout">Logout</a></li>
 				</ul>
 			</nav>
+
+			<div id="app_container">
+					<input type="text" id="file_title" data-file_id="-1" value="newfile"></input>
+				<div id="vertical_draft" class="container"> 
+				</div>
+					<div class="doc-info">
+						文字:<span class="str_num">-</span>/<span class="str_len">-</span>&nbsp;
+						行:<span class="row_num">-</span>/<span class="row_len">-</span>&nbsp;
+						ページ:<span class="page_num">-</span>/<span class="page_len">-</span>&nbsp;
+						最終更新日時:<span class="saved">-</span>
+					</div>
+				<div class="input_buffer"></div>
+			</div>
 
 			<div class="modal fade" id="file_list_modal" data-backdrop="static">
 				<div class="modal-dialog">
@@ -61,6 +74,7 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="modal fade" id="configue-modal" data-backdrop="static">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -74,6 +88,7 @@
 						</div>
 					</div>
 				</div>
+
 			<div class="modal fade" id="help-modal">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -98,18 +113,6 @@
 						</div>
 					</div>
 				</div>
-			<div id="app_container">
-					<input type="text" id="file_title" data-file_id="-1" value="newfile"></input>
-				<div id="vertical_draft" class="container"> 
-				</div>
-					<div class="infomation">
-						文字:<span class="str_num">-</span>/<span class="str_len">-</span>&nbsp;
-						行:<span class="row_num">-</span>/<span class="row_len">-</span>&nbsp;
-						ページ:<span class="page_num">-</span>/<span class="page_len">-</span>&nbsp;
-						最終更新日時:<span class="saved">-</span>
-					</div>
-				<div class="input_buffer"></div>
-			</div>
 
 			<script src="/tategaki/jquery-1.12.2.min.js"></script>
 			<script src="/tategaki/jquery.mousewheel.js"></script>

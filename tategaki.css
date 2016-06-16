@@ -62,7 +62,7 @@ input#command {
 	margin-bottom: 0px;
 	font-size: 20px;
 }
-.infomation {
+.doc-info {
 	background-color: yellow;
 	position: absolute;
 	bottom: 0;
@@ -111,6 +111,11 @@ menu[type="toolbar"] {
 	-webkit-writing-mode: vertical-rl;
 	-ms-writing-mode: tb-rl;
 	writing-mode: vertical-rl;
+	/*
+	-ms-text-combine-horizontal: all;
+	-webkit-text-combine: horizontal;
+	text-combine-upright: all;
+	*/
 }
 .vertical_paragraph {
 	/* border: 1px red dashed; */
@@ -138,12 +143,13 @@ menu[type="toolbar"] {
 	color: black;
 	padding: 0 0 0 0;
 	text-align: left;
-}
-.vertical_row.displayRow {
-	display: table;
+	overflow: hidden;
 }
 .vertical_character{
 	border: 1px yellowgreen dashed;
+	vertical-align: middle;
+	position: relative;
+	right: 2px;
 	/*
 	display: table-column;
 	float: left;
@@ -158,10 +164,16 @@ menu[type="toolbar"] {
 	display: none;
 	overflow: visible;
 }
+#vertical_draft .vertical_character {
+	display: none;
+}
 #vertical_draft > .vertical_paragraph > .vertical_row.displayRow {
 	display: block;
 }
-.EOL{
+#vertical_draft .vertical_row > .vertical_character.displayChar {
+	display: inline;
+}
+#vertical_draft .EOL.vertical_character{
 	/* border: 1px gray dashed; */
 	/*
 	display: table-column;
@@ -172,6 +184,7 @@ menu[type="toolbar"] {
 	position: relative;
 	width: 20px;
 	height: 20px;
+	display: inline;
 }
 .cursor{
 	border-top: 1px black solid;
@@ -299,6 +312,16 @@ menu[type="toolbar"] {
 	-webkit-writing-mode: vertical-rl;
 	-ms-writing-mode: tb-rl;
 	writing-mode: vertical-rl;
+	/*
+	-ms-text-combine-horizontal: all;
+	-webkit-text-combine: horizontal;
+	text-combine-upright: all;
+	*/
+}
+.alphabet {
+	-ms-text-combine-horizontal: all;
+	-webkit-text-combine: horizontal;
+	text-combine-upright: all;
 }
 .input_buffer .vertical_character {
 	left: 0px;
@@ -334,6 +357,7 @@ button {
 	display: none;
 }
 .convertView {
+	width: 180px;
 	z-index: 0;
 	position: fixed;
 }
@@ -343,6 +367,9 @@ button {
 }
 .convertView > .vertical_row {
 	border: none;
+	width: 30px;
+	float: right;
+	overflow: hidden;
 	-webkit-writing-mode: vertical-rl;
 	-ms-writing-mode: tb-rl;
 	writing-mode: vertical-rl;
@@ -370,7 +397,6 @@ button {
 */
 }
 #user-info {
-	background-color: yellow;
 	width: 400px;
 	height: 40px;
 }
