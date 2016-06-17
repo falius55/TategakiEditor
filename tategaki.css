@@ -90,13 +90,8 @@ menu[type="toolbar"] {
 	border: 1px brown;
 	/*width: 85%;*/
 	/*max-width: 1400px;*/
-	width: 90%;
-	height: 85%;
-	position: absolute;
 	top: 0px;
 	right: 0px;
-	left: 0px;
-	bottom: 0px;
 	background-color: yellowgreen;
 	background-image: url(img/old-paper02-768x480.jpg);
 	/*
@@ -107,10 +102,21 @@ menu[type="toolbar"] {
 	*/
 	overflow: visible;
 	z-index: 5;
-	margin: auto;
+	margin: 0 auto;
+
+	height: 750px;
+	position: relative;
+	display:table;
+	/*
+	width: 90%;
+	height: 85%;
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
 	-webkit-writing-mode: vertical-rl;
 	-ms-writing-mode: tb-rl;
 	writing-mode: vertical-rl;
+	*/
 	/*
 	-ms-text-combine-horizontal: all;
 	-webkit-text-combine: horizontal;
@@ -119,9 +125,6 @@ menu[type="toolbar"] {
 }
 .vertical_paragraph {
 	/* border: 1px red dashed; */
-	/*
-	float: right;
-	  */
 	position: relative;
 	margin: 0 0 0 0;
 	/*top: 20px;*/
@@ -129,36 +132,38 @@ menu[type="toolbar"] {
 	right: 20px;
 	border-top: 2px grey solid;
 	border-bottom: 2px grey solid;
+
+	float: right;
 }
 .vertical_row {
 	/*
-	float: right;
-	overflow: hidden;
-	display: table-cell;
+	height: 95%;
 	 */
+	overflow: hidden;
 	border: 1px gray dashed;
 	width: 30px;
-	height: 95%;
+	height: 675px;
 	position: relative;
 	color: black;
 	padding: 0 0 0 0;
 	text-align: left;
 	overflow: hidden;
+
+	float: right;
+	display: table-cell;
 }
 .vertical_character{
 	border: 1px yellowgreen dashed;
 	vertical-align: middle;
 	position: relative;
 	right: 2px;
-	/*
-	display: table-column;
-	float: left;
-	clear: left;
-	position: relative;
 	left: 5px;
 	width: 20px;
 	height: 20px;
-	*/
+
+	display: table-column;
+	float: left;
+	clear: left;
 }
 #vertical_draft > .vertical_paragraph > .vertical_row {
 	display: none;
@@ -208,20 +213,16 @@ menu[type="toolbar"] {
 	right: 3px;
 }
 .vertical_dot {
-	/*
 	position: relative;
 	top: -10px;
 	right: -8px;
 	padding-left: 5px;
-	*/
+	left: 10px;
 }
 .cursor.vertical_dot {
-	/*
 	border-top: 1px yellowgreen dashed;
-	*/
 }
 .cursor.vertical_dot::before{
-	/*
 	content: '';
 	border-top: 1px black solid;
 	position: absolute;
@@ -229,64 +230,51 @@ menu[type="toolbar"] {
 	right: 5px;
 	width: 20px;
 	height: 5px;
-	*/
 }
 .character_line {
-	/*
 	transform: rotate(90deg);
-	*/
+	left: 2.5px;
+	top: 3px;
 }
 .character_line.cursor {
-	/*
 	border-top: 1px yellowgreen dashed;
 	border-left: 1px black solid;
-	*/
 }
 .vertical_before_bracket {
-	/*
 	transform: rotate(90deg);
 	position: relative;
-	top: 5px;
-	*/
+	top: 12px;
+	left: 3px;
 }
 .vertical_after_bracket {
-	/*
 	transform: rotate(90deg);
 	position: relative;
-	bottom: 5px;
-	*/
+	left: 3px;
+	top: 2px;
 }
 .cursor.vertical_before_bracket::before{
-	/*
 	content: '';
 	transform: rotate(-90deg);
 	border-top: 1px black solid;
 	position: absolute;
 	top: 7px;
-	right: 5px;
+	right: 9px;
 	width: 20px;
-	*/
 }
 .vertical_before_bracket.cursor {
-	/*
 	border-top: 1px yellowgreen dashed;
-	*/
 }
 .cursor.vertical_after_bracket::before{
-	/*
 	content: '';
 	transform: rotate(-90deg);
 	border-top: 1px black solid;
 	position: absolute;
 	top: 7px;
-	right: 5px;
+	right: 9px;
 	width: 20px;
-	*/
 }
 .vertical_after_bracket.cursor {
-	/*
 	border-top: 1px yellowgreen dashed;
-	*/
 }
 #vertical_draft > .vertical_paragraph > .vertical_row:first-child {
 }
@@ -309,9 +297,11 @@ menu[type="toolbar"] {
 	z-index: 10;
 	box-shadow: 3px 2px;
 	display: none;
+	/*
 	-webkit-writing-mode: vertical-rl;
 	-ms-writing-mode: tb-rl;
 	writing-mode: vertical-rl;
+	*/
 	/*
 	-ms-text-combine-horizontal: all;
 	-webkit-text-combine: horizontal;
@@ -325,6 +315,9 @@ menu[type="toolbar"] {
 }
 .input_buffer .vertical_character {
 	left: 0px;
+}
+.input_buffer .vertical_dot {
+	left: 7px;
 }
 .input_buffer > .character_line {
 	border: none;
@@ -370,9 +363,11 @@ button {
 	width: 30px;
 	float: right;
 	overflow: hidden;
+	/*
 	-webkit-writing-mode: vertical-rl;
 	-ms-writing-mode: tb-rl;
 	writing-mode: vertical-rl;
+	*/
 }
 .convertView > .vertical_row > .vertical_character {
 	border: none;
@@ -422,4 +417,10 @@ button {
 	bottom: 0px;
 }
 #file_list_modal.command_modal .modal-content {
+}
+#help-tabs > ul.tab-body {
+	display: none;
+}
+#help-tabs > ul.tab-body.current-tab{
+	display: block;
 }

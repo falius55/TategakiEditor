@@ -1,3 +1,15 @@
 .style-strLen-30 .vertical_character {
 	padding: 1% 1% 0 0;
 }
+span.decolation-color-red {
+	color: red;
+}
+span.decolation-color-blue {
+	color: blue;
+}
+span.decolation-font-big {
+	font-size: 45px;
+}
+span.decolation-font-small {
+	font-size: 15px;
+}

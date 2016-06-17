@@ -25,7 +25,7 @@
 		<form method="POST" action="/tategaki/Login" name="loginform">
 			<fieldset>
 					<div class="form-group">
-								<label for="username" class="control-label">名前 </label>
+								<label for="username" class="control-label">名前</label>
 								<input type="text" name="username" class="form-control"></input>
 					</div>
 					<div class="form-group">
