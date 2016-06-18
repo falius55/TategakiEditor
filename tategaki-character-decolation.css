@@ -1,4 +1,4 @@
-.style-strLen-30 .vertical_character {
+.style-strLen-30 .vertical-char {
 	padding: 1% 1% 0 0;
 }
 span.decolation-color-red {
@@ -9,6 +9,14 @@ span.decolation-color-blue {
 }
 span.decolation-font-big {
 	font-size: 45px;
+	width: 45px;
+	height: auto;
+}
+.decolation-font-big > .vertical-row {
+	width: auto;
+}
+#vertical-draft span.EOL.vertical-char.decolation-font-big {
+	width: 45px;
 }
 span.decolation-font-small {
 	font-size: 15px;

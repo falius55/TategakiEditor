@@ -7,7 +7,10 @@
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<title>縦書きエディタ</title>
+			<!--
 			<link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css" media="screen">
+		-->
+			<link rel="stylesheet" href="honoka/css/bootstrap.min.css" media="screen">
 			<link rel="stylesheet" href="tategaki.css">
 			<link rel="stylesheet" href="tategaki-character-decolation.css">
 			<link rel="stylesheet" href="verticalprint.css" media="print">
@@ -18,7 +21,7 @@
 			String userID = (String)session.getAttribute("userid");
 			String username = (String)session.getAttribute("username");
 			%>
-			<h1 id="site_title" data-user_id="<%= userID %>">縦書きエディタ</h1>
+			<h1 id="site-title" data-user_id="<%= userID %>">縦書きエディタ</h1>
 			<nav class="nav navbar-default navbar-fixed-top">
 				<ul class="nav navbar-nav">
 					<li>
@@ -26,7 +29,7 @@
 							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">ファイル<span class="caret"></span></button>
 							<ul class="dropdown-menu">
 								<li><a id="menu-new"> 新規作成 </a></li>
-								<li> <a data-toggle="modal" href="#file_list_modal" id="modal-fileopen-link"> 開く </a> </li>
+								<li> <a data-toggle="modal" href="#file-list-modal" id="modal-fileopen-link"> 開く </a> </li>
 								<li><a id="menu-save"> 保存 </a></li>
 								<li><a id="menu-delete"> 削除 </a></li>
 							</ul>
@@ -42,20 +45,20 @@
 				</ul>
 			</nav>
 
-			<div id="app_container">
-					<input type="text" id="file_title" data-file_id="-1" value="newfile"></input>
-				<div id="vertical_draft" class="container"> 
+			<div id="app-container">
+					<input type="text" id="file-title" data-file_id="-1" value="newfile"></input>
+				<div id="vertical-draft" class="container"> 
 				</div>
 					<div class="doc-info">
-						文字:<span class="str_num">-</span>/<span class="str_len">-</span>&nbsp;
-						行:<span class="row_num">-</span>/<span class="row_len">-</span>&nbsp;
-						ページ:<span class="page_num">-</span>/<span class="page_len">-</span>&nbsp;
+						文字:<span class="str-num">-</span>/<span class="str-len">-</span>&nbsp;
+						行:<span class="row-num">-</span>/<span class="row-len">-</span>&nbsp;
+						ページ:<span class="page-num">-</span>/<span class="page-len">-</span>&nbsp;
 						最終更新日時:<span class="saved">-</span>
 					</div>
-				<div class="input_buffer"></div>
+				<div class="input-buffer"></div>
 			</div>
 
-			<div class="modal fade" id="file_list_modal" data-backdrop="static">
+			<div class="modal fade" id="file-list-modal" data-backdrop="static">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -64,12 +67,12 @@
 							<h4 class="modal-title modal-title-command">検索結果</h4>
 						</div>
 						<div class="modal-body">
-							<ul class="file_list"> </ul>
+							<ul class="file-list"> </ul>
 						</div>
 						<div class="modal-footer">
 							<div class="form-group">
 								<label for="search_file" class="control-label"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>ファイルを検索 </label>
-								<input type="text" name="search_file" id="search_file" class="form-control" placeholder="ファイル名"></input>
+								<input type="text" name="search_file" id="search-file" class="form-control" placeholder="ファイル名"></input>
 							</div>
 						</div>
 					</div>
@@ -87,21 +90,21 @@
 							<form action="#" name="conf-form">
 								<fieldset>
 									<div class="form-group">
-										<label for="str-len" class="control-label">文字数</label>
-										<input type="text" name="str-len" class="form-control"></input>
+										<label for="str_len" class="control-label">文字数</label>
+										<input type="text" name="str_len" id="conf-str-len" class="form-control"></input>
 									</div>
 									<div class="form-group">
-										<label for="password" class="control-label">行数</label>
-										<input type="text" name="row-len" class="form-control"></input>
+										<label for="row_len" class="control-label">行数</label>
+										<input type="text" name="row_len" id="conf-row-len" class="form-control"></input>
 									</div>
 									<div class="form-group">
-										<label for="str-size" class="control-label">文字の大きさ</label>
-										<input type="radio" name="str-size" value="big">大</input>
-										<input type="radio" name="str-size" value="middle" checked>中</input>
-										<input type="radio" name="str-size" value="small">小</input>
+										<label for="str_size" class="control-label">文字の大きさ</label>
+										<input type="radio" name="str_size" value="big" id="conf-str-size-big">大</input>
+										<input type="radio" name="str_size" value="middle" id="conf-str-sizi-middle" checked>中</input>
+										<input type="radio" name="str_size" value="small" id="conf-str-size-small">小</input>
 										</div>
 									<div class="form-group">
-										<button type="submit" class="btn btn-primary">Save</button>
+										<button class="btn btn-primary">Save</button>
 										<button type="reset" class="btn btn-primary">Reset</button>
 									</div>
 								</fieldset>
