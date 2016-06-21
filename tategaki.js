@@ -10,7 +10,6 @@ console.log("tategaki.js");
  * コピーアンドペースト
  * アンドゥ
  * 字句検索
- * 文字の装飾機能
  */
 $(function(){
 	// ===================================================================
@@ -172,6 +171,7 @@ $(function(){
 				console.log('push enter');
 				insertStringFromCursor($inputBuffer.text());
 				$inputBuffer.empty().hide(); // inputBufferを空にして隠す
+				checkKinsoku();
 				// displayrow
 				reDisplay();
 				addPageBreak();
@@ -277,14 +277,17 @@ $(function(){
 				// backspace
 				var $delChar = $('.cursor').prev();
 				deleteCharacter($delChar,$('.cursor-row'));
+				checkKinsoku();
 				break;
 			case 13:
 				// Enter
 				lineBreak();
+				checkKinsoku();
 				break;
 			case 32:
 				// space
 				insertStringFromCursor("　");
+				checkKinsoku();
 				break;
 			case 37:
 				// Left
@@ -321,8 +324,6 @@ $(function(){
 				insertStringToInputBuffer(newInputStr);
 				break;
 		}
-		// 禁則処理
-		checkKinsoku();
 		// displayrow
 		reDisplay();
 		addPageBreak();
@@ -538,6 +539,9 @@ $(function(){
 		this.rowLen = rowLen;
 		this.strSize = strSize;
 	}
+	function userAlert(str){
+		$('#user-info').text(str);
+	}
 	// ===================================================================
 	// 		文章操作(label:string)
 	// ===================================================================
@@ -593,7 +597,14 @@ $(function(){
 		if(key_table.beforeBracketList.indexOf(c) !== -1) $character.addClass("vertical-before-bracket"); // 前括弧
 		if(key_table.afterBracketList.indexOf(c) !== -1) $character.addClass("vertical-after-bracket"); // 後括弧
 		if(key_table.lineList.indexOf(c) !== -1) $character.addClass("character-line"); // 伸ばし棒
-		if (/[a-zA-Z]/.test(c)) { $character.addClass("alphabet"); }
+		// if (/[a-zA-Z]/.test(c)) { $character.addClass("alphabet"); }
+		if (/[a-z]/.test(c)) $character.addClass("alphabet");
+		if (/[１-９]/.test(c)) $character.addClass("suzi");
+		if (/[っゃゅょぁぃぅぇぉ]/.test(c)) $character.addClass("yoin");
+		var classArr = getConfDecoChar();
+		for(var i=0;i<classArr.length;i++){
+			$character.addClass(classArr[i]);
+		}
 		return $character;
 	}
 	function getKanjiForFullString(str) {
@@ -874,7 +885,7 @@ $(function(){
 		var x = cursorPosObj.x;
 		var y = cursorPosObj.y;
 		$convertViews.each(function () {
-			$(this).css('top',y + 'px').css('left',(x - parseInt($(this).css('width'))) + 'px');
+			$(this).css('top',y).css('left',(x - parseInt($(this).css('width'))));
 		});
 	}
 	function resetPhraseNum() {
@@ -911,17 +922,20 @@ $(function(){
 		}
 	}
 	function checkKinsoku() {
-		var $dots = $('#vertical-draft > .vertical-paragraph > .vertical-row > .vertical-char.vertical-dot');
+		var $dots = $('#vertical-draft .vertical-char.vertical-dot').add('#vertical-draft .vertical-char.vertical-after-bracket');
 		if ($dots[0]) {
 			$dots.each(function () {
 				var $self = $(this);
 				if (!($self.prev()[0])) {
+					// 行頭
 					var $selfRow = $self.closest('.vertical-row');
 					var $prevRow = $selfRow.prev('.vertical-row');	
 					if ($prevRow[0]) {
-						$self.remove();
-						$selfRow.remove();
-						$prevRow.children('.vertical-char.EOL').before($self);
+						// 段落の最初ではない
+						backChar($prevRow);
+						// $self.remove();
+						// $selfRow.remove();
+						// $prevRow.children('.vertical-char.EOL').before($self);
 					}
 				}
 			});
@@ -1270,7 +1284,7 @@ $(function(){
 		var x = cursorPosObj.x;
 		var y = cursorPosObj.y;
 		var $inputBuffer = $('.input-buffer');
-		$inputBuffer.css('top',y + 'px').css('left',x + 'px');
+		$inputBuffer.css('top',y).css('left',x);
 		resizeInputBuffer();
 	}
 	function resizeInputBuffer() {
@@ -1278,8 +1292,9 @@ $(function(){
 		var $inputBuffer = $('.input-buffer');
 		var $character = $inputBuffer.children('.vertical-char:first-of-type');
 		// borderは上下合わせて２つある
-		var height = (parseInt($character.css('height')) + parseInt($character.css('border-width'))*2) * ($inputBuffer.children('.vertical-char').length-1);
-		$inputBuffer.css('height',height + 'px');
+		// var height = (parseInt($character.css('height')) + parseInt($character.css('border-width'))*2) * ($inputBuffer.children('.vertical-char').length-1);
+		var height = $character.outerHeight() * ($inputBuffer.children('.vertical-char').length-1) + 5;
+		$inputBuffer.css('height',height);
 	}
 
 	function getData() {
@@ -1346,90 +1361,62 @@ $(function(){
 		}
 		return newArray;
 	}
-	//function appendParagraphFromObj(paraObj) {
 	function appendParagraphFromObj(paraObjArr) {
 		"use strict";
-		//$('#vertical-draft').append(createParagraphFromObj(paraObj));
 		var strHtml = "";
 		for (var i = 0; i < paraObjArr.length; i++) {
 			strHtml += createParagraphFromObj(paraObjArr[i]);
 		}
-		//$('#vertical-draft').append(createParagraphFromObj(paraObj));
 		document.getElementById("vertical-draft").innerHTML = strHtml;
 	}
 	function createParagraphFromObj(paraObj) {
 		"use strict";
 		// 文字列をstrLen文字ごとに区切って行にして、paragraphにappendする
 		var strLen = getStringLenOfRow();
-		//var $p = $('<div>').addClass('vertical-paragraph');
 		var strPara = "<div class='vertical-paragraph'>";
 		var objArray = splitArray(paraObj,strLen);
 		for (var i = 0; i < objArray.length; i++) {
-			//var $row = createRowFromObj(objArray[i]);
 			strPara += createRowFromObj(objArray[i]);
-			//$p.append($row);
 		}
 		if (objArray.length === 0) {
-			return createParagraph("");
+			strPara += createRowFromObj(objArray); // 空行の場合、空配列を渡す
 		}
 		strPara += "</div>";
-		//return $p;
-		//return $(strPara);
 		return strPara;
 	}
 	function createRowFromObj(objArray) {
 		"use strict";
-		//var $row = $('<div>').addClass('vertical-row');
-		//var $row = $('<div class="vertical-row"></div>');
 		var htmlRow = '<div class="vertical-row">';
-		//var $EOL = $('<span>').addClass('vertical-char').addClass('EOL').addClass('display-char');
-		//var $EOL = $('<span class="vertical_char EOL display-char"></span>');
-		//$row.append($EOL);
 		var strInnerHtml = "";
 		var cnt;
 		for (var i = 0; i < (cnt = objArray.length); i++) {
-			//var $c = createCharacterFromObj(objArray[i]);
-			//strInnerHtml += createCharacterFromObj(objArray[i]);
 			htmlRow += createCharacterFromObj(objArray[i]);
-			//$EOL.before($c);
 		}
-		//return $row;
-		//strInnerHtml += "<span class='vertical-char EOL display-char'>"
 		htmlRow += "<span class='vertical-char EOL display-char'></span></div>"
-		//return $row.html(strInnerHtml);
-		//return $(htmlRow);
 		return htmlRow;
 	}
 	function createCharacterFromObj(obj) {
 		// 文字列からjQueryオブジェクトを作成
 		// クラスを追加するには、最初に半角スペースを入れること
 		var c = obj["char"];
-		//var $character = $('<span>').addClass('vertical-char').addClass('display-char').text(c);
 		var htmlChar = "<span class='vertical-char display-char";
-		//var classArr = setDecolation(obj);
 		var classArr = obj["decolation"];
 		if (classArr) {
 			for (var i = 0; i < classArr.length; i++) {
 				htmlChar += " " + classArr[i];
-				//$character.addClass(classArr[i]);
 			}
 		}
 		//// 特殊クラスの付与
-		//if(key_table.dotList.indexOf(c) !== -1) $character.addClass("vertical-dot"); // 句点
 		if(key_table.dotList.indexOf(c) !== -1) htmlChar += " vertical-dot";
-		//if(key_table.beforeBracketList.indexOf(c) !== -1) $character.addClass("vertical-before-bracket"); // 前括弧
 		if(key_table.beforeBracketList.indexOf(c) !== -1) htmlChar += " vertical-before-bracket";
-		//if(key_table.afterBracketList.indexOf(c) !== -1) $character.addClass("vertical-after-bracket"); // 後括弧
 		if(key_table.afterBracketList.indexOf(c) !== -1) htmlChar += " vertical-after-bracket";
-		//if(key_table.lineList.indexOf(c) !== -1) $character.addClass("character-line"); // 伸ばし棒
 		if(key_table.lineList.indexOf(c) !== -1) htmlChar += " character-line";
-		//if (/[a-zA-Z]/.test(c)) { $character.addClass("alphabet"); }
-		if (/[a-zA-Z]/.test(c)) htmlChar += " alphabet";
+		if (/[a-z]/.test(c)) htmlChar += " alphabet";
+		if (/[１-９]/.test(c)) htmlChar += " suzi";
+		if (/[っゃゅょぁぃぅぇぉ]/.test(c)) htmlChar += " yoin";
 		htmlChar += "'>";
 		htmlChar += c;
 		htmlChar += "</span>";
-		//return $character;
-		//return $(htmlChar);
 		return htmlChar; // 返すのは文字列
 	}
 	function setDecolation(obj) {
@@ -1476,11 +1463,12 @@ $(function(){
 		// 後ろに数える
 		while ($row[0] && !($row.hasClass('page-last-row'))) {
 			cnt++;
-			if (!($row.next('.vertical-row')[0])) {
-				$row = $row.closest('.vertical-paragraph').next('.vertical-paragraph').children('.vertical-row:first-of-type');
-			}else{
-				$row = $row.next('.vertical-row');
-			}
+			$row = $row.nextObj('#vertical-draft .vertical-row');
+			//if (!($row.next('.vertical-row')[0])) {
+			//	$row = $row.closest('.vertical-paragraph').next('.vertical-paragraph').children('.vertical-row:first-of-type');
+			//}else{
+			//	$row = $row.next('.vertical-row');
+			//}
 		}
 		return cnt;
 	}
@@ -1496,11 +1484,12 @@ $(function(){
 		// 前にさかのぼって数える
 		while ($row[0] && !($row.hasClass('page-break'))) {
 			cnt++;
-			if (!($row.prev('.vertical-row')[0])) {
-				$row = $row.closest('.vertical-paragraph').prev('.vertical-paragraph').children('.vertical-row:last-of-type');
-			}else{
-				$row = $row.prev('.vertical-row');
-			}
+			$row = $row.prevObj('#vertical-draft .vertical-row');
+			//if (!($row.prev('.vertical-row')[0])) {
+			//	$row = $row.closest('.vertical-paragraph').prev('.vertical-paragraph').children('.vertical-row:last-of-type');
+			//}else{
+			//	$row = $row.prev('.vertical-row');
+			//}
 		}
 		return cnt;
 	}
@@ -1548,6 +1537,16 @@ $(function(){
 		// 1行の文字数
 		return 30;
 	}
+	function getConfDecoChar(){
+		var rtnArr = [];
+		var color = document.getElementById('color-btn').className.match(/select-(\S+)/);
+		if(color){
+			rtnArr.push('decolation-color-' + color[1]);
+		}
+		if(document.getElementById('btn-bold').classList.contains('active')) rtnArr.push('decolation-font-bold');
+		if(document.getElementById('btn-italic').classList.contains('active')) rtnArr.push('decolation-font-italic');
+		return rtnArr;
+	}
 	// ===================================================================
 	// 		カーソル操作(label:cursor)
 	// ===================================================================
@@ -1587,7 +1586,8 @@ $(function(){
 		var min = Number.MAX_VALUE;
 		$chars.each(function () {
 			var $self = $(this);
-			var distance = getDistanceP2O(clickPos,$self);
+			// var distance = getDistanceP2O(clickPos,$self);
+			var distance = $self.getDistanceP2O(clickPos);
 			if (distance < min) {
 				min = distance;
 				$resultObj = $self;
@@ -1624,7 +1624,8 @@ $(function(){
 		}
 	}
 	function getCursorPos() {
-		return getPosObj($('.cursor'));
+		// return getPosObj($('.cursor'));
+		return $('.cursor').getPosObj();
 	}
 	function getPosObj($obj) {
 		// window上の絶対座標
@@ -1652,7 +1653,6 @@ $(function(){
 		next : function() {
 			// カーソルを次の文字に移動する
 			var $prev = $('.cursor');
-			//var $next = nextObj('#vertical-draft .vertical-char',$prev);
 			var $next = $prev.nextObj('#vertical-draft .vertical-char');
 			if (!($next[0])) {
 				// 文章の最後に達していたら、何もしない
@@ -1668,7 +1668,6 @@ $(function(){
 		prev : function () {
 			// カーソルを前の文字に移動する
 			var $prev = $('.cursor');
-			//var $next = prevObj('#vertical-draft .vertical-char',$prev);
 			var $next = $prev.prevObj('#vertical-draft .vertical-char');
 			if (!($next[0])) {
 				return;
@@ -1699,10 +1698,8 @@ $(function(){
 			// カーソルを次の行に移動する
 			var $prev = $('.cursor');
 			var NOCNum = $('#NOC-line').children('.number-of-char').index($('.cursor_char'));
-			//var $next = nextObj('#vertical-draft .vertical-row',$prev.closest('.vertical-row')).children('.vertical-char').eq(NOCNum);
 			var $next = $prev.closest('div.vertical-row').nextObj('#vertical-draft .vertical-row').children('.vertical-char').eq(NOCNum);
 			if (!($next[0])) {
-			 //$next = nextObj('#vertical-draft .vertical-row',$prev.closest('.vertical-row')).children('.vertical-char:last-of-type');
 			 $next = $prev.closest('.vertical-row').nextObj('#vertical-draft .vertical-row').children('.vertical-char:last-of-type');
 			}
 			if (!($next[0])) { return; }
@@ -1770,7 +1767,6 @@ $(function(){
 		if($parentRow.hasClass('display-row')) return;
 		$parentRow.addClass('display-row');
 		if($('.display-row').length <= getDisplayRowLen()) return;
-		//var $nextRow = nextObj('#vertical-draft .vertical-row',$parentRow);
 		var $nextRow = $parentRow.nextObj('#vertical-draft .vertical-row');
 		if ($nextRow.hasClass('display-row')) {
 			$('.display-row').last().removeClass('display-row');
@@ -1780,8 +1776,13 @@ $(function(){
 	}
 	function addDisplayRow(start,end) {
 		// start行目からend行目まで表示させる
-		var $oldDisplayRows = $('.vertical-row.display-row').removeClass('display-row');
-		if ($oldDisplayRows[0]) { $oldDisplayRows.removeClass('display-row'); }
+		//var $oldDisplayRows = $('.vertical-row.display-row').removeClass('display-row');
+		var eOldDisplayRows = document.getElementsByClassName('display-row');
+		//if ($oldDisplayRows[0]) { $oldDisplayRows.removeClass('display-row'); }
+		while (eOldDisplayRows.length > 0) {
+			eOldDisplayRows.item(0).classList.remove("display-row");
+		}
+
 		var $verticalRows = $('.vertical-paragraph > .vertical-row');
 		var $row;
 		for (var i = start; i < end; i++) {
@@ -1792,6 +1793,7 @@ $(function(){
 	function changeDisplayChar() {
 		console.log('changeDisplayChar');
 		var $cursor = $('#vertical-draft > .vertical-paragraph > .vertical-row > .cursor');
+		//var eCursor = document.getElementById('vertical-draft').getElementsByClassName('cursor').item(0);
 		var $cursorRow = $cursor.closest('.vertical-row');
 		var $chars = $cursorRow.children('.vertical-char');
 		if ($cursor.hasClass('EOL') && $cursor.prev('.vertical-char')[0]) {
@@ -1833,58 +1835,69 @@ $(function(){
 			dispCharOfRow(0,$(this));
 		});
 	}
-	function addDisplayChar() {
-		console.log('addDisplayChar');
-		// 適正位置の文字にdisplay-charクラスを付与して表示する
+	//function addDisplayChar() {
+	//	console.log('addDisplayChar');
+	//	// 適正位置の文字にdisplay-charクラスを付与して表示する
 
-		// 何文字目から表示するかを計算
-		var $cursorRow = $('#vertical-draft .cursor-row');
-		var $cursorChars = $cursorRow.children('.vertical-char');
-		var $cursor = $cursorRow.children('.cursor');
-		var rowHeight = parseInt($cursorRow.css('height'));
-		var charsHeight = 0;
-		var start = 0;
-		for (var i = $cursorChars.index($cursor); i >= 0; i--) {
-			var $char = $cursorChars.eq(i);
-			if (!($char.hasClass('EOL'))) charsHeight += parseInt($char.css('height'));
-			if (charsHeight <= rowHeight) {
-				start = i;
-			}else{
-				break;
-			}
-		}
+	//	// 何文字目から表示するかを計算
+	//	var $cursorRow = $('#vertical-draft .cursor-row');
+	//	var $cursorChars = $cursorRow.children('.vertical-char');
+	//	var $cursor = $cursorRow.children('.cursor');
+	//	var rowHeight = parseInt($cursorRow.css('height'));
+	//	var charsHeight = 0;
+	//	var start = 0;
+	//	for (var i = $cursorChars.index($cursor); i >= 0; i--) {
+	//		var $char = $cursorChars.eq(i);
+	//		if (!($char.hasClass('EOL'))) charsHeight += parseInt($char.css('height'));
+	//		if (charsHeight <= rowHeight) {
+	//			start = i;
+	//		}else{
+	//			break;
+	//		}
+	//	}
 
-		var oldDisplayChar = $('#vertical-draft .display-row > .display-char').not('.EOL');
-		var $displayRow = $('#vertical-draft .display-row');
-		if (oldDisplayChar[0]) {
-			oldDisplayChar.removeClass('display-char');
+	//	var oldDisplayChar = $('#vertical-draft .display-row > .display-char').not('.EOL');
+	//	var $displayRow = $('#vertical-draft .display-row');
+	//	if (oldDisplayChar[0]) {
+	//		oldDisplayChar.removeClass('display-char');
+	//	}
+	//	$displayRow.each(function () {
+	//		dispCharOfRow(start,$(this));
+	//	});
+	//}
+	function hasClass(elem,classRegExp){
+		if(classRegExp.test(elem.className)){
+			return true;
 		}
-		$displayRow.each(function () {
-			dispCharOfRow(start,$(this));
-		});
+		console.log(false);
+		return false;
 	}
 	function dispCharOfRow(start,$row) {
 		// $rowのstart文字目以降の各文字を$rowの高さに収まるだけdisplaycharクラスを付与する
-		var dispHeight = parseInt($row.css('height'));
-		var $chars = $row.children('.vertical-char').not('.EOL').removeClass('display-char');
-		var charLen = $chars.size();
+		// var dispHeight = parseInt($row.css('height'));
+		var dispHeight = $row[0].clientHeight;
+		var chars = $row[0].childNodes;
+		// var $chars = $row.children('.vertical-char').not('.EOL').removeClass('display-char');
+		// var charLen = $chars.size();
+		var charLen = chars.length;
 		if (start > charLen) { return; }
 		var htcnt = 0;
 		var fontHeight = 0;
 		for (var i = start; i < charLen; i++) {
-			$char = $chars.eq(i);
-			fontHeight = parseInt($char.css('height')) + parseInt($char.css('border-width'))*2;
-			console.log('fontHeight:'+ fontHeight);
-			if (!($char.hasClass('EOL'))) htcnt += fontHeight;
+			// var $char = $chars.eq(i);
+			var elChar = chars.item(i);
+			// fontHeight = parseInt($char.css('height')) + parseInt($char.css('border-width'))*2;
+			fontHeight = elChar.offsetHeight;
+			//if (!($char.hasClass('EOL'))) htcnt += fontHeight;
+			if (!(elChar.classList.contains('EOL'))) htcnt += fontHeight;
 			if (htcnt < dispHeight) {
-				$char.addClass('display-char');
+				// $char.addClass('display-char');
+				elChar.classList.add('display-char');
 			}else{
-				console.log('non disp:'+ $char.text());
-				break;
+				// console.log('non disp:'+ $char.text());
+				elChar.classList.remove('display-char');
 			}
 		}
-		console.log('dispHeight:'+ dispHeight);
-		console.log('htcnt:'+ htcnt);
 	}
 	function getDisplayRowLen() {
 		// 表示する行数
@@ -1902,8 +1915,9 @@ $(function(){
 		if (delta > 0) {
 			// ホイールを上に動かす
 			for (var i = 0; i < 3; i++) {
-				$nextRow = $('.display-row').first().prev('.vertical-row');
-				if (!$nextRow[0]) { $nextRow = $('.display-row').first().closest('.vertical-paragraph').prev('.vertical-paragraph').children('.vertical-row:last-of-type'); }
+				//$nextRow = $('.display-row').first().prev('.vertical-row');
+				$nextRow = $('.display-row').first().prevObj('#vertical-draft .vertical-row');
+				//if (!$nextRow[0]) { $nextRow = $('.display-row').first().closest('.vertical-paragraph').prev('.vertical-paragraph').children('.vertical-row:last-of-type'); }
 				if (!$nextRow[0]) { return; }
 				$nextRow.addClass('display-row');
 				$('.display-row').last().removeClass('display-row');
@@ -1912,8 +1926,9 @@ $(function(){
 		}else{
 			// ホイールを下に動かす
 			for (var i = 0; i < 3; i++) {
-				$nextRow = $('.display-row').last().next('.vertical-row');
-				if (!$nextRow[0]) { $nextRow = $('.display-row').last().closest('.vertical-paragraph').next('.vertical-paragraph').children('.vertical-row:first-of-type'); }
+				//$nextRow = $('.display-row').last().next('.vertical-row');
+				$nextRow = $('.display-row').last().nextObj('#vertical-draft .vertical-row');
+				//if (!$nextRow[0]) { $nextRow = $('.display-row').last().closest('.vertical-paragraph').next('.vertical-paragraph').children('.vertical-row:first-of-type'); }
 				if (!$nextRow[0]) { return; }
 				$nextRow.addClass('display-row');
 				$('.display-row').first().removeClass('display-row');
@@ -1960,7 +1975,7 @@ $(function(){
 		selection.removeAllRanges(); // 選択を解除する
 		return retObjArray;
 	}
-	function setClass(strClass) {
+	function setClassOnSelect(strClass) {
 		// 選択中の文字に装飾用クラスを付与する
 		// 同じ種類のクラスをすでに持っていた場合は除去する
 		var $objArray = getSelectObjArray();
@@ -1972,18 +1987,38 @@ $(function(){
 			if (rmClass) { $objArray[i].removeClass(rmClass[0]); }
 		}
 	}
-	// work
-	function setColor(color) {
+	function toggleClassOnSelect(strClass){
+		var $objArray = getSelectObjArray();
+		var cnt;
+		for (var i = 0; i < (cnt = $objArray.length); i++) {
+			$objArray[i].toggleClass(strClass);
+		}
+	}
+	function removeClassOnSelect(kind) {
+		var $objArray = getSelectObjArray();
+		var regexp = new RegExp(kind +'-\\S+'); // 正規表現オブジェクト
+		for (var i = 0; i < $objArray.length; i++) {
+			var rmClass = ($objArray[i].attr('class').match(regexp));
+			if (rmClass) { $objArray[i].removeClass(rmClass[0]); }
+		}
+	}
+	function setColorOnSelect(color) {
 		switch (color) {
+			case 'black':
+				removeClassOnSelect('decolation-color');
+				break;
 			case 'red':
-				setClass('decolation-color-red');
+				setClassOnSelect('decolation-color-red');
 				break;
 			case 'blue':
-				setClass('decolation-color-blue');
+				setClassOnSelect('decolation-color-blue');
 				break;
 			default:
 				break;
 		}
+	}
+	function removeColorOnSelect() {
+		removeClassOnSelect('decolation-color');
 	}
 	// =====================================================================
 	// 		ファイル操作(label:file)
@@ -2073,11 +2108,13 @@ $(function(){
 		var userID = getUserID();
 		var filename = $fileTitle.val();
 		if (filename.length === 0) {
-			alert("ファイル名を入力してください");
+			// alert("ファイル名を入力してください");
+			userAlert("ファイル名を入力してください");
 			return;
 		}
 		if (filename.indexOf("'") > -1 || filename.indexOf("<")>-1 || filename.indexOf(">")>-1) {
-			alert("ファイル名に使用不可能文字が含まれています。");
+			// alert("ファイル名に使用不可能文字が含まれています。");
+			userAlert("ファイル名に使用不可能文字が含まれています。");
 			return;
 		}
 		var fileID = $fileTitle.attr('data-file_id');
@@ -2127,11 +2164,13 @@ $(function(){
 		var userID = getUserID();
 		var filename = $fileTitle.val();
 		if (filename.length === 0) {
-			alert("ファイル名を入力してください");
+			// alert("ファイル名を入力してください");
+			userAlert("ファイル名を入力してください");
 			return;
 		}
 		if (filename.indexOf("'") > -1 || filename.indexOf("<")>-1 || filename.indexOf(">")>-1) {
-			alert("ファイル名に使用不可能文字が含まれています。");
+			// alert("ファイル名に使用不可能文字が含まれています。");
+			userAlert("ファイル名に使用不可能文字が含まれています。");
 			return;
 		}
 		var fileID = $fileTitle.attr('data-file_id');
@@ -2181,7 +2220,7 @@ $(function(){
 			dataType : "json",
 			success : function (data) {
 				// 表示データを受け取ってからの処理
-				setFileListFromObject(data,$('.file-list'));
+				setFileListFromObject(data,$('#file-list'));
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
 				alert("Error:"+ textStatus + ":\n" + errorThrown + ":status=" + XMLHttpRequest.status + " in getFileList");
@@ -2272,7 +2311,7 @@ $(function(){
 			dataType : "json",
 			success : function (data) {
 				// 表示データを受け取ってからの処理
-				setFileListFromObject(data,$('.file-list'));
+				setFileListFromObject(data,$('#file-list'));
 				var $matchFilesArray = getFileObjectsFromFileNameMatch(this.search_word);
 				setFileListFromArray($matchFilesArray);
 			},
@@ -2282,7 +2321,7 @@ $(function(){
 		});
 	}
 	function setFileListFromArray($array) {
-		var $fileList = $('.file-list');
+		var $fileList = $('#file-list');
 		$fileList.empty();
 		var $obj;
 		var fileID;
@@ -2421,7 +2460,7 @@ $(function(){
 					var result = data.result; // true or false の文字列
 					if (successRecord === "1" && result) {
 						// 別ファイルに移動
-						var $files = $('.file-list .file');
+						var $files = $('#file-list .file');
 						for (var i = 0; i < $files.length; i++) {
 							if ($files.eq(i).attr('data-file_id') !== this.fileID) {
 								readJsonFile($files.eq(i).attr('data-file_id'));
@@ -2455,18 +2494,18 @@ $(function(){
 	}
 	function openNextFile() {
 		console.log('openNextFile()');
-		var $currentFileLi = $('.file-list > li').has('.file[data-file_id="'+ $('input#file-title').attr('data-file_id') +'"]');
+		var $currentFileLi = $('#file-list > li').has('.file[data-file_id="'+ $('input#file-title').attr('data-file_id') +'"]');
 		var $nextFile;
 		if ($currentFileLi[0]) {
 			$nextFile = $currentFileLi.nextAll('li').first().children('.file');
 		}else{
-			$nextFile = $('.file-list .file').first();
+			$nextFile = $('#file-list .file').first();
 		}
 		if($nextFile[0]) readJsonFile($nextFile.attr('data-file_id'));
 	}
 	function openPrevFile() {
 		console.log('openPrevFile()');
-		var $currentFileLi = $('.file-list > li').has('.file[data-file_id="'+ $('input#file-title').attr('data-file_id') +'"]');
+		var $currentFileLi = $('#file-list > li').has('.file[data-file_id="'+ $('input#file-title').attr('data-file_id') +'"]');
 		var $nextFile = $currentFileLi.prevAll('li').first().children('.file');
 		if($nextFile[0]) readJsonFile($nextFile.attr('data-file_id'));
 	}
@@ -2478,11 +2517,11 @@ $(function(){
 				}
 				function getFileObjectFromFileName(filename) {
 					// 同一名ファイルが複数存在する可能性を忘れずに
-					var $file = $('.file-list .file[data-file_name="'+ filename +'"]');
+					var $file = $('#file-list .file[data-file_name="'+ filename +'"]');
 					return $file;
 				}
 				function getFileNameFromFileID(fileID) {
-					return $('.file-list .file[data-file_id="'+ fileID +'"]').attr('data-file_name');
+					return $('#file-list .file[data-file_id="'+ fileID +'"]').attr('data-file_name');
 				}
 				function deleteFileFromFileName(filename) {
 					console.log('deleteFileFromFileName()');
@@ -2624,12 +2663,70 @@ $(function(){
 						}
 					},
 					addID:function (id) {
-						$('#'+id).removeAttr('id','');
+						$('#'+id).removeAttr('id');
 						this.attr('id',id);
+						return this;
 					},
 					toString:function () {
+						// DOM要素の文字列表現を返す
 						var $tmp = $('<div>');
 						return $tmp.append(this.clone()).text();
+					},
+					getDistanceBetweenObj:function($other) {
+					// ２つの要素の中心点同士の距離を求める
+						var tCenterPos = this.getPosCenterPoint();
+						var oCenterPos = $other.getPosCenterPoint();
+						return jQuery.getDistanceP2P(tCenterPos.x,tCenterPos.y,oCenterPos.x,oCenterPos.y);
+					},
+					getDistanceP2O:function(po) {
+					// ある点とオブジェクトの中心点の距離を求める
+					// ex: po = {x:10,y:10}
+						var objPos = this.getPosCenterPoint();
+						return jQuery.getDistanceP2P(po.x,po.y,objPos.x,objPos.y);
+					},
+					getPosCenterPoint:function() {
+					// オブジェクトの中心点の座標を求める
+						var objPos = this.getPosObj();
+						var objWidth = parseInt(this.css('width'));
+						var objHeight = parseInt(this.css('height'));
+						return {
+							x: objPos.x + objWidth/2,
+							y: objPos.y + objHeight/2
+						}
+					},
+					getPosObj:function() {
+						// window上の絶対座標
+						var offset = this.offset();
+						var x = offset.left;
+						var y = offset.top;
+						return {
+							'x' : x,
+							'y' : y
+						}
+					},
+					removeClassByRegExp:function (regexp) {
+						// 正規表現にマッチしたクラスを取り除く
+						var strClass = this.attr('class') || ""; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
+						var classArr = strClass.match(regexp); // 正規表現にマッチしない場合、nullが返ってくる
+						var cnt;
+						for (var i = 0; classArr && i < (cnt = classArr.length); i++) {
+							this.removeClass(classArr[i]);
+						}
+						return this;
+					},
+					getOneClassByRegExp:function(regexp){
+						// 正規表現に合うクラスを文字列で返す
+						var strClass = this.attr('class') || ""; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
+						var strClass = strClass.match(regexp)[0]; // 正規表現にマッチしない場合、nullが返ってくる
+						return strClass;
+					}
+				});
+				$.extend({
+					getDistanceP2P:function(x1,y1,x2,y2) {
+						// ２点間の距離を求める
+						// ２乗を使っているので、戻り値は必ず正の数になる
+						// √{(b.x - a.x)^2+ (b.y - a.y)^2}
+						return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
 					}
 				});
 				function nextObj(selector,$obj) {
@@ -2663,7 +2760,7 @@ $(function(){
 				document.addEventListener("keydown",keyEvent ,false);
 				addFocusEvent("file-title");
 				$('body').on('keyup','#search-file',keyupInSearchFileInput);
-				$('body').on('click','.file-list .file',function (e) {
+				$('body').on('click','#file-list .file',function (e) {
 					var fileID = $(this).attr('data-file_id');
 					readJsonFile(fileID);
 					$('#file-list-modal').modal('hide');
@@ -2677,7 +2774,7 @@ $(function(){
 				document.getElementById('modal-fileopen-link').addEventListener("click",function (e) { readyFileModal(); },false);
 				document.getElementById('test').addEventListener("click",function (e) {
 					setFontSize('big');
-					//setColor('blue');
+					//setColorOnSelect('blue');
 					//readJsonFile(17);
 				},false);
 				$(window).resize(function () {
@@ -2719,4 +2816,66 @@ $(function(){
 						}
 					});
 				}
+				// palette
+				document.getElementById('color-btn').addEventListener('change',function (e) {
+					var eSel = document.getElementById('color-btn');
+					var index = eSel.selectedIndex;
+					eSel.classList.remove('select-red');
+					eSel.classList.remove('select-blue');
+					switch (index) {
+						case 0:
+							removeColorOnSelect();
+							break;
+						case 1:
+							//eSel.classList.add('select-red');
+							setColorOnSelect('red');
+							break;
+						case 2:
+							//eSel.classList.add('select-blue');
+							setColorOnSelect('blue');
+							break;
+					}
+				},false);
+				setSelectColorClickEvent("black");
+				setSelectColorClickEvent("red");
+				setSelectColorClickEvent("blue");
+				function setSelectColorClickEvent(color) {
+					document.getElementById("select-color-"+color).addEventListener("click",function (e) {
+						var elSel = document.getElementById('color-btn');
+						$(elSel).removeClassByRegExp(/select-\S+/);
+						setColorOnSelect(color);
+						if(color === "black") return;
+						elSel.classList.add('select-'+color);
+					},false);
+				}
+				document.getElementById('btn-bold').addEventListener('click',function(e){
+					var elem = document.getElementById('btn-bold');
+					elem.classList.toggle('active');
+					var objArr = getSelectObjArray();
+					if(/active/.test(elem.className)){
+						for(var i = 0;i<objArr.length;i++){
+							objArr[i].addClass('decolation-font-bold');
+						}
+					}else{
+						for(var i = 0;i<objArr.length;i++){
+							objArr[i].removeClass('decolation-font-bold');
+						}
+					}
+					// toggleClassOnSelect('decolation-font-bold');
+				},false);
+				document.getElementById('btn-italic').addEventListener('click',function(e){
+					var elem = document.getElementById('btn-italic');
+					elem.classList.toggle('active');
+					var objArr = getSelectObjArray();
+					if(/active/.test(elem.className)){
+						for(var i = 0;i<objArr.length;i++){
+							objArr[i].addClass('decolation-font-italic');
+						}
+					}else{
+						for(var i = 0;i<objArr.length;i++){
+							objArr[i].removeClass('decolation-font-italic');
+						}
+					}
+					// toggleClassOnSelect('decolation-font-italic');
+				},false);
 });

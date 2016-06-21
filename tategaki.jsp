@@ -40,7 +40,7 @@
 					<li><button class="btn btn-primary" id="test">test</button></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><div class="navbar-brand alert alert-info" role="alert" id="user-info">おしらせ</div></li>
+					<li><div class="navbar-brand alert alert-info" role="alert" id="user-info"></div></li>
 					<li><a class="navbar-brand" href="/tategaki/Logout">Logout</a></li>
 				</ul>
 			</nav>
@@ -58,6 +58,25 @@
 				<div class="input-buffer"></div>
 			</div>
 
+			<nav id="palette" class="nav navbar-default">
+
+					<ul class="nav navbar-nav">
+						<li>
+							<div class="btn-group">
+								<button type="button" id="color-btn" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-text-color"></span></button>
+								<button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span> </button>
+								<ul class="dropdown-menu">
+									<li id="select-color-black"><a href="#">black</a></li>
+									<li id="select-color-red" class="select-red"><a href="#">red</a></li>
+									<li id="select-color-blue" class="select-blue"><a href="#">blue</a></li>
+								</ul>
+							</div>
+						</li>
+							<li id="btn-bold"><a href="#"><span class="glyphicon glyphicon-bold"></span></a></li>
+							<li id="btn-italic"><a href="#"><span class="glyphicon glyphicon-italic"></span></a></li>
+					</ul>
+				</nav>
+
 			<div class="modal fade" id="file-list-modal" data-backdrop="static">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -67,7 +86,7 @@
 							<h4 class="modal-title modal-title-command">検索結果</h4>
 						</div>
 						<div class="modal-body">
-							<ul class="file-list"> </ul>
+							<ul id="file-list"> </ul>
 						</div>
 						<div class="modal-footer">
 							<div class="form-group">
