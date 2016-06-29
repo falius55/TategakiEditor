@@ -13,6 +13,7 @@
 			<link rel="stylesheet" href="honoka/css/bootstrap.min.css" media="screen">
 			<link rel="stylesheet" href="tategaki.css">
 			<link rel="stylesheet" href="tategaki-character-decolation.css">
+			<link rel="stylesheet" href="tategaki-dispStyle.css">
 			<link rel="stylesheet" href="verticalprint.css" media="print">
 		</head>
 		<body>
@@ -46,16 +47,16 @@
 			</nav>
 
 			<div id="app-container">
-					<input type="text" id="file-title" data-file_id="-1" value="newfile"></input>
-				<div id="vertical-draft" class="container"> 
+				<input type="text" id="file-title" data-file_id="-1" value="newfile"></input>
+					<div id="vertical-draft"> </div>
+				<div class="doc-info">
+					文字:<span class="str-num">-</span>/<span class="str-len">-</span>&nbsp;
+					行:<span class="row-num">-</span>/<span class="row-len">-</span>&nbsp;
+					ページ:<span class="page-num">-</span>/<span class="page-len">-</span>&nbsp;
+					最終更新日時:<span class="saved">-</span>
 				</div>
-					<div class="doc-info">
-						文字:<span class="str-num">-</span>/<span class="str-len">-</span>&nbsp;
-						行:<span class="row-num">-</span>/<span class="row-len">-</span>&nbsp;
-						ページ:<span class="page-num">-</span>/<span class="page-len">-</span>&nbsp;
-						最終更新日時:<span class="saved">-</span>
-					</div>
 				<div class="input-buffer"></div>
+				<input type="text" id="find"></input>
 			</div>
 
 			<nav id="palette" class="nav navbar-default">
@@ -74,6 +75,13 @@
 						</li>
 							<li id="btn-bold"><a href="#"><span class="glyphicon glyphicon-bold"></span></a></li>
 							<li id="btn-italic"><a href="#"><span class="glyphicon glyphicon-italic"></span></a></li>
+							<li>
+								<div class="btn-group">
+									<button type="button" id="text-btn-left" class="btn btn-default"><span class="glyphicon glyphicon-align-left"></button>
+									<button type="button" id="text-btn-center" class="btn btn-default"><span class="glyphicon glyphicon-align-center"></button>
+									<button type="button" id="text-btn-right" class="btn btn-default"><span class="glyphicon glyphicon-align-right"></button>
+								</div>
+							</li>
 					</ul>
 				</nav>
 
@@ -156,9 +164,12 @@
 										<li> &lt;CTL-H&gt;&nbsp;カーソル移動[Left]</li>
 										<li> &lt;CTL-D&gt;&nbsp;カーソルの前にある文字を１文字削除[BackSpace]</li>
 										<li> &lt;CTL-S&gt;&nbsp;ファイルを上書き保存</li>
-										<li> &lt;CTL-I&gt;&nbsp;同じディレクトリ内の次のファイルを開く</li>
-										<li> &lt;CTL-O&gt;&nbsp;同じディレクトリ内の前のファイルを開く</li>
+										<li> &lt;CTL-,&gt;&nbsp;同じディレクトリ内の次のファイルを開く</li>
+										<li> &lt;CTL-.&gt;&nbsp;同じディレクトリ内の前のファイルを開く</li>
 										<li> &lt;CTL-F&gt;&nbsp;「ファイルを開く」ダイアログを開く</li>
+										<li> &lt;CTL-I&gt;&nbsp;次の検索語句に進む</li>
+										<li> &lt;CTL-O&gt;&nbsp;前の検索語句に進む</li>
+										<li> &lt;/&gt;&nbsp;語句検索を開始する</li>
 									</ul>
 									</div>
 									<div role="tabpanel" class="tab-pane" id="help-command">
@@ -178,6 +189,7 @@
 										<li> &lt;:mkdir ディレクトリ名&gt;&nbsp;「ディレクトリ名」という名前でディレクトリを作成する</li>
 										<li> &lt;:mv ファイル名 ディレクトリ名&gt;&nbsp;「ファイル名」を「ディレクトリ名」の中に移動する</li>
 										<li> &lt;:deldir ディレクトリ名&gt;&nbsp;ディレクトリ「ディレクトリ名」を削除する</li>
+										<li> &lt;:noh&gt;&nbsp;語句検索を終了する</li>
 									</ul>
 									</div>
 								</div>

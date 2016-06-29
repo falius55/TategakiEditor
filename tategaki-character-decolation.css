@@ -61,3 +61,12 @@ span.decolation-font-small {
 	color: white;
 	background-color: blue;
 }
+.decolation-textalign-left .vertical-row {
+	text-align: left;
+}
+.decolation-textalign-center .vertical-row {
+	text-align: center;
+}
+.decolation-textalign-right .vertical-row {
+	text-align: right;
+}

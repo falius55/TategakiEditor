@@ -1,15 +1,8 @@
 console.log("tategaki.js");
 /*
- * 命名規則
- * id,classの区切りは-(ハイフン)
- * class以外のhtml上の属性名の区切りは_(アンダースコア)
- * 変数名、関数名、オブジェクトのプロパティはキャメル記法
- */
-/*
  * 実装目標
  * コピーアンドペースト
  * アンドゥ
- * 字句検索
  */
 $(function(){
 	// ===================================================================
@@ -17,6 +10,7 @@ $(function(){
 	// ===================================================================
 	// キー操作
 	function keyEvent(e) {
+		userAlert("");
 		var keycode;
 		if (document.all) {
 			// IE
@@ -46,6 +40,9 @@ $(function(){
 		console.log(keycode);
 		// デフォルトの動作を無効化する
 		e.preventDefault();
+		// e.stopPropagation();
+		// e.keyCode = 0;
+		// e.ctrlKey = false;
 	}
 	function keyEventOnConvertView(e,keycode) {
 		var $inputBuffer = $('.input-buffer');
@@ -63,7 +60,8 @@ $(function(){
 				// 禁則処理
 				checkKinsoku();
 				// displayrow
-				reDisplay();
+				// reDisplay();
+				changeDisplayRow(false);
 				addPageBreak();
 				printDocInfo();
 				break;
@@ -94,7 +92,9 @@ $(function(){
 					} 
 					var $newPhrases = $('.input-buffer > .vertical-char[data-phrase_num='+ newPhraseNum + ']');
 					$prevSelectConvertView.attr('data-alternativeList','nonselect');
+					// $prevSelectConvertView.data('alternativeList','nonselect');
 					$newSelectConvertView.attr('data-alternativeList','select');
+					// $newSelectConvertView.data('alternativeList','select');
 					$('.input-buffer > .vertical-char.selectPhrase').removeClass('selectPhrase');
 					$newPhrases.addClass('selectPhrase');
 					$('.alternative-focus').removeClass('alternative-focus');
@@ -138,7 +138,9 @@ $(function(){
 					} 
 					var $newPhrases = $('.input-buffer > .vertical-char[data-phrase_num='+ newPhraseNum + ']');
 					$prevSelectConvertView.attr('data-alternativeList','nonselect');
+					// $prevSelectConvertView.data('alternativeList','nonselect');
 					$newSelectConvertView.attr('data-alternativeList','select');
+					// $newSelectConvertView.data('alternativeList','select');
 					$('.input-buffer > .vertical-char.selectPhrase').removeClass('selectPhrase');
 					$newPhrases.addClass('selectPhrase');
 					$('.alternative-focus').removeClass('alternative-focus');
@@ -173,7 +175,8 @@ $(function(){
 				$inputBuffer.empty().hide(); // inputBufferを空にして隠す
 				checkKinsoku();
 				// displayrow
-				reDisplay();
+				// reDisplay();
+				changeDisplayRow(false);
 				addPageBreak();
 				printDocInfo();
 				break;
@@ -221,15 +224,21 @@ $(function(){
 				var $delChar = $('.cursor').prev();
 				deleteCharacter($delChar,$('.cursor-row'));
 				break;
+			case 190:
+				// .
+				findPrev();
+				break;
 			case 79:
 				// o
-				console.log('C + O');
 				openPrevFile();
 				textcheck = false;
 				break;
+			case 188:
+				// ,
+				findNext();
+				break;
 			case 73:
 				// i
-				console.log('C + I');
 				openNextFile();
 				textcheck = false;
 				break;
@@ -265,7 +274,8 @@ $(function(){
 			// 禁則処理
 			checkKinsoku();
 			// displayrow
-			reDisplay();
+			// reDisplay();
+			changeDisplayRow(false);
 			addPageBreak();
 			printDocInfo();
 		}
@@ -310,6 +320,10 @@ $(function(){
 				// :
 				startCommandMode();
 				break;
+			case 191:
+				// /
+				startFindMode();
+				break;
 			default:
 				// bufferの更新
 				var newInputStr;
@@ -325,7 +339,8 @@ $(function(){
 				break;
 		}
 		// displayrow
-		reDisplay();
+		// reDisplay();
+		changeDisplayRow(false);
 		addPageBreak();
 		printDocInfo();
 	}
@@ -333,10 +348,14 @@ $(function(){
 	function runCommand() {
 		var $command = $('input#command');
 		var command = $command.val().split(' ');
+		if(command.length < 2) command = $command.val().split('　');
 		switch (command[0]) {
 			case ':w':
 			case ':save':
 			case ':s':
+			case ': ｗ':
+			case ':さヴぇ':
+			case ':ｓ':
 					 if (command[1]) {
 						 saveAs(command[1]);
 					 }else{
@@ -346,6 +365,9 @@ $(function(){
 			case ':e':
 			case ':o':
 			case ':open':
+			case ':え':
+			case ':お':
+			case ':おぺｎ':
 					 if (command[1]) {
 						 openFile(command[1]);
 					 }else{
@@ -355,15 +377,23 @@ $(function(){
 			case ':jumpr':
 			case ':jumprow':
 			case ':jr':
+			case ':じゅｍｐｒ':
+			case ':じゅｍｐろｗ':
+			case ':ｊｒ':
 					 if(command[1]) Cursor.jumpForRow(command[1]);
 					 break;
 			case ':jumpp':
 			case ':jumppage':
 			case ':jp':
+			case ':じゅｍっｐ':
+			case ':じゅｍっぱげ':
+			case ':ｊｐ':
 					 if(command[1]) Cursor.jumpForPage(command[1]);
 					 break;
 			case ':new':
 			case ':n':
+			case ':ねｗ':
+			case ':ｎ':
 					 if (command[1]) {
 						 newFile(command[1]);
 					 }else {
@@ -373,6 +403,9 @@ $(function(){
 			case ':delete':
 			case ':del':
 			case ':d':
+			case ':でぇて':
+			case ':でｌ':
+			case ':ｄ':
 					 if (command[1]) {
 						 deleteFileFromFileName(command[1]);
 					 }else{
@@ -380,6 +413,7 @@ $(function(){
 					 }
 					 break;
 			case ':next':
+			case ':ねｘｔ':
 					 // 次のファイルを開く
 					 if (command[1]) {
 						 // 第二引数は繰り返し回数
@@ -393,6 +427,7 @@ $(function(){
 					 }
 					 break;
 			case ':prev':
+			case ':ｐれｖ':
 					 // 前のファイルを開く
 					 if (command[1]) {
 						 // 第二引数は繰り返し回数
@@ -408,28 +443,58 @@ $(function(){
 			case ':title':
 			case ':name':
 			case ':t':
+			case ':ちｔぇ':
+			case ':なめ':
+			case ':ｔ':
 					 if (command[1]) {
 						 setFileTitle(command[1]);
 					 }
 					 break;
 			case ':mv':
+			case ':ｍｖ':
 					 var $file = $('.file[data-file_name="'+ command[1] +'"],.directory[data-directory_name="'+ command[1] +'"]');
 					 var $newParentDir = $('.directory[data-directory_name="'+ command[2] +'"]');
 					 if ($file[0] && $newParentDir[0]) {
 						 var fileID = $file.attr('data-type')==='file'?$file.attr('data-file_id'):$file.attr('data-directory_id');
+						 // var fileID = $file.data('type')==='file'?$file.data('file_id'):$file.data('directory_id');
 						 var newParentDirID = $newParentDir.attr('data-directory_id');
+						 // var newParentDirID = $newParentDir.data('directory_id');
 						 moveFileIntoDirectory(fileID,newParentDirID);
 					 }
 					 break;
 			case ':mkdir':
+			case ':ｍｋぢｒ':
 					 if (command[1]) {
 						 makeDirectory(command[1]);
 					 }
 					 break;
 			case ':deldir':
+			case ':でｌぢｒ':
 					 if (command[1]) {
 						 deleteDirectoryFromDirectoryName(command[1],false);
 					 }
+					 break;
+			case ':noh':
+			case ':のｈ':
+					 endFindMode();
+					 break;
+			case '::':
+					 insertStringFromCursor(':');
+					 break;
+			case ':;':
+					 insertStringFromCursor(';');
+					 break;
+			case ':/':
+					  insertStringFromCursor('/');
+					  break;
+			case ':i':
+					 insertStringFromCursor(command[1]);
+					 break;
+			case ':italic':
+					 toggleFont('italic');
+					 break;
+			case ':bold':
+					 toggleFont('bold');
 					 break;
 			default:
 					 break;
@@ -471,6 +536,7 @@ $(function(){
 			// :eなどの後に途中まで引数を打てばファイルの検索ダイアログが出るようにする
 			var $command = $(this);
 			var command = $command.val().split(' ');
+			if(command.length < 2) command = $command.val().split('　');
 			switch (command[0]) {
 				case ':e':
 				case ':o':
@@ -479,6 +545,13 @@ $(function(){
 				case ':delete':
 				case ':del':
 				case ':d':
+				case ':え':
+				case ':お':
+				case ':おぺｎ':
+				case ':ｍｖ':
+				case ':でぇて':
+				case ':でｌ':
+				case ':ｄ':
 						 if (keycode !== 8 && command[1] && !($('body').hasClass('modal-open'))) {
 							 // モーダルウィンドウを表示する
 							 displayFileModalOnCommandMode();
@@ -539,6 +612,38 @@ $(function(){
 		this.rowLen = rowLen;
 		this.strSize = strSize;
 	}
+	function startFindMode(){
+		var $find = $('#find').addClass('active');
+		// フォーカスを当ててからvalueをセットすることで末尾にカーソルが移動される
+		$find.focus();
+		$find.val('/');
+		document.removeEventListener("keydown",keyEvent,false);
+
+		$('body').on('keyup','#find',function(e){
+			if(e.keyCode == 13){
+				$find.blur();
+				document.addEventListener("keydown",keyEvent,false);
+				return;
+			}else if($find.val() == ''){
+				$find.blur();
+				document.addEventListener("keydown",keyEvent,false);
+				endFindMode();
+			}
+			find($find.val().substring(1));
+		});
+
+		$('body').on('blur','#find',function(e){
+		document.addEventListener("keydown",keyEvent,false);
+		});
+		$('body').on('focus','#find',function(e){
+		document.removeEventListener("keydown",keyEvent,false);
+		});
+	}
+	function endFindMode(){
+		$('#find').removeClass('active').val('');
+		$('.search-label').removeClass('search-label');
+		$('.search-word').removeClass('search-word');
+	}
 	function userAlert(str){
 		$('#user-info').text(str);
 	}
@@ -591,21 +696,25 @@ $(function(){
 		return $row;
 	}
 	function createCharacter(c) {
-		var $character = $('<span>').addClass('vertical-char').addClass('display-char').text(c);
-		// 特殊クラスの付与
-		if(key_table.dotList.indexOf(c) !== -1) $character.addClass("vertical-dot"); // 句点
-		if(key_table.beforeBracketList.indexOf(c) !== -1) $character.addClass("vertical-before-bracket"); // 前括弧
-		if(key_table.afterBracketList.indexOf(c) !== -1) $character.addClass("vertical-after-bracket"); // 後括弧
-		if(key_table.lineList.indexOf(c) !== -1) $character.addClass("character-line"); // 伸ばし棒
-		// if (/[a-zA-Z]/.test(c)) { $character.addClass("alphabet"); }
-		if (/[a-z]/.test(c)) $character.addClass("alphabet");
-		if (/[１-９]/.test(c)) $character.addClass("suzi");
-		if (/[っゃゅょぁぃぅぇぉ]/.test(c)) $character.addClass("yoin");
+		// 文字列からjQueryオブジェクトを作成
+		// クラスを追加するには、最初に半角スペースを入れること
+		var htmlChar = "<span class='vertical-char display-char";
 		var classArr = getConfDecoChar();
-		for(var i=0;i<classArr.length;i++){
-			$character.addClass(classArr[i]);
-		}
-		return $character;
+			for (var i = 0; i < classArr.length; i++) {
+				htmlChar += " " + classArr[i];
+			}
+		// 特殊クラスの付与
+		if(key_table.dotList.indexOf(c) !== -1) htmlChar += " vertical-dot";
+		if(key_table.beforeBracketList.indexOf(c) !== -1) htmlChar += " vertical-before-bracket";
+		if(key_table.afterBracketList.indexOf(c) !== -1) htmlChar += " vertical-after-bracket";
+		if(key_table.lineList.indexOf(c) !== -1) htmlChar += " character-line";
+		if (/[a-z]/.test(c)) htmlChar += " alphabet";
+		if (/[１-９]/.test(c)) htmlChar += " suzi";
+		if (/[っゃゅょぁぃぅぇぉ]/.test(c)) htmlChar += " yoin";
+		htmlChar += "'>";
+		htmlChar += c;
+		htmlChar += "</span>";
+		return $(htmlChar);
 	}
 	function getKanjiForFullString(str) {
 		// 漢字変換
@@ -636,6 +745,7 @@ $(function(){
 					// 文節番号をつける(同じ文節には同じ番号)
 					for (var j = cnt; j < (cnt + hiraLen); j++) {
 						$chars.eq(j).attr('data-phrase_num',i);
+						// $chars.eq(j).data('phrase_num',i);
 					}
 					cnt += hiraLen;
 					insertPhraseToInputBuffer(i,json[i][1][0]); // 第一候補の漢字でinputBufferの文字列を置き換える
@@ -646,6 +756,7 @@ $(function(){
 				}
 				var $convertViews = $('.convert-view');
 				$('.convert-view:eq(0)').attr('data-alternativeList','select');
+				// $('.convert-view:eq(0)').data('alternativeList','select');
 				$('.convert-view[data-alternativeList="select"] > .vertical-row:first-of-type').addClass('alternative-focus');
 				repositionConvertView();
 
@@ -684,6 +795,7 @@ $(function(){
 				var fPhraseNum = this.$first.children('.phrase-num').text();
 				var sPhraseNum = this.$second.children('.phrase-num').text();
 				var $newFirstConvertView = createConvertView(fPhraseNum,json[0]).attr('data-alternativeList','select');
+				// var $newFirstConvertView = createConvertView(fPhraseNum,json[0]).data('alternativeList','select');
 				var $newSecondConvertView = createConvertView(sPhraseNum,json[1]);
 				this.$first.before($newFirstConvertView);
 				this.$second.before($newSecondConvertView);
@@ -729,6 +841,7 @@ $(function(){
 				console.log('統合:');
 				var fPhraseNum = this.$first.children('.phrase-num').text();
 				var $newConvertView = createConvertView(fPhraseNum,json[0]).attr('data-alternativeList','select');
+				// var $newConvertView = createConvertView(fPhraseNum,json[0]).data('alternativeList','select');
 				this.$first.before($newConvertView);
 				// 第一候補の文字でinputBufferの該当文字を置き換える
 				insertPhraseToInputBuffer(fPhraseNum,getStringFromRow($newConvertView.children('.vertical-row:first-of-type').addClass('alternative-focus')));
@@ -771,6 +884,7 @@ $(function(){
 				var fPhraseNum = this.$first.children('.phrase-num').text();
 				var sPhraseNum = $('.convert-view').length;
 				var $newFirstConvertView = createConvertView(fPhraseNum,json[0]).attr('data-alternativeList','select');
+				// var $newFirstConvertView = createConvertView(fPhraseNum,json[0]).data('alternativeList','select');
 				var $newSecondConvertView = createConvertView(sPhraseNum,json[1]);
 				this.$first.before($newFirstConvertView);
 				this.$first.before($newSecondConvertView);
@@ -781,6 +895,7 @@ $(function(){
 				var $insertPosObj = $('.input-buffer > .vertical-char[data-phrase_num='+ fPhraseNum + ']').last();
 				for (var i = secondFirstStr.length -1; i >= 0; i--) {
 					var $character = createCharacter(secondFirstStr.charAt(i)).attr('data-phrase_num',sPhraseNum);
+					// var $character = createCharacter(secondFirstStr.charAt(i)).data('phrase_num',sPhraseNum);
 					$insertPosObj.after($character);
 				}
 
@@ -819,6 +934,7 @@ $(function(){
 				console.log('一文節のみ変換:');
 				var fPhraseNum = this.$first.children('.phrase-num').text();
 				var $newConvertView = createConvertView(fPhraseNum,json[0]).attr('data-alternativeList','select');
+				// var $newConvertView = createConvertView(fPhraseNum,json[0]).data('alternativeList','select');
 				this.$first.before($newConvertView);
 				// 第一候補の文字でinputBufferの該当文字を置き換える
 				insertPhraseToInputBuffer(fPhraseNum,getStringFromRow($newConvertView.children('.vertical-row:first-of-type').addClass('alternative-focus')));
@@ -836,6 +952,7 @@ $(function(){
 	}
 	function changeKatakanaAtConvert() {
 		var phraseNum = $('.input-buffer > .selectPhrase').attr('data-phrase_num');
+		// var phraseNum = $('.input-buffer > .selectPhrase').data('phrase_num');
 		var str = getKatakana(getStringFromRow($('.convert-view[data-alternativeList="select"] > .vertical-row').last()));
 		insertPhraseToInputBuffer(phraseNum,str).addClass('selectPhrase');
 		resizeInputBuffer();
@@ -863,6 +980,7 @@ $(function(){
 		// convertviewを作成する
 		// jsonArrayはひらがなと漢字配列が入るように、json[i]の形で渡す
 		var $convertView = $('<div>').addClass('convert-view').attr('data-alternativeList','nonselect');
+		// var $convertView = $('<div>').addClass('convert-view').data('alternativeList','nonselect');
 		if (jsonArray[1] != null) {
 			for (var i = 0; i < jsonArray[1].length; i++) {
 				$convertView.append(createRow(jsonArray[1][i]));
@@ -894,15 +1012,19 @@ $(function(){
 		var $character = $('.input-buffer > .vertical-char').first();
 		var $convertView = $('.convert-view').first();
 		var temp = $character.attr('data-phrase_num');
+		// var temp = $character.data('phrase_num');
 		$convertView.children('.phrase-num').text(newNum);
 		while (!($character.hasClass('EOL'))) {
 			if (temp !== $character.attr('data-phrase_num')){
+			// if (temp !== $character.data('phrase_num')){
 				newNum++;
 				temp = $character.attr('data-phrase_num');
+				// temp = $character.data('phrase_num');
 				$convertView = $convertView.next('.convert-view');
 				$convertView.children('.phrase-num').text(newNum);
 			}
 			$character.attr('data-phrase_num',newNum);
+			// $character.data('phrase_num',newNum);
 			$character = $character.next('.vertical-char');
 		}
 	}
@@ -933,9 +1055,6 @@ $(function(){
 					if ($prevRow[0]) {
 						// 段落の最初ではない
 						backChar($prevRow);
-						// $self.remove();
-						// $selfRow.remove();
-						// $prevRow.children('.vertical-char.EOL').before($self);
 					}
 				}
 			});
@@ -970,8 +1089,6 @@ $(function(){
 		}
 		cordinateStringNumber($cursorRow,getStringLenOfRow());
 		Cursor.repositionCharNum();
-		// 行をまたぐと非display-charがdisplay-charに挟まれ、かつカーソル文字がdisplay-charであるという状態となるので、
-		// 一度resetDisplayCharで埋めてからchangeDisplayをする
 		resetDisplayChar();
 		changeDisplayChar();
 	}
@@ -980,11 +1097,14 @@ $(function(){
 		// 新しくinputBufferを作り直す
 		var $newInputBuffer = createRow(str).addClass('input-buffer');
 		$newInputBuffer.children('.vertical-char').attr('data-phrase_num',-1);
+		// $newInputBuffer.children('.vertical-char').data('phrase_num',-1);
 		if ($inputBuffer.text()!=="" && $inputBuffer.children('.vertical-char:first-of-type').attr('data-phrase_num') !== "-1") {
+		// if ($inputBuffer.text()!=="" && $inputBuffer.children('.vertical-char:first-of-type').data('phrase_num') !== "-1") {
 			for (var i = 0; i < $inputBuffer.children('.vertical-char').length; i++) {
 				var $oldCharacter = $inputBuffer.children('.vertical-char').eq(i);
 				var $newCharacter = $newInputBuffer.children('.vertical-char').eq(i);
 				$newCharacter.attr('data-phrase_num',$oldCharacter.attr('data-phrase_num'));
+				// $newCharacter.data('phrase_num',$oldCharacter.data('phrase_num'));
 			}
 		}
 		$inputBuffer.before($newInputBuffer);
@@ -1003,9 +1123,11 @@ $(function(){
 			var $character = createCharacter(str.charAt(i));
 			$insertPosObj.before($character);
 			$character.attr('data-phrase_num',-10);
+			// $character.data('phrase_num',-10);
 		}
 		$selectPhrases.remove();
 		return $('.input-buffer > .vertical-char[data-phrase_num="-10"]').attr('data-phrase_num',phNum);
+		// return $('.input-buffer > .vertical-char[data-phrase_num="-10"]').data('phrase_num',phNum);
 	}
 	// 改行
 	function lineBreak() {
@@ -1016,48 +1138,45 @@ $(function(){
 		if (!($prevChar[0])) {
 			// 行頭カーソルで改行
 			var $baseParagraph = $cursorRow.closest('.vertical-paragraph');
-			var $paragraph = $('<div>').addClass('vertical-paragraph');
-			var $row = createRow("").addClass('display-row');
-			$paragraph.append($row);
+			var $paragraph = createParagraph("");
 			if (($cursorRow.prev())[0]) {
 				// 段落途中での行頭改行では、段落を２つに分ける
 				var $afterParagraph = createDevideParagraph($cursorRow);
 				// $baseParagraph,$afterParagraphの順番になるように
 				$baseParagraph.after($afterParagraph);
-				return;
+			}else{
+				// 段落最初での改行では、その前のところに空行挿入
+				$baseParagraph.before($paragraph);
 			}
-			// 段落最初での改行では、その前のところに空行挿入
-			$baseParagraph.before($paragraph);
-			return;
-		}
+		}else{
+			if (!($nextRow[0])) {
+				// 次の行がなければ新しく作る
+				$nextRow = createRow("");
+				$cursorRow.after($nextRow);
+			}
+			var $insertPosObj = $nextRow.children('.vertical-char:first-of-type'); //挿入先の最初の文字
+			var $moveChar = $cursor; // 移動文字
+			while($moveChar[0] && !($moveChar.hasClass('EOL'))){ // EOLは移動しない
+				// $nextRowの先頭にある$insertPosObjに、$prevCharの次の文字を挿入していく
+				$moveChar.remove();
+				$insertPosObj.before($moveChar);
+				$moveChar = $prevChar.nextAll('.vertical-char').first();
+			}
+			if ($cursor.hasClass('EOL')) { // EOLにカーソルがあると、EOLが動かないために、カーソルが次の行に行かないので強制的に動かす必要あり
+				// = 行末での改行
+				$nextRow.children('.vertical-char:first-of-type').addCursor();
+			}
+			// 移動文字列を次の行に入れた結果規定文字数を超えた場合のために、次の行を文字数調整
+			cordinateStringNumber($nextRow,getStringLenOfRow());
 
-		if (!($nextRow[0])) {
-			// 次の行がなければ新しく作る
-			$nextRow = createRow("");
-			$cursorRow.after($nextRow);
-		}
-		var $insertPosObj = $nextRow.children('.vertical-char:first-of-type'); //挿入先の最初の文字
-		var $vChar = $cursor; // 移動文字
-		while($vChar[0] && !($vChar.hasClass('EOL'))){ // EOLは移動しない
-			// $nextRowの先頭にある$insertPosObjに、$prevCharの次の文字を挿入していく
-			$vChar.remove();
-			$insertPosObj.before($vChar);
-			$vChar = $prevChar.nextAll('.vertical-char').first();
-		}
-		if ($cursor.hasClass('EOL')) { // EOLにカーソルがあると、EOLが動かないために、カーソルが次の行に行かないので強制的に動かす必要あり
-			// = 行末での改行
-			$cursor.removeClass('cursor');
-			$nextRow.children('.vertical-char:first-of-type').addClass('cursor');
-		}
-		// 移動文字列を次の行に入れた結果規定文字数を超えた場合のために、次の行を文字数調整
-		cordinateStringNumber($nextRow,getStringLenOfRow());
+			// $nextRow以降を新しい段落とする
+			var $currentParagraph = $nextRow.closest('.vertical-paragraph');
+			var $newParagraph = createDevideParagraph($nextRow);
+			$currentParagraph.after($newParagraph);
 
-		// $nextRow以降を新しい段落とする
-		var $currentParagraph = $nextRow.closest('.vertical-paragraph');
-		var $newParagraph = createDevideParagraph($nextRow);
-		$currentParagraph.after($newParagraph);
-
-		Cursor.repositionCharNum();
+			Cursor.repositionCharNum();
+		}
+		reDisplay();
 	}
 	function createDevideParagraph($row) {
 		// $row以降を新しい段落とする
@@ -1087,28 +1206,29 @@ $(function(){
 			// 次の行がなければ新しく作る
 			$nextRow = createRow("");
 			$vRow.after($nextRow);
+			reDisplay();
 		}
 		var $prevChar = $vRow.children('.vertical-char').eq(strLen -1); //移動しない文字の最後
 		var $insertPosObj = $nextRow.children('.vertical-char:first-of-type'); //挿入先の最初の文字
-		var $vChar = $prevChar.nextAll('.vertical-char').first(); // 移動文字
-		while($vChar[0] && !($vChar.hasClass('EOL'))){ // EOLは移動しない
-			$vChar.remove();
-			$insertPosObj.before($vChar);
-			$vChar = $prevChar.nextAll('.vertical-char').first();
+		var $moveChar = $prevChar.nextAll('.vertical-char').first(); // 移動文字
+		while($moveChar[0] && !($moveChar.hasClass('EOL'))){ // EOLは移動しない
+			$moveChar.remove();
+			$insertPosObj.before($moveChar);
+			$moveChar = $prevChar.nextAll('.vertical-char').first();
 		}
 		// 移動先の行がstrlen文字を超えている時のために再帰
 		cordinateStringNumber($nextRow,strLen);
 		// cursorが調整行の最後にあれば動いてくれないので、強制的に動かす
 		if ($prevChar.nextAll('.vertical-char').first().hasClass('cursor')) {
-			$('.cursor').removeClass('cursor');
-			$insertPosObj.addClass('cursor');
+			$insertPosObj.addCursor();
 			Cursor.repositionCharNum();
 		}
+		Cursor.addCursorRow();
 	}
-	function deleteCharacter($vCharacter,$rowOfDelChar) {
-		// $vCharacter: 削除文字
+	function deleteCharacter($delChar,$rowOfDelChar) {
+		// $delChar: 削除文字
 		// $rowofdelchar: 削除文字のある行
-		if (!($vCharacter[0])) {
+		if (!($delChar[0])) {
 			// 行頭からのBS
 			var $preRow = $rowOfDelChar.prevAll('.vertical-row').first();
 			if (!($preRow[0])) {
@@ -1126,8 +1246,8 @@ $(function(){
 					// 空段落でBSを押した時、段落を削除するのみ
 					$delParagraph.remove();
 					// cursorの調整
-					var $newCursor = $preRow.children('.vertical-char:last-of-type');
-					$newCursor.addClass('cursor');
+					var $newCursor = $preRow.children('.vertical-char:last-of-type').addCursor(false);
+					reDisplay();
 					Cursor.repositionCharNum();
 					return;
 				}
@@ -1139,7 +1259,10 @@ $(function(){
 					$mvRow = $delParagraph.children('.vertical-row:first-of-type');
 				}while($mvRow[0]);
 				$delParagraph.remove();
-				if($preRow.children().length >= getStringLenOfRow()) return; // 前の段落の最終行が規定文字数あるようなら、段落をつなげて終わり
+				if($preRow.children().length >= getStringLenOfRow()){
+					// 前の段落の最終行が規定文字数あるようなら、段落をつなげて終わり
+					return;
+				}
 			}
 			// 行頭からのBSかつ段落の最初ではない
 			if ($preRow.children('.vertical-char').length < getStringLenOfRow()) {
@@ -1148,23 +1271,25 @@ $(function(){
 				for (var i = 0; i < cnt; i++) {
 					backChar($preRow);
 				}
+				reDisplay();
 				Cursor.repositionCharNum();
 				return;
 			}else{
 				// 前の行の文字数が規定文字ある時、前の行の最後の文字を削除文字にする
-				$vCharacter = $preRow.children('.EOL').prev();
+				$delChar = $preRow.children('.EOL').prev();
 				$rowOfDelChar = $preRow;
 			}
 		}
 		backChar($rowOfDelChar); // 次の行から１文字持ってくる
-		var character = $vCharacter.text();
-		$vCharacter.remove();
+		var character = $delChar.text();
+		$delChar.remove();
 		if ($rowOfDelChar.children('.vertical-char:first-of-type').hasClass('EOL') && ($rowOfDelChar.prev())[0]) {
 			// 先にカーソルの調整($rowOfDelChar削除前にカーソル位置取得)
 			var $newCursor = $rowOfDelChar.prev().children('.vertical-char:last-of-type');
 			$newCursor.addClass('cursor');
 			// 最後の１文字を削除した場合はbackCharが反応しないので、その空行を削除(それが段落最後の行でなければ)
 			$rowOfDelChar.remove();
+			reDisplay();
 		}
 		Cursor.repositionCharNum();
 		return character;
@@ -1207,7 +1332,9 @@ $(function(){
 			} 
 			var $newPhrases = $('.input-buffer > .vertical-char[data-phrase_num='+ newPhraseNum + ']');
 			$prevSelectConvertView.attr('data-alternativeList','nonselect');
+			// $prevSelectConvertView.data('alternativeList','nonselect');
 			$newSelectConvertView.attr('data-alternativeList','select');
+			// $newSelectConvertView.data('alternativeList','select');
 			$('.input-buffer > .vertical-char.selectPhrase').removeClass('selectPhrase');
 			$newPhrases.addClass('selectPhrase');
 			$('.alternative-focus').removeClass('alternative-focus');
@@ -1292,7 +1419,6 @@ $(function(){
 		var $inputBuffer = $('.input-buffer');
 		var $character = $inputBuffer.children('.vertical-char:first-of-type');
 		// borderは上下合わせて２つある
-		// var height = (parseInt($character.css('height')) + parseInt($character.css('border-width'))*2) * ($inputBuffer.children('.vertical-char').length-1);
 		var height = $character.outerHeight() * ($inputBuffer.children('.vertical-char').length-1) + 5;
 		$inputBuffer.css('height',height);
 	}
@@ -1307,9 +1433,13 @@ $(function(){
 		/*
 		 * example
 		 * array[paragraph[{charObj},{charobj}],paragraph[{charObj}]]
-		 * data = [
-		 * 				[
-		 * 					{
+		 * data = {
+		 * "conf":{},
+		 * "text":[ // getTextObj()
+		 * 				[ // getParagraphDataArray()
+		 * 				[], // getParagraphClassArr()
+		 * 				[ // charArray
+		 * 					{ // Characterdata();
 		 * 						"char":"あ",
 		 * 						"decolation":["decolation-color-blue"]
 		 * 					},
@@ -1317,7 +1447,8 @@ $(function(){
 		 * 						"char":"い",
 		 * 						"decolation":null
 		 * 					}
-		 * 				],
+		 * 					]
+		 * 				], // getParagraphDataArray()
 		 * 				[
 		 * 					{
 		 * 						"char":"う",
@@ -1325,7 +1456,8 @@ $(function(){
 		 * 					}
 		 * 				],
 		 * 				[]		// 段落配列が空　＝　空行
-		 * 			]
+		 * 			] // getTextObj()
+		 * 			}
 		 */
 		var paragraphArrays = new Array();
 		var $paragraphs = $('#vertical-draft > .vertical-paragraph');
@@ -1335,13 +1467,20 @@ $(function(){
 		return paragraphArrays;
 	}
 	function getParagraphDataArray($paragraph) {
+		var paraArr = new Array();
+		paraArr[0] = getParagraphClassArr();
 		var $chars = $paragraph.find('.vertical-char').not('.EOL');
 		var charLen = $chars.length;
 		var charArray = new Array();
 		for (var i = 0; i < charLen; i++) {
 			charArray[i] = new CharacterData($chars.eq(i));
 		}
-		return charArray;
+		paraArr[1] = charArray;
+		return paraArr;
+	}
+	function getParagraphClassArr(){
+		var arr = new Array();
+		return arr;
 	}
 	function CharacterData($character) {
 		// constructor
@@ -1349,6 +1488,63 @@ $(function(){
 		this["char"] = $character.text();
 		this["decolation"] = classArray;
 	}
+	// function createCharChain(){
+	// 	var eChars = document.getElementById('vertical-draft').getElementsByClassName('vertical-char');
+	// 	var eChar;
+	// 	var cnt;
+	// 	var prevChar = null;
+	// 	var nextChar = null;
+	// 	for(var i=0,cnt=chars.length;i<cnt;i++){
+	// 		eChar = chars[i];
+	// 		if(eChar.classList.contains('EOL')) continue;
+	// 	}
+	// }
+	// function Chars(_elem){
+	// 	var classArr = _elem.className.match(/decolation-\S+/g);
+	// 	this = {
+	// 		prev: null,
+	// 		next: null,
+	// 		get elem(){ return _elem; },
+	// 		set elem(){},
+	// 		get text(){ return _elem.textContent;},
+	// 		set text(c){
+	// 			if(c.length === 1){
+	// 				_elem.textContent = c;
+	// 			}
+	// 		},
+	// 		get strClass(){
+	// 			return _elem.className;
+	// 		},
+	// 		get classes(){
+	// 			if(classArr){
+	// 				return classArr;
+	// 			}else{
+	// 				return [];
+	// 			}
+	// 		},
+	// 		toString: function(){
+	// 			var str = "<span class='"+ classArr[0]"'>"+ this.text +"</span>";
+	// 			str = 
+	// 	var htmlChar = "<span class='vertical-char display-char";
+	// 	var classArr = obj["decolation"];
+	// 	if (classArr) {
+	// 		for (var i = 0; i < classArr.length; i++) {
+	// 			htmlChar += " " + classArr[i];
+	// 		}
+	// 	//// 特殊クラスの付与
+	// 	if(key_table.dotList.indexOf(c) !== -1) htmlChar += " vertical-dot";
+	// 	if(key_table.beforeBracketList.indexOf(c) !== -1) htmlChar += " vertical-before-bracket";
+	// 	if(key_table.afterBracketList.indexOf(c) !== -1) htmlChar += " vertical-after-bracket";
+	// 	if(key_table.lineList.indexOf(c) !== -1) htmlChar += " character-line";
+	// 	if (/[a-z]/.test(c)) htmlChar += " alphabet";
+	// 	if (/[１-９]/.test(c)) htmlChar += " suzi";
+	// 	if (/[っゃゅょぁぃぅぇぉ]/.test(c)) htmlChar += " yoin";
+	// 	htmlChar += "'>";
+	// 	htmlChar += c;
+	// 	htmlChar += "</span>";
+	// 		},
+	// 	}
+	// }
 	function splitArray(baseArray,cnt) {
 		// baseArrayをcnt個ずつの配列に分割する
 		var b = baseArray.length;
@@ -1374,7 +1570,8 @@ $(function(){
 		// 文字列をstrLen文字ごとに区切って行にして、paragraphにappendする
 		var strLen = getStringLenOfRow();
 		var strPara = "<div class='vertical-paragraph'>";
-		var objArray = splitArray(paraObj,strLen);
+		var objArray = splitArray(paraObj[1],strLen);
+		// var objArray = splitArray(paraObj,strLen);
 		for (var i = 0; i < objArray.length; i++) {
 			strPara += createRowFromObj(objArray[i]);
 		}
@@ -1464,11 +1661,6 @@ $(function(){
 		while ($row[0] && !($row.hasClass('page-last-row'))) {
 			cnt++;
 			$row = $row.nextObj('#vertical-draft .vertical-row');
-			//if (!($row.next('.vertical-row')[0])) {
-			//	$row = $row.closest('.vertical-paragraph').next('.vertical-paragraph').children('.vertical-row:first-of-type');
-			//}else{
-			//	$row = $row.next('.vertical-row');
-			//}
 		}
 		return cnt;
 	}
@@ -1485,11 +1677,6 @@ $(function(){
 		while ($row[0] && !($row.hasClass('page-break'))) {
 			cnt++;
 			$row = $row.prevObj('#vertical-draft .vertical-row');
-			//if (!($row.prev('.vertical-row')[0])) {
-			//	$row = $row.closest('.vertical-paragraph').prev('.vertical-paragraph').children('.vertical-row:last-of-type');
-			//}else{
-			//	$row = $row.prev('.vertical-row');
-			//}
 		}
 		return cnt;
 	}
@@ -1535,7 +1722,7 @@ $(function(){
 	}
 	function getStringLenOfRow() {
 		// 1行の文字数
-		return 30;
+		return 40;
 	}
 	function getConfDecoChar(){
 		var rtnArr = [];
@@ -1553,8 +1740,7 @@ $(function(){
 	function moveCursorToClickPos(e) {
 		if ($('.input-buffer').text() !== "") { return; }
 		var prev = $('.cursor');
-		prev.removeClass('cursor');
-		getCharOnRowClick($(this),e).addClass('cursor'); // クリックした行のうち最も近い文字にカーソルが当たる
+		getCharOnRowClick($(this),e).addCursor(); // クリックした行のうち最も近い文字にカーソルが当たる
 		Cursor.repositionCharNum();
 		printDocInfo();
 	}
@@ -1586,7 +1772,6 @@ $(function(){
 		var min = Number.MAX_VALUE;
 		$chars.each(function () {
 			var $self = $(this);
-			// var distance = getDistanceP2O(clickPos,$self);
 			var distance = $self.getDistanceP2O(clickPos);
 			if (distance < min) {
 				min = distance;
@@ -1624,7 +1809,6 @@ $(function(){
 		}
 	}
 	function getCursorPos() {
-		// return getPosObj($('.cursor'));
 		return $('.cursor').getPosObj();
 	}
 	function getPosObj($obj) {
@@ -1642,6 +1826,7 @@ $(function(){
 			$('.vertical-char').first().addClass('cursor');
 			$('#NOC-line > .number-of-char:first-of-type').addClass('cursor_char');
 			this.addCursorRow();
+			resetDisplayChar();
 		},
 		addCursorRow : function () {
 			var $oldCursorRow = $('.vertical-paragraph > .vertical-row.cursor-row');
@@ -1658,12 +1843,9 @@ $(function(){
 				// 文章の最後に達していたら、何もしない
 				return;
 			}
-			$prev.removeClass('cursor');
-			$next.addClass('cursor');
+			$next.addCursor(false);
 			// markしたまま別の行に移り、そのまま上下キーを押してmarkを動かすこともあるので、markを１文字ずつ動かすのでは期待通りの動きをしてくれない
 			this.repositionCharNum();
-			this.addCursorRow();
-			changeDisplayChar();
 		},
 		prev : function () {
 			// カーソルを前の文字に移動する
@@ -1672,27 +1854,20 @@ $(function(){
 			if (!($next[0])) {
 				return;
 			}
-			$prev.removeClass('cursor');
-			$next.addClass('cursor');
+			$next.addCursor(false);
 			this.repositionCharNum();
-			this.addCursorRow();
-			changeDisplayChar();
 		},
 		shiftRight: function () {
 			// カーソルを前の行に移動する
 			var $prev = $('.cursor');
 			var NOCNum = $('#NOC-line').children('.number-of-char').index($('.cursor_char'));
-			//var $next = prevObj('#vertical-draft .vertical-row',$('#vertical-draft .cursor-row')).children('.vertical-char').eq(NOCNum);
 			var $next = $('#vertical-draft .cursor-row').prevObj('#vertical-draft .vertical-row').children('.vertical-char').eq(NOCNum);
 			if (!($next[0])) {
 				// 右の行の文字数が現在文字より小さい
-			//var $next = prevObj('#vertical-draft .vertical-row',$('#vertical-draft .cursor-row')).children('.vertical-char:last-of-type');
 			var $next = $('#vertical-draft div.cursor-row').prevObj('#vertical-draft .vertical-row').children('.vertical-char:last-of-type');
 			}
 			if (!($next[0])) { return; }
-			$prev.removeClass('cursor');
-			$next.addClass('cursor');
-			this.addCursorRow();
+			$next.addCursor(false);
 		},
 		shiftLeft: function () {
 			// カーソルを次の行に移動する
@@ -1703,9 +1878,7 @@ $(function(){
 			 $next = $prev.closest('.vertical-row').nextObj('#vertical-draft .vertical-row').children('.vertical-char:last-of-type');
 			}
 			if (!($next[0])) { return; }
-			$prev.removeClass('cursor');
-			$next.addClass('cursor');
-			this.addCursorRow();
+			$next.addCursor(false);
 		},
 		repositionCharNum: function () {
 			// charNumの位置を再調整
@@ -1720,16 +1893,17 @@ $(function(){
 			var $targetRow = $('.vertical-paragraph > .vertical-row').eq(rowNum-1);
 			if (!$targetRow[0]) { return; }
 			// cursor
-			$('.cursor').removeClass('cursor');
-			$targetRow.children('.vertical-char:first-of-type').addClass('cursor');
-			this.addCursorRow();
+			// $('.cursor').removeClass('cursor');
+			// $targetRow.children('.vertical-char:first-of-type').addClass('cursor');
+			$targetRow.children('.vertical-char:first-of-type').addCursor(true);
+			// this.addCursorRow();
 			this.repositionCharNum();
 			// display
-			var cursorRowPos = $('.vertical-paragraph > .vertical-row').index($('.cursor-row'));
-			var startDispNum = (cursorRowPos-getDisplayRowLen()/2)>=0?cursorRowPos-getDisplayRowLen()/2:$('.vertical-paragraph > .vertical-row').index($('.vertical-paragraph > .vertical-row:first-of-type'));
-			addDisplayRow(startDispNum,startDispNum+getDisplayRowLen());
-			resetDisplayChar();
-			printDocInfo();
+			// var cursorRowPos = $('.vertical-paragraph > .vertical-row').index($('.cursor-row'));
+			// var startDispNum = (cursorRowPos-getDisplayRowLen()/2)>=0?cursorRowPos-getDisplayRowLen()/2:$('.vertical-paragraph > .vertical-row').index($('.vertical-paragraph > .vertical-row:first-of-type'));
+			// addDisplayRow(startDispNum,startDispNum+getDisplayRowLen());
+			// resetDisplayChar();
+			// printDocInfo();
 		},
 		jumpForPage: function (pageNum) {
 			// 指定ページにジャンプする。カーソルは１行目
@@ -1737,44 +1911,146 @@ $(function(){
 			var $targetRow = $('.vertical-paragraph > .vertical-row').eq(startDispNum);
 			if (!$targetRow[0]) { return; }
 			// cursor
-			$('.cursor').removeClass('cursor');
-			$targetRow.children('.vertical-char:first-of-type').addClass('cursor');
-			this.addCursorRow();
+			// $('.cursor').removeClass('cursor');
+			// $targetRow.children('.vertical-char:first-of-type').addClass('cursor');
+			$targetRow.children('.vertical-char:first-of-type').addCursor(false);
+			// this.addCursorRow();
 			this.repositionCharNum();
 			// display
 			addDisplayRow(startDispNum,startDispNum+getDisplayRowLen());
-			resetDisplayChar();
-			printDocInfo();
+			// resetDisplayChar();
+			// printDocInfo();
 		}
 	};
+	function findNext(){
+		var $prevCursor = $('.cursor');
+		var $nextCursor = $prevCursor.nextObj('#vertical-draft .search-label,.cursor',true);
+		if(!$nextCursor[0]) return;
+		$nextCursor.addCursor(true);
+		Cursor.repositionCharNum();
+	}
+	function findPrev(){
+		var $prevCursor = $('.cursor');
+		var $nextCursor = $prevCursor.prevObj('#vertical-draft .search-label,.cursor',true);
+		if(!$nextCursor[0]) return;
+		$nextCursor.addCursor(true);
+		Cursor.repositionCharNum();
+	}
+	function find(word){
+		console.log('find:'+ word);
+		// if(word === '') return;
+		// 検索字句にクラスを付与する
+		var old = document.getElementById('vertical-draft').getElementsByClassName('search-label');
+		while(old[0]){ // クラスをremoveするとoldからその要素がなくなって詰められる
+			old[0].classList.remove('search-label');
+		}
+		old = document.getElementById('vertical-draft').getElementsByClassName('search-word');
+		while(old[0]){
+			old[0].classList.remove('search-word');
+		}
+		console.log('removed');
+		if(word === '') return;
+
+		var chars = document.getElementById('vertical-draft').getElementsByClassName('vertical-char');
+		var indexArr = findIndex(word);
+		console.log(indexArr);
+		var len = word.length;
+		for(var i=0;i<indexArr.length;i++){
+			chars[indexArr[i]].classList.add('search-label');
+			for(var j=0;j<len;j++){
+				chars[indexArr[i]+j].classList.add('search-word');
+			}
+		}
+			if(!document.getElementById('vertical-draft').getElementsByClassName('cursor')[0].classList.contains('search-label')) findNext();
+	}
+	function findIndex(word){
+		// 字句検索
+		// 1文字目のインデックスの配列を返す
+		// var $chars = $('#vertical-draft .vertical-character');
+		var indexArr = [];
+		var chars = document.getElementById('vertical-draft').getElementsByClassName('vertical-char');
+		// var charObj = {};
+		for(var i=0;i<chars.length;i++){
+			indexArr[i] = i;
+		}
+		for(var i=0;i<word.length;i++){
+			var searchChar = word.charAt(i);
+			for(var j=0;j<indexArr.length;j++){ // lengthは変動する
+				// if($chars.eq(indexArr[j]+i).text() !== searchChar){
+				if(chars.item(indexArr[j]+i).textContent != searchChar){
+					indexArr.splice(j,1); // j番目から要素を一つ削除する
+					j--;
+				}
+			}
+		}
+		return indexArr;
+	}
 	// =====================================================================
 	// 		表示操作(label:display)
 	// =====================================================================
 	function reDisplay() {
 		var startDispNum = $('.vertical-paragraph > .vertical-row').index($('.display-row').first());
 		addDisplayRow(startDispNum,startDispNum+getDisplayRowLen()); // 途中行数変化
-		if (getRowLen() >= getDisplayRowLen()) {
-			// 全行数が表示行数より多い
-			changeDisplayRow(); // カーソル移動
-		}else{
-			$('.vertical-paragraph > .vertical-row').addClass('display-row');
-		}
+		// if (getRowLen() >= getDisplayRowLen()) {
+		// 	// 全行数が表示行数より多い
+		// 	changeDisplayRow(false); // カーソル移動
+		// }else{
+		// 	$('.vertical-paragraph > .vertical-row').addClass('display-row');
+		// }
 	}
-	function changeDisplayRow() {
+	function changeDisplayRow(bl) {
+		console.time('changeDisplayRow()');
 		// カーソルが移動した時の、表示領域の調整
-		var $cursor = $('#vertical-draft > .vertical-paragraph > .vertical-row.cursor-row > .cursor');
-		var $parentRow = $cursor.closest('.vertical-row');
-		if($parentRow.hasClass('display-row')) return;
-		$parentRow.addClass('display-row');
-		if($('.display-row').length <= getDisplayRowLen()) return;
-		var $nextRow = $parentRow.nextObj('#vertical-draft .vertical-row');
-		if ($nextRow.hasClass('display-row')) {
-			$('.display-row').last().removeClass('display-row');
-		}else{
-			$('.display-row').first().removeClass('display-row');
+		// bl: trueならカーソルを画面中央に配置する
+		var $cursor = $('#vertical-draft .cursor');
+		var $cursorRow = $cursor.closest('.vertical-row');
+		if($cursorRow.hasClass('display-row')){
+			console.log('cursorRow has dispaly-row');
+			return;
 		}
+		$cursorRow.addClass('display-row');
+		if($('.display-row').length <= getDisplayRowLen()) return;
+		var $nextRow = $cursorRow.nextObj('#vertical-draft .vertical-row');
+		var $prevRow = $cursorRow.prevObj('#vertical-draft .vertical-row');
+		if ($nextRow.hasClass('display-row')) {
+			// カーソルが一行前にはみ出した
+			$('.display-row').last().removeClass('display-row');
+			resetDispNum();
+		}else if($prevRow.hasClass('display-row')){
+			// カーソルが一行後にはみ出した
+			$('.display-row').first().removeClass('display-row');
+			resetDispNum();
+		}else if(bl){
+			// カーソルが二行以上はみ出し、かつカーソルを中央配置する
+			var $rows = $('#vertical-draft .vertical-row');
+			var cursorRowPos = $rows.index($('.cursor-row'));
+			var start = cursorRowPos - getDisplayRowLen()/2;
+			start = start>=0?start:0;
+			addDisplayRow(start,start+getDisplayRowLen());
+		}else{
+			// カーソルが二行以上はみ出した
+			var currentStart = $('.vertical-row').index($('.display-row').first());
+			var cursorIndex = $('.vertical-row').index($cursorRow);
+			var currentEnd = $('.vertical-row').index($('.display-row').last());
+			var start = 0;
+			if (cursorIndex < currentStart) {
+				// カーソルが前にある
+				start = cursorIndex;
+			}else if(cursorIndex > currentEnd){
+				// カーソルが後ろにある
+				start = currentStart + (cursorIndex - currentEnd);
+			}else{
+				// display-rowに囲まれた部分にdisplay-rowでない行がある場合
+				// 途中行数変化
+				start = currentStart;
+				return;
+			}
+			addDisplayRow(start,start+getDisplayRowLen());
+		}
+		console.timeEnd('changeDisplayRow()');
 	}
 	function addDisplayRow(start,end) {
+		console.log('addDisplayRow()');
 		// start行目からend行目まで表示させる
 		//var $oldDisplayRows = $('.vertical-row.display-row').removeClass('display-row');
 		var eOldDisplayRows = document.getElementsByClassName('display-row');
@@ -1783,57 +2059,97 @@ $(function(){
 			eOldDisplayRows.item(0).classList.remove("display-row");
 		}
 
-		var $verticalRows = $('.vertical-paragraph > .vertical-row');
-		var $row;
-		for (var i = start; i < end; i++) {
-			$row = $verticalRows.eq(i);
-			$row.addClass('display-row');
+		// var $verticalRows = $('.vertical-paragraph > .vertical-row');
+		var rows = document.getElementById('vertical-draft').getElementsByClassName('vertical-row');
+		// var $row;
+		var row;
+		var rowLen = rows.length;
+		if(end>rowLen){
+			end = rowLen;
+			start = end - getDisplayRowLen();
+			if(start < 0) start = 0;
 		}
+		var k = 0;
+		for (var i = start; i < end; i++) {
+			// $row = $verticalRows.eq(i);
+			row = rows.item(i);
+			// $row.addClass('display-row');
+			row.classList.add('display-row');
+			// row.setAttribute('data-dispnum',k++);
+			row.dataset.dispnum = k++;
+		}
+		console.timeEnd('addDisplayRow()');
 	}
 	function changeDisplayChar() {
-		console.log('changeDisplayChar');
-		var $cursor = $('#vertical-draft > .vertical-paragraph > .vertical-row > .cursor');
-		//var eCursor = document.getElementById('vertical-draft').getElementsByClassName('cursor').item(0);
-		var $cursorRow = $cursor.closest('.vertical-row');
-		var $chars = $cursorRow.children('.vertical-char');
-		if ($cursor.hasClass('EOL') && $cursor.prev('.vertical-char')[0]) {
-			$cursor = $cursor.prev('.vertical-char');
+		console.time('changeDisplayChar()');
+		var eCursor = document.getElementById('vertical-draft').getElementsByClassName('cursor').item(0);
+		var eCursorRow = eCursor.parentNode;
+		var chars = eCursorRow.childNodes;
+		if (eCursor.classList.contains('EOL') && eCursor.previousElementSibling) {
+			eCursor = eCursor.previousElementSibling;
 		}
-		if($cursor.hasClass('display-char')){
+		if(eCursor.classList.contains('display-char')){
 			console.log('cursor has display-char');
 			return;
 		}
 		var start;
-		var currentStart = $chars.index($cursorRow.children('.display-char').first());
-		var cursorIndex = $chars.index($cursor);
-		var currentEnd = $chars.index($cursorRow.children('.display-char').not('.EOL').last());
+		var currentStart = index(eCursorRow.querySelector('.display-char'),chars);
+		var cursorIndex = index(eCursor,chars);
+		var currentEnd = index(eCursorRow.querySelectorAll('.display-char').item(eCursorRow.querySelectorAll('.display-row').length-1),chars);
 		if (cursorIndex < currentStart) {
 			// カーソルが前にある
 			start = cursorIndex;
-		}else if(cursorIndex > currentEnd){
+		}else if(currentEnd > 0 && cursorIndex > currentEnd){
 			// カーソルが後ろにある
 			start = currentStart + (cursorIndex - currentEnd);
 		}else{
 			// display-charに囲まれた部分にdisplay-charでない文字がある場合
+			// あるいはdisplay-charが一つもない状態の場合
 			resetDisplayChar();
 			changeDisplayChar();
 			return;
 		}
-		var $displayRow = $('#vertical-draft .display-row');
-		$displayRow.each(function () {
-			dispCharOfRow(start,$(this));
-		});
+		var displayRow = document.querySelectorAll('#vertical-draft .display-row');
+		// replaceDispChar(start,displayRow);
+		var cnt
+		for(var i=0,cnt=displayRow.length;i<cnt;i++){
+			dispCharOfRow(start,displayRow.item(i));
+		}
+		console.timeEnd('changeDisplayChar()');
+	}
+	function index(target,elements){
+		var index = -1;
+		for(var i=0;i<elements.lenght;i++){
+			if(elements.item(0) == target)
+				index = i;
+		}
+		return index;
 	}
 	function resetDisplayChar() {
-		console.log('resetDisplayChar');
-		var oldDisplayChar = $('#vertical-draft .display-row > .display-char').not('.EOL');
-		var $displayRow = $('#vertical-draft .display-row');
-		if (oldDisplayChar[0]) {
-			oldDisplayChar.removeClass('display-char');
+		console.time('resetDisplayChar()');
+		var dispRow = document.getElementById('vertical-draft').getElementsByClassName('display-row');
+		// replaceDispChar(0,dispRow);
+		var cnt;
+		for(var i=0,cnt=dispRow.length;i<cnt;i++){
+			dispCharOfRow(0,dispRow[i]);
 		}
-		$displayRow.each(function () {
-			dispCharOfRow(0,$(this));
-		});
+		console.log('resetDisplayChar');
+		console.timeEnd('resetDisplayChar()');
+	}
+	function replaceDispChar(start,dispRows){
+		var range = document.createRange();
+		range.setStartBefore(dispRows[0].parentNode);
+		range.setEndAfter(dispRows[dispRows.length-1].parentNode);
+		var fragment = range.cloneContents();
+		var frRows = fragment.querySelectorAll('.vertical-row');
+
+		var cnt;
+		for(var i=0,cnt=frRows.length;i<cnt;i++){
+			dispCharOfRow(start,dispRows[i],frRows[i]);
+		}
+		range.deleteContents();
+		range.insertNode(fragment);
+		console.log(frRows);
 	}
 	//function addDisplayChar() {
 	//	console.log('addDisplayChar');
@@ -1872,38 +2188,76 @@ $(function(){
 		console.log(false);
 		return false;
 	}
-	function dispCharOfRow(start,$row) {
+	function dispCharOfRow(start,row,dfRow) {
+		// console.time('dispCharOfRow()');
+		var elRow = row.nodeName && row.nodeType===1 ? row : row[0];
+
+		var range = document.createRange();
+		// range.setStartBefore(dispRows[0]);
+		// range.setEndAfter(dispRows[dispRows.length-1]);
+		// range.selectNode(row);
+		// var fragment = range.cloneContents();
+		// var frChars = fragment.querySelectorAll('.vertical-char');
+		// console.log('fragment:'+ fragment);
+		// console.log('frChars:'+ frChars);
+		// console.log('frChars[0]:'+ frChars[0]);
+
+		// var cnt;
+		// for(var i=0;i<(cnt = frRows.length);i++){
+		// 	dispCharOfRow(start,frRows[i]);
+		// }
+		
 		// $rowのstart文字目以降の各文字を$rowの高さに収まるだけdisplaycharクラスを付与する
-		// var dispHeight = parseInt($row.css('height'));
-		var dispHeight = $row[0].clientHeight;
-		var chars = $row[0].childNodes;
-		// var $chars = $row.children('.vertical-char').not('.EOL').removeClass('display-char');
-		// var charLen = $chars.size();
+		var dispHeight = elRow.clientHeight;
+		var chars = elRow.childNodes;
 		var charLen = chars.length;
+		// console.log('chars:'+ chars);
+		// console.log('charlen:'+ charLen);
 		if (start > charLen) { return; }
+		console.log('dfRow:'+dfRow);
+		var dfChars = dfRow.querySelectorAll('.vertical-char');
 		var htcnt = 0;
 		var fontHeight = 0;
+		for(var i=0;i<start;i++){
+			// var classList = chars[i].classList;
+			var classList = dfChars[i].classList;
+			if(classList.contains('display-char')) classList.remove('display-char');
+		}
 		for (var i = start; i < charLen; i++) {
-			// var $char = $chars.eq(i);
-			var elChar = chars.item(i);
-			// fontHeight = parseInt($char.css('height')) + parseInt($char.css('border-width'))*2;
+			var elChar = chars[i];
+			var dfChar = dfChars[i];
 			fontHeight = elChar.offsetHeight;
-			//if (!($char.hasClass('EOL'))) htcnt += fontHeight;
-			if (!(elChar.classList.contains('EOL'))) htcnt += fontHeight;
-			if (htcnt < dispHeight) {
-				// $char.addClass('display-char');
-				elChar.classList.add('display-char');
+			htcnt += fontHeight;
+			console.log('dispHeight:'+dispHeight);
+			console.log('fontHeight:'+fontHeight);
+			console.log('htcnt:'+ htcnt);
+			if (htcnt < dispHeight || elChar.classList.contains('EOL')) {
+				// if(!(elChar.classList.contains('display-char'))) elChar.classList.add('display-char');
+				if(!(dfChar.classList.contains('display-char'))) dfChar.classList.add('display-char');
 			}else{
-				// console.log('non disp:'+ $char.text());
-				elChar.classList.remove('display-char');
+				// if(elChar.classList.contains('display-char')) elChar.classList.remove('display-char');
+				if(dfChar.classList.contains('display-char')) dfChar.classList.remove('display-char');
 			}
 		}
+
+		// range.deleteContents();
+		// range.insertNode(fragment);
+		console.timeEnd('dispCharOfRow()');
+	}
+	function resetDispNum(){
+			var k=0;
+			$('.display-row').each(function(){
+				// this.setAttribute('data-dispnum',k++);
+				this.dataset.dispnum = k++;
+			});
 	}
 	function getDisplayRowLen() {
 		// 表示する行数
 		var dispWidth = parseInt($('#vertical-draft').css('width'));
+		// var dispWidth = parseInt($('#draft-container').css('width'));
 		if (dispWidth <= 0) { return 0; }
-		var rowWidth = parseInt($('.vertical-paragraph > .vertical-row').css('width'));
+		// var rowWidth = parseInt($('.vertical-paragraph > .vertical-row').css('width'));
+		var rowWidth = parseInt($('.vertical-paragraph > .vertical-row').css('height'));
 		var rowBorderWidth = 2;
 		rowWidth += rowBorderWidth;
 		var dispLen = dispWidth / rowWidth;
@@ -1915,10 +2269,8 @@ $(function(){
 		if (delta > 0) {
 			// ホイールを上に動かす
 			for (var i = 0; i < 3; i++) {
-				//$nextRow = $('.display-row').first().prev('.vertical-row');
 				$nextRow = $('.display-row').first().prevObj('#vertical-draft .vertical-row');
-				//if (!$nextRow[0]) { $nextRow = $('.display-row').first().closest('.vertical-paragraph').prev('.vertical-paragraph').children('.vertical-row:last-of-type'); }
-				if (!$nextRow[0]) { return; }
+				if (!$nextRow[0]) { break; }
 				$nextRow.addClass('display-row');
 				$('.display-row').last().removeClass('display-row');
 				if (!($('.cursor-row').hasClass('display-row'))) { Cursor.shiftRight(); }
@@ -1926,15 +2278,18 @@ $(function(){
 		}else{
 			// ホイールを下に動かす
 			for (var i = 0; i < 3; i++) {
-				//$nextRow = $('.display-row').last().next('.vertical-row');
 				$nextRow = $('.display-row').last().nextObj('#vertical-draft .vertical-row');
-				//if (!$nextRow[0]) { $nextRow = $('.display-row').last().closest('.vertical-paragraph').next('.vertical-paragraph').children('.vertical-row:first-of-type'); }
-				if (!$nextRow[0]) { return; }
+				if (!$nextRow[0]) { break; }
 				$nextRow.addClass('display-row');
 				$('.display-row').first().removeClass('display-row');
 				if (!($('.cursor-row').hasClass('display-row'))) { Cursor.shiftLeft(); }
 			}
 		}
+		resetDispNum();
+			// var k=0;
+			// $('.display-row').each(function(){
+			// 	this.setAttribute('data-dispnum',k++);
+			// });
 		printDocInfo();
 	}
 	function getRowPadding(rowLen) {
@@ -1948,7 +2303,7 @@ $(function(){
 	// =====================================================================
 	// 	選択操作(label:select)
 	// =====================================================================
-	function getSelectObjArray() {
+	function getSelect$Array(bl) {
 		// 選択範囲のvertical-charを配列に入れて返す
 		var retObjArray = new Array();
 		var $chars = $('#vertical-draft .display-row .vertical-char').not('.EOL');
@@ -1972,13 +2327,18 @@ $(function(){
 			selRange.detach();
 		}
 		charRange.detach();
-		selection.removeAllRanges(); // 選択を解除する
+		if(bl) selection.removeAllRanges(); // 選択を解除する
 		return retObjArray;
 	}
+	// function isSelect(){
+	// 	var selection = getSelection();
+	// 	if(selection.rangeCount > 0) return true;
+	// 	return false;
+	// }
 	function setClassOnSelect(strClass) {
 		// 選択中の文字に装飾用クラスを付与する
 		// 同じ種類のクラスをすでに持っていた場合は除去する
-		var $objArray = getSelectObjArray();
+		var $objArray = getSelect$Array(true);
 		var kind = (strClass.match(/(decolation-.+)-.+/))[1];
 		var regexp = new RegExp(kind +'-\\S+'); // 正規表現オブジェクト
 		for (var i = 0; i < $objArray.length; i++) {
@@ -1988,14 +2348,14 @@ $(function(){
 		}
 	}
 	function toggleClassOnSelect(strClass){
-		var $objArray = getSelectObjArray();
+		var $objArray = getSelect$Array(true);
 		var cnt;
 		for (var i = 0; i < (cnt = $objArray.length); i++) {
 			$objArray[i].toggleClass(strClass);
 		}
 	}
 	function removeClassOnSelect(kind) {
-		var $objArray = getSelectObjArray();
+		var $objArray = getSelect$Array(true);
 		var regexp = new RegExp(kind +'-\\S+'); // 正規表現オブジェクト
 		for (var i = 0; i < $objArray.length; i++) {
 			var rmClass = ($objArray[i].attr('class').match(regexp));
@@ -2020,6 +2380,17 @@ $(function(){
 	function removeColorOnSelect() {
 		removeClassOnSelect('decolation-color');
 	}
+	function setColor(color){
+		console.log('set color:'+ color);
+		$('#color-btn').removeClassByRegExp(/select-\S+/).addClass('select-'+ color);
+	}
+	function toggleFont(font){
+		var elem = document.getElementById('btn-'+ font);
+		elem.classList.toggle('active');
+	}
+	function setAlignCursorParagraph(align){
+		$('#vertical-draft').children('.vertical-paragraph').has('.cursor-row').removeClassByRegExp(/decolation-textalign-\S+/).addClass('decolation-textalign-'+ align);
+	}
 	// =====================================================================
 	// 		ファイル操作(label:file)
 	// =====================================================================
@@ -2042,6 +2413,7 @@ $(function(){
 				// 表示データを受け取ってからの処理
 				// ファイル名を表示
 				$('#file-title').val(data.filename).attr('data-file_id',this.id);
+				// $('#file-title').val(data.filename).data('file_id',this.id);
 				// 文章のhtml書き出し
 				printString(data.literaArray,getStringLenOfRow());
 				// 禁則処理
@@ -2081,14 +2453,11 @@ $(function(){
 				// 表示データを受け取ってからの処理
 				// ファイル名を表示
 				$('#file-title').val(data.filename).attr('data-file_id',this.id);
+				// $('#file-title').val(data.filename).data('file_id',this.id);
 				// 文章のhtml書き出し
 				var text = data.data.text;
-				//for (var i = 0; i < text.length; i++) {
-					appendParagraphFromObj(text);
-				//}
-				// 禁則処理
-				checkKinsoku();
-				// 最初の４０行のみ表示する
+				appendParagraphFromObj(text);
+				checkKinsoku(); // 禁則処理
 				addDisplayRow(0,getDisplayRowLen());
 				Cursor.init();
 				resetDisplayChar();
@@ -2108,16 +2477,15 @@ $(function(){
 		var userID = getUserID();
 		var filename = $fileTitle.val();
 		if (filename.length === 0) {
-			// alert("ファイル名を入力してください");
 			userAlert("ファイル名を入力してください");
 			return;
 		}
 		if (filename.indexOf("'") > -1 || filename.indexOf("<")>-1 || filename.indexOf(">")>-1) {
-			// alert("ファイル名に使用不可能文字が含まれています。");
 			userAlert("ファイル名に使用不可能文字が含まれています。");
 			return;
 		}
 		var fileID = $fileTitle.attr('data-file_id');
+		// var fileID = $fileTitle.data('file_id');
 		if (fileID === "-1") {
 			saveAs(filename);
 			return;
@@ -2174,6 +2542,7 @@ $(function(){
 			return;
 		}
 		var fileID = $fileTitle.attr('data-file_id');
+		// var fileID = $fileTitle.data('file_id');
 		if (fileID === "-1") {
 			saveAs(filename);
 			return;
@@ -2286,6 +2655,7 @@ $(function(){
 			var $file = getFileObjectFromFileName(searchWord);
 			if ($file[0] && $file.length === 1) {
 				readJsonFile($file.attr('data-file_id'));
+				// readJsonFile($file.data('file_id'));
 			}
 			$('#file-list-modal').modal('hide');
 			document.addEventListener('keydown',keyEvent,false);
@@ -2353,6 +2723,7 @@ $(function(){
 		$files.each(function () {
 			var $self = $(this);
 			var filename = $self.attr('data-file_name');
+			// var filename = $self.data('file_name');
 			if (regexp.test(filename)) {
 				$array.push($self);
 			}
@@ -2365,8 +2736,10 @@ $(function(){
 	function newFile(filename) {
 		$('.vertical-paragraph').remove();
 		appendParagraph("");
-		$('.vertical-row').addClass('display-row').children('.vertical-char').first().addClass('cursor');
+		$('.vertical-row').addClass('display-row').attr('data-dispnum',0).children('.vertical-char').first().addClass('cursor');
+		// $('.vertical-row').addClass('display-row').data('dispnum',"0").children('.vertical-char').first().addClass('cursor');
 		$('#file-title').val(filename).attr('data-file_id','-1');
+		// $('#file-title').val(filename).data('file_id','-1');
 		addPageBreak();
 		Cursor.addCursorRow();
 		printDocInfo();
@@ -2405,7 +2778,7 @@ $(function(){
 		// 名前をつけて保存
 		"use strict";
 		if (filename.indexOf("'") > -1 || filename.indexOf("<")>-1 || filename.indexOf(">")>-1) {
-			alert("ファイル名に使用不可能文字が含まれています。");
+			userAlert("ファイル名に使用不可能文字が含まれています。");
 			return;
 		}
 		var userID = getUserID();
@@ -2425,6 +2798,7 @@ $(function(){
 			success : function (data) {
 				// 表示データを受け取ってからの処理
 				$('#file-title').val(data.filename).attr('data-file_id',data.newFileID);
+				// $('#file-title').val(data.filename).data('file_id',data.newFileID);
 				saveJsonFile();
 			},
 			error : function (XMLHttpRequest, textStatus, errorThrown) {
@@ -2434,6 +2808,7 @@ $(function(){
 	}
 	function defaultDeleteFile() {
 		var fileID = $('#file-title').attr('data-file_id');
+		// var fileID = $('#file-title').data('file_id');
 		if (fileID === '-1') {
 			$('#user-info').text('保存していないファイルです。');
 			return;
@@ -2463,7 +2838,9 @@ $(function(){
 						var $files = $('#file-list .file');
 						for (var i = 0; i < $files.length; i++) {
 							if ($files.eq(i).attr('data-file_id') !== this.fileID) {
+							// if ($files.eq(i).data('file_id') !== this.fileID) {
 								readJsonFile($files.eq(i).attr('data-file_id'));
+								// readJsonFile($files.eq(i).data('file_id'));
 								break;
 							}
 						}
@@ -2495,6 +2872,7 @@ $(function(){
 	function openNextFile() {
 		console.log('openNextFile()');
 		var $currentFileLi = $('#file-list > li').has('.file[data-file_id="'+ $('input#file-title').attr('data-file_id') +'"]');
+		// var $currentFileLi = $('#file-list > li').has('.file[data-file_id="'+ $('input#file-title').data('file_id') +'"]');
 		var $nextFile;
 		if ($currentFileLi[0]) {
 			$nextFile = $currentFileLi.nextAll('li').first().children('.file');
@@ -2502,18 +2880,22 @@ $(function(){
 			$nextFile = $('#file-list .file').first();
 		}
 		if($nextFile[0]) readJsonFile($nextFile.attr('data-file_id'));
+		// if($nextFile[0]) readJsonFile($nextFile.data('file_id'));
 	}
 	function openPrevFile() {
 		console.log('openPrevFile()');
 		var $currentFileLi = $('#file-list > li').has('.file[data-file_id="'+ $('input#file-title').attr('data-file_id') +'"]');
+		// var $currentFileLi = $('#file-list > li').has('.file[data-file_id="'+ $('input#file-title').data('file_id') +'"]');
 		var $nextFile = $currentFileLi.prevAll('li').first().children('.file');
 		if($nextFile[0]) readJsonFile($nextFile.attr('data-file_id'));
+		// if($nextFile[0]) readJsonFile($nextFile.data('file_id'));
 	}
 	function openFile(filename) {
 		console.log('openFile('+ filename +')');
 				var $file = getFileObjectFromFileName(filename);
 				if (!$file[0]) { return; }
 				readJsonFile($file.attr('data-file_id'));
+				// readJsonFile($file.data('file_id'));
 				}
 				function getFileObjectFromFileName(filename) {
 					// 同一名ファイルが複数存在する可能性を忘れずに
@@ -2522,6 +2904,7 @@ $(function(){
 				}
 				function getFileNameFromFileID(fileID) {
 					return $('#file-list .file[data-file_id="'+ fileID +'"]').attr('data-file_name');
+					// return $('#file-list .file[data-file_id="'+ fileID +'"]').data('file_name');
 				}
 				function deleteFileFromFileName(filename) {
 					console.log('deleteFileFromFileName()');
@@ -2530,11 +2913,13 @@ $(function(){
 					var fileID;
 					if ($file.size() === 1) {
 						fileID = $file.attr('data-file_id');
+						// fileID = $file.data('file_id');
 						deleteFile(fileID);
 					}else if($file.size() > 1){
 						if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
 							$file.each(function () {
 								fileID = $(this).attr('data-file_id');
+								// fileID = $(this).data('file_id');
 								deleteFile(fileID);
 							});
 						}else{
@@ -2624,11 +3009,13 @@ $(function(){
 					var dirID;
 					if ($dir.size() === 1) {
 						dirID = $dir.attr('data-directory_id');
+						// dirID = $dir.data('directory_id');
 						deleteDirectory(dirID,option);
 					}else if($dir.size() > 1){
 						if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
 							$dir.each(function () {
 								dirID = $(this).attr('data-directory_id');
+								// dirID = $(this).data('directory_id');
 								deleteFile(dirID,option);
 							});
 						}else{
@@ -2639,27 +3026,39 @@ $(function(){
 				function getCurrentFileID() {
 					var $fileTitle = $('#file-title');
 					var fileID = $fileTitle.attr('data-file_id');
+					// var fileID = $fileTitle.data('file_id');
 					return fileID;
 				}
 				// ====================================================
 				// 	ユーティリティ(label:utility)
 				// ====================================================
 				$.fn.extend( {
-					nextObj:function(selector){
+					nextObj:function(selector,bl){
 						// selectorに合致するオブジェクト群の中で、$objの次のオブジェクトを返す
+						// bl: trueなら、最後のオブジェクトからnextObjをすると最初のオブジェクトを返す
 						var $objs = $(selector);
+						var objLen = $objs.length;
 						var currentIndex = $objs.index(this);
+						if(currentIndex === objLen -1){
+							if(bl){
+								return $objs.first();
+							}else{
+								return $();
+							}
+						}
 						return $objs.eq(currentIndex + 1);
 					},
-					prevObj:function (selector) {
+					prevObj:function (selector,bl) {
 						var $objs = $(selector);
 						var currentIndex = $objs.index(this);
-						var $newObj = $objs.eq(currentIndex - 1);
-						if ($newObj[0] === $objs.last()[0]) {
-							// eq()に負の引数を渡すと、最後の要素に戻ってしまうのを防止
-							return $();
+						if (currentIndex === 0) {
+							if(bl){
+								return $objs.last();
+							}else{
+								return $();
+							}
 						}else{
-							return $newObj;
+							return $objs.eq(currentIndex -1);
 						}
 					},
 					addID:function (id) {
@@ -2706,6 +3105,7 @@ $(function(){
 					},
 					removeClassByRegExp:function (regexp) {
 						// 正規表現にマッチしたクラスを取り除く
+						// 複数クラスを外す場合にはgオプション
 						var strClass = this.attr('class') || ""; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
 						var classArr = strClass.match(regexp); // 正規表現にマッチしない場合、nullが返ってくる
 						var cnt;
@@ -2714,11 +3114,41 @@ $(function(){
 						}
 						return this;
 					},
+					hasClassByRegExp:function(regexp){
+						var strClass = this.attr('class') || "";
+						return regexp.test(strClass);
+					},
 					getOneClassByRegExp:function(regexp){
 						// 正規表現に合うクラスを文字列で返す
 						var strClass = this.attr('class') || ""; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
 						var strClass = strClass.match(regexp)[0]; // 正規表現にマッチしない場合、nullが返ってくる
 						return strClass;
+					},
+					addCursor: function(bl){
+						// bl: trueなら、カーソルを画面中央に配置する(二行以上カーソル行がはみ出した場合)
+						if(!this.hasClass('vertical-char')) return this;
+						var $prevCursor = $('.cursor');
+						$prevCursor.removeClass('cursor');
+						this.addClass('cursor');
+						Cursor.addCursorRow();
+
+						// font
+						var prevChar = this.prev('.vertical-char');
+						if(prevChar.hasClass('decolation-font-bold')){
+							document.getElementById('btn-bold').classList.add('active');
+						}else{
+							document.getElementById('btn-bold').classList.remove('active');
+						}
+						if(prevChar.hasClass('decolation-font-italic')){
+							document.getElementById('btn-italic').classList.add('active');
+						}else{
+							document.getElementById('btn-italic').classList.remove('active');
+						}
+
+						changeDisplayRow(bl);
+						changeDisplayChar();
+						printDocInfo();
+						return this;
 					}
 				});
 				$.extend({
@@ -2748,6 +3178,7 @@ $(function(){
 				}
 				function getUserID() {
 					var userID = $('#site-title').attr('data-user_id');
+					// var userID = $('#site-title').data('user_id');
 					return userID;
 				}
 				// ====================================================
@@ -2762,6 +3193,7 @@ $(function(){
 				$('body').on('keyup','#search-file',keyupInSearchFileInput);
 				$('body').on('click','#file-list .file',function (e) {
 					var fileID = $(this).attr('data-file_id');
+					// var fileID = $(this).data('file_id');
 					readJsonFile(fileID);
 					$('#file-list-modal').modal('hide');
 					//document.addEventListener("keydown",keyEvent,false);
@@ -2773,9 +3205,10 @@ $(function(){
 				document.getElementById('menu-delete').addEventListener("click",function (e) { defaultDeleteFile(); },false);
 				document.getElementById('modal-fileopen-link').addEventListener("click",function (e) { readyFileModal(); },false);
 				document.getElementById('test').addEventListener("click",function (e) {
-					setFontSize('big');
+					// setFontSize('big');
 					//setColorOnSelect('blue');
 					//readJsonFile(17);
+					searchWord('らすと');
 				},false);
 				$(window).resize(function () {
 					resetDisplayChar();
@@ -2817,24 +3250,16 @@ $(function(){
 					});
 				}
 				// palette
-				document.getElementById('color-btn').addEventListener('change',function (e) {
-					var eSel = document.getElementById('color-btn');
-					var index = eSel.selectedIndex;
-					eSel.classList.remove('select-red');
-					eSel.classList.remove('select-blue');
-					switch (index) {
-						case 0:
-							removeColorOnSelect();
-							break;
-						case 1:
-							//eSel.classList.add('select-red');
-							setColorOnSelect('red');
-							break;
-						case 2:
-							//eSel.classList.add('select-blue');
-							setColorOnSelect('blue');
-							break;
+				// color
+				document.getElementById('color-btn').addEventListener('click',function (e) {
+					var eBtn = document.getElementById('color-btn');
+					var color = eBtn.className.match(/select-(\S+)/);
+					if(color == null){
+					 color = 'black';
+					}else{
+						color = color[1];
 					}
+					setColorOnSelect(color);
 				},false);
 				setSelectColorClickEvent("black");
 				setSelectColorClickEvent("red");
@@ -2848,10 +3273,11 @@ $(function(){
 						elSel.classList.add('select-'+color);
 					},false);
 				}
+				// bold italic
 				document.getElementById('btn-bold').addEventListener('click',function(e){
 					var elem = document.getElementById('btn-bold');
 					elem.classList.toggle('active');
-					var objArr = getSelectObjArray();
+					var objArr = getSelect$Array(true);
 					if(/active/.test(elem.className)){
 						for(var i = 0;i<objArr.length;i++){
 							objArr[i].addClass('decolation-font-bold');
@@ -2861,12 +3287,11 @@ $(function(){
 							objArr[i].removeClass('decolation-font-bold');
 						}
 					}
-					// toggleClassOnSelect('decolation-font-bold');
 				},false);
 				document.getElementById('btn-italic').addEventListener('click',function(e){
 					var elem = document.getElementById('btn-italic');
 					elem.classList.toggle('active');
-					var objArr = getSelectObjArray();
+					var objArr = getSelect$Array(true);
 					if(/active/.test(elem.className)){
 						for(var i = 0;i<objArr.length;i++){
 							objArr[i].addClass('decolation-font-italic');
@@ -2876,6 +3301,39 @@ $(function(){
 							objArr[i].removeClass('decolation-font-italic');
 						}
 					}
-					// toggleClassOnSelect('decolation-font-italic');
 				},false);
+				// selection
+				document.getElementById('vertical-draft').addEventListener('mouseup',function(e){
+					// 選択範囲に文字装飾が施されていればアクティブに
+					var objArr = getSelect$Array();
+
+					var bBold = false;
+					var bItalic = false;
+					for(var i=0;i<objArr.length;i++){
+						if(objArr[i].hasClass("decolation-font-bold")){ bBold = true; }
+						if(objArr[i].hasClass("decolation-font-italic")){ bItalic = true; }
+					}
+					if(bBold){
+						document.getElementById("btn-bold").classList.add("active");
+					}else{
+						document.getElementById("btn-bold").classList.remove("active");
+					}
+					if(bItalic){
+						document.getElementById("btn-italic").classList.add("active");
+					}else{
+						document.getElementById("btn-italic").classList.remove("active");
+					}
+					if(objArr.length > 0){
+					 objArr[objArr.length -1].nextObj('#vertical-draft .vertical-char').addCursor();
+					}
+				},false);
+				// align
+				setTextAlignClickEvent('left');
+				setTextAlignClickEvent('center');
+				setTextAlignClickEvent('right');
+				function setTextAlignClickEvent(align){
+					document.getElementById('text-btn-'+ align).addEventListener('click',function(e){
+						setAlignCursorParagraph(align);
+					},false);
+				}
 });
