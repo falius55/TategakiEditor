@@ -15,7 +15,7 @@ span.decolation-font-big {
 .decolation-font-big > .vertical-row {
 	width: auto;
 }
-#vertical-draft span.EOL.vertical-char.decolation-font-big {
+#vertical_draft span.EOL.vertical-char.decolation-font-big {
 	width: 45px;
 }
 span.decolation-font-small {
@@ -46,7 +46,7 @@ span.decolation-font-small {
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
-#select-color {
+#select_color {
 	/*
 	opacity: 0;
 	*/

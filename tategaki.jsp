@@ -9,11 +9,11 @@
 			<title>縦書きエディタ</title>
 			<!--
 			<link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css" media="screen">
+			<link rel="stylesheet" href="tategaki-dispStyle.css">
 		-->
 			<link rel="stylesheet" href="honoka/css/bootstrap.min.css" media="screen">
 			<link rel="stylesheet" href="tategaki.css">
 			<link rel="stylesheet" href="tategaki-character-decolation.css">
-			<link rel="stylesheet" href="tategaki-dispStyle.css">
 			<link rel="stylesheet" href="verticalprint.css" media="print">
 		</head>
 		<body>
@@ -22,40 +22,42 @@
 			String userID = (String)session.getAttribute("userid");
 			String username = (String)session.getAttribute("username");
 			%>
-			<h1 id="site-title" data-user_id="<%= userID %>">縦書きエディタ</h1>
+			<h1 id="site_title" data-user_id="<%= userID %>">縦書きエディタ</h1>
 			<nav class="nav navbar-default navbar-fixed-top">
 				<ul class="nav navbar-nav">
 					<li>
 						<div class="btn-group">
 							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">ファイル<span class="caret"></span></button>
 							<ul class="dropdown-menu">
-								<li><a id="menu-new"> 新規作成 </a></li>
-								<li> <a data-toggle="modal" href="#file-list-modal" id="modal-fileopen-link"> 開く </a> </li>
-								<li><a id="menu-save"> 保存 </a></li>
-								<li><a id="menu-delete"> 削除 </a></li>
+								<li><a id="menu_new"> 新規作成 </a></li>
+								<li> <a data-toggle="modal" href="#file_list_modal" id="modal_fileopen_link"> 開く </a> </li>
+								<li><a id="menu_save"> 保存 </a></li>
+								<li><a id="menu_delete"> 削除 </a></li>
 							</ul>
 						</div>
 					</li>
 					<li><button class="btn btn-primary" href="#configue-modal" data-toggle="modal">設定</button></li>
-					<li><button class="btn btn-primary" href="#help-modal" data-toggle="modal">ヘルプ</button></li>
+					<li><button class="btn btn-primary" href="#help_modal" data-toggle="modal">ヘルプ</button></li>
 					<li><button class="btn btn-primary" id="test">test</button></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><div class="navbar-brand alert alert-info" role="alert" id="user-info"></div></li>
+					<li><div class="navbar-brand alert alert-info" role="alert" id="user_info"></div></li>
 					<li><a class="navbar-brand" href="/tategaki/Logout">Logout</a></li>
 				</ul>
 			</nav>
 
-			<div id="app-container">
-				<input type="text" id="file-title" data-file_id="-1" value="newfile"></input>
-					<div id="vertical-draft"> </div>
+			<div id="app_container">
+				<input type="text" id="file_title" data-file_id="-1" value="newfile"></input>
+					<div id="vertical_draft"> </div>
 				<div class="doc-info">
 					文字:<span class="str-num">-</span>/<span class="str-len">-</span>&nbsp;
 					行:<span class="row-num">-</span>/<span class="row-len">-</span>&nbsp;
 					ページ:<span class="page-num">-</span>/<span class="page-len">-</span>&nbsp;
 					最終更新日時:<span class="saved">-</span>
 				</div>
-				<div class="input-buffer"></div>
+				<div id="input_buffer" class="vertical-row"></div>
+				<div id="convert_container"></div>
+				<input type="text" id="command"></input>
 				<input type="text" id="find"></input>
 			</div>
 
@@ -64,12 +66,12 @@
 					<ul class="nav navbar-nav">
 						<li>
 							<div class="btn-group">
-								<button type="button" id="color-btn" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-text-color"></span></button>
+								<button type="button" id="color_btn" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-text-color"></span></button>
 								<button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span> </button>
 								<ul class="dropdown-menu">
-									<li id="select-color-black"><a href="#">black</a></li>
-									<li id="select-color-red" class="select-red"><a href="#">red</a></li>
-									<li id="select-color-blue" class="select-blue"><a href="#">blue</a></li>
+									<li id="select_color_black"><a href="#">black</a></li>
+									<li id="select_color_red" class="select-red"><a href="#">red</a></li>
+									<li id="select_color_blue" class="select-blue"><a href="#">blue</a></li>
 								</ul>
 							</div>
 						</li>
@@ -85,21 +87,21 @@
 					</ul>
 				</nav>
 
-			<div class="modal fade" id="file-list-modal" data-backdrop="static">
+			<div class="modal fade" id="file_list_modal" data-backdrop="static">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
-							<button id="file-modal-close" class="close" data-dismiss="modal">&times;</button>
+							<button class="close" data-dismiss="modal">&times;</button>
 							<h4 class="modal-title modal-title-open">ファイルを開く</h4>
 							<h4 class="modal-title modal-title-command">検索結果</h4>
 						</div>
 						<div class="modal-body">
-							<ul id="file-list"> </ul>
+							<ul id="file_list"> </ul>
 						</div>
 						<div class="modal-footer">
 							<div class="form-group">
 								<label for="search_file" class="control-label"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>ファイルを検索 </label>
-								<input type="text" name="search_file" id="search-file" class="form-control" placeholder="ファイル名"></input>
+								<input type="text" name="search_file" id="search_file" class="form-control" placeholder="ファイル名"></input>
 							</div>
 						</div>
 					</div>
@@ -126,9 +128,9 @@
 									</div>
 									<div class="form-group">
 										<label for="str_size" class="control-label">文字の大きさ</label>
-										<input type="radio" name="str_size" value="big" id="conf-str-size-big">大</input>
-										<input type="radio" name="str_size" value="middle" id="conf-str-sizi-middle" checked>中</input>
-										<input type="radio" name="str_size" value="small" id="conf-str-size-small">小</input>
+										<input type="radio" name="str_size" value="big" id="conf_str_size_big">大</input>
+										<input type="radio" name="str_size" value="middle" id="conf_str_size_middle" checked>中</input>
+										<input type="radio" name="str_size" value="small" id="conf_str_size_small">小</input>
 										</div>
 									<div class="form-group">
 										<button class="btn btn-primary">Save</button>
@@ -143,20 +145,20 @@
 					</div>
 				</div>
 
-			<div class="modal fade" id="help-modal">
+			<div class="modal fade" id="help_modal">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
-							<button id="file-modal-close" class="close" data-dismiss="modal">&times;</button>
+							<button class="close" data-dismiss="modal">&times;</button>
 							<h4 class="modal-title modal-title-open">ヘルプ</h4>
 							</div>
 							<div class="modal-body">
 								<ul class="nav nav-tabs" role="tablist">
-									<li role="presentation" class="active"><a href="#help-shortcut" aria-controls="help-shortcut" role="tab" data-toggle="tab">ショートカットキー</a></li>
-									<li role="presentation"><a href="#help-command" aria-controls="help-command" role="tab" data-toggle="tab">コマンド</a></li>
+									<li role="presentation" class="active"><a href="#help_shortcut" aria-controls="help_shortcut" role="tab" data-toggle="tab">ショートカットキー</a></li>
+									<li role="presentation"><a href="#help_command" aria-controls="help_command" role="tab" data-toggle="tab">コマンド</a></li>
 								</ul>
 								<div class="tab-content">
-									<div role="tabpanel" class="tab-pane active" id="help-shortcut">
+									<div role="tabpanel" class="tab-pane active" id="help_shortcut">
 									<ul>
 										<li> &lt;CTL-J&gt;&nbsp;カーソル移動[Down]</li>
 										<li> &lt;CTL-K&gt;&nbsp;カーソル移動[Up]</li>
@@ -172,7 +174,7 @@
 										<li> &lt;/&gt;&nbsp;語句検索を開始する</li>
 									</ul>
 									</div>
-									<div role="tabpanel" class="tab-pane" id="help-command">
+									<div role="tabpanel" class="tab-pane" id="help_command">
 									<ul>
 										<li> &lt;:(w|s|save)&gt;&nbsp;ファイルを上書き保存</li>
 										<li> &lt;:(w|s|save) ファイル名&gt;&nbsp;名前をつけて保存</li>

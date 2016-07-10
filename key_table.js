@@ -4,7 +4,7 @@ var key_table = {
 		if (buffer_string.length === 0) {
 			// bufferに文字なし
 			// キーコードの文字をそのまま返す
-			return this.key_table_jpn[String(keycode)];
+			return this.key_table_jpn[keycode];
 		}else if(buffer_string.length === 1){
 			// bufferに一文字のみ
 			if (this.convertable.indexOf(buffer_string) !== -1) {
@@ -12,10 +12,10 @@ var key_table = {
 				// keytableからオブジェクト取得
 				var s = this.key_table_jpn[buffer_string];
 				// オブジェクトにキーコードを与えて、変換文字取得
-				var str =  s[String(keycode)];
+				var str =  s[keycode];
 				if ( str == null) {
 					// 変換文字が取得できないということは、アルファベット二文字が変換可能な組み合わせではないということ
-					var typestr = this.key_table_jpn[String(keycode)];
+					var typestr = this.key_table_jpn[keycode];
 					if (buffer_string === typestr) {
 						// 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
 						return "っ" + typestr;
@@ -30,7 +30,7 @@ var key_table = {
 				}
 			}else{
 				// bufferの文字がアルファベットでなければbufferの文字とキーコード文字を連結した文字列を返す
-				return buffer_string + this.key_table_jpn[String(keycode)];
+				return buffer_string + this.key_table_jpn[keycode];
 			}
 		}
 		// 以下はbufferの文字列が二文字以上であることが保証されている
@@ -42,14 +42,14 @@ var key_table = {
 			if (this.convertable.indexOf(second) === -1) {
 				// bufferに変換する変換可能アルファベットがない
 				// キーコード文字列をbufferに連結した文字列を返す
-				return buffer_string + this.key_table_jpn[String(keycode)];
+				return buffer_string + this.key_table_jpn[keycode];
 			}else{
 				// bufferの最終文字だけがアルファベット
 				var s = this.key_table_jpn[second];
-				var str =  s[String(keycode)];
+				var str =  s[keycode];
 				if ( str == null) {
 					// 変換文字が取得できないということは、アルファベット二文字が変換可能な組み合わせではないということ
-					var typestr = this.key_table_jpn[String(keycode)];
+					var typestr = this.key_table_jpn[keycode];
 					if (second === typestr) {
 						// 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
 						return noEncode + first + "っ" + typestr;
@@ -67,13 +67,13 @@ var key_table = {
 		}else{
 			// bufferの後ろから二文字目がアルファベット
 			// 最後の文字がアルファベットでないならそのまま連結 "sた + r"などの場合
-			if(this.convertable.indexOf(second) === -1) return buffer_string + this.key_table_jpn[String(keycode)];
+			if(this.convertable.indexOf(second) === -1) return buffer_string + this.key_table_jpn[keycode];
 			// bufferの最後に変換可能アルファベット二文字
 			// 第一添字がアルファベットなら必ず第二添字のためのオブジェクトは返ってくる
 			//
 			var o = this.key_table_jpn[first][second];
 			if (o != null) {
-				var str = o[String(keycode)];
+				var str = o[keycode];
 				// 三文字で１文字が完成した場合
 				// sy + a →  "しゃ" など
 				if (str != null) return noEncode + str;
@@ -163,7 +163,8 @@ var key_table = {
 		"ぃ" : "ィ",
 		"ぅ" : "ゥ",
 		"ぇ" : "ェ",
-		"ぉ" : "ォ"
+		"ぉ" : "ォ",
+		"っ" : "ッ"
 	},
 	shift_key : {
 		"49" : "!",
