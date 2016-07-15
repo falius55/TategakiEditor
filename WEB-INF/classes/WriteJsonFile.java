@@ -77,12 +77,14 @@ public class WriteJsonFile extends HttpServlet  {
 			// ==================================================================
 			//	 	更新日時文字列の作成
 			// ==================================================================
+			log("savedMillis to create savedTime");
 			long savedMillis = Long.parseLong(request.getParameter("saved"));
 			java.util.Date date = new java.util.Date(savedMillis);
 			String strDate = String.format("%1$tF %1$tT",date); // 2011-11-08 11:05:20 の書式
 			// ========================================================================
 			// 	ファイル名、最終更新日の更新
 			// ========================================================================
+			log("update filename and save time");
 			stmt = conn.createStatement();
 			// ファイル名
 			String fileName = request.getParameter("filename");
@@ -95,6 +97,7 @@ public class WriteJsonFile extends HttpServlet  {
 			// =======================================================
 			// 	userIDから、ルートディレクトリのidを取得
 			// =======================================================
+			log("get root id");
 			int userID = Integer.parseInt(request.getParameter("user_id"));
 			sql = "select * from edit_users where id = ?";
 			pstmt = conn.prepareStatement(sql);
@@ -112,6 +115,7 @@ public class WriteJsonFile extends HttpServlet  {
 			// 	テキストファイルへの書き込み
 			// ==========================================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
+			log("witing text file");
 			ServletContext context = this.getServletContext();
 			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
 			bw = new BufferedWriter(new FileWriter(new File(path),false));
@@ -124,6 +128,7 @@ public class WriteJsonFile extends HttpServlet  {
 			// =============================================================================
 			// 	レスポンス
 			// =============================================================================
+				log("response");
 			String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",strDate);
 			log("WriteJsonFile.rtnJson:"+ rtnJson);
 			out.println(rtnJson);
