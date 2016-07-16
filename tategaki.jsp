@@ -172,6 +172,8 @@
 										<li> &lt;CTL-I&gt;&nbsp;次の検索語句に進む</li>
 										<li> &lt;CTL-O&gt;&nbsp;前の検索語句に進む</li>
 										<li> &lt;/&gt;&nbsp;語句検索を開始する</li>
+										<li> &lt;CTL-C&gt;&nbsp;選択範囲をコピー</li>
+										<li> &lt;CTL-V&gt;&nbsp;ペースト</li>
 									</ul>
 									</div>
 									<div role="tabpanel" class="tab-pane" id="help_command">

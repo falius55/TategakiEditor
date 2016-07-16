@@ -277,21 +277,25 @@ $(function() {
 				break;
 			case 72:
 				// h
+				readySelection();
 				gCursor.shiftLeft();
 				extendSelection(e.shiftKey);
 				break;
 			case 74:
 				// j
+				readySelection();
 				gCursor.next();
 				extendSelection(e.shiftKey);
 				break;
 			case 75:
 				// k
+				readySelection();
 				gCursor.prev();
 				extendSelection(e.shiftKey);
 				break;
 			case 76:
 				// l
+				readySelection();
 				gCursor.shiftRight();
 				extendSelection(e.shiftKey);
 				break;
@@ -343,21 +347,25 @@ $(function() {
 				break;
 			case 37:
 				// Left
+				readySelection();
 				gCursor.shiftLeft();
 				extendSelection(e.shiftKey);
 				break;
 			case 38:
 				// Up
+				readySelection();
 				gCursor.prev();
 				extendSelection(e.shiftKey);
 				break;
 			case 39:
 				// Right
+				readySelection();
 				gCursor.shiftRight();
 				extendSelection(e.shiftKey);
 				break;
 			case 40:
 				// Down
+				readySelection();
 				gCursor.next();
 				extendSelection(e.shiftKey);
 				break;
@@ -1153,7 +1161,7 @@ $(function() {
 		if (key_table.lineList.indexOf(char) !== -1) html += " character-line";
 		if (/[a-z]/.test(char)) html += " alphabet";
 		if (/[１-９]/.test(char)) html += " number";
-		if (/[っゃゅょぁぃぅぇぉ]/.test(char)) html += " yoin";
+		if (/[っゃゅょぁぃぅぇぉァィゥェォッャュョ]/.test(char)) html += " yoin";
 
 		html += "'>";
 		html += char;
@@ -1253,7 +1261,7 @@ $(function() {
 		if (key_table.lineList.indexOf(char) !== -1) html += " character-line";
 		if (/[a-z]/.test(char)) html += " alphabet";
 		if (/[１-９]/.test(char)) html += " number";
-		if (/[っゃゅょぁぃぅぇぉ]/.test(char)) html += " yoin";
+		if (/[っゃゅょぁぃぅぇぉァィゥェォッャュョ]/.test(char)) html += " yoin";
 
 		html += "'>";
 		html += char;
@@ -1289,7 +1297,7 @@ $(function() {
 
 	// ----------------------------------- get json text data on draft --------------------------------
 
-	function makeJsonDataToSave() {
+	function makeJsonDataForSave() {
 		"use strict";
 		// テキスト情報をJsonで表す
 		var data = new Object();
@@ -2927,21 +2935,24 @@ $(function() {
 		}
 	}
 
+	// カーソル移動前に、selectionにカーソル位置を覚えさせる
+	function readySelection() {
+		var eCursor = document.querySelector('.cursor');
+		var selection = getSelection();
+		
+		if (selection.rangeCount === 0) {
+			selection.selectAllChildren(eCursor);
+		}
+	}
+
 	// 選択範囲を動かす(カーソル移動時)
 	function extendSelection(bShift) {
 		var eCursor = document.querySelector('.cursor');
 		var selection = getSelection();
 
 		if (bShift) {
-
-			if (selection.rangeCount === 0) {
-				// 選択されていない状態から実行された場合は、カーソルの前の位置にある文字を選択する
-				selection.selectAllChildren($('.cursor').prevObj('#vertical_draft .vertical-paragraph .vertical-char')[0]);
-			} else {
 				// シフトキーが押されていれば、カーソルのオフセット０までselectionを拡張
 				selection.extend(eCursor,0);
-			}
-
 		} else {
 			// シフトキー無しでカーソルが動いたならselectionを解除する
 			selection.removeAllRanges();
@@ -3135,7 +3146,7 @@ $(function() {
 			comSaveAs(filename);
 			return;
 		}
-		contentsJson = makeJsonDataToSave();
+		contentsJson = makeJsonDataForSave();
 		// console.log(contentsJson);
 		nowDate_ms = Date.now() + "";
 
@@ -3251,9 +3262,9 @@ $(function() {
 		}
 	}
 
+	// ファイルを開くモーダルにある検索ボックスのkeyupイベント
 	function keyupInSearchFileInput(e) {
 		"use strict";
-		// ファイルを開くモーダルにある検索ボックスのkeyupイベント
 		var $searchFile = $('#search_file');
 		var $file;
 		var keycode = getKeyCode(e);
@@ -3268,9 +3279,10 @@ $(function() {
 			}
 			$('#file_list_modal').modal('hide');
 			document.addEventListener('keydown',keydownOnDoc,false);
+			comFileList(getUserID());
 
 		} else if (searchWord.length === 0) {
-			comFileList(getUserID);
+			comFileList(getUserID());
 		} else {
 			comSearchFile(searchWord);
 		}

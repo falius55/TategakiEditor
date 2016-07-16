@@ -2,7 +2,7 @@ html,body {
 	/*background-color: #FFFACD;*/
 	background-color: rgba(245,245,245,.8);
 }
-h1#site_title {
+#site_title {
 	background-color: rgba(0,255,255,.8);
 	text-align: center;
 	position: fixed;
@@ -506,7 +506,7 @@ menu[type="toolbar"] {
 	padding-left: 2px;
 }
 .yoin {
-	padding-left: 5px;
+	padding-left: 4px;
 	/* bottom: 5px; */
 }
 #input_buffer .vertical-char {
