@@ -9,7 +9,6 @@ import java.sql.*;
 public class Login extends HttpServlet {
 	// インスタンス変数
 	Connection conn = null;
-	PreparedStatement pstmt;
 	// ====================================================================
 	// 	jsp起動時の処理
 	// ====================================================================
@@ -43,7 +42,6 @@ public class Login extends HttpServlet {
 		try{
 			if(conn != null){
 				conn.close();
-				pstmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -62,13 +60,13 @@ public class Login extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		// =====================================================
-		// フォームからの情報受取
+		// 	フォームからの情報受取
 		// =====================================================
 		String user = request.getParameter("username");
 		String pass = request.getParameter("password");
 
 		// =====================================================
-		// 認証のチェック
+		// 	認証のチェック
 		// =====================================================
 		HttpSession session = request.getSession(true);
 
@@ -85,13 +83,14 @@ public class Login extends HttpServlet {
 			response.sendRedirect("/tategaki/loginpage.jsp");
 		}
 	}
+
 	protected boolean userCheck(String user,String pass,HttpSession session){
 		if (user == null || user.length() == 0 || pass == null || pass.length() == 0) {
 			return false;
 		}	
 		try {
-			String sql = "SELECT * FROM edit_users WHERE name = ? && password = ?";
-			pstmt = conn.prepareStatement(sql);
+			String sql = "select * from edit_users where name = ? && password = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1,user);
 			pstmt.setString(2,pass);
@@ -104,8 +103,10 @@ public class Login extends HttpServlet {
 				session.setAttribute("userid",userid);
 				session.setAttribute("username",username);
 
+				pstmt.close();
 				return true;
-			}else{
+			} else {
+				pstmt.close();
 				return false;		
 			}
 		} catch (SQLException e) {

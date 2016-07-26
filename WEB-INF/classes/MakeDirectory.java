@@ -4,6 +4,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import java.net.*;
+import java.text.*;
 
 /**
  * ajax
@@ -12,7 +13,6 @@ import java.net.*;
 public class MakeDirectory extends HttpServlet  {
 	// インスタンス変数
 	Connection conn = null;
-	PreparedStatement pstmt;
 	// ====================================================================
 	// 	servlet起動時の処理
 	// ====================================================================
@@ -46,7 +46,6 @@ public class MakeDirectory extends HttpServlet  {
 		try{
 			if(conn != null){
 				conn.close();
-				pstmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -71,7 +70,7 @@ public class MakeDirectory extends HttpServlet  {
 			// 	userIDから、ルートディレクトリのidを取得
 			// =======================================================
 			String sql = "select * from edit_users where id = ?";
-			pstmt = conn.prepareStatement(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,userID);
 			ResultSet rs = pstmt.executeQuery();
 			int rootID;
@@ -81,26 +80,29 @@ public class MakeDirectory extends HttpServlet  {
 				log("database has no new data");
 				throw new SQLException();	
 			}
+			pstmt.close();
 			
-			// ==================================================================
-			//	 	更新日時文字列の作成
-			// ==================================================================
-			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			java.util.Date nowDate = new java.util.Date(savedMillis);
-			String strDate = String.format("%1$tF %1$tT",nowDate); // 2011-11-08 11:05:20 の書式
 			// ===================================================================
 			// 	行を挿入し、ファイル名、ユーザー名、最終更新日を保存
 			// ===================================================================
-			// ファイル名
-			String directoryname = request.getParameter("directoryname");
 			sql = "insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
+
+			// ファイル名
+			String directoryname = request.getParameter("directoryname");
 			pstmt.setString(1,directoryname);
 			pstmt.setString(2,"dir");
 			pstmt.setInt(3,rootID);
+			// ユーザー名
 			pstmt.setInt(4,userID);
+			// 最終更新日
+			long savedMillis = Long.parseLong(request.getParameter("saved"));
+			java.util.Date date = new java.util.Date(savedMillis); // java.sql.Dateは、時分秒を切り捨ててしまう
+			String strDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
 			pstmt.setString(5,strDate);
+
 			pstmt.executeUpdate();
+			pstmt.close();
 			// ====================================================================
 			// 	新しいfileIDを取得
 			// ====================================================================
@@ -116,6 +118,7 @@ public class MakeDirectory extends HttpServlet  {
 			}else{
 				throw new SQLException();
 			}
+			pstmt.close();
 			// ======================================================================
 			//	 	ajaxへ送信
 			// ======================================================================

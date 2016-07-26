@@ -1,22 +1,16 @@
 import java.io.*;
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import java.net.*;
+import java.text.*;
+
 
 // ajax通信用
-// Post
-// 渡し
-// fileId : ファイルid
-// 戻り
-// fileNname
-// literaArray : 読み込んだ各行文字列を格納した配列
 public class ReadJsonFile extends HttpServlet  {
-	BufferedReader br;
-	// インスタンス変数
 	Connection conn = null;
-	Statement stmt;
-	PreparedStatement pstmt;
+
 	// ====================================================================
 	// 	jsp起動時の処理
 	// ====================================================================
@@ -45,12 +39,10 @@ public class ReadJsonFile extends HttpServlet  {
 	// =====================================================================
 	// 	jsp破棄時の処理
 	// =====================================================================
-	// ConnectionとStatementをcloseしている
 	public void destroy(){
 		try{
 			if(conn != null){
 				conn.close();
-				stmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -66,9 +58,6 @@ public class ReadJsonFile extends HttpServlet  {
 		throws IOException, ServletException {
 
 		try{
-			// 返す値が1行だけならtext/plain
-			// 複数ならapplication/json
-			// response.setContentType("text/plain; charset=UTF-8");
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 
@@ -76,23 +65,23 @@ public class ReadJsonFile extends HttpServlet  {
 			//	 idから目的のファイル名、最終更新日を取得
 			// ======================================================
 			int fileID = Integer.parseInt(request.getParameter("file_id"));
-			stmt = conn.createStatement();
-			String sql = "SELECT * FROM file_table where id = " + fileID;
-			ResultSet rs = stmt.executeQuery(sql);
+			String sql = "select * from file_table where id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,fileID);
+			ResultSet rs = pstmt.executeQuery();
+
 			String fileName;
-			Timestamp tSaved;
 			String saved;
 
 			if (rs.next()) {
 			fileName = rs.getString("filename");
-			// 最終更新日はナノ秒も文字列で表されるので切り捨てる
-			tSaved = rs.getTimestamp("saved");
-			tSaved.setNanos(0);
-			saved = tSaved.toString();
-			saved = saved.substring(0,saved.length()-2);
+			// saved = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(rs.getDate("saved"));
+			saved = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(rs.getTimestamp("saved").getTime()));
 			}else{
 				throw new SQLException();	
 			}
+			pstmt.close();
+
 			StringBuffer sb = new StringBuffer();
 			sb.append("{\"filename\":\"");
 			sb.append(fileName);
@@ -116,6 +105,7 @@ public class ReadJsonFile extends HttpServlet  {
 				log("database has no new data");
 				throw new SQLException();	
 			}
+			pstmt.close();
 			
 			// ========================================================
 			//	 ファイル読込
@@ -123,19 +113,8 @@ public class ReadJsonFile extends HttpServlet  {
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
 			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
-			br = new BufferedReader(new FileReader(new File(path)));
+			BufferedReader br = new BufferedReader(new FileReader(new File(path)));
 
-			// 複数行読み出し、配列で返している
-			// {"literaArray": ["a","b","c"]}
-			//sb.append("\"literaArray\": [");
-			//String str = br.readLine();
-			//for(int i=0;str != null ;i++){
-			//	if(i!=0)	sb.append(",");
-			//	sb.append("\"");
-			//	sb.append(str);
-			//	sb.append("\"");
-			//	str = br.readLine();
-			//}
 			sb.append("\"data\":");
 			String str = br.readLine();
 			for(int i=0;str != null ;i++){

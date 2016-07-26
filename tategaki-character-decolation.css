@@ -7,6 +7,14 @@ span.decolation-color-red {
 span.decolation-color-blue {
 	color: blue;
 }
+.vertical-char[data-font-size="auto"] {
+	font-size: 18px;
+	height: 18px;
+	width: 18px;
+}
+.vertical-char[data-font-size="30"] {
+	font-size: 30px;
+}
 span.decolation-font-big {
 	font-size: 45px;
 	width: 45px;
@@ -69,4 +77,10 @@ span.decolation-font-small {
 }
 .decolation-textalign-right .vertical-row {
 	text-align: right;
+}
+.decolation-fontsize-big {
+	font-size: 30px;
+}
+.decolation-fontsize-small {
+	font-size: 10px;
 }

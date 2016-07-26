@@ -12,8 +12,6 @@ import java.net.*;
 public class CreateFile extends HttpServlet  {
 	// インスタンス変数
 	Connection conn = null;
-	Statement stmt;
-	PreparedStatement pstmt;
 	// ====================================================================
 	// 	servlet起動時の処理
 	// ====================================================================
@@ -47,8 +45,6 @@ public class CreateFile extends HttpServlet  {
 		try{
 			if(conn != null){
 				conn.close();
-				stmt.close();
-				pstmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -68,13 +64,12 @@ public class CreateFile extends HttpServlet  {
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 
-			int userID = Integer.parseInt(request.getParameter("user_id"));
-			stmt = conn.createStatement();
 			// =======================================================
 			// 	userIDから、ルートディレクトリのidを取得
 			// =======================================================
+			int userID = Integer.parseInt(request.getParameter("user_id"));
 			String sql = "select * from edit_users where id = ?";
-			pstmt = conn.prepareStatement(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,userID);
 			ResultSet rs = pstmt.executeQuery();
 			int rootID;
@@ -84,25 +79,33 @@ public class CreateFile extends HttpServlet  {
 				log("database has no new data");
 				throw new SQLException();	
 			}
+			pstmt.close();
 			
-			// ==================================================================
-			//	 	更新日時文字列の作成
-			// ==================================================================
-			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			java.util.Date nowDate = new java.util.Date(savedMillis);
-			String strDate = String.format("%1$tF %1$tT",nowDate); // 2011-11-08 11:05:20 の書式
 			// ===================================================================
 			// 	行を挿入し、ファイル名、ユーザー名、最終更新日を保存
 			// ===================================================================
 			// ファイル名
 			String fileName = request.getParameter("filename");
-			sql = String.format("insert into file_table (filename,type,parent_dir,user_id,saved) values (\'%s\',\'%s\',%d,%d,\'%s\')",fileName,"file",rootID,userID,strDate);
-			stmt.executeUpdate(sql);
+			long savedMillis = Long.parseLong(request.getParameter("saved"));
+			java.sql.Date date = new java.sql.Date(savedMillis);
+			sql = "insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,fileName);
+			pstmt.setString(2,"file");
+			pstmt.setInt(3,rootID);
+			pstmt.setInt(4,userID);
+			pstmt.setDate(5,date);
+			pstmt.executeUpdate();
+			pstmt.close();
+
 			// ====================================================================
 			// 	新しいfileIDを取得
 			// ====================================================================
-			sql = String.format("select * from file_table where saved = \'%s\' and user_id = %d",strDate,userID);
-			rs = stmt.executeQuery(sql);
+			sql = "select * from file_table where saved = ? and user_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setDate(1,date);
+			pstmt.setInt(2,userID);
+			rs = pstmt.executeQuery();
 
 			int fileID;
 			if (rs.next()) {
@@ -110,6 +113,7 @@ public class CreateFile extends HttpServlet  {
 			}else{
 				throw new SQLException();
 			}
+			pstmt.close();
 			// =====================================================================
 			// 	ファイルを作成
 			// =====================================================================
@@ -125,7 +129,6 @@ public class CreateFile extends HttpServlet  {
 			String rtn = String.format("{\"newFileID\" : \"%d\",\"filename\" : \"%s\"}",fileID,fileName);
 			out.println(rtn);
 
-			log("NewFile return is " + rtn);
 			out.close();
 		}catch(IOException e){
 			log("IOException:" + e.getMessage());

@@ -22,7 +22,7 @@
 			String userID = (String)session.getAttribute("userid");
 			String username = (String)session.getAttribute("username");
 			%>
-			<h1 id="site_title" data-user_id="<%= userID %>">縦書きエディタ</h1>
+			<h1 id="site_title" data-user-id="<%= userID %>">縦書きエディタ</h1>
 			<nav class="nav navbar-default navbar-fixed-top">
 				<ul class="nav navbar-nav">
 					<li>
@@ -47,7 +47,7 @@
 			</nav>
 
 			<div id="app_container">
-				<input type="text" id="file_title" data-file_id="-1" value="newfile"></input>
+				<input type="text" id="file_title" data-file-id="-1" value="newfile"></input>
 					<div id="vertical_draft"> </div>
 				<div class="doc-info">
 					文字:<span class="str-num">-</span>/<span class="str-len">-</span>&nbsp;
@@ -77,6 +77,19 @@
 						</li>
 							<li id="btn-bold"><a href="#"><span class="glyphicon glyphicon-bold"></span></a></li>
 							<li id="btn-italic"><a href="#"><span class="glyphicon glyphicon-italic"></span></a></li>
+							<li>
+								<div class="input-group">
+									<div class="input-group-btn">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-text-size"></span><span class="caret"></span></button>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#" id="select-font-8">8</a></li>
+											<li><a href="#" id="select-font-14">14</a></li>
+											<li><a href="#" id="select-font-30">30</a></li>
+											</ul>
+										</div>
+										<input type="text" id="input_text_size" class="form-control" value="14" aria-label="text size"></input>
+									</div>
+							</li>
 							<li>
 								<div class="btn-group">
 									<button type="button" id="text-btn-left" class="btn btn-default"><span class="glyphicon glyphicon-align-left"></button>
@@ -204,7 +217,7 @@
 					</div>
 				</div>
 
-			<script src="/tategaki/jquery-1.12.2.min.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 			<script src="/tategaki/jquery.mousewheel.js"></script>
 			<script src="/tategaki/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 			<script src="/tategaki/key_table.js"></script>

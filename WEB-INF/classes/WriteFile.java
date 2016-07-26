@@ -9,14 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 // ajax通信用
-// Post
-// file_id.txtという名前のファイルにjsonの中身を書き出し、データベースにファイル名と更新日時を保存します。
 public class WriteFile extends HttpServlet  {
-	BufferedWriter bw;
-	// インスタンス変数
 	Connection conn = null;
-	Statement stmt;
-	PreparedStatement pstmt;
 	// ========================================================================
 	// jsp起動時の処理
 	// =======================================================================
@@ -45,13 +39,10 @@ public class WriteFile extends HttpServlet  {
 	// =======================================================================
 	// 	jsp破棄時の処理
 	// =======================================================================
-	// ConnectionとStatementをcloseしている
 	public void destroy(){
 		try{
 			if(conn != null){
 				conn.close();
-				stmt.close();
-				pstmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -65,32 +56,34 @@ public class WriteFile extends HttpServlet  {
 		throws IOException, ServletException {
 
 		try{
-			// 返す値が1行だけならtext/plain
-			// 複数ならapplication/json
-			// response.setContentType("text/plain; charset=UTF-8");
 			response.setContentType("application/json; charset=UTF-8");
 			// 受取のcharset
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 
 			int fileID = Integer.parseInt(request.getParameter("file_id"));
-			// ==================================================================
-			//	 	更新日時文字列の作成
-			// ==================================================================
-			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			java.util.Date date = new java.util.Date(savedMillis);
-			String strDate = String.format("%1$tF %1$tT",date); // 2011-11-08 11:05:20 の書式
 			// ========================================================================
 			// 	ファイル名、最終更新日の更新
 			// ========================================================================
-			stmt = conn.createStatement();
+
 			// ファイル名
 			String fileName = request.getParameter("filename");
-			String sql = String.format("update file_table set filename = \'%s\' where id = %d",fileName,fileID);
-			stmt.executeUpdate(sql);
+			String sql = "update file_table set filename = ? where id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,fileName);
+			pstmt.setInt(2,fileID);
+			pstmt.executeUpdate();
+			pstmt.close();
+
 			// 更新日
-			sql = String.format("update file_table set saved = \'%s\' where id = %d",strDate,fileID);
-			stmt.executeUpdate(sql);
+			long savedMillis = Long.parseLong(request.getParameter("saved"));
+			java.sql.Date date = new java.sql.Date(savedMillis);
+			sql = "update file_table set saved = ? where id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setDate(1,date);
+			pstmt.setInt(2,fileID);
+			pstmt.executeUpdate();
+			pstmt.close();
 
 			// =======================================================
 			// 	userIDから、ルートディレクトリのidを取得
@@ -107,14 +100,15 @@ public class WriteFile extends HttpServlet  {
 				log("database has no new data");
 				throw new SQLException();	
 			}
-			
+			pstmt.close();
+
 			// ==========================================================================
 			// 	テキストファイルへの書き込み
 			// ==========================================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
-			bw = new BufferedWriter(new FileWriter(new File(path),false));
+			String path = context.getRealPath(String.format("data/%d/%d_txt.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(path),false));
 
 			String json = request.getParameter("json");
 			Gson gson = new Gson();
@@ -127,13 +121,12 @@ public class WriteFile extends HttpServlet  {
 			// =============================================================================
 			// 	レスポンス
 			// =============================================================================
-			String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",strDate);
+			String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",date.toString());
 			out.println(rtnJson);
 
 
 			bw.close();
 			out.close();
-			log("fileName is " + fileName);
 		}catch(IOException e){
 			log("IOException");
 			log("getMessage is " + e.getMessage());

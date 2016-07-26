@@ -5,7 +5,7 @@ var key_table = {
 			// bufferに文字なし
 			// キーコードの文字をそのまま返す
 			return this.key_table_jpn[keycode];
-		}else if(buffer_string.length === 1){
+		} else if(buffer_string.length === 1) {
 			// bufferに一文字のみ
 			if (this.convertable.indexOf(buffer_string) !== -1) {
 				// bufferの文字が変換可能アルファベット
@@ -19,16 +19,16 @@ var key_table = {
 					if (buffer_string === typestr) {
 						// 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
 						return "っ" + typestr;
-					}else{
+					} else {
 						// 異なるアルファベットの場合、そのまま連結
 						return buffer_string + typestr;
 					}
-				}else{
+				} else {
 					// 変換できた場合
 					// buffer文字をkeytableに与えて返ってきたオブジェクトにkeycodeを与えて得た文字を返す
 					return str;
 				}
-			}else{
+			} else {
 				// bufferの文字がアルファベットでなければbufferの文字とキーコード文字を連結した文字列を返す
 				return buffer_string + this.key_table_jpn[keycode];
 			}
@@ -43,7 +43,7 @@ var key_table = {
 				// bufferに変換する変換可能アルファベットがない
 				// キーコード文字列をbufferに連結した文字列を返す
 				return buffer_string + this.key_table_jpn[keycode];
-			}else{
+			} else {
 				// bufferの最終文字だけがアルファベット
 				var s = this.key_table_jpn[second];
 				var str =  s[keycode];
@@ -53,21 +53,21 @@ var key_table = {
 					if (second === typestr) {
 						// 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
 						return noEncode + first + "っ" + typestr;
-					}else{
+					} else {
 						// 異なるアルファベットの場合、そのまま連結
 						return buffer_string + typestr;
 					}
-				}else{
+				} else {
 					// 最後から二文字目はアルファベット以外で、最終文字だけがアルファベット
 					// 変換文字取得成功
 					// 無変換文字 + first + buffer文字をkeytableに与えて返ってきたオブジェクトにkeycodeを与えて得た文字を返す
 					return noEncode + first + str;
 				}
 			}
-		}else{
+		} else {
 			// bufferの後ろから二文字目がアルファベット
 			// 最後の文字がアルファベットでないならそのまま連結 "sた + r"などの場合
-			if(this.convertable.indexOf(second) === -1) return buffer_string + this.key_table_jpn[keycode];
+			if (this.convertable.indexOf(second) === -1) return buffer_string + this.key_table_jpn[keycode];
 			// bufferの最後に変換可能アルファベット二文字
 			// 第一添字がアルファベットなら必ず第二添字のためのオブジェクトは返ってくる
 			//
@@ -85,10 +85,6 @@ var key_table = {
 		}
 	},
 	convertable : ["k","s","t","n","h","m","y","r","w","g","z","d","b","p","j","f","l","x","c","v","q"],
-	dotList : ["。","、",",","."],
-	lineList : ["-","ー","―","〜"],
-	beforeBracketList : ["（","[","<","{","「","『","【","(","［","〈"],
-	afterBracketList : ["）","]",">","}","」","』","】",")","］","〉"],
 	katakana : {
 		"あ" : "ア",
 		"い" : "イ",

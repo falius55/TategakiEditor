@@ -15,8 +15,6 @@ public class DeleteFile extends HttpServlet  {
 	BufferedReader br;
 	// インスタンス変数
 	Connection conn = null;
-	Statement stmt;
-	PreparedStatement pstmt;
 	// ====================================================================
 	// 	jsp起動時の処理
 	// ====================================================================
@@ -50,7 +48,6 @@ public class DeleteFile extends HttpServlet  {
 		try{
 			if(conn != null){
 				conn.close();
-				stmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -66,18 +63,18 @@ public class DeleteFile extends HttpServlet  {
 		throws IOException, ServletException {
 
 		try{
-			// 返す値が1行だけならtext/plain
-			// 複数ならapplication/json
-			// response.setContentType("text/plain; charset=UTF-8");
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
+
 			// ========================================================================
 			// 	データベースから該当idのファイルレコードを削除
 			// ========================================================================
 			int fileID = Integer.parseInt(request.getParameter("file_id"));
-			stmt = conn.createStatement();
-			String sql = String.format("delete from file_table where id = %d",fileID);
-			int num = stmt.executeUpdate(sql);
+			String sql = "delete from file_table where id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,fileID);
+			int num = pstmt.executeUpdate();
+			pstmt.close();
 
 			// ========================================================================
 			// 	該当ファイルを削除
@@ -97,6 +94,7 @@ public class DeleteFile extends HttpServlet  {
 				log("database has no new data");
 				throw new SQLException();	
 			}
+			pstmt.close();
 
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();

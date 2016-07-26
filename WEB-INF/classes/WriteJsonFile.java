@@ -4,6 +4,7 @@ import javax.servlet.http.*;
 import java.sql.*;
 import java.net.*;
 import java.util.*;
+import java.text.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -12,10 +13,7 @@ import com.google.gson.Gson;
 // Post
 // file_id.txtという名前のファイルにjsonの中身を書き出し、データベースにファイル名と更新日時を保存します。
 public class WriteJsonFile extends HttpServlet  {
-	BufferedWriter bw;
-	// インスタンス変数
 	Connection conn = null;
-	Statement stmt;
 	PreparedStatement pstmt;
 	// ========================================================================
 	// jsp起動時の処理
@@ -50,7 +48,6 @@ public class WriteJsonFile extends HttpServlet  {
 		try{
 			if(conn != null){
 				conn.close();
-				stmt.close();
 				pstmt.close();
 			}
 		}catch(SQLException e){
@@ -65,34 +62,32 @@ public class WriteJsonFile extends HttpServlet  {
 		throws IOException, ServletException {
 
 		try{
-			// 返す値が1行だけならtext/plain
-			// 複数ならapplication/json
-			// response.setContentType("text/plain; charset=UTF-8");
 			response.setContentType("application/json; charset=UTF-8");
-			// 受取のcharset
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 
-			int fileID = Integer.parseInt(request.getParameter("file_id"));
-			// ==================================================================
-			//	 	更新日時文字列の作成
-			// ==================================================================
-			log("savedMillis to create savedTime");
-			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			java.util.Date date = new java.util.Date(savedMillis);
-			String strDate = String.format("%1$tF %1$tT",date); // 2011-11-08 11:05:20 の書式
 			// ========================================================================
 			// 	ファイル名、最終更新日の更新
 			// ========================================================================
-			log("update filename and save time");
-			stmt = conn.createStatement();
+			int fileID = Integer.parseInt(request.getParameter("file_id"));
+
 			// ファイル名
 			String fileName = request.getParameter("filename");
-			String sql = String.format("update file_table set filename = \'%s\' where id = %d",fileName,fileID);
-			stmt.executeUpdate(sql);
+			String sql = "update file_table set filename = ? where id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,fileName);
+			pstmt.setInt(2,fileID);
+			pstmt.executeUpdate();
+
 			// 更新日
-			sql = String.format("update file_table set saved = \'%s\' where id = %d",strDate,fileID);
-			stmt.executeUpdate(sql);
+			long savedMillis = Long.parseLong(request.getParameter("saved"));
+			java.util.Date date = new java.util.Date(savedMillis); // java.sql.Dateは、時分秒を切り捨ててしまう
+			String strDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+			sql = "update file_table set saved = ? where id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,strDate);
+			pstmt.setInt(2,fileID);
+			pstmt.executeUpdate();
 
 			// =======================================================
 			// 	userIDから、ルートディレクトリのidを取得
@@ -118,25 +113,20 @@ public class WriteJsonFile extends HttpServlet  {
 			log("witing text file");
 			ServletContext context = this.getServletContext();
 			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
-			bw = new BufferedWriter(new FileWriter(new File(path),false));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(path),false));
 
-			log("before get json");
 			String json = request.getParameter("json");
-			log("after get json");
-				bw.write(json);
+			bw.write(json);
 
 			// =============================================================================
 			// 	レスポンス
 			// =============================================================================
-				log("response");
 			String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",strDate);
-			log("WriteJsonFile.rtnJson:"+ rtnJson);
 			out.println(rtnJson);
 
 
 			bw.close();
 			out.close();
-			log("fileName is " + fileName);
 		}catch(IOException e){
 			log("IOException");
 			log("getMessage is " + e.getMessage());

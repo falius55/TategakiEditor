@@ -28,6 +28,7 @@ public class KanjiProxy extends HttpServlet {
 			log(e.getMessage());
 		}
 	}
+
 	public static void main(String args[]) {
 		System.out.println(getData(args[0]));
 	}
@@ -49,7 +50,7 @@ public class KanjiProxy extends HttpServlet {
 			System.err.println(e);
 		}
 		int i;
-		for(i = 0;b[i] != 0 && i<b.length;i++); // 読み込みバイト数を数える
+		for(i = 0;b[i] != 0 && i < b.length;i++); // 読み込みバイト数を数える
 		return new String(b,0,i);
 	}
 }

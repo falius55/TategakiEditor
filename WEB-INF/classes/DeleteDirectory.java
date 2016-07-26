@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 public class DeleteDirectory extends HttpServlet  {
 	// インスタンス変数
 	Connection conn = null;
-	PreparedStatement pstmt;
 	// ========================================================================
 	// jsp起動時の処理
 	// =======================================================================
@@ -44,12 +43,11 @@ public class DeleteDirectory extends HttpServlet  {
 	// =======================================================================
 	// ConnectionとStatementをcloseしている
 	public void destroy(){
-		try{
-			if(conn != null){
+		try {
+			if (conn != null) {
 				conn.close();
-				pstmt.close();
 			}
-		}catch(SQLException e){
+		} catch(SQLException e) {
 			log("SQLException:" + e.getMessage());
 		}
 	}
@@ -60,19 +58,17 @@ public class DeleteDirectory extends HttpServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
-		try{
-			// 返す値が1行だけならtext/plain
-			// 複数ならapplication/json
-			// response.setContentType("text/plain; charset=UTF-8");
+		try {
 			response.setContentType("application/json; charset=UTF-8");
 			// 受取のcharset
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 
+			PreparedStatement pstmt;
 			int directoryID = Integer.parseInt(request.getParameter("directory_id"));
 			boolean option = Boolean.getBoolean(request.getParameter("option"));
 			String rtnJson;
-			if (isFileInDirectory(directoryID)) {
+			if (hasFileInDirectory(directoryID)) {
 				// ディレクトリ内にファイルが存在する
 				if (option) {
 					// 強制的にディレクトリ内ファイルごと削除する
@@ -83,14 +79,16 @@ public class DeleteDirectory extends HttpServlet  {
 					pstmt.setInt(2,directoryID);
 					pstmt.executeUpdate();
 					rtnJson = "{\"result\":\"success(file in)\"}";
+					pstmt.close();
 				}
 					rtnJson = "{\"result\":\"within\"}";
-			}else{
+			} else {
 				// ディレクトリ内にファイルが存在しない		
 					String sql = "delete from file_table where id = ?;";
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setInt(1,directoryID);
 					pstmt.executeUpdate();
+					pstmt.close();
 					rtnJson = "{\"result\":\"success\"}";
 			}
 			// =============================================================================
@@ -101,30 +99,32 @@ public class DeleteDirectory extends HttpServlet  {
 
 			log("DeleteDirectory's directoryID:"+ directoryID);
 			out.close();
-		}catch(IOException e){
+		} catch(IOException e) {
 			log("IOException");
 			log("getMessage is " + e.getMessage());
-		}catch(SQLException e){
+		} catch(SQLException e) {
 			log("SQLException");
 			log("getMessage is " + e.getMessage());
-		}catch(Exception e){
+		} catch(Exception e) {
 			log("Exception");
 			log("getMessage is " + e.getMessage());
 		}
 	}
-	private boolean isFileInDirectory(int directoryID) {
+	private boolean hasFileInDirectory(int directoryID) {
 		// ディレクトリ内にファイルがあればtrue
-		try{
+		try {
 			String sql = "select * from file_table where parent_dir = ?";
-			pstmt = conn.prepareStatement(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,directoryID);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
+				pstmt.close();
 				return true;
 			}else{
+				pstmt.close();
 				return false;		
 			}
-		}catch(SQLException e){
+		} catch(SQLException e) {
 			log("SQLException");
 			log("getMessage is " + e.getMessage());
 		}

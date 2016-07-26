@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 public class MoveFile extends HttpServlet  {
 	// インスタンス変数
 	Connection conn = null;
-	PreparedStatement pstmt;
 	// ========================================================================
 	// jsp起動時の処理
 	// =======================================================================
@@ -47,7 +46,6 @@ public class MoveFile extends HttpServlet  {
 		try{
 			if(conn != null){
 				conn.close();
-				pstmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -75,10 +73,11 @@ public class MoveFile extends HttpServlet  {
 			// 	親ディレクトリの更新
 			// ========================================================================
 			String sql = "update file_table set parent_dir = ? where id = ?";
-			pstmt = conn.prepareStatement(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,parentDirID);
 			pstmt.setInt(2,fileID);
 			pstmt.executeUpdate();
+			pstmt.close();
 			// =============================================================================
 			// 	レスポンス
 			// =============================================================================

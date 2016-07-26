@@ -9,7 +9,7 @@ public class Logout extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		HttpSession session = request.getSession(true);
-		session.invalidate();
+		session.invalidate(); // セッションを破棄する
 
 		response.sendRedirect("/tategaki/loginpage.jsp");
 	}

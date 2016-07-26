@@ -6,7 +6,6 @@ import java.sql.*;
 public class Register extends HttpServlet {
 	// インスタンス変数
 	Connection conn = null;
-	PreparedStatement pstmt;
 	// ====================================================================
 	// 	jsp起動時の処理
 	// ====================================================================
@@ -40,7 +39,6 @@ public class Register extends HttpServlet {
 		try{
 			if(conn != null){
 				conn.close();
-				pstmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -94,13 +92,14 @@ public class Register extends HttpServlet {
 			// 	データベースへの登録
 			//	========================================================
 			String sql = "insert into edit_users (name,email,password,registered) values (?,?,?,?)";
-			pstmt = conn.prepareStatement(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1,user);
 			pstmt.setString(2,email);
 			pstmt.setString(3,pass);
 			pstmt.setString(4,String.format("%1$tF %1$tT",nowDate));
 			pstmt.executeUpdate();
+			pstmt.close();
 
 			// =========================================================
 			// 	ユーザー専用ディレクトリの作成
@@ -121,6 +120,7 @@ public class Register extends HttpServlet {
 				log("database has no new data");
 				throw new SQLException();	
 			}
+			pstmt.close();
 
 			// データベースへのディレクトリ情報登録
 			sql = "insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)";
@@ -132,6 +132,7 @@ public class Register extends HttpServlet {
 			pstmt.setInt(4,userID);
 			pstmt.setString(5,String.format("%1$tF %1$tT",nowDate));
 			pstmt.executeUpdate();
+			pstmt.close();
 
 			// rootIDの取得
 			sql = "select * from file_table where user_id = ? and type = ? ";
@@ -147,12 +148,14 @@ public class Register extends HttpServlet {
 				log("database has no new data");
 				throw new SQLException();	
 			}
+			pstmt.close();
 
 			// edit_usersへのrootディレクトリ情報の登録
 			sql = "update edit_users set root_file_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,rootID);
 			pstmt.executeUpdate();
+			pstmt.close();
 
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();

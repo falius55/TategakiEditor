@@ -3,20 +3,18 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import java.net.*;
+import java.text.*;
+
 
 // ajax通信用
 // Post
-// 渡し
+// 受取
 // fileId : ファイルid
-// 戻り
+// 返し
 // fileNname
 // literaArray : 読み込んだ各行文字列を格納した配列
 public class ReadFile extends HttpServlet  {
-	BufferedReader br;
-	// インスタンス変数
 	Connection conn = null;
-	Statement stmt;
-	PreparedStatement pstmt;
 	// ====================================================================
 	// 	jsp起動時の処理
 	// ====================================================================
@@ -50,7 +48,6 @@ public class ReadFile extends HttpServlet  {
 		try{
 			if(conn != null){
 				conn.close();
-				stmt.close();
 			}
 		}catch(SQLException e){
 			log("SQLException:" + e.getMessage());
@@ -66,9 +63,6 @@ public class ReadFile extends HttpServlet  {
 		throws IOException, ServletException {
 
 		try{
-			// 返す値が1行だけならtext/plain
-			// 複数ならapplication/json
-			// response.setContentType("text/plain; charset=UTF-8");
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 
@@ -76,23 +70,21 @@ public class ReadFile extends HttpServlet  {
 			//	 idから目的のファイル名、最終更新日を取得
 			// ======================================================
 			int fileID = Integer.parseInt(request.getParameter("file_id"));
-			stmt = conn.createStatement();
-			String sql = "SELECT * FROM file_table where id = " + fileID;
-			ResultSet rs = stmt.executeQuery(sql);
+			String sql = "select * from file_table where id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,fileID);
+			ResultSet rs = pstmt.executeQuery();
 			String fileName;
-			Timestamp tSaved;
 			String saved;
 
 			if (rs.next()) {
-			fileName = rs.getString("filename");
-			// 最終更新日はナノ秒も文字列で表されるので切り捨てる
-			tSaved = rs.getTimestamp("saved");
-			tSaved.setNanos(0);
-			saved = tSaved.toString();
-			saved = saved.substring(0,saved.length()-2);
+				fileName = rs.getString("filename");
+				saved = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(rs.getDate("saved"));
 			}else{
 				throw new SQLException();	
 			}
+			pstmt.close();
+
 			StringBuffer sb = new StringBuffer();
 			sb.append("{\"filename\":\"");
 			sb.append(fileName);
@@ -116,14 +108,15 @@ public class ReadFile extends HttpServlet  {
 				log("database has no new data");
 				throw new SQLException();	
 			}
-			
+			pstmt.close();
+
 			// ========================================================
 			//	 ファイル読込
 			// ========================================================
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
-			br = new BufferedReader(new FileReader(new File(path)));
+			String path = context.getRealPath(String.format("data/%d/%d_txt.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
+			BufferedReader br = new BufferedReader(new FileReader(new File(path)));
 
 			// 複数行読み出し、配列で返している
 			// {"literaArray": ["a","b","c"]}
