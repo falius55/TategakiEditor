@@ -9,7 +9,6 @@
 			<title>縦書きエディタ</title>
 			<!--
 			<link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css" media="screen">
-			<link rel="stylesheet" href="tategaki-dispStyle.css">
 		-->
 			<link rel="stylesheet" href="honoka/css/bootstrap.min.css" media="screen">
 			<link rel="stylesheet" href="tategaki.css">
