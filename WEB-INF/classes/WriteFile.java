@@ -1,9 +1,13 @@
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.net.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.List;
+import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -17,7 +21,7 @@ public class WriteFile extends AbstractServlet  {
 			// 受取のcharset
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			startSql("jdbc:mysql://localhost/tategaki_editor","serveruser","digk473");
+			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
 

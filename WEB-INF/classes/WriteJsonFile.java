@@ -1,13 +1,9 @@
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.net.*;
-import java.util.*;
-import java.text.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 // file_id.txtという名前のファイルにjsonの中身を書き出し、データベースにファイル名と更新日時を保存します。
 public class WriteJsonFile extends AbstractServlet {
@@ -18,7 +14,7 @@ public class WriteJsonFile extends AbstractServlet {
 			response.setContentType("application/json; charset=UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			startSql("jdbc:mysql://localhost/tategaki_editor","serveruser","digk473");
+			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			// ファイル名、最終更新日の更新
 			int fileId = Integer.parseInt(request.getParameter("file_id"));

@@ -1,8 +1,13 @@
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * アクセスしたクライアントのセッションを確認し、セッションがまだ始まっていないか、ログインがされていなければログインページに飛ばします。
@@ -20,7 +25,7 @@ public class UserCheckFilter implements Filter {
 				session = servletrequest.getSession(true);
 
 				servletresponse.sendRedirect("/tategaki/loginpage.jsp");
-			}else{
+			} else {
 				Boolean loginCheck = (Boolean)session.getAttribute("login");
 				if (loginCheck == null || loginCheck.equals(Boolean.FALSE)) {
 					servletresponse.sendRedirect("/tategaki/loginpage.jsp");
@@ -28,18 +33,18 @@ public class UserCheckFilter implements Filter {
 			}
 			chain.doFilter(request,response);
 		} catch (ServletException e) {
-			System.out.println("ServletException:" + e.getMessage());
-		}catch(IOException e){
-			System.out.println("IOException:" + e.getMessage());
-		}catch(Exception e){
-			System.out.println("Exception:" + e.getMessage());
+			System.err.println(e.getMessage());
+		} catch(IOException e) {
+			System.err.println(e.getMessage());
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
 		}
 	}
 
-	public void init(FilterConfig filterconfig) throws ServletException{
+	public void init(FilterConfig filterconfig) throws ServletException {
 			
 	}
-	public void destroy(){
+	public void destroy() {
 			
 	}
 }

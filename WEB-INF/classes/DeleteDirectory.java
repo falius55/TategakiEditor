@@ -1,9 +1,8 @@
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.net.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class DeleteDirectory extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -14,7 +13,7 @@ public class DeleteDirectory extends AbstractServlet  {
 			// 受取のcharset
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			startSql("jdbc:mysql://localhost/tategaki_editor","serveruser","digk473");
+			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			int directoryId = Integer.parseInt(request.getParameter("directory_id"));
 			boolean option = Boolean.getBoolean(request.getParameter("option"));

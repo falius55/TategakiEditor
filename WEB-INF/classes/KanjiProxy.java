@@ -1,10 +1,14 @@
-import java.io.*;
-import java.sql.*;
-import java.net.*;
-import java.util.*;
-import javax.xml.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.MalformedURLException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 
 public class KanjiProxy extends HttpServlet {
 	String sentence;

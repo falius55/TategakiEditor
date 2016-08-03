@@ -1,10 +1,17 @@
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.net.*;
-import java.text.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServlet;
 
 abstract public class AbstractServlet extends HttpServlet  {
 	protected Connection connection = null; // FileListMakerでも利用するためprotected
@@ -16,7 +23,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	/*
 	 * DataBase
 	 */
-	protected void startSql(String url, String user, String password) {
+	protected void connectDatabase(String url, String user, String password) {
 		try {
 			// 指定したクラスのインスタンスを作成してJDBCドライバをロードする
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -46,7 +53,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 		}
 	}
 
-	// startSql(url,user,password);
+	// connectDatabase(url,user,password);
 	// Resultset rs = executeSql("select * from table where id = ? and save = ?").setInt(5).setTimeMillis(savedMillis).query();
 	// int id;
 	// long savedMillis;

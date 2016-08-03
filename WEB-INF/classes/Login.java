@@ -1,73 +1,26 @@
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * 送られてきたユーザー名とパスワードを確認してログインします。
  */
-public class Login extends HttpServlet {
-	// インスタンス変数
-	Connection conn = null;
-	// ====================================================================
-	// 	jsp起動時の処理
-	// ====================================================================
-	// データベースへの接続
-	public void init() {
-		String url = "jdbc:mysql://localhost/tategaki_editor";
-		String user = "serveruser";
-		String password = "digk473";
-
-		try {
-			// 指定したクラスのインスタンスを作成してJDBCドライバをロードする
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-			// Drivermanagerに接続(データベースへの接続)
-			conn = DriverManager.getConnection(url,user,password);
-
-
-		} catch (ClassNotFoundException e) {
-			log("ClassNotFoundException:" + e.getMessage());
-		} catch (SQLException e) {
-			log("SQLException:" + e.getMessage());
-		} catch (Exception e) {
-			log("Exception:" + e.getMessage());
-		} 
-	}
-	// =====================================================================
-	// 	jsp破棄時の処理
-	// =====================================================================
-	// ConnectionとStatementをcloseしている
-	public void destroy(){
-		try{
-			if(conn != null){
-				conn.close();
-			}
-		}catch(SQLException e){
-			log("SQLException:" + e.getMessage());
-		}catch(NullPointerException e){
-			log("NullPointerException:" + e.getMessage());
-		}
-	}
-
-	// =======================================================================
-	// 	main
-	// =======================================================================
+public class Login extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 
-		// =====================================================
-		// 	フォームからの情報受取
-		// =====================================================
+		// フォームからの情報受取
 		String user = request.getParameter("username");
 		String pass = request.getParameter("password");
 
-		// =====================================================
-		// 	認証のチェック
-		// =====================================================
+		// 認証のチェック
 		HttpSession session = request.getSession(true);
 
 		boolean checked = userCheck(user,pass,session);
@@ -75,43 +28,32 @@ public class Login extends HttpServlet {
 		if (checked) {
 			// 認証済みにセット
 			session.setAttribute("login",Boolean.TRUE);
-
 			response.sendRedirect("/tategaki/tategaki.jsp");
-		}else{
+		} else {
 			// 認証に失敗したら、ログイン画面に戻す
 			session.setAttribute("login",Boolean.FALSE);
 			response.sendRedirect("/tategaki/loginpage.jsp");
 		}
 	}
 
-	protected boolean userCheck(String user,String pass,HttpSession session){
+	protected boolean userCheck(String user,String pass,HttpSession session) {
 		if (user == null || user.length() == 0 || pass == null || pass.length() == 0) {
 			return false;
 		}	
-		try {
-			String sql = "select * from edit_users where name = ? && password = ?";
-			PreparedStatement pstmt = conn.prepareStatement(sql);
+		connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
+		executeSql("select * from edit_users where name = ? && password = ?")
+			.setString(user).setString(pass).query();
 
-			pstmt.setString(1,user);
-			pstmt.setString(2,pass);
-			ResultSet rs = pstmt.executeQuery();
+		if (next()) {
+			String userid = getString("id");
+			String username = getString("name");
 
-			if (rs.next()) {
-				String userid = rs.getString("id");
-				String username = rs.getString("name");
+			session.setAttribute("userid",userid);
+			session.setAttribute("username",username);
 
-				session.setAttribute("userid",userid);
-				session.setAttribute("username",username);
-
-				pstmt.close();
-				return true;
-			} else {
-				pstmt.close();
-				return false;		
-			}
-		} catch (SQLException e) {
-			log("SQLException:" + e.getMessage());
-			return false;
+			return true;
+		} else {
+			return false;		
 		}
 	}
 }
