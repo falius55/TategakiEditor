@@ -43,7 +43,6 @@ public class ReadFile extends HttpServlet  {
 	// =====================================================================
 	// 	jsp破棄時の処理
 	// =====================================================================
-	// ConnectionとStatementをcloseしている
 	public void destroy(){
 		try{
 			if(conn != null){

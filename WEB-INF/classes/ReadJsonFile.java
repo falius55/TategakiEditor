@@ -7,80 +7,27 @@ import java.net.*;
 import java.text.*;
 
 
-// ajax通信用
-public class ReadJsonFile extends HttpServlet  {
-	Connection conn = null;
-
-	// ====================================================================
-	// 	jsp起動時の処理
-	// ====================================================================
-	// データベースへの接続
-	public void init() {
-		String url = "jdbc:mysql://localhost/tategaki_editor";
-		String user = "serveruser";
-		String password = "digk473";
-
-		try {
-			// 指定したクラスのインスタンスを作成してJDBCドライバをロードする
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-			// Drivermanagerに接続(データベースへの接続)
-			conn = DriverManager.getConnection(url,user,password);
-
-
-		} catch (ClassNotFoundException e) {
-			log("ClassNotFoundException:" + e.getMessage());
-		} catch (SQLException e) {
-			log("SQLException:" + e.getMessage());
-		} catch (Exception e) {
-			log("Exception:" + e.getMessage());
-		} 
-	}
-	// =====================================================================
-	// 	jsp破棄時の処理
-	// =====================================================================
-	public void destroy(){
-		try{
-			if(conn != null){
-				conn.close();
-			}
-		}catch(SQLException e){
-			log("SQLException:" + e.getMessage());
-		}catch(NullPointerException e){
-			log("NullPointerException:" + e.getMessage());
-		}
-	}
-
-	// =======================================================================
-	// 	main
-	// =======================================================================
+public class ReadJsonFile extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
-		try{
+		try {
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
+			startSql("jdbc:mysql://localhost/tategaki_editor","serveruser","digk473");
 
-			// ======================================================
 			//	 idから目的のファイル名、最終更新日を取得
-			// ======================================================
 			int fileID = Integer.parseInt(request.getParameter("file_id"));
-			String sql = "select * from file_table where id = ?";
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1,fileID);
-			ResultSet rs = pstmt.executeQuery();
+			executeSql("select * from file_table where id = ?").setInt(fileID).query();
 
 			String fileName;
 			String saved;
-
-			if (rs.next()) {
-			fileName = rs.getString("filename");
-			// saved = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(rs.getDate("saved"));
-			saved = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(rs.getTimestamp("saved").getTime()));
-			}else{
+			if (next()) {
+				fileName = getString("filename");
+				saved = getDateFormat("saved");
+			} else {
 				throw new SQLException();	
 			}
-			pstmt.close();
 
 			StringBuffer sb = new StringBuffer();
 			sb.append("{\"filename\":\"");
@@ -90,58 +37,35 @@ public class ReadJsonFile extends HttpServlet  {
 			sb.append(saved);
 			sb.append("\",");
 
-			// =======================================================
-			// 	userIDから、ルートディレクトリのidを取得
-			// =======================================================
+			// userIDから、ルートディレクトリのidを取得
 			int userID = Integer.parseInt(request.getParameter("user_id"));
-			sql = "select * from edit_users where id = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1,userID);
-			rs = pstmt.executeQuery();
+			executeSql("select * from edit_users where id = ?").setInt(userID).query();
 			int rootID;
-			if (rs.next()) {
-				rootID = rs.getInt("root_file_id");
-			}else{
+			if (next()) {
+				rootID = getInt("root_file_id");
+			} else {
 				log("database has no new data");
 				throw new SQLException();	
 			}
-			pstmt.close();
-			
-			// ========================================================
-			//	 ファイル読込
-			// ========================================================
-			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
-			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/rootID/fileID.txtとなる
-			BufferedReader br = new BufferedReader(new FileReader(new File(path)));
 
+			//	ファイル読込
 			sb.append("\"data\":");
-			String str = br.readLine();
-			for(int i=0;str != null ;i++){
-				sb.append(str);
-				str = br.readLine();
-			}
+			sb.append(readFile(String.format("data/%d/%d.txt",rootID,fileID)));
 			sb.append("}");
 
-			// ===================================================
-			//	 ajaxへ送信
-			// ====================================================
-			String rtnJson = sb.toString().replaceAll("\"","\\\"");
+			//	ajaxへ送信
+			String rtnJson = sb.toString().replaceAll("\"","\\\""); // jsonファイル中の"を\"にエスケープする
 			log(rtnJson);
 			out.println(rtnJson);
 
-
-			br.close();
 			out.close();
 			log("fileName is " + fileName);
-		}catch(IOException e){
-			log("ReadFile's IOException:'" + e.getMessage());
-		}catch(SQLException e){
-			log("ReadFile's SQLException:'" + e.getMessage());
-		}catch(NullPointerException e){
-			log("ReadFile's NullPointerException:'" + e.getMessage());
-		}catch(Exception e){
-			log("ReadFile's Exception:'" + e.getMessage());
+		} catch(IOException e) {
+			log(e.getMessage());
+		} catch(SQLException e) {
+			log(e.getMessage());
+		} catch(Exception e) {
+			log(e.getMessage());
 		}
 	}
 }

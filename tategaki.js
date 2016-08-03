@@ -11,6 +11,12 @@ $(function() {
 	// --------------------- key event listener ---------------------------
 
 	// キー操作
+	/**
+	 * イベントオブジェクトを渡して、キーコードを返します
+	 * @inner
+	 * @param {Object} e	キーボードイベントオブジェクト
+	 * @return {Number} 入力されたキーコードを表す数値
+	 */
 	function getKeyCode(e) {
 		'use strict';
 		let keycode;
@@ -626,9 +632,7 @@ $(function() {
 					 break;
 			case ':mv':
 			case ':ｍｖ':
-					 const $file = $('.file[data-file-name="'+ command[1] +'"],.directory[data-directory-name="'+ command[1] +'"]');
-					 const $newParentDir = $('.directory[data-directory-name="'+ command[2] +'"]');
-					 comMoveFile($file,$newParentDir);
+					 comMoveFile(command[1],command[2]);
 					 break;
 			case ':mkdir':
 			case ':ｍｋぢｒ':
@@ -1796,7 +1800,7 @@ $(function() {
 		const $cursorRow = $('.cursor-row');
 
 		if ($prevChar[0]) {
-			const $nextRow = $cursorRow.nextAll('.vertical-row').first(); //改行前の次の行
+			let $nextRow = $cursorRow.nextAll('.vertical-row').first(); //改行前の次の行
 
 			// paragraph
 			if (!($nextRow[0])) {
@@ -1865,7 +1869,7 @@ $(function() {
 
 		// 行頭からのBS
 		const $rowOfDelChar = $('.cursor-row');
-		const $preRow = $rowOfDelChar.prevAll('.vertical-row').first();
+		let $preRow = $rowOfDelChar.prevAll('.vertical-row').first();
 
 		// 段落途中の行頭からのBS
 		if($preRow[0]) {
@@ -3254,10 +3258,9 @@ $(function() {
 
 	function comFileList(userID) {
 		'use strict';
-
 		$.ajax({
 			type : 'POST',
-			url : '/tategaki/GetFileList',
+			url : '/tategaki/FileListMaker',
 			data : {
 				user_id: userID
 			},
@@ -3342,7 +3345,7 @@ $(function() {
 			.attr('data-type','directory')
 			.attr('data-directory-id',dirID)
 			.attr('data-directory-name',data.directoryname)
-			.html('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'+data.directoryname); // ☓ボタン
+			.html('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'+data.directoryname); // icon
 		$parentUl.append($('<li>').append($dirLink));
 
 		const $collapse = $('<div>').addClass('collapse').attr('id','directory'+dirID);
@@ -3389,7 +3392,7 @@ $(function() {
 
 		$.ajax({
 			type : 'POST',
-			url : '/tategaki/GetFileList',
+			url : '/tategaki/FileListMaker',
 			data : {
 				user_id: userID
 			},
@@ -3423,12 +3426,32 @@ $(function() {
 			let $file;
 			let fileID;
 			let filename;
+			let $directory;
+			let directoryID;
+			let directoryname;
 			for (let i = 0; i < matchObjLength; i++) {
 				$obj = $array[i];
-				fileID = $obj.attr('data-file-id');
-				filename = $obj.attr('data-file-name');
-				$file = $('<a>').addClass('file').attr('href','#').attr('data-file-id',fileID).attr('data-file-name',filename).text(filename);
-				$fileList.append($('<li>').append($file));
+				if ($obj.attr('data-type') === 'file') {
+					fileID = $obj.attr('data-file-id');
+					filename = $obj.attr('data-file-name');
+					$file = $('<a>')
+						.addClass('file')
+						.attr('href','#')
+						.attr('data-file-id',fileID)
+						.attr('data-file-name',filename)
+						.text(filename);
+					$fileList.append($('<li>').append($file));
+				} else {
+					directoryID = $obj.attr('data-directory-id');
+					directoryname = $obj.attr('data-directory-name');
+					$directory = $('<a>')
+						.addClass('directory')
+						.attr('data-type','directory')
+						.attr('data-directory-id',directoryID)
+						.attr('data-directory-name',directoryname)
+						.html('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'+ directoryname); // icon
+					$fileList.append($('<li>').append($directory));
+				}
 			}
 
 		} else {
@@ -3451,11 +3474,19 @@ $(function() {
 		const $array = []; // マッチしたjqueryオブジェクトを入れる配列
 		let $self;
 		let filename;
+		let directoryname;
 
 		$('.file').each(function () {
 			$self = $(this);
 			filename = $self.attr('data-file-name');
 			if (regexp.test(filename)) {
+				$array.push($self);
+			}
+		});
+		$('.directory').each(function () {
+			$self = $(this);
+			directoryname = $self.attr('data-directory-name');
+			if (regexp.test(directoryname)) {
 				$array.push($self);
 			}
 		});
@@ -3493,9 +3524,11 @@ $(function() {
 
 		const userID = getUserID();
 		const nowDate_ms = Date.now() + '';
+		console.log('userId:'+ userID);
+		console.log('nowDate_ms:'+ nowDate_ms);
 		$.ajax({
 			type : 'POST',
-			url : '/tategaki/CreateFile',
+			url : '/tategaki/FileMaker',
 			data : {
 				filename: filename,
 				user_id: userID,
@@ -3657,16 +3690,35 @@ $(function() {
 					}
 				}
 
-				function comMoveFile($file,$newParentDir) {
+				function comMoveFile(filename,newParentDirname) {
 					'use strict';
-					let fileID;
-					let newParentDirID;
-
-					if ($file[0] && $newParentDir[0]) {
-						fileID = $file.attr('data-type')==='file' ? $file.attr('data-file-id') : $file.attr('data-directory-id');
-						newParentDirID = $newParentDir.attr('data-directory-id');
-						comMvFileToDirectory(fileID,newParentDirID);
-					}
+					const userID = getUserID();
+					// コマンドからの実行の場合、フィルターがかかってfile-list内が一つだけになってしまっているので、
+					// いったん全ファイルを取得してからでないと$fileと$newParentDirが見つからない
+					$.ajax({
+						type : 'POST',
+						url : '/tategaki/FileListMaker',
+						data : {
+							user_id: userID
+						},
+						dataType : 'json',
+						success : function (data) {
+							// 表示データを受け取ってからの処理
+							setFileListFromObject(data);
+							const $file = $('.file[data-file-name="'+ filename +'"],.directory[data-directory-name="'+ filename +'"]');
+							const $newParentDir = $('.directory[data-directory-name="'+ newParentDirname +'"]');
+							let fileID;
+							let newParentDirID;
+							if ($file[0] && $newParentDir[0]) {
+								fileID = $file.attr('data-type')==='file' ? $file.attr('data-file-id') : $file.attr('data-directory-id');
+								newParentDirID = $newParentDir.attr('data-directory-id');
+								comMvFileToDirectory(fileID,newParentDirID);
+							}
+						},
+						error : function (XMLHttpRequest, textStatus, errorThrown) {
+							alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comFileList');
+						}
+					});
 				}
 
 				function comMvFileToDirectory(fileID,newParentDirID) {
@@ -3702,10 +3754,12 @@ $(function() {
 					console.log('make directory:'+ directoryname);
 					const userID = getUserID();
 					const nowDate_ms = Date.now() + '';
+					console.log('user-id:'+ userID);
+					console.log('nowDate_ms:'+ nowDate_ms);
 
 					$.ajax({
 						type : 'POST',
-						url : '/tategaki/MakeDirectory',
+						url : '/tategaki/DirectoryMaker',
 						data : {
 							user_id: userID,
 							directoryname: directoryname,
@@ -3749,7 +3803,7 @@ $(function() {
 							}
 						},
 						error : function (XMLHttpRequest, textStatus, errorThrown) {
-							alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMakeDirectory');
+							alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteDirectory');
 						}
 					});
 				}

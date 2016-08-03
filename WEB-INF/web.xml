@@ -30,16 +30,16 @@
 			<servlet-class>WriteJsonFile</servlet-class>
 		</servlet>
 		<servlet>
-			<servlet-name>GetFileList</servlet-name>
-			<servlet-class>GetFileList</servlet-class>
+			<servlet-name>FileListMaker</servlet-name>
+			<servlet-class>FileListMaker</servlet-class>
 		</servlet>
 		<servlet>
 			<servlet-name>KanjiProxy</servlet-name>
 			<servlet-class>KanjiProxy</servlet-class>
 		</servlet>
 		<servlet>
-			<servlet-name>CreateFile</servlet-name>
-			<servlet-class>CreateFile</servlet-class>
+			<servlet-name>FileMaker</servlet-name>
+			<servlet-class>FileMaker</servlet-class>
 		</servlet>
 		<servlet>
 			<servlet-name>DeleteFile</servlet-name>
@@ -62,8 +62,8 @@
 			<servlet-class>MoveFile</servlet-class>
 		</servlet>
 		<servlet>
-			<servlet-name>MakeDirectory</servlet-name>
-			<servlet-class>MakeDirectory</servlet-class>
+			<servlet-name>DirectoryMaker</servlet-name>
+			<servlet-class>DirectoryMaker</servlet-class>
 		</servlet>
 		<servlet>
 			<servlet-name>DeleteDirectory</servlet-name>
@@ -88,16 +88,16 @@
 			<url-pattern>/WriteJsonFile</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
-			<servlet-name>GetFileList</servlet-name>
-			<url-pattern>/GetFileList</url-pattern>
+			<servlet-name>FileListMaker</servlet-name>
+			<url-pattern>/FileListMaker</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
 			<servlet-name>KanjiProxy</servlet-name>
 			<url-pattern>/KanjiProxy</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
-			<servlet-name>CreateFile</servlet-name>
-			<url-pattern>/CreateFile</url-pattern>
+			<servlet-name>FileMaker</servlet-name>
+			<url-pattern>/FileMaker</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
 			<servlet-name>DeleteFile</servlet-name>
@@ -120,8 +120,8 @@
 			<url-pattern>/MoveFile</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
-			<servlet-name>MakeDirectory</servlet-name>
-			<url-pattern>/MakeDirectory</url-pattern>
+			<servlet-name>DirectoryMaker</servlet-name>
+			<url-pattern>/DirectoryMaker</url-pattern>
 		</servlet-mapping>
 		<servlet-mapping>
 			<servlet-name>DeleteDirectory</servlet-name>

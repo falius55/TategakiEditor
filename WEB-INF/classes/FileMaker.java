@@ -1,0 +1,61 @@
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+import java.net.*;
+
+public class FileMaker extends AbstractServlet  {
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+		throws IOException, ServletException {
+
+		try {
+			response.setContentType("application/json; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			startSql("jdbc:mysql://localhost/tategaki_editor","serveruser","digk473");
+
+			// userIdから、ルートディレクトリのidを取得
+			int userId = Integer.parseInt(request.getParameter("user_id"));
+			executeSql("select * from edit_users where id = ?").setInt(userId).query();
+
+			int rootId;
+			if (next()) {
+				rootId = getInt("root_file_id");
+			} else {
+				log("database has no new data");
+				throw new SQLException();	
+			}
+
+			// 行を挿入し、ファイルID、ユーザー名、最終更新日を保存
+			String fileName = request.getParameter("filename");
+			long savedMillis = Long.parseLong(request.getParameter("saved"));
+			executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
+				.setString(fileName).setString("file").setInt(rootId).setInt(userId).setTimeMillis(savedMillis).update();
+
+			// 新しいfileIdを取得
+			executeSql("select * from file_table where user_id = ? and saved = ?").setInt(userId).setTimeMillis(savedMillis).query();
+
+			int fileId;
+			if (next()) {
+				fileId = getInt("id");
+			} else {
+				throw new SQLException();
+			}
+
+			// ファイルを作成
+			createFile(String.format("data/%d/%d.txt",rootId,fileId));
+
+			//	ajaxへ送信
+			String rtn = String.format("{\"newFileID\" : \"%d\",\"filename\" : \"%s\"}",fileId,fileName);
+			out.println(rtn);
+
+			out.close();
+		} catch(IOException e) {
+			log(e.getMessage());
+		} catch(SQLException e) {
+			log(e.getMessage());
+		} catch(Exception e) {
+			log(e.getMessage());
+		}
+	}
+}

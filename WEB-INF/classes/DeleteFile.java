@@ -4,140 +4,41 @@ import javax.servlet.http.*;
 import java.sql.*;
 import java.net.*;
 
-// ajax通信用
-// Post
-// 渡し
-// file_id
-// 戻り
-// successRecord データベースで処理した行数
-// resulet 削除処理が行われた場合にtrue
-public class DeleteFile extends HttpServlet  {
-	BufferedReader br;
-	// インスタンス変数
-	Connection conn = null;
-	// ====================================================================
-	// 	jsp起動時の処理
-	// ====================================================================
-	// データベースへの接続
-	public void init() {
-		String url = "jdbc:mysql://localhost/tategaki_editor";
-		String user = "serveruser";
-		String password = "digk473";
-
-		try {
-			// 指定したクラスのインスタンスを作成してJDBCドライバをロードする
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-			// Drivermanagerに接続(データベースへの接続)
-			conn = DriverManager.getConnection(url,user,password);
-
-
-		} catch (ClassNotFoundException e) {
-			log("ClassNotFoundException:" + e.getMessage());
-		} catch (SQLException e) {
-			log("SQLException:" + e.getMessage());
-		} catch (Exception e) {
-			log("Exception:" + e.getMessage());
-		} 
-	}
-	// =====================================================================
-	// 	jsp破棄時の処理
-	// =====================================================================
-	// ConnectionとStatementをcloseしている
-	public void destroy(){
-		try{
-			if(conn != null){
-				conn.close();
-			}
-		}catch(SQLException e){
-			log("SQLException:" + e.getMessage());
-		}catch(NullPointerException e){
-			log("NullPointerException:" + e.getMessage());
-		}
-	}
-
-	// =======================================================================
-	// 	main
-	// =======================================================================
+public class DeleteFile extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
-		try{
+		try {
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();
+			startSql("jdbc:mysql://localhost/tategaki_editor","serveruser","digk473");
 
-			// ========================================================================
-			// 	データベースから該当idのファイルレコードを削除
-			// ========================================================================
-			int fileID = Integer.parseInt(request.getParameter("file_id"));
-			String sql = "delete from file_table where id = ?";
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1,fileID);
-			int num = pstmt.executeUpdate();
-			pstmt.close();
+			// --- データベースから該当idのファイルレコードを削除 ---
+			int fileId = Integer.parseInt(request.getParameter("file_id"));
+			int num = executeSql("delete from file_table where id = ?").setInt(fileId).update();
 
-			// ========================================================================
-			// 	該当ファイルを削除
-			// ========================================================================
-			int userID = Integer.parseInt(request.getParameter("user_id"));
-			// rootIDの取得
-			sql = "select * from file_table where user_id = ? and type = ? ";
-			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setInt(1,userID);
-			pstmt.setString(2,"root");
-			ResultSet rs = pstmt.executeQuery();
-			int rootID;
-			if (rs.next()) {
-				rootID = rs.getInt("id");
-			}else{
+			// --- 該当ファイルを削除 ---
+			int userId = Integer.parseInt(request.getParameter("user_id"));
+			// rootIdの取得
+			executeSql("select * from file_table where user_id = ? and type = ? ").setInt(userId).setString("root").query();
+			int rootId;
+			if (next()) {
+				rootId = getInt("id");
+			} else {
 				log("database has no new data");
 				throw new SQLException();	
 			}
-			pstmt.close();
 
-			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
-			ServletContext context = this.getServletContext();
-			String path = context.getRealPath(String.format("data/%d/%d.txt",rootID,fileID));	// ルートディレクトリ/data/userID/fileID.txtとなる
-			File delFile = new File(path);
-			boolean b = deleteFile(delFile);
+			boolean b = deleteFile(String.format("data/%d/%d.txt",rootId,fileId)); // 削除
 
-			// ====================================================
-			//	 ajaxへ送信
-			// ====================================================
+			//	ajaxへ送信
 			out.printf("{\"successRecord\" : \"%d\",\"result\": \"%b\"}\n",num,b);
 
-
-			br.close();
 			out.close();
-		}catch(IOException e){
-			log("DeleteFile's IOException:'" + e.getMessage());
-		}catch(NullPointerException e){
-			log("DeleteFile's NullPointerException:'" + e.getMessage());
-		}catch(Exception e){
-			log("DeleteFile's Exception:'" + e.getMessage());
+		} catch(IOException e) {
+			log(e.getMessage());
+		} catch(Exception e) {
+			log(e.getMessage());
 		}
-	}
-	private boolean deleteFile(File file) {
-		// 削除処理が行われればtrueを返す。ただし、すべての処理において正しく削除処理が終了したことを保証するものではない。
-		// ファイルまたはディレクトリが存在しない場合は何もしない
-		if (file.exists() == false) {
-			return false;
-		}		
-		if (file.isFile()) {
-			// ファイルの場合は削除する
-			 return file.delete();
-		}else if (file.isDirectory()) {
-			// ディレクトリの場合は、すべてのファイルを削除する
-			File[] files = file.listFiles(); // 対象ディレクトリ内のファイル及びディレクトリの一覧を取得
-			// ファイル及びディレクトリをすべて削除
-			for (File f : files) {
-				// 自身をコールし、再帰的に削除する
-				deleteFile(f);
-			}
-			// 自ディレクトリを削除する
-			return file.delete();
-		}
-		return false;
 	}
 }
