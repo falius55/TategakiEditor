@@ -26,7 +26,7 @@ public class FileMaker extends AbstractServlet  {
 				throw new SQLException();	
 			}
 
-			// 行を挿入し、ファイルID、ユーザー名、最終更新日を保存
+			// 行を挿入し、ファイルId、ユーザー名、最終更新日を保存
 			String fileName = request.getParameter("filename");
 			long savedMillis = Long.parseLong(request.getParameter("saved"));
 			executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
@@ -46,7 +46,7 @@ public class FileMaker extends AbstractServlet  {
 			createFile(String.format("data/%d/%d.txt",rootId,fileId));
 
 			//	ajaxへ送信
-			String rtn = String.format("{\"newFileID\" : \"%d\",\"filename\" : \"%s\"}",fileId,fileName);
+			String rtn = String.format("{\"newFileId\" : \"%d\",\"filename\" : \"%s\"}",fileId,fileName);
 			out.println(rtn);
 
 			out.close();

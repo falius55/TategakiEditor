@@ -10,8 +10,7 @@ public class DirectoryMaker extends AbstractServlet  {
 		throws IOException, ServletException {
 
 		try {
-			response.setContentType("application/json; charset=UTF-8");
-			PrintWriter out = response.getWriter();
+			ready(request, response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			int userId = Integer.parseInt(request.getParameter("user_id"));
@@ -44,12 +43,9 @@ public class DirectoryMaker extends AbstractServlet  {
 
 			//	ajaxへ送信
 			String rtn = String.format("{\"newDirectoryID\" : \"%d\",\"filename\" : \"%s\"}",directoryId,directoryname);
-			out.println(rtn);
+			out(rtn);
 
 			log("DirectoryMaker return is " + rtn);
-			out.close();
-		} catch(IOException e) {
-			log(e.getMessage());
 		} catch(SQLException e) {
 			log(e.getMessage());
 		} catch(Exception e) {

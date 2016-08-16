@@ -14,6 +14,8 @@ span.decolation-color-blue {
 }
 .vertical-char[data-font-size="30"] {
 	font-size: 30px;
+	height: 30px;
+	width: 30px;
 }
 span.decolation-font-big {
 	font-size: 45px;

@@ -10,8 +10,7 @@ public class DeleteFile extends AbstractServlet {
 		throws IOException, ServletException {
 
 		try {
-			response.setContentType("application/json; charset=UTF-8");
-			PrintWriter out = response.getWriter();
+			ready(request, response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			// --- データベースから該当idのファイルレコードを削除 ---
@@ -26,17 +25,14 @@ public class DeleteFile extends AbstractServlet {
 			if (next()) {
 				rootId = getInt("id");
 			} else {
-				log("database has no new data");
-				throw new SQLException();	
+				throw new SQLException("database has no new data");	
 			}
 
 			boolean b = deleteFile(String.format("data/%d/%d.txt",rootId,fileId)); // 削除
 
 			//	ajaxへ送信
-			out.printf("{\"successRecord\" : \"%d\",\"result\": \"%b\"}\n",num,b);
-
-			out.close();
-		} catch(IOException e) {
+			out("{\"successRecord\" : \"%d\",\"result\": \"%b\"}\n",num,b);
+		} catch(SQLException e) {
 			log(e.getMessage());
 		} catch(Exception e) {
 			log(e.getMessage());

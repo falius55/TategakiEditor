@@ -18,10 +18,10 @@
 		<body>
 			<%
 			// セッションからユーザーIDを取得
-			String userID = (String)session.getAttribute("userid");
+			String userId = (String)session.getAttribute("userid");
 			String username = (String)session.getAttribute("username");
 			%>
-			<h1 id="site_title" data-user-id="<%= userID %>">縦書きエディタ</h1>
+			<h1 id="site_title" data-user-id="<%= userId %>">縦書きエディタ</h1>
 			<nav class="nav navbar-default navbar-fixed-top">
 				<ul class="nav navbar-nav">
 					<li>
@@ -47,6 +47,7 @@
 
 			<div id="app_container">
 				<input type="text" id="file_title" data-file-id="-1" value="newfile"></input>
+				<div id="cursor_line"></div>
 					<div id="vertical_draft"> </div>
 				<div class="doc-info">
 					文字:<span class="str-num">-</span>/<span class="str-len">-</span>&nbsp;
@@ -221,8 +222,9 @@
 			<script src="/tategaki/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 			<script src="/tategaki/key_table.js"></script>
 			<script>
-			  var globalUserID = <%= userID %>;
+			  var globalUserId = <%= userId %>;
 			</script>
+			<script src="/tategaki/object.js"></script>
 			<script src="/tategaki/tategaki.js"></script>
 		</body>
 	</html>

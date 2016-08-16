@@ -12,8 +12,7 @@ public class FileListMaker extends AbstractServlet  {
 		throws IOException, ServletException {
 
 		try {
-			response.setContentType("application/json; charset=UTF-8");
-			PrintWriter out = response.getWriter();
+			ready(request, response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor",/* username = */"serveruser", /* password = */"digk473");
 
 			// userIdから、ルートディレクトリのidを取得
@@ -29,12 +28,11 @@ public class FileListMaker extends AbstractServlet  {
 
 			//	 ajaxへ送信
 			String rtnJson = getFileJson(userId,rootId);
-			out.println(rtnJson);
+			out(rtnJson);
 
 
 			log("FileListMaker return is " + rtnJson);
-			out.close();
-		} catch(IOException e) {
+		} catch(SQLException e) {
 			log(e.getMessage());
 		} catch(Exception e) {
 			log(e.getMessage());

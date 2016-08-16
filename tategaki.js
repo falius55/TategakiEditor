@@ -5,18 +5,140 @@ console.log('tategaki.js');
  */
 $(function() {
 	// ===================================================================
+	// 		クロージャ(label:closer)
+	// ===================================================================
+	// 巻き上げが起こらないため、ファイル先頭に記述する
+
+	// file_listの中に入れるファイル行を作成する
+	const createFileElement = (function () {
+		'use strict';
+		/*
+		 * 作成例
+		 * <li>
+		 * <a class="file"
+		 * data-type="file"
+		 * href="#"
+		 * data-file-id="1"
+		 * data-file-name="filename"
+		 * >
+		 * filename
+		 * </a>
+		 * </li>
+		 */
+		const eFileTemplate = document.createElement('li');
+		const eFileLinkTemplate = document.createElement('a');
+		eFileLinkTemplate.classList.add('file');
+		eFileLinkTemplate.dataset.type = 'file';
+		eFileLinkTemplate.href = '#';
+
+		return function (id,filename) {
+			const eFile = eFileTemplate.cloneNode(true);
+			const eFileLink = eFileLinkTemplate.cloneNode(true);
+			eFileLink.dataset.fileId = id;
+			eFileLink.dataset.fileName = filename;
+			eFileLink.textContent = filename;
+			eFile.appendChild(eFileLink);
+			return eFile;
+		}
+	})();
+	
+	// file_listの中に入れるディレクトリ行を作成する
+	const createDirectoryElement = (function () {
+		'use strict';
+		/*
+		 * 作成例
+		 * <li>
+		 * 	<a class="directory"
+		 * 	data-type="directory"
+		 * 	data-toggle="collapse"
+		 * 	data-directory-id="1"
+		 * 	data-directory-name="filename.directoryname"
+		 * 	href="#directory1"
+		 * 	>
+		 *		<span
+		 *		class="glyphicon glyphicon-folder-close"
+		 *		aria-hidden="true">
+		 *		</span>
+		 *		filename.directoryname
+		 *		</a>
+		 *
+		 *		<div class="collapse" id="directory1">
+		 *			<div class="well">
+		 *				<ul>
+		 *					<li>filename</li>
+		 *					<li>filename</li>
+		 *					<li>filename</li>
+		 *				</ul>
+		 *			</div>
+		 *		</div>
+		 *	</li>
+		 */
+		const eDirectoryTemplete = document.createElement('li');
+		const eDirLinkTemplete = document.createElement('a');
+		eDirLinkTemplete.classList.add('directory');
+		eDirLinkTemplete.dataset.type = 'directory';
+		eDirLinkTemplete.dataset.toggle = 'collapse';
+		eDirLinkTemplete.innerHTML = '<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'; // フォルダアイコン
+
+		return function (id,innerData) {
+			const eDirectory = eDirectoryTemplete.cloneNode(true);
+			const eDirLink = eDirLinkTemplete.cloneNode(true);
+			const directoryname = innerData.directoryname;
+			eDirLink.dataset.directoryId = id;
+			eDirLink.dataset.directoryName = directoryname;
+			eDirLink.href = '#directory' + id;
+			eDirLink.insertAdjacentHTML('beforeend',directoryname);
+
+			eDirectory.appendChild(eDirLink);
+			eDirectory.appendChild(createDirCollapseElement(id,innerData)); // コラプスも加える
+			return eDirectory;
+		}
+	})();
+
+	// ディレクトリ行の中に入れるディレクトリ内を表すコラプスを作成する
+	const createDirCollapseElement = (function () {
+		'use strict';
+		/*
+		 * 作成例
+		 *		<div class="collapse" id="directory1">
+		 *			<div class="well">
+		 *				<ul>
+		 *					<li>filename</li>
+		 *					<li>filename</li>
+		 *					<li>filename</li>
+		 *				</ul>
+		 *			</div>
+		 *		</div>
+		 */
+		const eCollapseTemplate = document.createElement('div');
+		const eInnerUlTemplate = document.createElement('ul');
+		const eWellTemplate = document.createElement('div');
+		eCollapseTemplate.classList.add('collapse');
+		eWellTemplate.classList.add('well');
+
+		return function (id,innerData) {
+			'use strict';
+			const eCollapse = eCollapseTemplate.cloneNode(true);
+			const eInnerUl = eInnerUlTemplate.cloneNode(true);
+			const eWell = eWellTemplate.cloneNode(true);
+			eCollapse.id = 'directory' + id;
+
+			// コラプス内にファイルリストを加える
+			setFileListFromObject(innerData, eInnerUl);
+
+			eCollapse.appendChild(eWell);
+			eWell.appendChild(eInnerUl);
+			return eCollapse;
+		}
+	})();
+	
+	// ===================================================================
 	// 		ユーザー操作(label:user)
 	// ===================================================================
 
 	// --------------------- key event listener ---------------------------
 
 	// キー操作
-	/**
-	 * イベントオブジェクトを渡して、キーコードを返します
-	 * @inner
-	 * @param {Object} e	キーボードイベントオブジェクト
-	 * @return {Number} 入力されたキーコードを表す数値
-	 */
 	function getKeyCode(e) {
 		'use strict';
 		let keycode;
@@ -30,6 +152,17 @@ $(function() {
 
 		return keycode;
 	}
+	
+	// 漢字変換候補を選んでいるときならtrue
+	function isConvertMode() {
+		'use strict';
+		return $('.convert-view')[0] ? true : false;
+	}
+	// inputbufferへの入力中ならtrue
+	function isInputMode() {
+		'use strict';
+		return $('#input_buffer').text() !== '' ? true : false;
+	}
 
 	function keydownOnDoc(e) {
 		'use strict';
@@ -39,11 +172,9 @@ $(function() {
 		if (keycode === 123) { return; } // F12のみブラウザショートカットキー
 
 		const $inputBuffer = $('#input_buffer');
-		if ($('.convert-view')[0]) {
-			// 漢字変換候補を選んでいるとき
+		if (isConvertMode()) {
 			keydownOnConvertView(e,keycode);
-		} else if ($inputBuffer.text() !== '') {
-			// inputBufferへの入力中
+		} else if (isInputMode()) {
 			keydownOnInputBuffer(e,keycode);
 		} else {
 			// 非入力(通常)状態
@@ -64,7 +195,6 @@ $(function() {
 
 	function keydownOnConvertView(e,keycode) {
 		'use strict';
-		const $inputBuffer = $('#input_buffer');
 
 		switch (keycode) {
 			case 8:
@@ -74,6 +204,7 @@ $(function() {
 			case 13:
 				// Enter
 				// inputBufferの文字を挿入
+				const $inputBuffer = $('#input_buffer');
 				$('.convert-view').remove();
 				insertStringFromCursor($inputBuffer.text());
 				$inputBuffer.empty().hide(); // inputBufferを空にして隠す
@@ -83,7 +214,7 @@ $(function() {
 				// space
 				// Left
 				// 候補のフォーカスを移動する
-				shiftLeftAlternativeFocus();
+				shiftLeftSelectKanjiFocus();
 				break;
 			case 38:
 				// Up
@@ -97,7 +228,7 @@ $(function() {
 				break;
 			case 39:
 				// Right
-				shiftRightAlternativeFocus();
+				shiftRightSelectKanjiFocus();
 				break;
 			case 40:
 				// Down
@@ -125,11 +256,12 @@ $(function() {
 		switch (keycode) {
 			case 8:
 				// backspace
+				// input_bufferの最後の１文字を削除
 				$inputBuffer.children('.EOL').prev().remove();
 				moveInput();
-				if ($inputBuffer.children('.vertical-char:first-of-type').hasClass('EOL')) {
-					$inputBuffer.children('.EOL').remove();
-					$inputBuffer.hide();
+				// input_bufferの文字がなくなればinput_bufferを空にして隠す
+				if ($inputBuffer.children('.vertical-char').first().hasClass('EOL')) {
+					$inputBuffer.empty().hide(); // inputBufferを空にして隠す
 				}
 				break;
 			case 13:
@@ -141,12 +273,11 @@ $(function() {
 				break;
 			case 32:
 				// space
-				const inputStr = getStringFromRow($inputBuffer);
-				comKanjiForFullString(inputStr);
+				comKanjiForFullString($inputBuffer.text());
 				break;
 			case 118:
 				// F7
-				changeKatakanaAtInput();
+				changeKatakanaAll();
 				break;
 			default:
 				// inputBufferの更新
@@ -157,7 +288,6 @@ $(function() {
 
 	function keydownWithCTRL(e,keycode) {
 		'use strict';
-		const $inputBuffer = $('#input_buffer');
 
 		switch (keycode) {
 			case 18:
@@ -237,12 +367,11 @@ $(function() {
 		checkKinsoku();
 		changeDisplayRow(false);
 		addPageBreak();
-		printDocInfo();
+		// printDocInfo();
 	}
 
 	function keydownOnDraft(e,keycode) {
 		'use strict';
-		const $inputBuffer = $('#input_buffer');
 
 		switch (keycode) {
 			case 8:
@@ -306,12 +435,15 @@ $(function() {
 		'use strict';
 		const $inputBuffer = $('#input_buffer');
 		const $activeConvertView = $('.convert-view.active');
-		const currentSelectKana = getStringFromRow($activeConvertView.children('.vertical-row').last());
+		const currentSelectKana = $activeConvertView.children('.vertical-row').last().text();
 
 		if (currentSelectKana.length >= 2) {
 			// 現在選択中の文節が２文字以上
 			// 現在選択中の文節から１文字削って、その文節だけ再変換
-			comKanjiForOnePhrase(currentSelectKana.substring(0,currentSelectKana.length-1),$('.convert-view.active'));
+			comKanjiForOnePhrase(
+					currentSelectKana.substring(0,currentSelectKana.length-1) // １文字削除
+					,$('.convert-view.active')
+					);
 
 		} else {
 			// 現在選択中の文節がひらがなで１文字のみ
@@ -326,8 +458,8 @@ $(function() {
 			}
 
 			// 削除後のフォーカス移動先
-			const $newActiveConvertView = $activeConvertView.next('.convert-view');
-			const newPhraseNum = $newActiveConvertView.children('.phrase-num').text();
+			let $newActiveConvertView = $activeConvertView.next('.convert-view');
+			let newPhraseNum = $newActiveConvertView.children('.phrase-num').text();
 			// 現在選択中の文節が最後の文節なら一つ前に戻る
 			// 見つからなかった場合は下のselectPhraseのセレクタがエラー(newPhraseNumが空になる)
 			if (!($newActiveConvertView[0])) {
@@ -350,35 +482,11 @@ $(function() {
 
 	}
 
-	// 漢字変換中にShift+<Up>
-	// 文節区切りを一つ前にずらす
-	function shiftUpOnConvert() {
-		'use strict';
-		const $firstConvertView = $('.convert-view.active');
-		const $secondConvertView = $firstConvertView.next('.convert-view');
-		const firstKana = getStringFromRow($firstConvertView.children('.vertical-row').last());
-
-		if (firstKana.length < 2) return; // 選択中の文節が１文字しかないときは何もしない
-
-		let newStr;
-		if (!($secondConvertView[0])) {
-			// 最後の文節の場合
-			// 分離
-			newStr = firstKana.substring(0,firstKana.length-1) + ',' + firstKana.substring(firstKana.length-1,firstKana.length);
-			comKanjiForSplit(newStr,$firstConvertView);
-			return;
-		}
-
-		const secondKana = getStringFromRow($secondConvertView.children('.vertical-row').last());
-
-		newStr = firstKana.substring(0,firstKana.length-1) + ','+ firstKana.substring(firstKana.length-1,firstKana.length) + secondKana; // 前半文節の最後の文字を、後半文節の最初に移動
-		comKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
-	}
-
 	// 漢字変換中に<Up>キー
 	// 選択文節を一つ上に変更
 	function upOnConvert() {
 		'use strict';
+		// 選択文節の変更
 		const $oldSelectConvertView = $('.convert-view.active');
 		let $newSelectConvertView = $oldSelectConvertView.prev('.convert-view');
 		let newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
@@ -400,30 +508,6 @@ $(function() {
 		// input_bufferのselect-phraseの変更
 		$('#input_buffer > .vertical-char.select-phrase').removeClass('select-phrase');
 		$('#input_buffer > .vertical-char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
-	}
-
-	// 漢字変換中にShift+<Down>
-	// 文節区切りの変更
-	function shiftDownOnConvert() {
-		'use strict';
-		const $firstConvertView = $('.convert-view.active');
-		const $secondConvertView = $firstConvertView.next('.convert-view');
-		const firstKana = getStringFromRow($firstConvertView.children('.vertical-row').last());
-		const secondKana = getStringFromRow($secondConvertView.children('.vertical-row').last());
-
-		if (!($secondConvertView[0])) return; // 最後の文節を選択していたら何もしない
-
-		let newStr;
-		if (secondKana.length < 2) {
-			//二番目の文字列が１文字しかないので、２つを統合する
-			newStr = firstKana + secondKana + ',';
-			comKanjiForFusion(newStr,$firstConvertView,$secondConvertView);
-			return;
-		}
-
-		// 後半の１文字を前半に移す
-		newStr = firstKana + secondKana.charAt(0) + ',' + secondKana.substring(1);
-		comKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
 	}
 
 	// 漢字変換中に<Down>
@@ -452,44 +536,95 @@ $(function() {
 		$('#input_buffer > .vertical-char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
 	}
 
+	// 漢字変換中にShift+<Up>
+	// 文節区切りを一つ前にずらす
+	function shiftUpOnConvert() {
+		'use strict';
+		const $firstConvertView = $('.convert-view.active');
+		const $secondConvertView = $firstConvertView.next('.convert-view');
+		const firstKana = $firstConvertView.children('.vertical-row').last().text();
+
+		if (firstKana.length < 2) return; // 選択中の文節が１文字しかないときは何もしない
+
+		if (!($secondConvertView[0])) {
+			// 最後の文節の場合
+			// 分離
+			const newStr = firstKana.substring(0,firstKana.length-1) +
+				',' +
+				firstKana.substring(firstKana.length-1,firstKana.length);
+
+			comKanjiForSplit(newStr,$firstConvertView);
+			return;
+		}
+
+		const secondKana = $secondConvertView.children('.vertical-row').last().text();
+
+		// 前半文節の最後の文字を、後半文節の最初に移動
+		const newStr = firstKana.substring(0,firstKana.length-1) +
+			',' +
+			firstKana.substring(firstKana.length-1,firstKana.length) +
+			secondKana;
+
+		comKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
+	}
+
+	// 漢字変換中にShift+<Down>
+	// 文節区切りの変更
+	function shiftDownOnConvert() {
+		'use strict';
+		const $firstConvertView = $('.convert-view.active');
+		const $secondConvertView = $firstConvertView.next('.convert-view');
+		const firstKana = $firstConvertView.children('.vertical-row').last().text();
+		const secondKana = $secondConvertView.children('.vertical-row').last().text();
+
+		if (!($secondConvertView[0])) return; // 最後の文節を選択していたら何もしない
+
+		if (secondKana.length < 2) {
+			//二番目の文字列が１文字しかないので、２つを統合する
+			const newStr = firstKana + secondKana + ',';
+			comKanjiForFusion(newStr,$firstConvertView,$secondConvertView);
+			return;
+		}
+
+		// 後半の１文字を前半に移す
+		const newStr = firstKana + secondKana.charAt(0) + ',' + secondKana.substring(1);
+		comKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
+	}
+
 	// 漢字変換候補一覧のフォーカスを左にシフトさせる
-	function shiftLeftAlternativeFocus() {
+	function shiftLeftSelectKanjiFocus() {
 		'use strict';
 		const $oldSelect = $('.convert-view.active > .vertical-row.select');
 		const $newSelect = $oldSelect.next('.vertical-row');
 
-		if (!($newSelect[0])) return;
-
-		// selectクラスの付け替え
-		$oldSelect.removeClass('select');
-		$newSelect.addClass('select');
-		// inputBufferの文字を入れ替える
-		const phraseNum = $newSelect.siblings('.phrase-num').text();
-		const selectKanji = getStringFromRow($newSelect);
-		insertPhraseToInputBuffer(phraseNum,selectKanji);
-		// selectphraseクラスの付け替え
-		$('.select-phrase').removeClass('select-phrase');
-		$('#input_buffer > .vertical-char[data-phrase-num='+ phraseNum +']').addClass('select-phrase');
-
-		resizeInputBuffer();
+		shiftSelectKanjiFocus($oldSelect, $newSelect);
 	}
 
 	// 漢字変換候補一覧のフォーカスを右にシフトさせる
-	function shiftRightAlternativeFocus() {
+	function shiftRightSelectKanjiFocus() {
 		'use strict';
 		const $oldSelect = $('.convert-view.active > .vertical-row.select');
 		const $newSelect = $oldSelect.prev('.vertical-row');
+
+		shiftSelectKanjiFocus($oldSelect, $newSelect);
+	}
+
+	// convert-viewのselectを$oldSelectから$newSelectに動かす
+	function shiftSelectKanjiFocus($oldSelect, $newSelect) {
+		'use strict';
 		if (!($newSelect[0])) return;
 
+		// selectクラス
 		$oldSelect.removeClass('select');
 		$newSelect.addClass('select');
 
+		// inputBufferの文字を入れ替える
 		const phraseNum = $newSelect.siblings('.phrase-num').text();
-		const selectKanji = getStringFromRow($newSelect);
+		const selectKanji = $newSelect.text();
 		insertPhraseToInputBuffer(phraseNum,selectKanji);
 
 		// selectphraseクラスの付け替え
-		$('.select-phrase').removeClass('select-phrase');
+		$('#input_buffer .select-phrase').removeClass('select-phrase');
 		$('#input_buffer > .vertical-char[data-phrase-num='+ phraseNum +']').addClass('select-phrase');
 
 		resizeInputBuffer();
@@ -501,30 +636,36 @@ $(function() {
 		'use strict';
 		// マウスホイールを動かすと、ページが左右に動く
 		const mvRowNum = 4; // 一度に動かす行数
-		let $nextRow;
 
 		if (delta > 0) {
 			// ホイールを上に動かす
 			for (let i = 0; i < mvRowNum; i++) {
-				$nextRow = $('.display-row').first().prevObj('#vertical_draft .vertical-row');
-				if (!$nextRow[0]) { break; }
-				$nextRow.addClass('display-row');
-				$('.display-row').last().removeClass('display-row');
-				if (!($('.cursor-row').hasClass('display-row'))) { gCursor.shiftRight(); }
+				shiftRightDisplay();
 			}
 		} else {
 			// ホイールを下に動かす
 			for (let i = 0; i < mvRowNum; i++) {
-				$nextRow = $('.display-row').last().nextObj('#vertical_draft .vertical-row');
-				if (!$nextRow[0]) { break; }
-				$nextRow.addClass('display-row');
-				$('.display-row').first().removeClass('display-row');
-				if (!($('.cursor-row').hasClass('display-row'))) { gCursor.shiftLeft(); }
+				shiftLeftDisplay();
 			}
 		}
 
-		resetDispNum();
-		printDocInfo();
+		// printDocInfo();
+	}
+	function shiftRightDisplay() {
+		'use strict';
+		const $nextRow = $('.display-row').first().prevObj('#vertical_draft .vertical-row');
+		if (!$nextRow[0]) { return; }
+		$nextRow.addClass('display-row');
+		$('.display-row').last().removeClass('display-row');
+		if (!($('.cursor-row').hasClass('display-row'))) { gCursor.shiftRight(); }
+	}
+	function shiftLeftDisplay() {
+		'use strict';
+		const $nextRow = $('.display-row').last().nextObj('#vertical_draft .vertical-row');
+		if (!$nextRow[0]) { return; }
+		$nextRow.addClass('display-row');
+		$('.display-row').first().removeClass('display-row');
+		if (!($('.cursor-row').hasClass('display-row'))) { gCursor.shiftLeft(); }
 	}
 
 	// ------------------------------- command mode ---------------------------------------
@@ -760,9 +901,13 @@ $(function() {
 	function comHideFileModaOnCommand() {
 		'use strict';
 		if ($('body').hasClass('modal-open')) {
-			$('#file_list_modal').attr('style','display: none;').removeClass('command-modal').modal('hide'); // あらかじめbootstrapより先回りしてstyle適用で非表示にしておかなければ、消える前に一瞬中央表示になってしまう
+			// あらかじめbootstrapより先回りしてstyle適用で非表示にしておかなければ、消える前に一瞬中央表示になってしまう
+			$('#file_list_modal')
+				.attr('style','display: none;')
+				.removeClass('command-modal')
+				.modal('hide');
 		}
-		comFileList(getUserID());
+		comFileList(getUserId());
 	}
 
 	function endCommandMode() {
@@ -775,30 +920,6 @@ $(function() {
 		$body.off('blur','#command',endCommandMode);
 		document.addEventListener('keydown',keydownOnDoc,false);
 		comHideFileModaOnCommand();
-	}
-
-	// ------------------------------ configue ----------------------------
-
-	// [未使用]
-	function Configue() {
-		'use strict';
-		const strLen = document.conf_form.str_len.value;
-		const rowLen = document.conf_form.row_len.value;
-
-		let strSize;
-		if (document.getElementById('conf_str_size_big').checked) {
-			strSize = 'big';
-		} else if (document.getElementById('conf_str_size_small').checked) {
-			strSize = 'small';
-		} else if (document.getElementById('conf_str_size_middle').checked) {
-			strSize = 'middle';
-		} else {
-			strSize = null;
-		}
-
-		this.strLen = strLen;
-		this.rowLen = rowLen;
-		this.strSize = strSize;
 	}
 
 	// ---------------------------- find mode ----------------------------------
@@ -875,14 +996,13 @@ $(function() {
 
 		const eChars = eDraft.getElementsByClassName('vertical-char');
 		const indexArr = findIndex(word);
-		// console.log(indexArr);
 		const wordLen = word.length;
-		for (let i = 0,len = indexArr.length;i < len;i++) {
+		for(let index of indexArr) {
 			// 先頭文字にfind-label
-			eChars[indexArr[i]].classList.add('find-label');
-			for (let j=0;j<wordLen;j++) {
+			eChars[index].classList.add('find-label');
+			for (let word_i = 0;word_i < wordLen;word_i++) {
 				// 該当文字全てにfind-word
-				eChars[indexArr[i]+j].classList.add('find-word');
+				eChars[index + word_i].classList.add('find-word');
 			}
 		}
 
@@ -909,10 +1029,10 @@ $(function() {
 			indexArr[i] = i;
 		}
 
-		for (let search_i = 0,wordLen = word.length,searchChar;search_i < wordLen;search_i++) {
-			searchChar = word.charAt(search_i);
+		for (let search_i = 0,wordLen = word.length;search_i < wordLen;search_i++) {
+			const searchChar = word.charAt(search_i);
 			// 配列から、条件に合わない要素のインデックスを除外する
-			for (let index_i = 0;index_i < indexArr.length;index_i++) { // lengthは変動する
+			for (let index_i = 0;index_i < indexArr.length;index_i++) { // lengthは変動するため、キャッシュ不可
 				if (eChars[indexArr[index_i]+search_i].textContent != searchChar) {
 					indexArr.splice(index_i,1); // index_i番目から要素を一つ削除する
 					index_i--; // 要素を削除して配列が詰められているので、再び同じ添字の要素を確認する
@@ -966,13 +1086,12 @@ $(function() {
 		let html = '';
 
 		// 段落のhtml文字列を作成して連結
-		for (let i = 0,len = strArray.length;i < len;i++) {
-			html += createParagraphHtml(strArray[i]);
+		for (let str of strArray) {
+			html += createParagraphHtml(str);
 		}
 
 		// データに１文字もなければ上記for文に入れないので、空行を別に作成する
 		if ($('#vertical_draft > .vertical-paragraph').length === 0) {
-			// appendParagraph('');
 			html += createParagraphHtml('');
 		}
 
@@ -989,10 +1108,11 @@ $(function() {
 		// 決まった形のオブジェクトを引数に、本文を作成して画面に表示する
 		'use strict';
 		let html = '';
-		for (let i = 0,len = paraObjArr.length; i < len; i++) {
-			html += createParagraphHtmlFromObj(paraObjArr[i]);
+		for (let paraObj of paraObjArr) {
+			html += createParagraphHtmlFromObj(paraObj);
 		}
 		document.getElementById('vertical_draft').innerHTML = html;
+		checkKinsoku(); // 禁則処理
 	}
 
 	function insertStringFromCursor(str) {
@@ -1001,8 +1121,8 @@ $(function() {
 		const $cursor = $('.cursor');
 		const $cursorRow = $('#vertical_draft .cursor-row')
 
-			for (let i = 0,len = str.length,$character; i < len; i++) {
-				$character = $(createCharHtml(str.charAt(i)));
+			for (let char of str) {
+				const $character = $(createCharHtml(char));
 				$cursor.before($character);
 			}
 		cordinateStringNumber($cursorRow,getStringLenOfRow());
@@ -1020,9 +1140,10 @@ $(function() {
 		const $inputBuffer = $('#input_buffer');
 		$inputBuffer.empty();
 
-		for (let i = 0,len = str.length,char;i < len;i++) {
-			char = str.charAt(i);
-			$inputBuffer.append($(createCharHtml(char)).attr('data-phrase-num',-1));
+		for (let char of str) {
+			$inputBuffer.append(
+					$(createCharHtml(char)
+						).attr('data-phrase-num',-1));
 		}
 
 		$inputBuffer.append($('<span class="vertical-char EOL"></span>'));
@@ -1036,7 +1157,7 @@ $(function() {
 	// inputBufferの更新
 	function updateInputBuffer(keycode,isShift) {
 		'use strict';
-		const inputStr = getStringFromRow($('#input_buffer')); //もともとの文字列
+		const inputStr = $('#input_buffer').text(); //もともとの文字列
 		let newInputStr;
 
 		if (isShift) {
@@ -1060,8 +1181,8 @@ $(function() {
 		const $selectPhrases = $('#input_buffer > .vertical-char[data-phrase-num='+ phNum +']');
 		const $insertPosChar = $selectPhrases.first();
 
-		for (let i = 0,$character; i < str.length; i++) {
-			$character = $(createCharHtml(str.charAt(i)));
+		for (let char of str) {
+			const $character = $(createCharHtml(char));
 			$insertPosChar.before($character);
 			$character.attr('data-phrase-num',-10);
 		}
@@ -1079,9 +1200,16 @@ $(function() {
 
 			// strLen文字ごとに区切って各行として連結する
 			const strLen = getStringLenOfRow();
-		for (let pos = 0,len = str.length,outputStr; pos <= len; pos += strLen) { // 空文字が渡されることもあるので、pox<=lenと=がついている
-			outputStr = pos+strLen>str.length ? str.slice(pos) : str.substring(pos,pos+strLen);
-			html += createRowHtml(outputStr);
+		for (let pos = 0,len = str.length; pos <= len; pos += strLen) { // 空文字が渡されることもあるので、pox<=lenと=がついている
+			if(str.length < pos + strLen){
+				// 残った文字が一行で収まる
+				const outputStr = str.slice(pos);
+				html += createRowHtml(outputStr);
+			} else {
+				// 残り文字が一行で収まらない
+				const	outputStr = str.substring(pos, pos+strLen);
+				html += createRowHtml(outputStr);
+			}
 		}
 
 		html += '</div>'
@@ -1096,8 +1224,8 @@ $(function() {
 
 		let html = '<div class="vertical-row">'
 
-			for (let i = 0,len = str.length; i < len; i++) {
-				html += createCharHtml(str.charAt(i));
+			for (let char of str) {
+				html += createCharHtml(char);
 			}
 
 		html += '<span class="vertical-char EOL display-char"></span></div>';
@@ -1114,8 +1242,8 @@ $(function() {
 		const classArr = getConfDecoChar();
 		let html = '<span class="vertical-char display-char';
 
-		for (let i = 0,len = classArr.length; i < len; i++) {
-			html += ' ' + classArr[i];
+		for (let className of classArr) {
+			html += ' ' + className;
 		}
 
 		// 特殊クラスの付与
@@ -1138,7 +1266,6 @@ $(function() {
 		else if (/[っゃゅょぁぃぅぇぉァィゥェォッャュョ]/.test(char))
 			html += ' yoin';
 
-		// html += `" data-font-size="auto">${char}</span>`;
 		html += '" data-font-size="auto">';
 		html += char;
 		html += '</span>';
@@ -1166,16 +1293,16 @@ $(function() {
 		let html = '<div class="vertical-paragraph"';
 
 		// 段落そのものにクラスを付与する
-		for (let i = 0,len = paraObj[0].length;i<len;i++) {
-			html += ' ' + paraObj[0][i];
+		for (let className of paraObj[0]) {
+			html += ' ' + className;
 		}
 		html += '>';
 
 		// 文字の配列をstrLen個ずつの配列に分け、それぞれで行を作成して連結する
 		const strLen = getStringLenOfRow();
 		const objArray = splitArray(paraObj[1],strLen); // paraObj[1]が空配列なら、objArrayにも空配列が入る
-		for (let i = 0,len = objArray.length; i < len; i++) {
-			html += createRowHtmlFromObj(objArray[i]);
+		for (let charArray of objArray) {
+			html += createRowHtmlFromObj(charArray);
 		}
 		// paraObj[1]が空配列 = 空段落(空行)の場合は上記for文が実行されないので、別に空行を作成して連結する
 		if (objArray.length === 0) {
@@ -1203,8 +1330,8 @@ $(function() {
 		 */
 		let html = '<div class="vertical-row">';
 
-		for (let i = 0,len = objArray.length; i < len; i++) {
-			html += createCharHtmlFromObj(objArray[i]);
+		for (let charObj of objArray) {
+			html += createCharHtmlFromObj(charObj);
 		}
 		html += '<span class="vertical-char EOL display-char"></span></div>'
 			return html;
@@ -1225,12 +1352,12 @@ $(function() {
 		const classArr = obj['decolation'];
 		let html = '<span class="vertical-char';
 
-		for (let i = 0,len = classArr.length; i < len; i++) {
-			html += ' ' + classArr[i];
+		for (let className of classArr) {
+			html += ' ' + className;
 		}
 
 		// 文字の種類に応じて付与するクラス
-		if (/[。、,\.,]/.test(char))
+		if (/[。、,.,]/.test(char))
 			html += ' vertical-dot';
 		else if (/[「『]/.test(char))
 			html += ' vertical-before-kagi-bracket';
@@ -1256,33 +1383,6 @@ $(function() {
 		html += '</span>';
 
 		return html;
-	}
-
-	// ---------------------------------- get text -------------------------------------------
-
-	function getStringFromRow($row) {
-		'use strict';
-		let $character = $row.children('.vertical-char').first('.vertical-char');
-		let rtnStr = '';
-
-		while ($character[0] && !($character.hasClass('EOL'))) {
-			rtnStr += $character.text();
-			$character = $character.next();
-		}
-
-		return rtnStr;
-	}
-
-	function getStringFromParagraph($paragraph) {
-		'use strict';
-		const $rows = $paragraph.children('.vertical-row');
-		let rtnStr = '';
-
-		for (let i = 0,len = $rows.length; i < len; i++) {
-			rtnStr += getStringFromRow($rows.eq(i));
-		}
-
-		return rtnStr;
 	}
 
 	// ----------------------------------- get json text data on draft --------------------------------
@@ -1412,34 +1512,29 @@ $(function() {
 				sentence: str
 			},
 			dataType : 'json',
-			context: {
-			},
-			success : function (json) {
-				// 表示データを受け取ってからの処理
-				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
-				// json[0][0]; // ひらがな
-				// json[0][1][0]; // 変換候補１つ目
-				console.log('初変換:');
+		}).done(function (json) {
+			// 表示データを受け取ってからの処理
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('初変換:');
 
-				// convert-view群を作成する
-				buildConvertViews(json);
+			// convert-view群を作成する
+			buildConvertViews(json);
 
-				// input_bufferの各文字に、文節番号を割り振る
-				setPhraseNumToCharOnInputBuffer(json);
+			// input_bufferの各文字に、文節番号を割り振る
+			setPhraseNumToCharOnInputBuffer(json);
 
-				// input_bufferの文字を、変換第一候補ですべて置き換える
-				for (let i = 0,len = json.length; i < len; i++) {
-					insertPhraseToInputBuffer(i,json[i][1][0]); // 第一候補の漢字でinputBufferの文字列を置き換える
-				}
-				// selectphraseクラスを設定する
-				$('#input_buffer').children('.vertical-char[data-phrase-num="0"]').addClass('select-phrase');
-				// inputBufferの高さ調整
-				resizeInputBuffer();
-
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanjiForFullString');
+			// input_bufferの文字を、変換第一候補ですべて置き換える
+			for (let i = 0,len = json.length; i < len; i++) {
+				insertPhraseToInputBuffer(i,json[i][1][0]); // 第一候補の漢字でinputBufferの文字列を置き換える
 			}
+			// selectphraseクラスを設定する
+			$('#input_buffer').children('.vertical-char[data-phrase-num="0"]').addClass('select-phrase');
+			// inputBufferの高さ調整
+			resizeInputBuffer();
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanjiForFullString');
 		});
 	}
 
@@ -1450,9 +1545,9 @@ $(function() {
 
 		// 各文節ループ
 		// pos: 各文節の１文字目のインデックスを保持
-		for (let i = 0,pos = 0,len = json.length,hiragana,hiraLen; i < len; i++) {
-			hiragana = json[i][0];
-			hiraLen = hiragana.length;
+		for (let i = 0,pos = 0,len = json.length; i < len; i++) {
+			const hiragana = json[i][0];
+			const hiraLen = hiragana.length;
 
 			// 同一文節ループ
 			// 文節番号をつける(同じ文節には同じ番号)
@@ -1472,10 +1567,10 @@ $(function() {
 		const $convertContainer = $('#convert_container');
 
 		// 各文節ループ
-		for (let i = 0,len = json.length,$convertView; i < len; i++) {
+		for (let i = 0,len = json.length; i < len; i++) {
 			// 変換候補表示
 			// convertviewを作成する
-			$convertView = createConvertView(i,json[i]);
+			const $convertView = createConvertView(i,json[i]);
 			$convertContainer.append($convertView);
 		}
 
@@ -1504,39 +1599,38 @@ $(function() {
 				$firstConvertView: $firstConvertView,
 				$secondConvertView: $secondConvertView,
 			},
-			success : function (json) {
-				// 表示データを受け取ってからの処理
-				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
-				// json[0][0]; // ひらがな
-				// json[0][1][0]; // 変換候補１つ目
-				console.log('文節総数に変化なし:');
-				const firstPhraseNum = this.$firstConvertView.children('.phrase-num').text();
-				const secondPhraseNum = this.$secondConvertView.children('.phrase-num').text();
+		}).done(function (json) {
+			// 表示データを受け取ってからの処理
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('文節総数に変化なし:');
+			const firstPhraseNum = this.$firstConvertView.children('.phrase-num').text();
+			const secondPhraseNum = this.$secondConvertView.children('.phrase-num').text();
 
-				// convert-view
-				const $newFirstConvertView = createConvertView(firstPhraseNum,json[0]).addClass('active');
-				const $newSecondConvertView = createConvertView(secondPhraseNum,json[1]);
-				this.$firstConvertView.before($newFirstConvertView);
-				this.$secondConvertView.before($newSecondConvertView);
-				this.$firstConvertView.remove();
-				this.$secondConvertView.remove();
+			// convert-view
+			const $newFirstConvertView = createConvertView(firstPhraseNum,json[0]).addClass('active');
+			const $newSecondConvertView = createConvertView(secondPhraseNum,json[1]);
+			this.$firstConvertView.before($newFirstConvertView);
+			this.$secondConvertView.before($newSecondConvertView);
+			this.$firstConvertView.remove();
+			this.$secondConvertView.remove();
 
-				$newFirstConvertView.children('.vertical-row').first().addClass('select');
-				repositionConvertView();
+			$newFirstConvertView.children('.vertical-row').first().addClass('select');
+			repositionConvertView();
 
-				// input_buffer
-				// 第一候補の文字でinputBufferの該当文字を置き換える
-				insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
-				insertPhraseToInputBuffer(secondPhraseNum,json[1][1][0]);
+			// input_buffer
+			// 第一候補の文字でinputBufferの該当文字を置き換える
+			insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
+			insertPhraseToInputBuffer(secondPhraseNum,json[1][1][0]);
 
-				// selectphraseクラスの付け替え
-				$('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum +']').addClass('select-phrase');
-				// 最後にinputBufferの高さ調整
-				resizeInputBuffer();
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanji');
-			}
+			// selectphraseクラスの付け替え
+			$('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum +']').addClass('select-phrase');
+			// 最後にinputBufferの高さ調整
+			resizeInputBuffer();
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			'use strict';
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanji');
 		});
 	}
 
@@ -1558,36 +1652,34 @@ $(function() {
 				$firstConvertView: $firstConvertView,
 				$secondConvertView: $secondConvertView,
 			},
-			success : function (json) {
-				// 表示データを受け取ってからの処理
-				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
-				// json[0][0]; // ひらがな
-				// json[0][1][0]; // 変換候補１つ目
-				console.log('統合:');
-				const firstPhraseNum = this.$firstConvertView.children('.phrase-num').text();
+		}).done(function (json) {
+			// 表示データを受け取ってからの処理
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('統合:');
+			const firstPhraseNum = this.$firstConvertView.children('.phrase-num').text();
 
-				// convert-view
-				const $newConvertView = createConvertView(firstPhraseNum,json[0]).addClass('active');
-				this.$firstConvertView.before($newConvertView);
-				this.$firstConvertView.remove();
-				this.$secondConvertView.remove();
-				repositionConvertView();
+			// convert-view
+			const $newConvertView = createConvertView(firstPhraseNum,json[0]).addClass('active');
+			this.$firstConvertView.before($newConvertView);
+			this.$firstConvertView.remove();
+			this.$secondConvertView.remove();
+			repositionConvertView();
 
-				// input_buffer
-				// 第一候補の文字でinputBufferの該当文字を置き換える
-				$newConvertView.children('.vertical-row').first().addClass('select');
-				insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
-				const secondPhraseNum = this.$secondConvertView.children('.phrase-num').text();
-				$('#input_buffer > .vertical-char[data-phrase-num='+ secondPhraseNum +']').remove();
-				// selectphraseクラスの付け替え
-				$('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum +']').addClass('select-phrase');
-				resetPhraseNum();
-				// inputBufferの高さ調整
-				resizeInputBuffer();
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanji');
-			}
+			// input_buffer
+			// 第一候補の文字でinputBufferの該当文字を置き換える
+			$newConvertView.children('.vertical-row').first().addClass('select');
+			insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
+			const secondPhraseNum = this.$secondConvertView.children('.phrase-num').text();
+			$('#input_buffer > .vertical-char[data-phrase-num='+ secondPhraseNum +']').remove();
+			// selectphraseクラスの付け替え
+			$('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum +']').addClass('select-phrase');
+			resetPhraseNum();
+			// inputBufferの高さ調整
+			resizeInputBuffer();
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanji');
 		});
 	}
 
@@ -1606,46 +1698,44 @@ $(function() {
 			dataType : 'json',
 			context: {
 				$firstConvertView: $firstConvertView,
-			},
-			success : function (json) {
-				// 表示データを受け取ってからの処理
-				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
-				// json[0][0]; // ひらがな
-				// json[0][1][0]; // 変換候補１つ目
-				console.log('分離:');
-				const firstPhraseNum = this.$firstConvertView.children('.phrase-num').text();
-				const secondPhraseNum = $('.convert-view').length; // 未使用の数字を取得
-
-				// convert-view
-				const $newFirstConvertView = createConvertView(firstPhraseNum,json[0]).addClass('active');
-				const $newSecondConvertView = createConvertView(secondPhraseNum,json[1]);
-				this.$firstConvertView.before($newFirstConvertView);
-				this.$firstConvertView.before($newSecondConvertView);
-				this.$firstConvertView.remove();
-				repositionConvertView();
-
-				// input_buffer
-				// first phrase
-				// 第一候補の文字でinputBufferの該当文字を置き換える
-				$newFirstConvertView.children('.vertical-row').first().addClass('select');
-				const $newBufferChars = insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
-				$newBufferChars.addClass('select-phrase');
-				// second phrase
-				const secondFirstStr = json[1][1][0];
-				const $insertPosChar = $('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum + ']').last();
-				for (let i = secondFirstStr.length -1,$character; i >= 0; i--) {
-					$character = $(createCharHtml(secondFirstStr.charAt(i))).attr('data-phrase-num',secondPhraseNum);
-					$insertPosChar.after($character);
-				}
-
-				// selectphraseクラスの付け替え
-				resetPhraseNum();
-				// 最後にinputBufferの高さ調整
-				resizeInputBuffer();
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanji');
 			}
+		}).done(function (json) {
+			// 表示データを受け取ってからの処理
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('分離:');
+			const firstPhraseNum = this.$firstConvertView.children('.phrase-num').text();
+			const secondPhraseNum = $('.convert-view').length; // 未使用の数字を取得
+
+			// convert-view
+			const $newFirstConvertView = createConvertView(firstPhraseNum,json[0]).addClass('active');
+			const $newSecondConvertView = createConvertView(secondPhraseNum,json[1]);
+			this.$firstConvertView.before($newFirstConvertView);
+			this.$firstConvertView.before($newSecondConvertView);
+			this.$firstConvertView.remove();
+			repositionConvertView();
+
+			// input_buffer
+			// first phrase
+			// 第一候補の文字でinputBufferの該当文字を置き換える
+			$newFirstConvertView.children('.vertical-row').first().addClass('select');
+			const $newBufferChars = insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
+			$newBufferChars.addClass('select-phrase');
+			// second phrase
+			const secondFirstStr = json[1][1][0];
+			const $insertPosChar = $('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum + ']').last();
+			for (let i = secondFirstStr.length -1; i >= 0; i--) {
+				const $character = $(createCharHtml(secondFirstStr.charAt(i))).attr('data-phrase-num',secondPhraseNum);
+				$insertPosChar.after($character);
+			}
+
+			// selectphraseクラスの付け替え
+			resetPhraseNum();
+			// 最後にinputBufferの高さ調整
+			resizeInputBuffer();
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanji');
 		});
 	}
 
@@ -1664,33 +1754,31 @@ $(function() {
 			dataType : 'json',
 			context: {
 				$firstConvertView: $firstConvertView,
-			},
-			success : function (json) {
-				// 表示データを受け取ってからの処理
-				// Google日本語入力のwebAPIから、json形式で変換候補が渡される
-				// json[0][0]; // ひらがな
-				// json[0][1][0]; // 変換候補１つ目
-				console.log('一文節のみ変換:');
-
-				// convert-view
-				const firstPhraseNum = this.$firstConvertView.children('.phrase-num').text();
-				const $newConvertView = createConvertView(firstPhraseNum,json[0]).addClass('active');
-				this.$firstConvertView.before($newConvertView);
-				this.$firstConvertView.remove();
-				// 第一候補の文字でinputBufferの該当文字を置き換える
-				$newConvertView.children('.vertical-row').first().addClass('select');
-				repositionConvertView();
-
-				// input_buffer
-				const $newBufferChars = insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
-				// selectphraseクラスの付け替え
-				$newBufferChars.addClass('select-phrase');
-				// 最後にinputBufferの高さ調整
-				resizeInputBuffer();
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanji');
 			}
+		}).done(function (json) {
+			// 表示データを受け取ってからの処理
+			// Google日本語入力のwebAPIから、json形式で変換候補が渡される
+			// json[0][0]; // ひらがな
+			// json[0][1][0]; // 変換候補１つ目
+			console.log('一文節のみ変換:');
+
+			// convert-view
+			const firstPhraseNum = this.$firstConvertView.children('.phrase-num').text();
+			const $newConvertView = createConvertView(firstPhraseNum,json[0]).addClass('active');
+			this.$firstConvertView.before($newConvertView);
+			this.$firstConvertView.remove();
+			// 第一候補の文字でinputBufferの該当文字を置き換える
+			$newConvertView.children('.vertical-row').first().addClass('select');
+			repositionConvertView();
+
+			// input_buffer
+			const $newBufferChars = insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
+			// selectphraseクラスの付け替え
+			$newBufferChars.addClass('select-phrase');
+			// 最後にinputBufferの高さ調整
+			resizeInputBuffer();
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comKanji');
 		});
 	}
 
@@ -1752,10 +1840,12 @@ $(function() {
 
 	// ひらがな入力中のカタカナ変換
 	// inputbufferの文字をすべてカタカナに変える
-	function changeKatakanaAtInput() {
+	function changeKatakanaAll() {
 		'use strict';
-		let str = getStringFromRow($('#input_buffer'));
-		insertStringToInputBuffer(getKatakana(str)).children('.vertical-char').not('.EOL').addClass('select-phrase');
+		let str = $('#input_buffer').text();
+		insertStringToInputBuffer(getKatakana(str))
+			.children('.vertical-char').not('.EOL')
+			.addClass('select-phrase');
 	}
 
 	// 漢字変換中のカタカナ変換
@@ -1763,7 +1853,7 @@ $(function() {
 	function changeKatakanaAtConvert() {
 		'use strict';
 		const phraseNum = $('#input_buffer > .select-phrase').attr('data-phrase-num');
-		const str = getKatakana(getStringFromRow($('.convert-view.active > .vertical-row').last()));
+		const str = getKatakana($('.convert-view.active > .vertical-row').last().text());
 		insertPhraseToInputBuffer(phraseNum,str).addClass('select-phrase');
 		resizeInputBuffer();
 	}
@@ -1773,14 +1863,14 @@ $(function() {
 	function getKatakana(str) {
 		'use strict';
 		let rtnKatakana = '';
-		for (let i = 0,len = str.length,cKatakana; i < len; i++) {
-			cKatakana = key_table.katakana[str.charAt(i)];
+		for (let char of str) {
+			const cKatakana = key_table.katakana[char];
 
 			if (cKatakana) {
 				rtnKatakana += cKatakana;
 			} else {
 				// 変換できなければ元の文字をそのまま連結
-				rtnKatakana += str.charAt(i);
+				rtnKatakana += char;
 			}
 
 		}
@@ -1799,6 +1889,7 @@ $(function() {
 		const $prevChar = $cursor.prev(); //移動しない文字の最後
 		const $cursorRow = $('.cursor-row');
 
+		// 行途中での改行
 		if ($prevChar[0]) {
 			let $nextRow = $cursorRow.nextAll('.vertical-row').first(); //改行前の次の行
 
@@ -1824,7 +1915,7 @@ $(function() {
 
 			if ($cursor.hasClass('EOL')) { // EOLにカーソルがあると、EOLが動かないために、カーソルが次の行に行かないので強制的に動かす必要あり
 				// = 段落末での改行
-				$nextRow.children('.vertical-char:first-of-type').addCursor();
+				$nextRow.children('.vertical-char').first().addCursor();
 			}
 			// 移動文字列を次の行に入れた結果規定文字数を超えた場合のために、次の行を文字数調整
 			cordinateStringNumber($nextRow,getStringLenOfRow());
@@ -2106,36 +2197,6 @@ $(function() {
 		$('#vertical_draft').children('.vertical-paragraph').has('.cursor-row').removeClassByRegExp(/decolation-textalign-\S+/).addClass('decolation-textalign-'+ align);
 	}
 
-	// [未使用]フォントサイズを変更する
-	function setFontSize(size) {
-		'use strict';
-		const $chars = $('#vertical_draft').find('span.vertical-char');
-		const $paras = $('#vertical_draft').find('div.vertical-paragraph');
-
-		$chars.removeClass('decolation-font-big');
-		$chars.removeClass('decolation-font-small');
-		$paras.removeClass('decolation-font-big');
-		$paras.removeClass('decolation-font-small');
-
-		switch (size) {
-			case 'big':
-				$chars.addClass('decolation-font-big');
-				$paras.addClass('decolation-font-big');
-				break;
-			case 'middle':
-				break;
-			case 'small':
-				$chars.addClass('decolation-font-small');
-				$paras.addClass('decolation-font-small');
-				break;
-			default:
-				break;
-		}
-		addDisplayRow(0,getDisplayRowLen());
-		resetDisplayChar();
-		changeDisplayChar();
-	}
-
 	// テキストボックスに入力できるように
 	document.getElementById('input_text_size').addEventListener('focus',function (e) {
 		document.removeEventListener('keydown',keydownOnDoc);
@@ -2160,7 +2221,7 @@ $(function() {
 		'use strict';
 		const eSelectChars = findSelectElem(false);
 
-		for (let i = 0,eChar; eChar = eSelectChars[i]; i++) {
+		for (let eChar of eSelectChars) {
 			eChar.dataset.fontSize = size;
 		}
 	}
@@ -2178,8 +2239,8 @@ $(function() {
 		'use strict';
 		const selection = getSelection();
 		let ret = '';
-		for (let i = 0,cnt = selection.rangeCount,selRange; i < cnt; i++) {
-			selRange = selection.getRangeAt(i);
+		for (let i = 0,cnt = selection.rangeCount; i < cnt; i++) {
+			const selRange = selection.getRangeAt(i);
 			ret += selRange.toString();
 		}
 		return ret;
@@ -2270,7 +2331,7 @@ $(function() {
 					$currentPage = $row;
 				}
 			} else {
-				$currentPage = $currentParagraph.children('.page-break:last-of-type');
+				$currentPage = $currentParagraph.children('.page-break').last();
 			}
 
 		}
@@ -2323,15 +2384,14 @@ $(function() {
 
 	// カーソルのある文字が何文字目かを記憶する要素群を作成する
 	// カーソルを左右に動かすときに利用する
-	function setNOCLine() {
+	function setCursorLine() {
 		'use strict';
-		const $NOCLine = $('<div>').attr('id','NOC-line');
+		const $CursorLine = $('#cursor_line');
 
-		for (let i = 0,len = getStringLenOfRow(),$numberOfChar; i < len; i++) {
-			$numberOfChar = $('<span>').addClass('number-of-char');
-			$NOCLine.append($numberOfChar);
+		for (let i = 0,len = getStringLenOfRow(); i < len; i++) {
+			const $numberOfChar = $('<span>').addClass('char-pos');
+			$CursorLine.append($numberOfChar);
 		}
-		$('#vertical_draft').before($NOCLine);
 	}
 
 	// クリック箇所にもっとも近い.vertical-charオブジェクトを返す
@@ -2345,19 +2405,14 @@ $(function() {
 			y: rowEo.pageY
 		};
 
-		let $self;
-		let distance;
-		let min = Number.MAX_VALUE;
 		let $resultObj = $chars.first('.vertical-char');
-		$chars.each(function () {
-			$self = $(this);
-			distance = $self.computeDistanceP2O(clickPos);
+		for (let i = 0,min = Number.MAX_VALUE,$char; ($char = $chars.eq(i))[0]; i++) {
+			const distance = $char.computeDistanceP2O(clickPos);
 			if (distance < min) {
 				min = distance;
-				$resultObj = $self;
+				$resultObj = $char;
 			}
-		});
-
+		}
 		return $resultObj;
 	}
 
@@ -2419,7 +2474,7 @@ $(function() {
 		init: function () {
 			'use strict';
 			$('.vertical-char').first().addClass('cursor');
-			$('#NOC-line > .number-of-char:first-of-type').addClass('cursor_char');
+			$('#cursor_line > .char-pos').first().addClass('cursor-pos-memory');
 			this.addCursorRow();
 			resetDisplayChar();
 		},
@@ -2461,8 +2516,8 @@ $(function() {
 		shiftRight: function () {
 			'use strict';
 			const $prev = $('.cursor');
-			const NOCNum = $('#NOC-line').children('.number-of-char').index($('.cursor_char'));
-			let $next = $('#vertical_draft .cursor-row').prevObj('#vertical_draft .vertical-row').children('.vertical-char').eq(NOCNum);
+			const memoryPos = $('#cursor_line').children('.char-pos').index($('.cursor-pos-memory'));
+			let $next = $('#vertical_draft .cursor-row').prevObj('#vertical_draft .vertical-row').children('.vertical-char').eq(memoryPos);
 
 			if (!($next[0])) {
 				// 右の行の文字数が現在文字より小さい
@@ -2477,11 +2532,11 @@ $(function() {
 		shiftLeft: function () {
 			'use strict';
 			const $prev = $('.cursor');
-			const NOCNum = $('#NOC-line').children('.number-of-char').index($('.cursor_char'));
-			let $next = $prev.closest('div.vertical-row').nextObj('#vertical_draft .vertical-row').children('.vertical-char').eq(NOCNum);
+			const memoryPos = $('#cursor_line').children('.char-pos').index($('.cursor-pos-memory'));
+			let $next = $prev.closest('div.vertical-row').nextObj('#vertical_draft .vertical-row').children('.vertical-char').eq(memoryPos);
 
 			if (!($next[0])) {
-				$next = $prev.closest('.vertical-row').nextObj('#vertical_draft .vertical-row').children('.vertical-char:last-of-type');
+				$next = $prev.closest('.vertical-row').nextObj('#vertical_draft .vertical-row').children('.vertical-char').last();
 			}
 			if (!($next[0])) { return; }
 
@@ -2492,30 +2547,30 @@ $(function() {
 		repositionCharNum: function () {
 			'use strict';
 			const cursorPos = $('.cursor').closest('.vertical-row').children().index($('.cursor'));
-			$('.cursor_char').removeClass('cursor_char');
-			$('#NOC-line > .number-of-char').eq(cursorPos).addClass('cursor_char');
+			$('.cursor-pos-memory').removeClass('cursor-pos-memory');
+			$('#cursor_line > .char-pos').eq(cursorPos).addClass('cursor-pos-memory');
 			// cursor-rowの 調整
 			this.addCursorRow();
 		},
 		// 指定行にジャンプする。画面中央に指定行及びカーソルが来るように調整
 		jumpForRow: function (rowNum) {
 			'use strict';
-			const $targetRow = $('.vertical-paragraph > .vertical-row').eq(rowNum-1);
+			const $targetRow = $('#vertical_draft .vertical-row').eq(rowNum-1);
 			if (!$targetRow[0]) { return; }
 			// cursor
-			$targetRow.children('.vertical-char:first-of-type').addCursor(true);
+			$targetRow.children('.vertical-char').first().addCursor(true);
 			this.repositionCharNum();
 		},
 		// 指定ページにジャンプする。カーソルは１行目
 		jumpForPage: function (pageNum) {
 			'use strict';
-			const $targetRow = $('.vertical-paragraph > .vertical-row').eq(firstDispNum);
+			const $targetRow = $('#vertical_draft .vertical-row').eq(firstDispNum);
 			if (!$targetRow[0]) { return; }
 			// cursor
-			$targetRow.children('.vertical-char:first-of-type').addCursor(false);
+			$targetRow.children('.vertical-char').first().addCursor(false);
 			this.repositionCharNum();
 			// display
-			const firstDispNum = $('.vertical-paragraph > .vertical-row').index($('.page-break').eq(pageNum-1));
+			const firstDispNum = $('#vertical_draft .vertical-row').index($('#vertical_draft .page-break').eq(pageNum-1));
 			addDisplayRow(firstDispNum,firstDispNum+getDisplayRowLen());
 		}
 	};
@@ -2529,7 +2584,7 @@ $(function() {
 	function reDisplay() {
 		'use strict';
 		console.log('reDisplay');
-		const firstDispNum = $('.vertical-paragraph > .vertical-row').index($('.display-row').first());
+		const firstDispNum = $('#vertical_draft .vertical-row').index($('#vertical_draft .display-row').first());
 		addDisplayRow(firstDispNum,firstDispNum+getDisplayRowLen()); // 途中行数変化
 	}
 
@@ -2555,12 +2610,10 @@ $(function() {
 		if ($nextRow.hasClass('display-row')) {
 			// カーソルが一行前にはみ出した
 			$('.display-row').last().removeClass('display-row');
-			resetDispNum();
 
 		} else if ($prevRow.hasClass('display-row')) {
 			// カーソルが一行後にはみ出した
 			$('.display-row').first().removeClass('display-row');
-			resetDispNum();
 
 		} else if (opt_bl) {
 			// カーソルが二行以上はみ出し、かつカーソルを中央配置する
@@ -2599,6 +2652,8 @@ $(function() {
 	function addDisplayRow(first,last) {
 		'use strict';
 		console.log('addDisplayRow('+ first + ','+ last +')');
+				first = Math.floor(first);
+				last = Math.floor(last);
 				const eOldDisplayRows = document.getElementsByClassName('display-row');
 
 				while (eOldDisplayRows.length > 0) {
@@ -2607,14 +2662,15 @@ $(function() {
 
 				const eRows = document.getElementById('vertical_draft').getElementsByClassName('vertical-row');
 				const rowLen = eRows.length;
-				if (last>rowLen) {
+				if (last > rowLen) {
 					last = rowLen;
 					first = last - getDisplayRowLen();
 					if (first < 0) first = 0;
 				}
 
-				for (let i = first,eRow; i < last; i++) {
-					eRow = eRows[i];
+				console.log(getDisplayRowLen());
+				for (let i = first; i < last; i++) {
+					const eRow = eRows[i];
 					eRow.classList.add('display-row');
 				}
 				console.timeEnd('addDisplayRow()');
@@ -2662,17 +2718,6 @@ $(function() {
 		console.timeEnd('changeDisplayChar()');
 	}
 
-	// ノードリストelementsのうち、targetのインデックスを返す
-	function index(target,elements) {
-		'use strict';
-		for (let i = 0,elem; elem = elements[i];i++) {
-			if (elem == target)
-				return i;
-		}
-
-		return -1;
-	}
-
 	function resetDisplayChar() {
 		'use strict';
 		console.time('resetDisplayChar()');
@@ -2692,82 +2737,41 @@ $(function() {
 	// 画面に表示されているrowのfirst文字以降にdisplay-charを付与して表示する
 	function addDisplayChar(first) {
 		'use strict';
+		console.log('char first:'+ first);
 		const eDisplayRows = document.querySelectorAll('#vertical_draft .display-row');
 		let addArr = [];
 		let removeArr = [];
 
-		// dispCharAll();
-		let result;
 		for (let i = 0,eDispRow; eDispRow = eDisplayRows[i];i++) {
-			result = dispCharOfRow(first,eDispRow);
+			const result = dispCharOfRow(first,eDispRow);
 			addArr = addArr.concat(result.add);
 			removeArr = removeArr.concat(result.remove);
 		}
-		for (let i = 0,len = addArr.length;i < len;i++) {
-			addArr[i].classList.add('display-char');
+		for (let elem of addArr) {
+			elem.classList.add('display-char');
 		}
-		for (let i = 0,len = removeArr.length;i < len;i++) {
-			removeArr[i].classList.remove('display-char');
+		for (let elem of removeArr) {
+			elem.classList.remove('display-char');
 		}
 	}
 
-	// [未使用]
-	function replaceDispChar(first,dispRows) {
-		'use strict';
-		const range = document.createRange();
-		const fragment = range.cloneContents();
-		const frRows = fragment.querySelectorAll('.vertical-row');
-
-		range.setStartBefore(dispRows[0].parentNode);
-		range.setEndAfter(dispRows[dispRows.length-1].parentNode);
-
-		for (let i=0,cnt=frRows.length;i<cnt;i++) {
-			dispCharOfRow(first,dispRows[i],frRows[i]);
-		}
-
-		range.deleteContents();
-		range.insertNode(fragment);
-	}
-
-	// $('#vertical_draft').on('click','.vertical-char',function (e) {
-	// 	var eSelf = this;
-	// 	var $self = $(this);
-	// 	var fontHeight;
-	// 	console.log('data:'+ this.dataset.a);
-	// 	console.log('clientHeight:'+ this.clientHeight);
-	// 	console.time('offsetHeight');
-	// 	fontHeight = this.offsetHeight;
-	// 	console.timeEnd('offsetHeight');
-	// 	console.time('getComputedStyle');
-	// 	fontHeight = (this.currentStyle || document.defaultView.getComputedStyle(this,null));
-	// 	console.timeEnd('getComputedStyle');
-	// 	console.time('dataset');
-	// 	fontHeight = (parseInt(this.dataset.fontSize) || 16) + 2;
-	// 	console.timeEnd('dataset');
-	// 	console.time('dispCharOfRow');
-	// 	dispCharOfRow(1,this.parentNode);
-	// 	console.timeEnd('dispCharOfRow');
-	// fontHeight = parseInt((eChar.currentStyle || defaultView.getComputedStyle(eChar,null)).height);
-	// fontHeight = eChar.offsetHeight;
-	// fontHeight = eChar.clientHeight;
-	// fontHeight = eChar.offsetWidth;
-	// fontHeight = parseInt((eChar.currentStyle || document.defaultView.getComputedStyle(eChar,null)).width) + parseInt((eChar.currentStyle || document.defaultView.getComputedStyle(eChar,null)).marginLeft);
-	// });
 	// rowのfirst文字目以降の各文字をrowの高さに収まるだけdisplaycharクラスを付与するとして、row内のcharすべてについてクラスを付与する要素と除去する要素の配列をオブジェクトで返す
 	function dispCharOfRow(first,row) {
 		'use strict';
 		// この関数内でクラスを直接いじってしまうと、複数行に対して実行した場合にその都度描画計算が起こってしまい時間がかかるため、いったんインデックスのみを調査して関数外で一気にクラスの変更を行う形にしている
 		console.time('dispCharOfRow()');
 
-
-		// var defaultView = document.defaultView;
-
 		const eRow = row.nodeName && row.nodeType===1 ? row : row[0];
-		const eChars = eRow.childNodes;
+		const eChars = eRow.children;
+		const addArr = [];
+		const removeArr = [];
 		// first文字以前の文字でdisplay-charを持つ文字があれば除去リストに加える
-		for (let i = 0,eChar; i < first; i++) {
-			eChar = eChars[i];
-			if (!eChar) { break; } // 行内文字数がfirst文字ない場合はEOL以外のdisplay-charをすべて外して終わり
+		for (let i = 0; i < first; i++) {
+			const eChar = eChars[i];
+			if (!eChar) { return {
+				add: addArr,
+				remove: removeArr
+			}; } // 行内文字数がfirst文字ない場合はEOL以外のdisplay-charをすべて外して終わり
 			if (eChar.classList.contains('display-char') && !eChar.classList.contains('EOL')) {
 				removeArr.push(eChar);
 			}
@@ -2776,22 +2780,16 @@ $(function() {
 		// first文字以降の文字でrowの高さに収まる文字のうち、display-charを持たない文字を追加リストに加える
 		// また、rowに収まらない文字でdisplay-charを持つ文字があれば除去リストに加える
 		// EOLは常にdisplay-charを持つようにする(そうしなければ、空行で一つもdisplay-charがない状態となり表示要素が一切なくなってしまうので、heightがautoであるrowは潰れた状態になってしまう)
-		const addArr = [];
-		const removeArr = [];
 		const dispHeight = parseInt((eRow.currentStyle || document.defaultView.getComputedStyle(eRow,null)).width);
 		let fontHeight = 0;
 		let htcnt = 0;
 		for (let i = first,eChar; eChar = eChars[i]; i++) {
-			// fontHeight = parseInt((eChar.currentStyle || defaultView.getComputedStyle(eChar,null)).height);
-			// fontHeight = eChar.offsetHeight;
-			// fontHeight = eChar.clientHeight;
-			fontHeight = (parseInt(eChar.dataset.fontSize) || 16) + 2;
-			// fontHeight = eChar.offsetWidth;
-			// fontHeight = parseInt((eChar.currentStyle || document.defaultView.getComputedStyle(eChar,null)).width) + parseInt((eChar.currentStyle || document.defaultView.getComputedStyle(eChar,null)).marginLeft);
+			if (eChar.classList.contains('EOL')) {
+				continue;
+			}
+			fontHeight = eChar.dataset.fontSize === 'auto' ? 18 : parseInt(eChar.dataset.fontSize)+2;
 			htcnt += fontHeight;
-			console.log('fontHeight:'+fontHeight);
-			// console.log('htcnt:'+ htcnt);
-			if (htcnt < dispHeight || eChar.classList.contains('EOL')) {
+			if (htcnt < dispHeight) {
 				if (!(eChar.classList.contains('display-char'))) {
 					addArr.push(eChar);
 				}
@@ -2802,24 +2800,20 @@ $(function() {
 			}
 		}
 
-		console.log('dispRow.add:'+ addArr.length);
-		// console.log('dispRow.remove:'+ removeArr.length);
 		console.timeEnd('dispCharOfRow()');
-
 		return {
 			add: addArr,
 			remove: removeArr
 		};
 	}
-
-	// [未使用]
-	function resetDispNum() {
+	$('body').on('click','.vertical-char',function (e) {
 		'use strict';
-		let k=0;
-		$('.display-row').each(function() {
-			this.dataset.dispnum = k++;
-		});
-	}
+		console.log('char:' + $(this).css('height'));
+	});
+	$('body').on('click','.vertical-row',function (e) {
+		'use strict';
+		console.log('row:' + $(this).css('height'));
+	});
 
 	// 表示する行数
 	function getDisplayRowLen() {
@@ -2827,9 +2821,10 @@ $(function() {
 		const dispWidth = parseInt($('#vertical_draft').css('height'));
 		const rowBorderWidth = 2;
 		let rowWidth = parseInt($('.vertical-paragraph > .vertical-row').css('height'));
+		console.log('tategaki rowWidgh:'+ rowWidth + ','+ $('.vertical-paragraph > .vertical-row').hasClass('display-row'));
 		if (dispWidth <= 0) { return 0; }
 		rowWidth += rowBorderWidth;
-		const dispLen = dispWidth / rowWidth;
+		const dispLen = Math.floor(dispWidth / rowWidth);
 		return dispLen -1; // 一行だけ余裕をもたせる
 	}
 
@@ -2881,24 +2876,13 @@ $(function() {
 
 		const pageNum = getRowLenOnPage();
 		const $rows = $('#vertical_draft > .vertical-paragraph > .vertical-row');
-		let $row;
-		for (let i = 1; ($row = $rows.eq(pageNum*i-1))[0]; i++) {
+		for (let i = 1,$row; ($row = $rows.eq(pageNum*i-1))[0]; i++) {
 			$row.addClass('page-last-row');
 		}
 		$rows.last().addClass('page-last-row');
-		for (let i = 0; ($row = $rows.eq(pageNum*i))[0]; i++) {
+		for (let i = 0,$row; ($row = $rows.eq(pageNum*i))[0]; i++) {
 			$row.addClass('page-break');
 		}
-	}
-
-	// [未使用]
-	function getRowPadding(rowLen) {
-		'use strict';
-		const dispWidth = parseInt($('#vertical_draft').css('width'))-50; // 負の数になることも考慮すること
-		const rowWidth = parseInt($('.vertical-paragraph > .vertical-row').css('width'));
-		const padding = (dispWidth/rowLen - rowWidth)/2;
-
-		return padding;
 	}
 
 	// =====================================================================
@@ -2918,15 +2902,15 @@ $(function() {
 
 			const $chars = $('#vertical_draft .display-row .vertical-char').not('.EOL');
 			const charRange = document.createRange();
-			for (let i = 0,len = $chars.length; i < len; i++) {
+			for (let i = 0,$char; ($char = $chars.eq(i))[0] ; i++) {
 				// そのcharacterが選択範囲内にある場合に配列に入れている
 				// 現在の要素を囲む範囲をcharRangeとして設定(jqueryオブジェクトからDOM要素を取得し、引数に渡している)。selectNodeContentsをselectNodeにする、あるいは引数をテキストノードではなくspan要素にすると、選択中最初と最終文字が反応しないことがある
-				charRange.selectNodeContents($chars.eq(i).get(0).childNodes.item(0));
+				charRange.selectNodeContents($char[0].childNodes.item(0));
 				// 開始位置が同じかselectの開始位置より文字の開始位置が後ろにあり、
 				// 終了位置が同じかselectの終了位置より文字の終了位置が前にある
 				if ((charRange.compareBoundaryPoints(Range.START_TO_START,selRange) >= 0
 							&& charRange.compareBoundaryPoints(Range.END_TO_END,selRange) <= 0)) {
-					retObjArray.push($chars.eq(i));
+					retObjArray.push($char);
 				}
 			}
 
@@ -2953,8 +2937,7 @@ $(function() {
 			// 選択範囲内にあるcharacterを配列に入れる
 			const eChars = document.querySelectorAll('#vertical_draft .display-row .vertical-char');
 			const charRange = document.createRange();
-			for (let i = 0,len=eChars.length,eChar; i < len; i++) {
-				eChar = eChars[i];
+			for (let i = 0,eChar; eChar = eChars[i] ; i++) {
 				if (eChar.classList.contains('EOL')) { continue; }
 				// 現在の要素を囲む範囲をcharRangeとして設定。selectNodeContentsをselectNodeにする、あるいは引数をテキストノードではなくspan要素にすると、選択中最初と最終文字が反応しないことがある
 				charRange.selectNodeContents(eChar.childNodes.item(0));
@@ -2982,34 +2965,23 @@ $(function() {
 		const eSelChars = findSelectElem(true);
 		const kind = (strClass.match(/(decolation-.+)-.+/))[1];
 		const regexp = new RegExp(kind +'-\\S+');
-		let rmClass;
 
-		for (let i = 0,len = eSelChars.length; i < len; i++) {
-			rmClass = (eSelChars[i].className.match(regexp));
-			eSelChars[i].classList.add(strClass);
-			if (rmClass) { eSelChars[i].classList.remove(rmClass[0]); }
+		for (let eChar of eSelChars) {
+			const rmClass = eChar.className.match(regexp);
+			eChar.classList.add(strClass);
+			if (rmClass) { eChar.classList.remove(rmClass[0]); }
 		}
 
-	}
-
-	// [未使用]
-	function toggleClassOnSelect(strClass) {
-		'use strict';
-		const $objArray = findSelect$obj(true);
-		for (let i = 0,cnt = $objArray.length; i < cnt; i++) {
-			$objArray[i].toggleClass(strClass);
-		}
 	}
 
 	function removeClassOnSelect(kind) {
 		'use strict';
 		const eSelChars = findSelectElem(true);
 		const regexp = new RegExp(kind +'-\\S+');
-		let rmClass;
 
-		for (let i = 0,len = eSelChars.length; i < len; i++) {
-			rmClass = eSelChars[i].className.match(regexp);
-			if (rmClass) { eSelChars[i].classList.remove(rmClass[0]); }
+		for (let eChar of eSelChars) {
+			const rmClass = eChar.className.match(regexp);
+			if (rmClass) { eChar.classList.remove(rmClass[0]); }
 		}
 	}
 
@@ -3041,7 +3013,7 @@ $(function() {
 	// 		ファイル操作(label:file)
 	// =====================================================================
 
-	function comReadFile(fileID) {
+	function comReadFile(fileId) {
 		'use strict';
 		$('#vertical_draft > .vertical-paragraph').remove();
 
@@ -3049,14 +3021,14 @@ $(function() {
 			type : 'POST',
 			url : '/tategaki/ReadFile',
 			data : {
-				user_id: getUserID(),
-				file_id: fileID
+				user_id: getUserId(),
+				file_id: fileId
 			},
 			context : {
-				id : fileID
+				id : fileId
 			},
 			dataType : 'json',
-			success : function (data) {
+		}).done(function (data) {
 				// 表示データを受け取ってからの処理
 				// ファイル名を表示
 				$('#file_title').val(data.filename).attr('data-file-id',this.id);
@@ -3072,21 +3044,19 @@ $(function() {
 
 				addPageBreak();
 				printDocInfo();
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comReadFile');
-			}
 		});
 
 	}
 
-	function comReadJsonFile(fileID) {
+	function comReadJsonFile(fileId) {
 		'use strict';
-		console.log('comReadJsonFile("'+ fileID +'")');
+		console.log('comReadJsonFile("'+ fileId +'")');
 		console.time('comReadJsonFile()');
-		const userID = getUserID();
+		const userId = getUserId();
 		userAlert('読込中');
-		console.log('comReadJsonFile userID:"'+ userID);
+		console.log('comReadJsonFile userId:"'+ userId);
 		$('#vertical_draft').empty();
 		console.time('ReadJsonFile communication');
 
@@ -3094,51 +3064,48 @@ $(function() {
 			type : 'POST',
 			url : '/tategaki/ReadJsonFile',
 			data : {
-				user_id: userID,
-				file_id: fileID
+				user_id: userId,
+				file_id: fileId
 			},
 			context : {
-				id : fileID
+				id : fileId
 			},
-			dataType : 'json',
-			success : function (data) {
-				console.timeEnd('ReadJsonFile communication');
-				// 表示データを受け取ってからの処理
-				// ファイル名を表示
-				$('#file_title').val(data.filename).attr('data-file-id',this.id);
-				// 文章のhtml書き出し
-				const text = data.data.text;
-				console.time('append string');
-				appendParagraphFromObj(text);
-				console.timeEnd('append string');
-				console.time('checkKinsoku');
-				checkKinsoku(); // 禁則処理
-				console.timeEnd('checkKinsoku');
-				console.time('addDisplayRow');
-				addDisplayRow(0,getDisplayRowLen());
-				console.timeEnd('addDisplayRow');
-				console.time('cursor init');
-				gCursor.init();
-				console.timeEnd('cursor init');
-				// console.time('resetDisplayChar');
-				// resetDisplayChar();
-				// console.timeEnd('resetDisplayChar');
-				$('.doc-info > .saved').text(data.saved);
+			dataType : 'json'
+		}).done(function (data) {
+			console.timeEnd('ReadJsonFile communication');
+			// 表示データを受け取ってからの処理
+			// ファイル名を表示
+			$('#file_title').val(data.filename).attr('data-file-id',this.id);
+			// 文章のhtml書き出し
+			const text = data.data.text;
+			console.time('append string');
+			// appendParagraphFromObj(text);
+			window.draft = new window.Draft(this.id,text);
+			console.timeEnd('append string');
+			console.log(window.draft);
+			console.time('addDisplayRow');
+			addDisplayRow(0,getDisplayRowLen());
+			console.timeEnd('addDisplayRow');
+			console.time('cursor init');
+			gCursor.init();
+			console.timeEnd('cursor init');
+			// console.time('resetDisplayChar');
+			// resetDisplayChar();
+			// console.timeEnd('resetDisplayChar');
+			$('.doc-info > .saved').text(data.saved);
 
-				addPageBreak();
-				printDocInfo();
-				console.timeEnd('comReadJsonFile()');
-				userAlert('読み込み完了');
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comReadJsonFile');
-			}
+			addPageBreak();
+			printDocInfo();
+			console.timeEnd('comReadJsonFile()');
+			userAlert('読み込み完了');
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comReadJsonFile');
 		});
 	}
 
 	function comSaveFile() {
 		'use strict';
-		const userID = getUserID();
+		const userId = getUserId();
 		const $fileTitle = $('#file_title');
 		const filename = $fileTitle.val();
 
@@ -3151,9 +3118,9 @@ $(function() {
 			return;
 		}
 
-		const fileID = $fileTitle.attr('data-file-id');
+		const fileId = $fileTitle.attr('data-file-id');
 
-		if (fileID === '-1') {
+		if (fileId === '-1') {
 			comSaveAs(filename);
 			return;
 		}
@@ -3161,8 +3128,8 @@ $(function() {
 		// 段落ごとに配列に格納
 		const $paragraphs = $('#vertical_draft > .vertical-paragraph');
 		const contentsArray = [];
-		for (let i = 0,len = $paragraphs.length; i < len; i++) {
-			contentsArray.push(getStringFromParagraph($paragraphs.eq(i)));
+		for (let i = 0,$paragraph; ($paragraph = $paragraphs.eq(i))[0]; i++) {
+			contentsArray.push($paragraph.text());
 		}
 		const contentsJson = JSON.stringify(contentsArray);
 		const nowDate_ms = Date.now() + '';
@@ -3171,33 +3138,31 @@ $(function() {
 			type : 'POST',
 			url : '/tategaki/WriteFile',
 			data : {
-				user_id : userID,
-				file_id: fileID,
+				user_id : userId,
+				file_id: fileId,
 				filename: filename,
 				json: contentsJson,
 				saved: nowDate_ms
 			},
 			context : {
-				userID : userID,
-				fileID: fileID
+				userId : userId,
+				fileId: fileId
 			},
 			dataType : 'json',
-			success : function (data) {
-				// 表示データを受け取ってからの処理
-				console.log(data.result);
-				$('.saved').text(data.strDate);
-				comFileList(this.userID);
-				console.log('保存しました:fileID=' + this.fileID);
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveFile');
-			}
+		}).done(function (data) {
+			// 表示データを受け取ってからの処理
+			console.log(data.result);
+			$('.saved').text(data.strDate);
+			comFileList(this.userId);
+			console.log('保存しました:fileId=' + this.fileId);
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveFile');
 		});
 	}
 
 	function comSaveJsonFile() {
 		'use strict';
-		const userID = getUserID();
+		const userId = getUserId();
 		const $fileTitle = $('#file_title');
 		const filename = $fileTitle.val();
 
@@ -3212,17 +3177,16 @@ $(function() {
 
 		userAlert('保存しています');
 
-		const fileID = $fileTitle.attr('data-file-id');
-		if (fileID === '-1') {
+		const fileId = $fileTitle.attr('data-file-id');
+		if (fileId === '-1') {
 			comSaveAs(filename);
 			return;
 		}
 		const contentsJson = makeJsonDataForSave();
-		// console.log(contentsJson);
 		const nowDate_ms = Date.now() + '';
 
-		console.log('user_id:'+ userID);
-		console.log('file_id:'+ fileID);
+		console.log('user_id:'+ userId);
+		console.log('file_id:'+ fileId);
 		console.log('filename:'+ filename);
 		console.log('json:'+ contentsJson);
 		console.log('saved:'+ nowDate_ms);
@@ -3231,51 +3195,47 @@ $(function() {
 			type : 'POST',
 			url : '/tategaki/WriteJsonFile',
 			data : {
-				user_id : userID,
-				file_id: fileID,
+				user_id : userId,
+				file_id: fileId,
 				filename: filename,
 				json: contentsJson,
 				saved: nowDate_ms
 			},
 			context : {
-				userID : userID,
-				fileID: fileID
+				userId : userId,
+				fileId: fileId
 			},
-			dataType : 'json',
-			success : function (data) {
-				// 表示データを受け取ってからの処理
-				console.log(data.result);
-				$('.saved').text(data.strDate);
-				comFileList(this.userID);
-				console.log('保存しました:fileID=' + this.fileID);
-				userAlert('保存しました');
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveJsonFile');
-			}
+			dataType : 'json'
+		}).done(function (data) {
+			// 表示データを受け取ってからの処理
+			console.log(data.result);
+			$('.saved').text(data.strDate);
+			comFileList(this.userId);
+			console.log('保存しました:fileId=' + this.fileId);
+			userAlert('保存しました');
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveJsonFile');
 		});
 	}
 
-	function comFileList(userID) {
+	function comFileList(userId) {
 		'use strict';
 		$.ajax({
 			type : 'POST',
 			url : '/tategaki/FileListMaker',
 			data : {
-				user_id: userID
+				user_id: userId
 			},
 			dataType : 'json',
-			success : function (data) {
-				// 表示データを受け取ってからの処理
-				setFileListFromObject(data);
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comFileList');
-			}
+		}).done(function (data) {
+			// 表示データを受け取ってからの処理
+			setFileListFromObject(data);
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comFileList');
 		});
 	}
 
-	function setFileListFromObject(data,opt_$parentUl) {
+	function setFileListFromObject(data,opt_eParentUl) {
 		'use strict';
 		/*
 		 * dataの中身例
@@ -3293,70 +3253,36 @@ $(function() {
 		 * 		}
 		 * 	}
 		 * }
-		 * fileID:filename
+		 * fileId:filename
 		 */
 
-		const $parentUl = opt_$parentUl || $('#file_list');
-		$parentUl.empty();
+		const eParentUl = opt_eParentUl || document.createDocumentFragment();
+		if (opt_eParentUl) {
+			empty(eParentUl);
+		}
 
-		let filename = '';
-		let $file;
-		for (let fileID in data) {
-			filename = data[fileID]; // filenameは、対象fileIDのファイル名か、ディレクトリならば再帰的にオブジェクトが入っている
+		for (let fileId in data) {
+			const filename = data[fileId]; // filenameは、対象fileIdのファイル名か、ディレクトリならば再帰的にオブジェクトが入っている
 
-			if (typeof filename === 'string' && fileID !==  'directoryname') {
+			if (typeof filename === 'string' && fileId !==  'directoryname') {
 				// file
-				$file = $('<a>').addClass('file').attr('href','#').attr('data-type','file').attr('data-file-id',fileID).attr('data-file-name',filename).text(filename);
-				$parentUl.append($('<li>').append($file));
+				eParentUl.appendChild(createFileElement(fileId,filename));
 			} else if (typeof filename === 'object') {
 				// dir
-				createDirCollapseFromObject(/* innerData = */filename, /* dirID = */fileID, $parentUl);
+				const dirId = fileId;
+				const innerData = filename;
+				const eDir = createDirectoryElement(dirId, innerData); // createDirectoryElement()内にあるcreateDirCollapseElement()の中でさらにsetFileListFromObject()を使用している
+				eParentUl.appendChild(eDir);
 			}
 
 		}
-	}
 
-	function createDirCollapseFromObject(data,dirID,$parentUl) {
-		'use strict';
-		// setFileListと交互再帰的にリストを作成し、コラプスで開けるようにする
-		/*
-		 *
-		 * <li>
-		 * 	<a class="directory" data-toggle="collapse" href="#directory1" data-type="directory" data-directory-id="1" data-directory-name="filename.directoryname">
-		 *		<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
-		 *		filename.directoryname
-		 *		</a>
-		 *
-		 *		<div class="collapse" id="directory1">
-		 *			<div class="well">
-		 *				<ul>
-		 *					<li>filename</li>
-		 *					<li>filename</li>
-		 *					<li>filename</li>
-		 *				</ul>
-		 *			</div>
-		 *		</div>
-		 *	</li>
-		 */
-		const $dirLink = $('<a>')
-			.addClass('directory')
-			.attr('data-toggle','collapse')
-			.attr('href','#directory'+dirID)
-			.attr('data-type','directory')
-			.attr('data-directory-id',dirID)
-			.attr('data-directory-name',data.directoryname)
-			.html('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'+data.directoryname); // icon
-		$parentUl.append($('<li>').append($dirLink));
-
-		const $collapse = $('<div>').addClass('collapse').attr('id','directory'+dirID);
-		const $innerUl = $('<ul>');
-		const $well = $('<div>').addClass('well');
-		setFileListFromObject(data,$innerUl); // 交互再帰 内部の各ファイルを設置
-
-		$collapse.append($well);
-		$well.append($innerUl);
-
-		$dirLink.after($collapse);
+		// eParentUl == documentFlagmentの時だけ、file_list内を入れ替える
+		if (!opt_eParentUl) {
+			const eFileList = document.getElementById('file_list');
+			empty(eFileList);
+			eFileList.appendChild(eParentUl);
+		}
 	}
 
 	// ファイルを開くモーダルにある検索ボックスのkeyupイベント
@@ -3375,10 +3301,10 @@ $(function() {
 			}
 			$('#file_list_modal').modal('hide');
 			document.addEventListener('keydown',keydownOnDoc,false);
-			comFileList(getUserID());
+			comFileList(getUserId());
 
 		} else if (searchWord.length === 0) {
-			comFileList(getUserID());
+			comFileList(getUserId());
 		} else {
 			comSearchFile(searchWord);
 		}
@@ -3388,66 +3314,50 @@ $(function() {
 	// searchWordをファイル名に含むファイルのみをmodalに表示する
 	function comSearchFile(searchWord) {
 		'use strict';
-		const userID = getUserID();
+		const userId = getUserId();
 
 		$.ajax({
 			type : 'POST',
 			url : '/tategaki/FileListMaker',
 			data : {
-				user_id: userID
+				user_id: userId
 			},
 			context: {
-				userID: userID,
+				userId: userId,
 				search_word : searchWord
 			},
 			dataType : 'json',
-			success : function (data) {
-				// 表示データを受け取ってからの処理
-				setFileListFromObject(data); // filterFileNameMatchは現在のファイルリストから探すため、先に全ファイルをリストに入れておく必要がある
-				const $matchFilesArray = filterFileNameMatch(this.search_word);
-				setFileListFromArray($matchFilesArray);
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comSearchFile');
-			}
+		}).done(function (data) {
+			// 表示データを受け取ってからの処理
+			setFileListFromObject(data); // filterFileNameMatchは現在のファイルリストから探すため、先に全ファイルをリストに入れておく必要がある
+			const $matchFilesArray = filterFileNameMatch(this.search_word);
+			setFileListFromArray($matchFilesArray);
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comSearchFile');
 		});
 	}
 
 	function setFileListFromArray($array) {
 		'use strict';
 		const $fileList = $('#file_list');
-		const matchObjLength = $array.length;
 
 		$fileList.empty();
 
-		if (matchObjLength > 0) {
+		if ($array.length > 0) {
 
-			let $obj;
-			let $file;
-			let fileID;
-			let filename;
-			let $directory;
-			let directoryID;
-			let directoryname;
-			for (let i = 0; i < matchObjLength; i++) {
-				$obj = $array[i];
+			for (let $obj of $array) {
 				if ($obj.attr('data-type') === 'file') {
-					fileID = $obj.attr('data-file-id');
-					filename = $obj.attr('data-file-name');
-					$file = $('<a>')
-						.addClass('file')
-						.attr('href','#')
-						.attr('data-file-id',fileID)
-						.attr('data-file-name',filename)
-						.text(filename);
-					$fileList.append($('<li>').append($file));
+					const fileId = $obj.attr('data-file-id');
+					const filename = $obj.attr('data-file-name');
+					const $file = $(createFileElement(fileId, filename));
+					$fileList.append($file);
 				} else {
-					directoryID = $obj.attr('data-directory-id');
-					directoryname = $obj.attr('data-directory-name');
-					$directory = $('<a>')
+					const directoryId = $obj.attr('data-directory-id');
+					const directoryname = $obj.attr('data-directory-name');
+					const $directory = $('<a>')
 						.addClass('directory')
 						.attr('data-type','directory')
-						.attr('data-directory-id',directoryID)
+						.attr('data-directory-id',directoryId)
 						.attr('data-directory-name',directoryname)
 						.html('<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'+ directoryname); // icon
 					$fileList.append($('<li>').append($directory));
@@ -3463,33 +3373,31 @@ $(function() {
 	// 開くボタンを押した時
 	function readyFileModal() {
 		'use strict';
-		comFileList(getUserID());
+		comFileList(getUserId());
 		$('#search_file').val('').focus();
 	}
 
 	// ファイル検索
 	function filterFileNameMatch(str) {
 		'use strict';
-		const regexp = new RegExp('.*'+ str +'.*');
+		const regexp = new RegExp('^'+ str +'.*');
 		const $array = []; // マッチしたjqueryオブジェクトを入れる配列
-		let $self;
-		let filename;
-		let directoryname;
 
-		$('.file').each(function () {
-			$self = $(this);
-			filename = $self.attr('data-file-name');
+		const $files = $('.file');
+		for (let i = 0,$file; ($file = $files.eq(i))[0]; i++) {
+			const filename = $file.attr('data-file-name');
+			console.log(filename);
 			if (regexp.test(filename)) {
-				$array.push($self);
+				$array.push($file);
 			}
-		});
-		$('.directory').each(function () {
-			$self = $(this);
-			directoryname = $self.attr('data-directory-name');
+		}
+		const $directories = $('.directory');
+		for (let i = 0,$directory; ($directory = $directories.eq(i))[0]; i++) {
+			const directoryname = $directory.attr('data-directory-name');
 			if (regexp.test(directoryname)) {
-				$array.push($self);
+				$array.push($directory);
 			}
-		});
+		}
 
 		return $array;
 	}
@@ -3503,7 +3411,9 @@ $(function() {
 		'use strict';
 		$('#vertical_draft').empty();
 
-		appendParagraph('');
+		// appendParagraph('');
+		window.Draft.newFile(filename);
+		console.log(window.draft);
 		$('.vertical-row').addClass('display-row').children('.vertical-char').first().addClass('cursor');
 		$('#file_title').val(filename).attr('data-file-id','-1');
 		addPageBreak();
@@ -3522,84 +3432,76 @@ $(function() {
 
 		userAlert('保存しています');
 
-		const userID = getUserID();
+		const userId = getUserId();
 		const nowDate_ms = Date.now() + '';
-		console.log('userId:'+ userID);
+		console.log('userId:'+ userId);
 		console.log('nowDate_ms:'+ nowDate_ms);
 		$.ajax({
 			type : 'POST',
 			url : '/tategaki/FileMaker',
 			data : {
 				filename: filename,
-				user_id: userID,
+				user_id: userId,
 				saved: nowDate_ms
 			},
 			context : {
-				userID: userID
+				userId: userId
 			},
-			dataType : 'json',
-			success : function (data) {
-				// 表示データを受け取ってからの処理
-				$('#file_title').val(data.filename).attr('data-file-id',data.newFileID);
-				comSaveJsonFile();
-			},
-			error : function (XMLHttpRequest, textStatus, errorThrown) {
-				alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveAs');
-			}
+			dataType : 'json'
+		}).done(function (data) {
+			// 表示データを受け取ってからの処理
+			$('#file_title').val(data.filename).attr('data-file-id',data.newFileId);
+			comSaveJsonFile();
+		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveAs');
 		});
 	}
 
 	function defaultDeleteFile() {
 		'use strict';
-		const fileID = $('#file_title').attr('data-file-id');
-		if (fileID === '-1') {
+		const fileId = $('#file_title').attr('data-file-id');
+		if (fileId === '-1') {
 			userAlert('保存していないファイルです。');
 			return;
 		}
-		comDeleteFile(fileID);
+		comDeleteFile(fileId);
 	}
 
-	function comDeleteFile(fileID) {
+	function comDeleteFile(fileId) {
 		'use strict';
-		const userID = getUserID();
-		if (window.confirm('本当に削除しますか:'+ getFileNameFromFileID(fileID) + '('+ fileID +')')) {
+		const userId = getUserId();
+		if (!window.confirm('本当に削除しますか:'+ getFileNameFromFileId(fileId) + '('+ fileId +')')) { return; }
 
-			$.ajax({
-				type : 'POST',
-				url : '/tategaki/DeleteFile',
-				data : {
-					user_id: userID,
-					file_id : fileID
-				},
-				context : {
-					fileID : fileID
-				},
-				dataType : 'json',
-				success : function (data) {
-					const successRecord = data.successRecord; // 処理行数の文字列
-					const result = data.result; // true or false の文字列
-					if (successRecord === '1' && result) {
-						// 別ファイルに移動
-						const $files = $('#file_list .file');
-						for (let i = 0; i < $files.length; i++) {
-							if ($files.eq(i).attr('data-file-id') !== this.fileID) {
-								comReadJsonFile($files.eq(i).attr('data-file-id'));
-								break;
-							}
-						}
-						comFileList(getUserID());
-					}else{
-						alert('ファイル削除エラーです(ファイル番号：'+ this.fileID + ')');
-								}
-
-								},
-								error : function (XMLHttpRequest,textStatus,errorThrown) {
-									alert('Error:' + textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteFile ');
-								}
-								});
-
-		}
-
+		$.ajax({
+			type : 'POST',
+			url : '/tategaki/DeleteFile',
+			data : {
+				user_id: userId,
+				file_id : fileId
+			},
+			context : {
+				fileId : fileId
+			},
+			dataType : 'json'
+		}).done(function (data) {
+			const successRecord = data.successRecord; // 処理行数の文字列
+			const result = data.result; // true or false の文字列
+			if (successRecord === '1' && result) {
+				// 別ファイルに移動
+				const $files = $('#file_list .file');
+				for (let i = 0,$file; ($file = $files.eq(i))[0]; i++) {
+					if ($file.attr('data-file-id') != this.fileId) {
+						comReadJsonFile($file.attr('data-file-id'));
+						break;
+					}
+				}
+				comFileList(getUserId());
+			} else {
+				alert('ファイル削除エラーです(ファイル番号：'+ this.fileId + ')');
+			}
+			}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					alert('Error:' + textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteFile ');
+				});
 	}
 
 	function printDocInfo() {
@@ -3659,9 +3561,9 @@ $(function() {
 					return $file;
 				}
 
-				function getFileNameFromFileID(fileID) {
+				function getFileNameFromFileId(fileId) {
 					'use strict';
-					return $('#file_list .file[data-file-id="'+ fileID +'"]').attr('data-file-name');
+					return $('#file_list .file[data-file-id="'+ fileId +'"]').attr('data-file-name');
 				}
 
 				function comDeleteFileFromFileName(filename) {
@@ -3670,17 +3572,17 @@ $(function() {
 					const $file = getFileObjectFromFileName(filename);
 					if (!$file[0]) { return; }
 
-					let fileID;
+					let fileId;
 					if ($file.size() === 1) {
-						fileID = $file.attr('data-file-id');
-						comDeleteFile(fileID);
+						fileId = $file.attr('data-file-id');
+						comDeleteFile(fileId);
 					} else if ($file.size() > 1) {
 						// 該当ファイルが複数
 
 						if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
 							$file.each(function () {
-								fileID = $(this).attr('data-file-id');
-								comDeleteFile(fileID);
+								fileId = $(this).attr('data-file-id');
+								comDeleteFile(fileId);
 							});
 
 						} else {
@@ -3692,119 +3594,111 @@ $(function() {
 
 				function comMoveFile(filename,newParentDirname) {
 					'use strict';
-					const userID = getUserID();
+					const userId = getUserId();
 					// コマンドからの実行の場合、フィルターがかかってfile-list内が一つだけになってしまっているので、
 					// いったん全ファイルを取得してからでないと$fileと$newParentDirが見つからない
 					$.ajax({
 						type : 'POST',
 						url : '/tategaki/FileListMaker',
 						data : {
-							user_id: userID
+							user_id: userId
 						},
-						dataType : 'json',
-						success : function (data) {
-							// 表示データを受け取ってからの処理
-							setFileListFromObject(data);
-							const $file = $('.file[data-file-name="'+ filename +'"],.directory[data-directory-name="'+ filename +'"]');
-							const $newParentDir = $('.directory[data-directory-name="'+ newParentDirname +'"]');
-							let fileID;
-							let newParentDirID;
-							if ($file[0] && $newParentDir[0]) {
-								fileID = $file.attr('data-type')==='file' ? $file.attr('data-file-id') : $file.attr('data-directory-id');
-								newParentDirID = $newParentDir.attr('data-directory-id');
-								comMvFileToDirectory(fileID,newParentDirID);
-							}
-						},
-						error : function (XMLHttpRequest, textStatus, errorThrown) {
-							alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comFileList');
+						dataType : 'json'
+					}).done(function (data) {
+						// 表示データを受け取ってからの処理
+						setFileListFromObject(data);
+						const $file = $('.file[data-file-name="'+ filename +'"],.directory[data-directory-name="'+ filename +'"]');
+						const $newParentDir = $('.directory[data-directory-name="'+ newParentDirname +'"]');
+						let fileId;
+						let newParentDirId;
+						if ($file[0] && $newParentDir[0]) {
+							fileId = $file.attr('data-type')==='file' ? $file.attr('data-file-id') : $file.attr('data-directory-id');
+							newParentDirId = $newParentDir.attr('data-directory-id');
+							comMvFileToDirectory(fileId,newParentDirId);
 						}
+					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comFileList');
 					});
 				}
 
-				function comMvFileToDirectory(fileID,newParentDirID) {
+				function comMvFileToDirectory(fileId,newParentDirId) {
 					'use strict';
 					// ディレクトリをディレクトリに入れるのも可
-					console.log('comMvFileToDirectory:file['+ fileID +'],newParentDir['+ newParentDirID +']');
-					const userID = getUserID();
+					console.log('comMvFileToDirectory:file['+ fileId +'],newParentDir['+ newParentDirId +']');
+					const userId = getUserId();
 
 					$.ajax({
 						type : 'POST',
 						url : '/tategaki/MoveFile',
 						data : {
-							user_id: userID,
-							file_id: fileID,
-							directory_id: newParentDirID
+							user_id: userId,
+							file_id: fileId,
+							directory_id: newParentDirId
 						},
 						dataType : 'json',
 						context: {
-							userID: userID
-						},
-						success : function (json) {
-							// 表示データを受け取ってからの処理
-							comFileList(this.userID);
-						},
-						error : function (XMLHttpRequest, textStatus, errorThrown) {
-							alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMvFileToDirectory');
+							userId: userId
 						}
+					}).done(function (json) {
+						// 表示データを受け取ってからの処理
+						comFileList(this.userId);
+					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMvFileToDirectory');
 					});
 				}
 
 				function comMakeDirectory(directoryname) {
 					'use strict';
 					console.log('make directory:'+ directoryname);
-					const userID = getUserID();
+					const userId = getUserId();
 					const nowDate_ms = Date.now() + '';
-					console.log('user-id:'+ userID);
+					console.log('user-id:'+ userId);
 					console.log('nowDate_ms:'+ nowDate_ms);
 
 					$.ajax({
 						type : 'POST',
 						url : '/tategaki/DirectoryMaker',
 						data : {
-							user_id: userID,
+							user_id: userId,
 							directoryname: directoryname,
 							saved: nowDate_ms
 						},
 						dataType : 'json',
 						context: {
-							userID: userID
-						},
-						success : function (json) {
-							// 表示データを受け取ってからの処理
-							comFileList(this.userID);
-						},
-						error : function (XMLHttpRequest, textStatus, errorThrown) {
-							alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMakeDirectory');
+							userId: userId
 						}
+					}).done(function (json) {
+						// 表示データを受け取ってからの処理
+						comFileList(this.userId);
+					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMakeDirectory');
 					});
 				}
 
-				function comDeleteDirectory(directoryID,option) {
+				function comDeleteDirectory(directoryId,option) {
 					'use strict';
 					// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
-					const userID = getUserID();
+					const userId = getUserId();
 
 					$.ajax({
 						type : 'POST',
 						url : '/tategaki/DeleteDirectory',
 						data : {
-							directory_id: directoryID,
+							directory_id: directoryId,
 							option: option
 						},
 						dataType : 'json',
 						context: {
-							userID: userID
-						},
-						success : function (json) {
-							// 表示データを受け取ってからの処理
-							comFileList(this.userID);
-							if (json.result === 'within') {
-								userAlert('ディレクトリが空ではないので削除できませんでした。');
-							}
-						},
-						error : function (XMLHttpRequest, textStatus, errorThrown) {
-							alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteDirectory');
+							userId: userId
 						}
+					}).done(function (json) {
+						// 表示データを受け取ってからの処理
+						comFileList(this.userId);
+						if (json.result === 'within') {
+							userAlert('ディレクトリが空ではないので削除できませんでした。');
+						}
+					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteDirectory');
 					});
 				}
 
@@ -3812,17 +3706,17 @@ $(function() {
 					'use strict';
 					const $dir = $('.directory[data-directory-name="'+ directoryname +'"]');
 					if (!$dir[0]) { return; }
-					let dirID;
+					let dirId;
 
 					if ($dir.size() === 1) {
-						dirID = $dir.attr('data-directory-id');
-						comDeleteDirectory(dirID,option);
+						dirId = $dir.attr('data-directory-id');
+						comDeleteDirectory(dirId,option);
 					} else if ($dir.size() > 1) {
 
 						if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
 							$dir.each(function () {
-								dirID = $(this).attr('data-directory-id');
-								comDeleteFile(dirID,option);
+								dirId = $(this).attr('data-directory-id');
+								comDeleteFile(dirId,option);
 							});
 						} else {
 							console.log('[複数ディレクトリ]削除できませんでした。:' + directoryname);
@@ -3831,10 +3725,10 @@ $(function() {
 					}
 				}
 
-				function getCurrentFileID() {
+				function getCurrentFileId() {
 					'use strict';
-					const fileID = $('#file_title').attr('data-file-id');
-					return fileID;
+					const fileId = $('#file_title').attr('data-file-id');
+					return fileId;
 				}
 
 				// ====================================================
@@ -3873,7 +3767,7 @@ $(function() {
 							return $objs.eq(currentIndex -1);
 						}
 					},
-					addID:function (id) {
+					addId:function (id) {
 						'use strict';
 						$('#'+id).removeAttr('id');
 						this.attr('id',id);
@@ -3927,8 +3821,8 @@ $(function() {
 						'use strict';
 						const strClass = this.attr('class') || ''; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
 						const classArr = strClass.match(regexp) || []; // 正規表現にマッチしない場合、nullが返ってくる
-						for (let i = 0,len = classArr.length; classArr && i < len; i++) {
-							this.removeClass(classArr[i]);
+						for (let className of classArr) {
+							this.removeClass(className);
 						}
 						return this;
 					},
@@ -3946,12 +3840,14 @@ $(function() {
 					addCursor: function(opt_bl) {
 						'use strict';
 						// opt_bl: trueなら、カーソルを画面中央に配置する(二行以上カーソル行がはみ出した場合)
+						console.log('addCursor');
 						if (!this.hasClass('vertical-char')) return this;
 
 						const $prevCursor = $('.cursor');
 						const $prevChar = this.prev('.vertical-char');
 
 						$prevCursor.removeClass('cursor');
+						console.log('after prevcursor add class');
 						this.addClass('cursor');
 						gCursor.addCursorRow();
 
@@ -3969,7 +3865,7 @@ $(function() {
 
 						changeDisplayRow(opt_bl);
 						changeDisplayChar();
-						printDocInfo();
+						// printDocInfo();
 						return this;
 					}
 				});
@@ -4028,27 +3924,50 @@ $(function() {
 					return newArray;
 				}
 
-				function getUserID() {
+				// 要素内を空にする
+				function empty(elem) {
 					'use strict';
-					const userID = $('#site_title').attr('data-user-id');
-					return userID;
+					while (elem.childNodes.length > 0) {
+						elem.removeChild(elem.firstChild);
+					}
+				}
+
+				// ノードリストelementsのうち、targetのインデックスを返す
+				function index(target,elements) {
+					'use strict';
+					for (let i = 0,elem; elem = elements[i];i++) {
+						if (elem == target)
+							return i;
+					}
+
+					return -1;
+				}
+
+				function getUserId() {
+					'use strict';
+					const userId = $('#site_title').attr('data-user-id');
+					return userId;
 				}
 
 				// ====================================================
 				// 	initialize(label:init)
 				// ====================================================
 
-				setNOCLine();
+				setCursorLine();
 				defaultNewFile();
-				comFileList(globalUserID);
+				comFileList(globalUserId);
 				// Event
 				document.addEventListener('keydown',keydownOnDoc ,false);
 				addFocusEvent('file_title');
 				$('body').on('keyup','#search_file',keyupInSearchFileInput);
 				$('body').on('click','#file_list .file',function (e) {
 					'use strict';
-					const fileID = $(this).attr('data-file-id');
-					comReadJsonFile(fileID);
+					const fileId = $(this).attr('data-file-id');
+					// comReadJsonFile(fileId);
+					window.Draft.readFile({
+						user_id: getUserId(),
+						file_id: fileId
+					});
 					$('#file_list_modal').modal('hide');
 				});
 				$('body').on('click','.vertical-paragraph > .vertical-row',moveCursorToClickPos);
@@ -4059,6 +3978,10 @@ $(function() {
 				document.getElementById('modal_fileopen_link').addEventListener('click',function (e) { readyFileModal(); },false);
 				document.getElementById('test').addEventListener('click',function (e) {
 					'use strict';
+					// addDisplayRow(0,getDisplayRowLen());
+					gCursor.init();
+					addPageBreak();
+					// printDocInfo(); // page-breakなどがなければフリーズする(計算に無限ループ？)
 				},false);
 				$(window).resize(function () {
 					'use strict';
@@ -4137,13 +4060,13 @@ $(function() {
 					eBtn.classList.toggle('active');
 					if (/active/.test(eBtn.className)) {
 						// ボタンをクリックした結果、activeになった
-						for (let i = 0,cnt=eSelChars.length;i<cnt;i++) {
-							eSelChars[i].classList.add('decolation-font-bold');
+						for (let eChar of eSelChars) {
+							eChar.classList.add('decolation-font-bold');
 						}
 					} else {
 						// ボタンをクリックした結果、解除された
-						for (let i = 0,cnt=eSelChars.length;i<cnt;i++) {
-							eSelChars[i].classList.remove('decolation-font-bold');
+						for (let eChar of eSelChars) {
+							eChar.classList.remove('decolation-font-bold');
 						}
 					}
 				},false);
@@ -4154,12 +4077,12 @@ $(function() {
 
 					eBtn.classList.toggle('active');
 					if (/active/.test(eBtn.className)) {
-						for (let i = 0,cnt=eSelChars.length;i<cnt;i++) {
-							eSelChars[i].classList.add('decolation-font-italic');
+						for (let eChar of eSelChars) {
+							eChar.classList.add('decolation-font-italic');
 						}
 					} else {
-						for (let i = 0,cnt=eSelChars.length;i<cnt;i++) {
-							eSelChars[i].classList.remove('decolation-font-italic');
+						for (let eChar of eSelChars) {
+							eChar[i].classList.remove('decolation-font-italic');
 						}
 					}
 				},false);
@@ -4171,9 +4094,9 @@ $(function() {
 					let bBold = false;
 					let bItalic = false;
 
-					for (let i=0,cnt=eSelChars.length;i<cnt;i++) {
-						if (eSelChars[i].classList.contains('decolation-font-bold')) { bBold = true; }
-						if (eSelChars[i].classList.contains('decolation-font-italic')) { bItalic = true; }
+					for (let eChar of eSelChars) {
+						if (eChar.classList.contains('decolation-font-bold')) { bBold = true; }
+						if (eChar.classList.contains('decolation-font-italic')) { bItalic = true; }
 					}
 					if (bBold) {
 						document.getElementById('btn-bold').classList.add('active');

@@ -44,7 +44,7 @@ public class WriteJsonFile extends AbstractServlet {
 			log("witing text file");
 
 			String json = request.getParameter("json");
-			writeFile(String.format("data/%d/%d.txt",rootId,fileId), json);
+			writeFile(String.format("data/%d/%d.json",rootId,fileId), json);
 
 			// レスポンス
 			String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",dateFormat(savedMillis));

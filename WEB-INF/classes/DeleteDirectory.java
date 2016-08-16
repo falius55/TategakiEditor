@@ -8,11 +8,7 @@ public class DeleteDirectory extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
-		try {
-			response.setContentType("application/json; charset=UTF-8");
-			// 受取のcharset
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
+			ready(request, response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			int directoryId = Integer.parseInt(request.getParameter("directory_id"));
@@ -25,8 +21,9 @@ public class DeleteDirectory extends AbstractServlet  {
 					// データベース上だけ
 					executeSql("delete from file_table where id = ? or parent_dir = ?").setInt(directoryId).setInt(directoryId).update();
 					rtnJson = "{\"result\":\"success(file in)\"}";
+				} else {
+					rtnJson = "{\"result\":\"within\"}";
 				}
-				rtnJson = "{\"result\":\"within\"}";
 			} else {
 				// ディレクトリ内にファイルが存在しない
 				executeSql("delete from file_table where id = ?").setInt(directoryId).update();
@@ -34,15 +31,9 @@ public class DeleteDirectory extends AbstractServlet  {
 			}
 
 			// レスポンス
-			out.println(rtnJson);
+			out(rtnJson);
 
 			log("DeleteDirectory's directoryId:"+ directoryId);
-			out.close();
-		} catch(IOException e) {
-			log(e.getMessage());
-		} catch(Exception e) {
-			log(e.getMessage());
-		}
 	}
 
 	// ディレクトリ内にファイルがあればtrue
