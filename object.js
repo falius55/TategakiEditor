@@ -183,8 +183,8 @@ class Cursor {
 	constructor(draft) {
 		this.draft = draft;
 		const firstChar = this.draft.firstChild().firstChild().firstChild();
-		this._char = firstChar;
 		console.log(firstChar);
+		this._char = firstChar;
 		this._char.addClass('cursor'); // この時点ではDraftの_cursorにインスタンスが入っていないのでdraft.cursor()が使えず、そのためchar.addCursor()が利用できない
 		this.createCursorLine();
 		this.setPosMemory(this._char.index());
@@ -198,28 +198,37 @@ class Cursor {
 	}
 	moveNext() {
 		const nextChar = this._char.next();
-		if (nextChar) nextChar.addCursor();
-		this.setPosMemory(nextChar.index());
+		if (nextChar){
+			nextChar.addCursor();
+			this.setPosMemory(nextChar.index());
+		}
 		return this;
 	}
 	movePrev() {
 		const prevChar = this._char.prev();
 		if (prevChar) prevChar.addCursor();
-		this.setPosMemory(nextChar.index());
+		this.setPosMemory(prevChar.index());
 		return this;
 	}
 	moveRight() {
 		const currentChar = this.getChar();
 		const index = this.getPosMemory();
-		const rightChar = currentChar.row().prev().chars(index);
+		const rightChar = currentChar.row().prev().children(index);
 		rightChar.addCursor();
 		return this;
 	}
 	moveLeft() {
 		const currentChar = this.getChar();
 		const index = this.getPosMemory();
-		const leftChar = currentChar.row().next().chars(index);
+		console.log(this);
+		console.log(currentChar);
+		console.log(currentChar.row());
+		console.log(currentChar.row().next());
+		console.log(currentChar.row().next().children(index));
+		console.log(index);
+		const leftChar = currentChar.row().next().children(index);
 		leftChar.addCursor();
+		console.log(this.getChar());
 		return this;
 	}
 	// cursor-pos-memoryは、カーソルの左右移動の際にカーソルが何文字目の位置から移動してきたのかを記憶する要素
@@ -350,7 +359,6 @@ class Sentence {
 	// javascriptでのcss値の取得は複雑で困難であることから、jQueryの使用が適していると判断した(不可視の要素は一時的に可視状態にしてから取得するので、レンダリングが発生する可能性は高い)
 	// 読み込み時には時間がかかるが、キャッシュすることで行移動などでは最低限の計算になると期待
 	width(useCache) {
-		// return 26;
 		if (useCache == undefined) useCache = true;
 		if (useCache && this._width) {
 			return this._width;
@@ -379,8 +387,11 @@ class Sentence {
 	}
 
 	addKeyDownEventListener() {
-		this.elem().addEventListener('keydown',function (e) {
+		console.log('addKeyDownEventListener');
+		const self = this;
+		document.addEventListener('keydown',function (e) {
 			'use strict';
+			console.log('abstract event');
 			let keycode;
 			if (document.all) {
 				// IE
@@ -390,7 +401,7 @@ class Sentence {
 				keycode = e.which;
 			}
 		if (keycode === 123) { return; } // F12のみブラウザショートカットキー
-			this.runKeyDown(e,keycode);
+			self.runKeyDown(e,keycode);
 		});
 	}
 	runKeyDown(e,keycode) {
@@ -492,10 +503,8 @@ class Char extends Sentence {
 		this.prev(char);
 		char.row(row);
 		// rowのcharsにcharを追加
-		// const chars = row.chars();
 		const pos = this.index();
-		// if (pos < 0) { pos = chars.length; } // this == EOL のとき
-		// chars.splice(pos,0,char);
+		console.log(pos);
 		row.insertChar(pos,char);
 		return this;
 	}
@@ -511,10 +520,7 @@ class Char extends Sentence {
 		const row = this.row();
 		char.row(row);
 		// rowのcharsにcharを追加
-		// const chars = row.chars();
-		// const pos = chars.indexOf(this) + 1;
 		const pos = this.index() + 1;
-		// chars.splice(pos,0,char);
 		row.insertChar(pos,char);
 		return this;
 	}
@@ -543,9 +549,6 @@ class Char extends Sentence {
 		oldNext.prev(oldPrev);
 		// 古い親の配列から削除
 		this.row().deleteChar(this);
-		// const oldChars = this.row().chars();
-		// const pos = oldChars.indexOf(this);
-		// oldChars.splice(pos,1);
 		return this;
 	}
 	cursor() {
@@ -564,7 +567,7 @@ class Char extends Sentence {
 class EOL extends Char {
 	// Rowとともに要素を作ってしまうため、要素を引数に取る必要がある。CharとEOLはis-a関係が成り立つと考え、継承を選択
 	constructor(elem) {
-		super(elem); // thisを使う前にスーパークラスのコンストラクタを呼ばなければエラー
+		super(elem); // 最初にスーパークラスのコンストラクタを呼ばなければエラー
 		this._isEOL = true;
 	}
 
@@ -576,7 +579,7 @@ class EOL extends Char {
 		return this;
 	}
 	index() {
-		return this.childLen();
+		return this.row().childLen();
 	}
 }
 
@@ -594,7 +597,16 @@ class Row extends Sentence {
 		return this._EOL;
 	}
 	chars(index) { // EOLは含まれない
-		return this.children(index);
+		return super.children(index);
+	}
+	children(index) {
+		if (index === undefined) {
+			return super.children(index);
+		} else if(index === this.childLen()) {
+			return this.EOL();
+		} else {
+			return super.children(index);
+		}
 	}
 	pushChar(char) {
 		return this.pushChild(char);
@@ -866,6 +878,7 @@ window.Draft = class extends Sentence {
 		}
 
 		this._cursor = new Cursor(this);
+		this.addKeyDownEventListener();
 	}
 	paragraphs(index) {
 		return this.children(index);
@@ -1027,6 +1040,7 @@ window.Draft = class extends Sentence {
 	}
 
 	runKeyDown(e,keycode) {
+		console.log('runKeyDown:'+ keycode);
 		switch (keycode) {
 			case 37:
 				// Left
@@ -1044,9 +1058,15 @@ window.Draft = class extends Sentence {
 				// Down
 				this.cursor().moveNext();
 				break;
+			case 188:
+				// ,
+				console.log(this);
+				console.log(window.draft);
+				break;
 			default:
 				break;
 		}
+		return this;
 	}
 }
 

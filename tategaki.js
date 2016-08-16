@@ -391,25 +391,25 @@ $(function() {
 			case 37:
 				// Left
 				readySelection();
-				gCursor.shiftLeft();
+				// gCursor.shiftLeft();
 				extendSelection(e.shiftKey);
 				break;
 			case 38:
 				// Up
 				readySelection();
-				gCursor.prev();
+				// gCursor.prev();
 				extendSelection(e.shiftKey);
 				break;
 			case 39:
 				// Right
 				readySelection();
-				gCursor.shiftRight();
+				// gCursor.shiftRight();
 				extendSelection(e.shiftKey);
 				break;
 			case 40:
 				// Down
 				readySelection();
-				gCursor.next();
+				// gCursor.next();
 				extendSelection(e.shiftKey);
 				break;
 			case 58: // firefox developer edition
