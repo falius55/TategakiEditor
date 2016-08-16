@@ -1,0 +1,168 @@
+各クラスへのプロバティ振り分け
+User {
+		int id
+		alert()
+	}
+InputBuffer {
+		Dom elem
+		ConvertContainer convertContainer
+		Phrase[] phrases
+		insertString(str)
+		insertPhrase(str)
+		addKeyListener()
+		removeKeyListener()
+		onKeyDown()
+		backSpace()
+		resize()
+		update(keycode, isShift)
+		resetPhraseNum()
+		toKatakana()
+		text()
+	}
+ConvertContainer {
+		constructor(json)
+		Dom elem
+		Phrase[] views // inputbufferと共有
+		Phrase activeView
+		addKeyListener()
+		removeKeyListener()
+		onKeyDown()
+		backSpace()
+		up()
+		down()
+		left()
+		right()
+		shiftUp()
+		shiftDown()
+		comFullString()
+		comFusion()
+		comSplit()
+		comOnePhrase()
+	}
+Phrase {
+	constructor(phraseNum,json) // convertviewの作成
+	Dom view
+	int index
+	String kana
+	active()
+	moveSelect(old,new)
+	toKatakana()
+	text()
+	}
+Command {
+		start()
+		addKeyListener()
+		removeKeyListener()
+		onKeyDown()
+		run()
+		stop()
+	}
+Find {
+		start()
+		addKeyListener()
+		removeKeyListener()
+		onKeyDown()
+		blur() // フォーカスが外れた
+		stop()
+		do(word) // 字句検索を行う
+		next()
+		prev()
+	}
+FileList {
+	constructor(json)
+	Dom elem
+	Dom fileTemplate
+	Dom directoryTemplate
+	search(word)
+	new(filename)
+	comMove(filename,parentname)
+	comDelete(filename)
+	comOpenNext()
+	comOpenPrev()
+	comMakeDirectory(directoryname)
+	comRead()
+	comSave()
+	comSaveAs()
+	}
+Cursor {
+		Dom elem
+		Char char
+		next()
+		prev()
+		shiftRight()
+		shiftLeft()
+		posOnRow() // 行内での位置(何文字目か)
+		posOnPage() // ページ内での位置(何行目か)
+		insertString()
+		lineBreak()
+	}
+// 一度読み込んだオブジェクトをキャッシュすれば速くなる?
+Draft {
+	constructor(elem,jsonObj) // Draftのelemさえ渡せば、後はそのelem内にjsonObj通りに自動でhtml構築
+	Dom elem
+	Paragraph[] children
+	addKeyListener()
+	removeKeyListener()
+	onKeyDown()
+	onKeyDownWithCTRL()
+	text()
+	json()
+	checkKinsoku() // 禁則処理
+	displayRowLen()
+	backSpase()
+	}
+Paragraph {
+		constructor(jsonObj)
+		Dom elem
+		Draft parent
+		Paragraph next
+		Paragraph prev
+		Row[] children
+		addAlign(strAlign)
+		text()
+		json()
+		append(Row)
+		unite(anotherParagraph) // anotherparagraphのinnerHtmlをthisのinsertAdjacentHTML('beforend',anotherParagraph.elem.innerHtml)とする
+	}
+Row {
+		constructor(jsonObj)
+		Dom elem
+		Paragraph parent
+		Row next
+		Row prev
+		Char[] children
+		text()
+		json()
+		prepend(Char)
+		prependChars(Char[]) // documentFlagmentにCharsを入れてprepend(ネイティブメソッドの方)
+		prependHtml(html) // insertAdjacentHTML('afterbegin')にて
+		append(Char)
+		appendHtml(html) // insertAdjacentHTML('beforeend')
+		appendChars(Char[])
+		hasChild() // EOLを除く子がいるか
+		hasNextSibling() // 所属段落内で最終行でなければtrue
+		eachNextSibling(func(Row)) // この行以降の、同じ段落内にある各行に処理を行う
+		divideParent() // この行以降を別段落として分ける。あるいはこの行の前に空段落を追加する(一行目の場合)
+		display()
+	}
+Char {
+		constructor(jsonObj) // elementの作成はここで行う
+		Dom elem
+		Row parent
+		Char next
+		Char prev
+		isEOL
+		text()
+		json()
+		html()
+		addColor(strColor)
+		addBold()
+		addItalic()
+		befor(Char)
+		after(Char)
+		addCursor()
+		delete()
+		moveBeforeLast() // 前の行の最終文字に移動する
+		moveAfterTop() // 次の行の一文字目に移動する
+		static createJson(char) // 文字を元にobjを作成
+	}

@@ -3079,8 +3079,8 @@ $(function() {
 			// 文章のhtml書き出し
 			const text = data.data.text;
 			console.time('append string');
-			appendParagraphFromObj(text);
-			// window.draft = new window.Draft(this.id,text);
+			// appendParagraphFromObj(text);
+			window.draft = new window.Draft(this.id,text);
 			console.timeEnd('append string');
 			console.log(window.draft);
 			console.time('addDisplayRow');
@@ -3089,9 +3089,9 @@ $(function() {
 			console.time('cursor init');
 			gCursor.init();
 			console.timeEnd('cursor init');
-			console.time('resetDisplayChar');
-			resetDisplayChar();
-			console.timeEnd('resetDisplayChar');
+			// console.time('resetDisplayChar');
+			// resetDisplayChar();
+			// console.timeEnd('resetDisplayChar');
 			$('.doc-info > .saved').text(data.saved);
 
 			addPageBreak();
@@ -3411,9 +3411,9 @@ $(function() {
 		'use strict';
 		$('#vertical_draft').empty();
 
-		appendParagraph('');
-		// window.Draft.newFile(filename);
-		// console.log(window.draft);
+		// appendParagraph('');
+		window.Draft.newFile(filename);
+		console.log(window.draft);
 		$('.vertical-row').addClass('display-row').children('.vertical-char').first().addClass('cursor');
 		$('#file_title').val(filename).attr('data-file-id','-1');
 		addPageBreak();
@@ -3963,11 +3963,11 @@ $(function() {
 				$('body').on('click','#file_list .file',function (e) {
 					'use strict';
 					const fileId = $(this).attr('data-file-id');
-					comReadJsonFile(fileId);
-					// window.Draft.readFile({
-					// 	user_id: getUserId(),
-					// 	file_id: fileId
-					// });
+					// comReadJsonFile(fileId);
+					window.Draft.readFile({
+						user_id: getUserId(),
+						file_id: fileId
+					});
 					$('#file_list_modal').modal('hide');
 				});
 				$('body').on('click','.vertical-paragraph > .vertical-row',moveCursorToClickPos);
