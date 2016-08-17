@@ -64,11 +64,11 @@ Util.createCharElement = (function () {
 	const eCharTemplate = document.createElement('span');
 	eCharTemplate.classList.add('vertical-char');
 
-	return function (json) {
+	return function (data) {
 		const eChar = eCharTemplate.cloneNode(true);
-		const char = json['char'];
-		const classArr = json['decolation'];
-		const fontSize = json['fontSize'];
+		const char = data['char'];
+		const classArr = data['decolation'];
+		const fontSize = data['fontSize'];
 		eChar.textContent = char;
 		eChar.dataset.fontSize = fontSize || 'auto';
 
@@ -118,7 +118,7 @@ Util.createRowElement = (function () {
 	eEOL.classList.add('display-char');
 	eRowTemplate.appendChild(eEOL);
 
-	return function (json) {
+	return function (data) {
 		const eRow = eRowTemplate.cloneNode(true);
 		return eRow;
 	}
@@ -144,10 +144,10 @@ Util.createParagraphElement = (function () {
 	const eParagraphTemplate = document.createElement('div');
 	eParagraphTemplate.classList.add('vertical-paragraph');
 
-	return function (json) {
+	return function (data) {
 		const eParagraph = eParagraphTemplate.cloneNode(true);
 		// 段落そのものにクラスを付与する
-		for (let className of json[0]) {
+		for (let className of data[0]) {
 			eParagraph.classList.add(className);
 		}
 		return eParagraph;
@@ -173,8 +173,8 @@ Util.createCharPosElement = (function () {
 	'use strict';
 	class Cursor {
 		constructor(draft) {
-			this.draft = draft;
-			const firstChar = this.draft.firstChild().firstChild().firstChild();
+			this._draft = draft;
+			const firstChar = this._draft.firstChild().firstChild().firstChild();
 			this._char = firstChar;
 			this._char.addClass('cursor'); // この時点ではDraftの_cursorにインスタンスが入っていないのでdraft.cursor()が使えず、そのためchar.addCursor()が利用できない
 			this.createCursorLine();
@@ -382,14 +382,36 @@ Util.createCharPosElement = (function () {
 				return null;
 			}
 		}
+		replaceChild(oldChild,newChild) {
+			const pos = oldChild.index();
+			this._children.splice(pos,1,newChild);
+			return this;
+		}
+		emptyChild() {
+			this._children = [];
+			return this;
+		}
+		// DOM操作関係
+		emptyElem() {
+			if (this._children) {
+				for (let child of this._children) {
+					this.elem().removeChild(child.elem());
+				}
+			}
+			this.removeKeydownEventListener();
+			return this;
+		}
 
 		addKeydownEventListener() {
 			this._keydownArg = this.onKeydown.bind(this); // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
 			document.addEventListener('keydown',this._keydownArg);
+			return this;
 		}
 		removeKeydownEventListener() {
 			if (!this._keydownArg) return;
 			document.removeEventListener('keydown',this._keydownArg);
+			this._keydownArg = null;
+			return this;
 		}
 		onKeydown(e) {
 			'use strict';
@@ -408,6 +430,7 @@ Util.createCharPosElement = (function () {
 		runKeyDown(e,keycode) {
 		}
 	}
+
 	class Char extends Sentence {
 		/*
 		 *		文字を表すオブジェクト
@@ -417,23 +440,23 @@ Util.createCharPosElement = (function () {
 		 *			"fontSize": "auto"
 		 *		}
 		 */
-		constructor(json) {
-			super(json.char ? Util.createCharElement(json) : json); // jsonオブジェクトにcharプロパティがなければEOLからの呼び出しで、jsonにはエレメントが入っている
+		constructor(data) {
+			super(data.char ? Util.createCharElement(data) : data); // dataオブジェクトにcharプロパティがなければEOLからの呼び出しで、dataにはエレメントが入っている
 			this._isEOL = false;
-			if (!json.fontSize || json.fontSize === 'auto') {
+			if (!data.fontSize || data.fontSize === 'auto') {
 				this._fontSize = 18;
 			} else {
-				this._fontSize = parseInt(json.fontSize);
+				this._fontSize = parseInt(data.fontSize);
 			}
 		}
 		// ステータス関係
-		json() {
-			const json = {};
-			json['char'] = this.text();
+		data() {
+			const data = {};
+			data['char'] = this.text();
 			const classArray = this.className().match(/decolation-\S+/g) || [];
-			json['decolation'] = classArray;
+			data['decolation'] = classArray;
 			this['fontSize'] = this._fontSize();
-			return json;
+			return data;
 		}
 		// 同一行内で最終文字でなければtrue、最終文字ならfalse。EOLは含まない(次の文字がEOLならfalse)
 		hasNextSibling() {
@@ -550,6 +573,17 @@ Util.createCharPosElement = (function () {
 			this.row().deleteChar(this);
 			return this;
 		}
+		replace(newChar) {
+			newChar.prev(this.prev());
+			newChar.next(this.next());
+			if (this.prev()) { this.prev().next(newChar); }
+			if (this.next()) { this.next().prev(newChar); }
+			this.prev(null);
+			this.next(null);
+			this.row().replaceChild(this,newChar);
+			this.row(null);
+			return this;
+		}
 		// 前の行の最終行に移動する
 		moveBeforeLast() {
 			if (this.isEOL() || this !== this.row().firstChild()) { return this; } // 各行最初の文字でのみ有効
@@ -588,22 +622,30 @@ Util.createCharPosElement = (function () {
 	}
 
 	class Row extends Sentence {
-		constructor(json) {
-			super(Util.createRowElement(json));
+		constructor(data) {
+			// 配列が渡されたら新しく要素を作り、そうでなければ要素が渡されたとしてそれを元にインスタンスを作る
+			if (Array.isArray(data)) {
+				super(Util.createRowElement(data));
+			} else {
+				// InputBufferの場合
+				super(data);
+				data = [];
+			}
 			this._EOL = new EOL(this._elem.lastElementChild);
 			this._EOL.appended(this);
-			for (let charJson of json) {
-				const char = new Char(charJson);
+			if (!Array.isArray(data)) return;
+			for (let charData of data) {
+				const char = new Char(charData);
 				this.append(char);
 			}
 		}
 		// ステータス関係
-		json() {
-			const json = [];
+		data() {
+			const data = [];
 			for (let char of this.chars()) {
-				json.push(char.json());
+				data.push(char.data());
 			}
-			return json;
+			return data;
 		}
 		maxFont() {
 			let max = 0; // 空行では０になる
@@ -724,6 +766,19 @@ Util.createCharPosElement = (function () {
 		}
 
 		// DOM操作関係
+		// 子を空にする(自身は削除しない)
+		empty() {
+			this.emptyElem();
+			const prevRow = this.prev();
+			if (prevRow) {
+				this.EOL().prev(prevRow.lastChild());
+				prevRow.lastChild().next(this.EOL());
+			} else {
+				this.EOL().prev(null);
+			}
+			this.emptyChild();
+			return this;
+		}
 		prepend(char) {
 			this.firstChild().before(char);
 			return this;
@@ -822,35 +877,34 @@ Util.createCharPosElement = (function () {
 			this.lastChild().next(null);
 			return this;
 		}
-
 	}
 
 	class Paragraph extends Sentence {
-		constructor(json) {
-			super(Util.createParagraphElement(json));
+		constructor(data) {
+			super(Util.createParagraphElement(data));
 			const strLen = 40;
-			const spArray = Util.splitArray(json[1],strLen); // json[1]が空配列なら、spArrayにも空配列が入る
+			const spArray = Util.splitArray(data[1],strLen); // data[1]が空配列なら、spArrayにも空配列が入る
 			for (let charArray of spArray) {
 				this.append(new Row(charArray));
 			}
-			// json[1]が空配列 = 空段落(空行)の場合は上記for文が実行されないので、別に空行を作成して連結する
+			// data[1]が空配列 = 空段落(空行)の場合は上記for文が実行されないので、別に空行を作成して連結する
 			if (spArray.length === 0) {
 				this.append(new Row([]));
 			}
 		}
 		// ステータス関係
-		// json用の形式に変換する
-		json() {
-			const json = [];
-			json[0] = classArray();
+		// data用の形式に変換する
+		data() {
+			const data = [];
+			data[0] = classArray();
 			const charArray = [];
 			for (let row of this.rows()) {
 				for (let char of row.chars()) {
-					charArray.push(char.json());
+					charArray.push(char.data());
 				}
 			}
-			json[1] = charArray;
-			return json;
+			data[1] = charArray;
+			return data;
 		}
 		classArray() {
 			return this.elem().className.match(/decolation-\S+/g) || [];
@@ -910,8 +964,64 @@ Util.createCharPosElement = (function () {
 		}
 	}
 
+	// classは巻き上げが起こらないため、Char・Rowの下に作る必要がある。ただし、Draft内で利用するのでDraftよりは上になければならない
+	class InputChar extends Char {
+		constructor(c,phraseNum) {
+			if (phraseNum === undefined) phraseNum = -1;
+			super(this.createPlainCharData(c));
+			this.phraseNum(phraseNum);
+		}
+		phraseNum(newNum) {
+			if (newNum === undefined) {
+				return this._phraseNum;
+			} else {
+				this.elem().dataset.phraseNum = newNum;
+				this._phraseNum = newNum;
+				return this;
+			}
+		}
+		createPlainCharData(c) {
+			const ret = {};
+			ret['char'] = c;
+			ret['decolation'] = [];
+			ret['fontSize']
+			return this;
+		}
+	}
+	class InputBuffer extends Row {
+		constructor(draft) {
+			super(document.getElementById('input_buffer'));
+			this._draft = draft;
+		}
+		add(keycode,isShift) {
+			const newInputStr = this.newString(keycode,isShift);
+
+			if (newInputStr === undefined || newInputStr.indexOf('undefined') !== -1) {
+				// 未定義文字(alt,ctrl,tabなど)はreturn
+				return;
+			}
+			this.update(newInputStr);
+			return this;
+		}
+		update(str) {
+			this.empty();
+			for (let char of str) {
+				this.append(new InputChar(char));
+			}
+			return this;
+		}
+		newString(keycode,isShift) {
+			const inputStr = this.text(); //もともとの文字列
+			if (isShift) {
+				return inputStr + key_table.shift_key[keycode];
+			} else {
+				return key_table.getString(inputStr,keycode); //keycodeを加えた新しい文字列
+			}
+		}
+	}
+
 	window.Draft = class extends Sentence {
-		constructor(fileId,json) {
+		constructor(fileId,data) {
 			console.log('draft constructor');
 			super(document.getElementById('vertical_draft'));
 			// 文書情報
@@ -920,8 +1030,8 @@ Util.createCharPosElement = (function () {
 			this._rowLenOnPage = 40; // １ページの行数
 			// DOMの構築
 			this.emptyElem();
-			for (let paraJson of json) {
-				this.append(new Paragraph(paraJson));
+			for (let paraData of data) {
+				this.append(new Paragraph(paraData));
 			}
 
 			this._cursor = new Cursor(this);
@@ -929,16 +1039,16 @@ Util.createCharPosElement = (function () {
 		}
 
 		// ステータス関係
-		json() {
-			const json = {};
-			json.conf = {};
+		data() {
+			const data = {};
+			data.conf = {};
 			const paraArr = [];
 			for (let paragraph of this.paragraphs()) {
-				paraArr.push(paragraph.json());
+				paraArr.push(paragraph.data());
 			}
-			json.text = paraArr;
+			data.text = paraArr;
 
-			return JSON.stringify(json);
+			return JSON.stringify(data);
 		}
 		fileId() {
 			return this._fileId;
@@ -1102,16 +1212,7 @@ Util.createCharPosElement = (function () {
 		// 子を空にする
 		empty() {
 			this.emptyElem();
-			this._paragraphs = [];
-			return this;
-		}
-		emptyElem() {
-			if (this.paragraphs()) {
-				for (let paragraph of this.paragraphs()) {
-					this.elem().removeChild(paragraph.elem());
-				}
-			}
-			this.removeKeydownEventListener();
+			this.emptyChild();
 			return this;
 		}
 		// TODO: 配列が渡されたらフラグメントを使ってappendする
