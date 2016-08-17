@@ -390,27 +390,27 @@ $(function() {
 				break;
 			case 37:
 				// Left
-				readySelection();
+				// readySelection();
 				// gCursor.shiftLeft();
-				extendSelection(e.shiftKey);
+				// extendSelection(e.shiftKey);
 				break;
 			case 38:
 				// Up
-				readySelection();
+				// readySelection();
 				// gCursor.prev();
-				extendSelection(e.shiftKey);
+				// extendSelection(e.shiftKey);
 				break;
 			case 39:
 				// Right
-				readySelection();
+				// readySelection();
 				// gCursor.shiftRight();
-				extendSelection(e.shiftKey);
+				// extendSelection(e.shiftKey);
 				break;
 			case 40:
 				// Down
-				readySelection();
+				// readySelection();
 				// gCursor.next();
-				extendSelection(e.shiftKey);
+				// extendSelection(e.shiftKey);
 				break;
 			case 58: // firefox developer edition
 			case 186: // chrome

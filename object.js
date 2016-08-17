@@ -198,37 +198,34 @@ class Cursor {
 	}
 	moveNext() {
 		const nextChar = this._char.next();
-		if (nextChar){
-			nextChar.addCursor();
-			this.setPosMemory(nextChar.index());
-		}
+		if (!nextChar) return this;
+		nextChar.addCursor();
+		this.setPosMemory(nextChar.index());
 		return this;
 	}
 	movePrev() {
 		const prevChar = this._char.prev();
-		if (prevChar) prevChar.addCursor();
+		if (!prevChar) return this;
+		prevChar.addCursor();
 		this.setPosMemory(prevChar.index());
 		return this;
 	}
 	moveRight() {
 		const currentChar = this.getChar();
 		const index = this.getPosMemory();
-		const rightChar = currentChar.row().prev().children(index);
+		const prevRow = currentChar.row().prev();
+		if (!prevRow) return this;
+		const rightChar = prevRow.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
 		rightChar.addCursor();
 		return this;
 	}
 	moveLeft() {
 		const currentChar = this.getChar();
 		const index = this.getPosMemory();
-		console.log(this);
-		console.log(currentChar);
-		console.log(currentChar.row());
-		console.log(currentChar.row().next());
-		console.log(currentChar.row().next().children(index));
-		console.log(index);
-		const leftChar = currentChar.row().next().children(index);
+		const nextRow = currentChar.row().next();
+		if (!nextRow) return this;
+		const leftChar = nextRow.children(index);
 		leftChar.addCursor();
-		console.log(this.getChar());
 		return this;
 	}
 	// cursor-pos-memoryは、カーソルの左右移動の際にカーソルが何文字目の位置から移動してきたのかを記憶する要素
@@ -298,11 +295,12 @@ class Sentence {
 		}
 	}
 	// TODO: 防御的コピーが必要かも?
+	// 範囲外のインデックスなら、lastChild()が返る
 	children(index) {
 		if (index === undefined) {
 			return this._children;
 		} else {
-			return this._children[index];
+			return this._children[index] || this.lastChild();
 		}
 	}
 	pushChild(child) {
@@ -386,26 +384,29 @@ class Sentence {
 		return this.elem().textContent;
 	}
 
-	addKeyDownEventListener() {
-		console.log('addKeyDownEventListener');
-		const self = this;
-		document.addEventListener('keydown',function (e) {
-			'use strict';
-			console.log('abstract event');
-			let keycode;
-			if (document.all) {
-				// IE
-				keycode = e.keyCode
-			} else {
-				// IE以外
-				keycode = e.which;
-			}
+	addKeydownEventListener() {
+		this._keydownArg = this.onKeydown.bind(this); // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+		document.addEventListener('keydown',this._keydownArg);
+	}
+	removeKeydownEventListener() {
+		if (!this._keydownArg) return;
+		document.removeEventListener('keydown',this._keydownArg);
+	}
+	onKeydown(e) {
+		'use strict';
+		console.log('abstract event');
+		let keycode;
+		if (document.all) {
+			// IE
+			keycode = e.keyCode
+		} else {
+			// IE以外
+			keycode = e.which;
+		}
 		if (keycode === 123) { return; } // F12のみブラウザショートカットキー
-			self.runKeyDown(e,keycode);
-		});
+		this.runKeyDown(e,keycode);
 	}
 	runKeyDown(e,keycode) {
-		return this;
 	}
 }
 class Char extends Sentence {
@@ -504,7 +505,6 @@ class Char extends Sentence {
 		char.row(row);
 		// rowのcharsにcharを追加
 		const pos = this.index();
-		console.log(pos);
 		row.insertChar(pos,char);
 		return this;
 	}
@@ -865,6 +865,7 @@ class Paragraph extends Sentence {
 	
 window.Draft = class extends Sentence {
 	constructor(fileId,json) {
+		console.log('draft constructor');
 		super(document.getElementById('vertical_draft'));
 		// this._elem = document.getElementById('vertical_draft');
 		// 文書情報
@@ -878,7 +879,7 @@ window.Draft = class extends Sentence {
 		}
 
 		this._cursor = new Cursor(this);
-		this.addKeyDownEventListener();
+		this.addKeydownEventListener();
 	}
 	paragraphs(index) {
 		return this.children(index);
@@ -927,6 +928,7 @@ window.Draft = class extends Sentence {
 				this.elem().removeChild(paragraph.elem());
 			}
 		}
+		this.removeKeydownEventListener();
 		return this;
 	}
 
