@@ -243,7 +243,6 @@ Util.createCharPosElement = (function () {
 			return -1;
 		}
 		setPosMemory(index) {
-			console.log(index);
 			const eCursorLine = document.getElementById('cursor_line');
 			const eCharPoses = eCursorLine.children;
 			if (eCharPoses[this.getPosMemory()]) eCharPoses[this.getPosMemory()].classList.remove('cursor-pos-memory');
@@ -309,7 +308,7 @@ Util.createCharPosElement = (function () {
 			}
 			return this._width = parseInt($(this.elem()).css('width'));
 		}
-		
+
 		// DOM参照関係
 		elem() {
 			return this._elem;
@@ -629,13 +628,16 @@ Util.createCharPosElement = (function () {
 
 			this.elem().classList.add('display-row');
 			const dispHeight = this.height();
-			let fontHeight = 0;
 			let heightSum = 0;
 			const addArray = [];
 			for (let array of this.chars().entries()) {
 				const index = array[0];
 				const char = array[1];
-				fontHeight = char.fontSize() + 2; // sizeの取得はDOMにアクセスせずに行っているため、ここではレンダリングは発生しない
+				if (index < first) {
+					char.display(false);
+					continue;
+				}
+				const fontHeight = char.fontSize(); // sizeの取得はDOMにアクセスせずに行っているため、ここではレンダリングは発生しない
 				heightSum += fontHeight;
 				char.display(index >= first && heightSum < dispHeight); // trueになれば表示、falseになれば非表示
 			}
