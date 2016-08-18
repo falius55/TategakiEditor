@@ -319,30 +319,30 @@ $(function() {
 				// i
 				comOpenNextFile();
 				break;
-			case 72:
-				// h
-				readySelection();
-				gCursor.shiftLeft();
-				extendSelection(e.shiftKey);
-				break;
-			case 74:
-				// j
-				readySelection();
-				gCursor.next();
-				extendSelection(e.shiftKey);
-				break;
-			case 75:
-				// k
-				readySelection();
-				gCursor.prev();
-				extendSelection(e.shiftKey);
-				break;
-			case 76:
-				// l
-				readySelection();
-				gCursor.shiftRight();
-				extendSelection(e.shiftKey);
-				break;
+			// case 72:
+			// 	// h
+			// 	readySelection();
+			// 	gCursor.shiftLeft();
+			// 	extendSelection(e.shiftKey);
+			// 	break;
+			// case 74:
+			// 	// j
+			// 	readySelection();
+			// 	gCursor.next();
+			// 	extendSelection(e.shiftKey);
+			// 	break;
+			// case 75:
+			// 	// k
+			// 	readySelection();
+			// 	gCursor.prev();
+			// 	extendSelection(e.shiftKey);
+			// 	break;
+			// case 76:
+			// 	// l
+			// 	readySelection();
+			// 	gCursor.shiftRight();
+			// 	extendSelection(e.shiftKey);
+			// 	break;
 			case 78:
 				// n
 				break;
@@ -384,34 +384,34 @@ $(function() {
 				lineBreak();
 				checkText();
 				break;
-			case 32:
-				// space
-				insertStringFromCursor('　');
-				break;
-			case 37:
-				// Left
-				// readySelection();
-				// gCursor.shiftLeft();
-				// extendSelection(e.shiftKey);
-				break;
-			case 38:
-				// Up
-				// readySelection();
-				// gCursor.prev();
-				// extendSelection(e.shiftKey);
-				break;
-			case 39:
-				// Right
-				// readySelection();
-				// gCursor.shiftRight();
-				// extendSelection(e.shiftKey);
-				break;
-			case 40:
-				// Down
-				// readySelection();
-				// gCursor.next();
-				// extendSelection(e.shiftKey);
-				break;
+			// case 32:
+			// 	// space
+			// 	insertStringFromCursor('　');
+			// 	break;
+			// case 37:
+			// 	// Left
+			// 	// readySelection();
+			// 	// gCursor.shiftLeft();
+			// 	// extendSelection(e.shiftKey);
+			// 	break;
+			// case 38:
+			// 	// Up
+			// 	// readySelection();
+			// 	// gCursor.prev();
+			// 	// extendSelection(e.shiftKey);
+			// 	break;
+			// case 39:
+			// 	// Right
+			// 	// readySelection();
+			// 	// gCursor.shiftRight();
+			// 	// extendSelection(e.shiftKey);
+			// 	break;
+			// case 40:
+			// 	// Down
+			// 	// readySelection();
+			// 	// gCursor.next();
+			// 	// extendSelection(e.shiftKey);
+			// 	break;
 			case 58: // firefox developer edition
 			case 186: // chrome
 				// :
