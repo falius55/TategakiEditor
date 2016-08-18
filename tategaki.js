@@ -257,19 +257,19 @@ $(function() {
 			case 8:
 				// backspace
 				// input_bufferの最後の１文字を削除
-				$inputBuffer.children('.EOL').prev().remove();
-				moveInput();
+				// $inputBuffer.children('.EOL').prev().remove();
+				// moveInput();
 				// input_bufferの文字がなくなればinput_bufferを空にして隠す
-				if ($inputBuffer.children('.char').first().hasClass('EOL')) {
-					$inputBuffer.empty().hide(); // inputBufferを空にして隠す
-				}
+				// if ($inputBuffer.children('.char').first().hasClass('EOL')) {
+				// 	$inputBuffer.empty().hide(); // inputBufferを空にして隠す
+				// }
 				break;
 			case 13:
 				// Enter
 				// inputBufferの文字を挿入
 				console.log('push enter');
-				insertStringFromCursor($inputBuffer.text());
-				$inputBuffer.empty().hide(); // inputBufferを空にして隠す
+				// insertStringFromCursor($inputBuffer.text());
+				// $inputBuffer.empty().hide(); // inputBufferを空にして隠す
 				break;
 			case 32:
 				// space
@@ -281,7 +281,7 @@ $(function() {
 				break;
 			default:
 				// inputBufferの更新
-				updateInputBuffer(keycode,e.shiftKey);
+				// updateInputBuffer(keycode,e.shiftKey);
 				break;
 		}
 	}
@@ -423,7 +423,7 @@ $(function() {
 				break;
 			default:
 				// bufferの更新
-				updateInputBuffer(keycode,e.shiftKey);
+				// updateInputBuffer(keycode,e.shiftKey);
 				break;
 		}
 	}
@@ -3052,55 +3052,59 @@ $(function() {
 
 	function comReadJsonFile(fileId) {
 		'use strict';
-		console.log('comReadJsonFile("'+ fileId +'")');
-		console.time('comReadJsonFile()');
+		// console.log('comReadJsonFile("'+ fileId +'")');
+		// console.time('comReadJsonFile()');
 		const userId = getUserId();
-		userAlert('読込中');
-		console.log('comReadJsonFile userId:"'+ userId);
-		$('#sentence_container').empty();
-		console.time('ReadJsonFile communication');
-
-		$.ajax({
-			type : 'POST',
-			url : '/tategaki/ReadJsonFile',
-			data : {
-				user_id: userId,
-				file_id: fileId
-			},
-			context : {
-				id : fileId
-			},
-			dataType : 'json'
-		}).done(function (data) {
-			console.timeEnd('ReadJsonFile communication');
-			// 表示データを受け取ってからの処理
-			// ファイル名を表示
-			$('#file_title').val(data.filename).attr('data-file-id',this.id);
-			// 文章のhtml書き出し
-			const text = data.data.text;
-			console.time('append string');
-			// appendParagraphFromObj(text);
-			window.sentence = new window.SentenceContainer(this.id,text);
-			console.timeEnd('append string');
-			console.log(window.sentence);
-			console.time('addDisplayRow');
-			addDisplayRow(0,getDisplayRowLen());
-			console.timeEnd('addDisplayRow');
-			console.time('cursor init');
-			gCursor.init();
-			console.timeEnd('cursor init');
-			// console.time('resetDisplayChar');
-			// resetDisplayChar();
-			// console.timeEnd('resetDisplayChar');
-			$('.doc-info > .saved').text(data.saved);
-
-			addPageBreak();
-			printDocInfo();
-			console.timeEnd('comReadJsonFile()');
-			userAlert('読み込み完了');
-		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
-			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comReadJsonFile');
+		window.SentenceContainer.readFile({
+			user_id: userId,
+			file_id: fileId
 		});
+		// userAlert('読込中');
+		// console.log('comReadJsonFile userId:"'+ userId);
+		// $('#sentence_container').empty();
+		// console.time('ReadJsonFile communication');
+		//
+		// $.ajax({
+		// 	type : 'POST',
+		// 	url : '/tategaki/ReadJsonFile',
+		// 	data : {
+		// 		user_id: userId,
+		// 		file_id: fileId
+		// 	},
+		// 	context : {
+		// 		id : fileId
+		// 	},
+		// 	dataType : 'json'
+		// }).done(function (data) {
+		// 	console.timeEnd('ReadJsonFile communication');
+		// 	// 表示データを受け取ってからの処理
+		// 	// ファイル名を表示
+		// 	$('#file_title').val(data.filename).attr('data-file-id',this.id);
+		// 	// 文章のhtml書き出し
+		// 	const text = data.data.text;
+		// 	console.time('append string');
+		// 	// appendParagraphFromObj(text);
+		// 	window.sentence = new window.SentenceContainer(this.id,text);
+		// 	console.timeEnd('append string');
+		// 	console.log(window.sentence);
+		// 	console.time('addDisplayRow');
+		// 	addDisplayRow(0,getDisplayRowLen());
+		// 	console.timeEnd('addDisplayRow');
+		// 	console.time('cursor init');
+		// 	gCursor.init();
+		// 	console.timeEnd('cursor init');
+		// 	// console.time('resetDisplayChar');
+		// 	// resetDisplayChar();
+		// 	// console.timeEnd('resetDisplayChar');
+		// 	$('.doc-info > .saved').text(data.saved);
+		//
+		// 	addPageBreak();
+		// 	printDocInfo();
+		// 	console.timeEnd('comReadJsonFile()');
+		// 	userAlert('読み込み完了');
+		// }).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+		// 	alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comReadJsonFile');
+		// });
 	}
 
 	function comSaveFile() {

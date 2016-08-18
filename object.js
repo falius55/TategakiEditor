@@ -63,6 +63,7 @@ Util.createCharElement = (function () {
 	'use strict';
 	const eCharTemplate = document.createElement('span');
 	eCharTemplate.classList.add('char');
+	eCharTemplate.classList.add('display');
 
 	return function (data) {
 		const eChar = eCharTemplate.cloneNode(true);
@@ -190,16 +191,14 @@ Util.createCharPosElement = (function () {
 		moveNext() {
 			const nextChar = this._char.next();
 			if (!nextChar) return this;
-			nextChar.addCursor();
-			this.setPosMemory(nextChar.index());
+			nextChar.addCursor().setPosMemory();
 			this._sentence.changeDisplay();
 			return this;
 		}
 		movePrev() {
 			const prevChar = this._char.prev();
 			if (!prevChar) return this;
-			prevChar.addCursor();
-			this.setPosMemory(prevChar.index());
+			prevChar.addCursor().setPosMemory();
 			this._sentence.changeDisplay();
 			return this;
 		}
@@ -243,9 +242,15 @@ Util.createCharPosElement = (function () {
 			return -1;
 		}
 		setPosMemory(index) {
+			console.log('set memory');
+			const oldPos = this.getPosMemory();
+			if (index === oldPos) {
+			console.log('not set memory');
+				return this;
+			}
 			const eCursorLine = document.getElementById('cursor_line');
 			const eCharPoses = eCursorLine.children;
-			if (eCharPoses[this.getPosMemory()]) eCharPoses[this.getPosMemory()].classList.remove('cursor-pos-memory');
+			if (eCharPoses[oldPos]) eCharPoses[oldPos].classList.remove('cursor-pos-memory');
 			eCharPoses[index].classList.add('cursor-pos-memory');
 			return this;
 		}
@@ -307,6 +312,14 @@ Util.createCharPosElement = (function () {
 				return this._width;
 			}
 			return this._width = parseInt($(this.elem()).css('width'));
+		}
+		// 要素左上のX座標
+		x() {
+			return this.elem().getBoundingClientRect().left + window.pageXOffset;
+		}
+		// 要素左上のY座標
+		y() {
+			return this.elem().getBoundingClientRect().top + window.pageYOffset;
 		}
 
 		// DOM参照関係
@@ -377,7 +390,7 @@ Util.createCharPosElement = (function () {
 		}
 		lastChild() {
 			if (this.hasChild) {
-				return this._children[this.children().length-1];
+				return this._children[this.childLen()-1];
 			} else {
 				return null;
 			}
@@ -393,12 +406,11 @@ Util.createCharPosElement = (function () {
 		}
 		// DOM操作関係
 		emptyElem() {
-			if (this._children) {
-				for (let child of this._children) {
-					this.elem().removeChild(child.elem());
-				}
+			const children = this.elem().children;
+			let child;
+			while (child = children[0]) {
+				this.elem().removeChild(child);
 			}
-			this.removeKeydownEventListener();
 			return this;
 		}
 
@@ -452,14 +464,20 @@ Util.createCharPosElement = (function () {
 		data() {
 			const data = {};
 			data['char'] = this.text();
-			const classArray = this.className().match(/decolation-\S+/g) || [];
-			data['decolation'] = classArray;
-			this['fontSize'] = this._fontSize();
+			data['decolation'] = this.classArray();
+			this['fontSize'] = this.fontSize();
 			return data;
+		}
+		classArray() {
+			return this.className().match(/decolation-\S+/g) || [];
 		}
 		// 同一行内で最終文字でなければtrue、最終文字ならfalse。EOLは含まない(次の文字がEOLならfalse)
 		hasNextSibling() {
 			return !(this._isEOL || this.next().isEOL());
+		}
+
+		isCursor() {
+			return this.hasClass('cursor');
 		}
 
 		// フォント関係
@@ -507,6 +525,9 @@ Util.createCharPosElement = (function () {
 			}
 			return this;
 		}
+		isDisplay() {
+			return this.hasClass('display');
+		}
 
 		// DOM参照関係
 		isEOL() {
@@ -529,9 +550,15 @@ Util.createCharPosElement = (function () {
 			this.cursor().setChar(this);
 			return this;
 		}
+		setPosMemory() {
+			console.log('char set memory');
+			const index = this.index();
+			this.cursor().setPosMemory(index);
+			return this;
+		}
 		before(char) {
 			// oldPrev - char - this
-			// this.elem.before(char.elem);
+			// this.elem.before(char.elem); // before(),after()はまだサポートされず
 			const row = this.row();
 			row.elem().insertBefore(char.elem(),this._elem);
 			const oldPrev = this._prev;
@@ -546,9 +573,15 @@ Util.createCharPosElement = (function () {
 			return this;
 		}
 		after(char) {
-			// this - oldNextChar - char
+			// this - char - oldNextChar
 			if (this.isEOL()) { return this; } // todo: 例外を使用したほうがいいかも EOLからのafterはできない
-			this.elem.after(char.elem());
+			// this.elem.after(char.elem());
+			// this.row().elem().insertAfter(char.elem(),this.elem()); // javascriptにinsertAfter()という関数は存在しない
+			if (this.next() && this.next().row() === this.row()) {
+				this.row().elem().insertBefore(char.elem(),this.next().elem());
+			} else {
+				this.row().elem().appendChild(char.elem());
+			}
 			const oldNextChar = this.next();
 			if (oldNextChar) oldNextChar.prev(char);
 			char.next(oldNextChar);
@@ -561,13 +594,13 @@ Util.createCharPosElement = (function () {
 			row.insertChar(pos,char);
 			return this;
 		}
-		delete() {
+		remove() {
 			this.row().elem().removeChild(this.elem());
 			// oldPrev - this - oldNext →　oldPrev - oldNext
 			const oldPrev = this.prev();
 			const oldNext = this.next();
-			oldPrev.next(oldNext);
-			oldNext.prev(oldPrev);
+			if (oldPrev) oldPrev.next(oldNext);
+			if (oldNext) oldNext.prev(oldPrev);
 			// 古い親の配列から削除
 			this.row().deleteChar(this);
 			return this;
@@ -584,10 +617,31 @@ Util.createCharPosElement = (function () {
 			return this;
 		}
 		// 前の行の最終行に移動する
-		moveBeforeLast() {
+		moveLastBefore() {
 			if (this.isEOL() || this !== this.row().firstChild()) { return this; } // 各行最初の文字でのみ有効
-			this.delete();
-			this.row().prev().append(this);
+			// 自分の次がEOLでなおかつカーソルがあれば動いてくれないので、記憶してカーソルを付けなおす(そうしなければbringChar()でカーソルごと行が削除される)
+			let isCursor = false;
+			if (this.next().isCursor()) isCursor = true;
+
+			const oldRow = this.row();
+			this.remove();
+			oldRow.prev().append(this);
+			if (isCursor) this.next().addCursor().setPosMemory();
+			this.setPosMemory();
+			return this;
+		}
+		// 次の行の最初に移動する
+		moveFirstAfter() {
+			if (this.isEOL() || this !== this.row().lastChar()) return this; // 各行最後の文字でのみ有効
+			// 自分の次がEOLでなおかつカーソルがあれば動いてくれないので、記憶してカーソルを付けなおす(そうしなければ元々自分の後ろにあったカーソルが自分の前に来てしまう)
+			let isCursor = false;
+			if (this.next().isCursor()) isCursor = true;
+
+			const oldRow = this.row();
+			this.remove();
+			oldRow.next().prepend(this);
+			if (isCursor) this.next().addCursor();
+			this.setPosMemory();
 			return this;
 		}
 		// 自分を含めて、自分以降で同じ段落内のChar全てに処理を行う(EOLは含まない)
@@ -598,6 +652,22 @@ Util.createCharPosElement = (function () {
 				func(this);
 			}
 			return this;
+		}
+
+		static createData(c) {
+			const ret = {};
+			ret["char"] = c;
+			ret["decolation"] = Char.activeDecolation();
+			ret["fontSize"] = Char.currentFontSize();
+			return ret;
+		}
+		static activeDecolation() {
+			const ret = [];
+			return ret;
+		}
+		static currentFontSize() {
+			const ret = 'auto';
+			return ret;
 		}
 	}
 	class EOL extends Char {
@@ -627,6 +697,7 @@ Util.createCharPosElement = (function () {
 				super(Util.createRowElement(data));
 			} else {
 				// InputBufferの場合
+				console.log('input super()');
 				super(data);
 				data = [];
 			}
@@ -634,6 +705,7 @@ Util.createCharPosElement = (function () {
 			this._EOL.appended(this);
 			if (!Array.isArray(data)) return;
 			for (let charData of data) {
+				console.log('new char');
 				const char = new Char(charData);
 				this.append(char);
 			}
@@ -658,6 +730,9 @@ Util.createCharPosElement = (function () {
 		}
 		height(useCache) {
 			return super.width(useCache);
+		}
+		charLen() {
+			return super.childLen();
 		}
 		// Display関係
 		// displayがtrueであれば、first文字以降でその行に収まる文字を表示し、それ以外の文字は非表示にする
@@ -700,16 +775,19 @@ Util.createCharPosElement = (function () {
 		}
 		firstDisplayCharPos() {
 			for (let char of this.children()) {
-				if (char.hasClass('display')) return char.index();
+				if (char.isDisplay()) return char.index();
 			}
 			return -1; // displayがひとつもない(EOLは常にdisplayなので、ここまで来たら異常)
 		}
 		lastDisplayCharPos() {
 			if (!this.hasChar) return -1;
-			for (let i = super.childLen()-1,char; char = this.chars(i); i--) {
-				if (char.hasClass('display')) return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
+			for (let i = this.charLen()-1,char; char = this.chars(i); i--) {
+				if (char.isDisplay()) return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
 			}
 			return -1;
+		}
+		isDisplay() {
+			return this.hasClass('display');
 		}
 
 		// DOM参照関係
@@ -728,6 +806,9 @@ Util.createCharPosElement = (function () {
 		lastChild() {
 			return this.EOL();
 		}
+		lastChar() {
+			return super.lastChild();
+		}
 		cursorChar() {
 			return this.paragraph().sentence().cursor().getChar();
 		}
@@ -736,6 +817,7 @@ Util.createCharPosElement = (function () {
 		}
 		// 同一段落内で最終行でなければtrue、最終行ならfalse
 		hasNextSibling() {
+			if (!this.next()) return false;
 			return this.next().paragraph() === this.paragraph();
 		}
 		chars(index) { // EOLは含まれない
@@ -763,9 +845,18 @@ Util.createCharPosElement = (function () {
 		paragraph(newParagraph) {
 			return this.parent(newParagraph);
 		}
+		sentence() {
+			return this.paragraph().sentence();
+		}
 
 		// DOM操作関係
 		// 子を空にする(自身は削除しない)
+		emptyElem() {
+			for (let char of this.chars()) {
+				this.elem().removeChild(char.elem());
+			}
+			return this;
+		}
 		empty() {
 			this.emptyElem();
 			const prevRow = this.prev();
@@ -789,7 +880,8 @@ Util.createCharPosElement = (function () {
 		before(row) {
 			// oldPrev - row - this
 			// row
-			this.elem().before(row.elem());
+			// this.elem().before(row.elem());
+			this.paragraph().elem().insertBefore(row.elem(),this.elem());
 			row.paragraph(this.paragraph());
 			const oldPrev = this.prev();
 			if (oldPrev) oldPrev.next(row);
@@ -809,7 +901,13 @@ Util.createCharPosElement = (function () {
 		after(row) {
 			// this - row - oldNext
 			// row
-			this.elem().after(row.elem());
+			// this.elem().after(row.elem());
+			// this.paragraph().elem().insertAfter(row.elem(),this.elem());
+			if (this.next() && this.next().paragraph() === this.paragraph()) {
+				this.paragraph().elem().insertBefore(row.elem(),this.next().elem());
+			} else {
+				this.paragraph().elem().appendChild(row.elem());
+			}
 			row.paragraph(this.paragraph());
 			const oldNext = this.next();
 			if (oldNext) oldNext.prev(row);
@@ -826,33 +924,8 @@ Util.createCharPosElement = (function () {
 			this.paragraph().insertRow(pos,row);
 			return this;
 		}
-		// 隣のRowの第一文字を、自らの最後に移動する
-		// 持ってきた結果次の行が空になったら、その行は削除する
-		bringChar() {
-			this.next().firstChild().moveBeforeLast();
-			if (this.next().isEmpty()) {
-				this.next().delete();
-			}
-			return this;
-		}
-
-		// 自分を含めて、自分以降で同じ段落内のRow全てに処理を行う
-		afterEach(func) {
-			func(this);
-			for (let row = this; row.hasNextSibling(); ) {
-				row = row.next();
-				func(this);
-			}
-			return this;
-		}
-		// 同一段落内で、自分とその以降でそれぞれ次の行から１文字持ってきて埋める
-		bringChars() {
-			afterEach(function (row) {
-				row.bringChar();
-			});
-		}
 		// 行を削除する
-		delete() {
+		remove() {
 			this.paragraph().elem().removeChild(this.elem());
 			// oldPrev - this - oldNext →　oldPrev - oldNext
 			const oldPrev = this.prev();
@@ -876,6 +949,66 @@ Util.createCharPosElement = (function () {
 			this.lastChild().next(null);
 			return this;
 		}
+		static createEmptyRow() {
+			return new Row([]);
+		}
+		// 隣のRowの第一文字を、自らの最後に移動する
+		// 持ってきた結果次の行が空になったら、その行は削除する
+		bringChar() {
+			if (!this.hasNextSibling()) return this;
+			this.next().firstChild().moveLastBefore();
+			if (this.next().isEmpty()) {
+				this.next().remove();
+			}
+			return this;
+		}
+		bringChars(num) {
+			for (let i = 0; i < num; i++) {
+				this.bringChar();
+			}
+		}
+		// 自分の最後の文字を、次の行の最初に移動する
+		takeChar() {
+			console.log(this);
+			// 次の行がなければ新しく作る
+			if (!this.hasNextSibling()) {
+				this.after(Row.createEmptyRow());
+				this.sentence().changeDisplay();
+			}
+			console.log('last char');
+			console.log(this.lastChar());
+			this.lastChar().moveFirstAfter();
+			return this;
+		}
+		takeChars(num) {
+			for (let i = 0; i < num; i++) {
+				this.takeChar();
+			}
+		}
+
+		// 自分を含めて、自分以降で同じ段落内のRow全てに処理を行う
+		afterEach(func) {
+			func(this);
+			for (let row = this; row.hasNextSibling(); ) {
+				row = row.next();
+				func(this);
+			}
+			return this;
+		}
+
+		// 指定文字数と異なる文字数なら、指定文字数に合わせる
+		cordinate() {
+			const strLen = this.sentence().strLenOnRow();
+			const len = this.charLen();
+			if (len === strLen) return;
+			if (len < strLen) {
+				this.bringChars(strLen - len);
+			}
+			if (len > strLen) {
+				this.takeChars(len - strLen);
+			}
+			return this;
+		}
 	}
 
 	class Paragraph extends Sentence {
@@ -888,14 +1021,14 @@ Util.createCharPosElement = (function () {
 			}
 			// data[1]が空配列 = 空段落(空行)の場合は上記for文が実行されないので、別に空行を作成して連結する
 			if (spArray.length === 0) {
-				this.append(new Row([]));
+				this.append(Row.createEmptyRow());
 			}
 		}
 		// ステータス関係
 		// data用の形式に変換する
 		data() {
 			const data = [];
-			data[0] = classArray();
+			data[0] = this.classArray();
 			const charArray = [];
 			for (let row of this.rows()) {
 				for (let char of row.chars()) {
@@ -961,13 +1094,20 @@ Util.createCharPosElement = (function () {
 
 			return this;
 		}
+
+		cordinate() {
+			for (let row of this.rows()) {
+				row.cordinate();
+			}
+			return this;
+		}
 	}
 
 	// classは巻き上げが起こらないため、Char・Rowの下に作る必要がある。ただし、SentenceContainer内で利用するのでSentenceContainerよりは上になければならない
 	class InputChar extends Char {
 		constructor(c,phraseNum) {
+			super(Char.createData(c));
 			if (phraseNum === undefined) phraseNum = -1;
-			super(this.createPlainCharData(c));
 			this.phraseNum(phraseNum);
 		}
 		phraseNum(newNum) {
@@ -979,27 +1119,122 @@ Util.createCharPosElement = (function () {
 				return this;
 			}
 		}
-		createPlainCharData(c) {
+		static createPlainCharData(c) {
 			const ret = {};
 			ret['char'] = c;
 			ret['decolation'] = [];
-			ret['fontSize']
-			return this;
+			ret['fontSize'] = 'auto';
+			return ret;
 		}
 	}
 	class InputBuffer extends Row {
-		constructor(sentence) {
+		constructor(container) {
 			super(document.getElementById('input_buffer'));
-			this._sentence = sentence;
+			this._container = container;
 		}
-		add(keycode,isShift) {
+		// key eventがSentenceContainerから移動するかどうかを判定して前処理を行う
+		transfer(e,isShift) {
+			this.push(e,isShift);
+			if (this.hasChar()) {
+				this.addKeydownEventListener();
+				this.move();
+			}
+			return this;
+		}
+		container() {
+			return this._container;
+		}
+		cursor() {
+			return this.container().cursor();
+		}
+		cursorChar() {
+			return this.cursor().getChar();
+		}
+		width() {
+			return super.super.width();
+		}
+		newWidth() {
+			const cache = {};
+			let width = 0;
+			for (let char of this.chars()) {
+				const size = char.fontSize();
+				if (cache[size]) {
+					width = Math.max(width,cache[size]);
+				} else {
+					cache[size] = char.width();
+					width = Math.max(width,char.width());
+				}
+			}
+			return width + 5; // 5px余裕をもたせる
+		}
+		height() {
+			return super.super.height();
+		}
+		newHeight() {
+			const cache = {};
+			let height = 0;
+			for (let char of this.chars()) {
+				const size = char.fontSize();
+				if (cache[size]) {
+					height += cache[size];
+				} else {
+					cache[size] = char.height();
+					height += cache[size];
+				}
+			}
+			return height + 5; // 5px余裕をもたせる
+		}
+		cursorX() {
+			console.log(this.cursorChar());
+			return this.cursorChar().x();
+		}
+		cursorY() {
+			return this.cursorChar().y();
+		}
+		isDisplay() {
+			return this.elem().style.display === 'block';
+		}
+
+		resize() {
+			const style = this.elem().style;
+			style.width = this.newWidth() + 'px';
+			style.height = this.newHeight() + 'px';
+			return this;
+		}
+		move() {
+			this.elem().style.left = this.cursorX() + 'px';
+			this.elem().style.top = this.cursorY() + 'px';
+			return this;
+		}
+		show() {
+			this.elem().style.display = 'block';
+			return this;
+		}
+		hide() {
+			this.elem().style.display = 'none';
+			return this;
+		}
+		push(keycode,isShift) {
 			const newInputStr = this.newString(keycode,isShift);
 
 			if (newInputStr === undefined || newInputStr.indexOf('undefined') !== -1) {
 				// 未定義文字(alt,ctrl,tabなど)はreturn
-				return;
+				return this;
 			}
 			this.update(newInputStr);
+			this.resize();
+			return this;
+		}
+		pop() {
+			if (!this.hasChar) return this;
+			console.log('pop()');
+			console.log(this.lastChar());
+			this.lastChar().remove();
+			this.resize();
+			if (!this.hasChar()) {
+				this.hide();
+				this.removeKeydownEventListener();
+			}
 			return this;
 		}
 		update(str) {
@@ -1007,6 +1242,7 @@ Util.createCharPosElement = (function () {
 			for (let char of str) {
 				this.append(new InputChar(char));
 			}
+			this.show();
 			return this;
 		}
 		newString(keycode,isShift) {
@@ -1017,24 +1253,99 @@ Util.createCharPosElement = (function () {
 				return key_table.getString(inputStr,keycode); //keycodeを加えた新しい文字列
 			}
 		}
+		getKatakana() {
+			const str = this.text();
+			let rtnKatakana = '';
+			for (let char of str) {
+				const cKatakana = key_table.katakana[char];
+
+				if (cKatakana) {
+					rtnKatakana += cKatakana;
+				} else {
+					// 変換できなければ元の文字をそのまま連結
+					rtnKatakana += char;
+				}
+			}
+
+			return rtnKatakana;
+		}
+		// カーソル位置に文字を挿入し、後処理を行ってinput状態を終了する
+		input() {
+			InputBuffer.insert(this.text(),this.cursor());
+			this.hide();
+			this.empty();
+			this.removeKeydownEventListener();
+			this.container().changeDisplay();
+			return this;
+		}
+		// カーソル位置に文字を挿入する
+		static insert(str,cursor) {
+			const cursorChar = cursor.getChar();
+			for (let char of str) {
+				const newChar = new Char(Char.createData(char));
+				cursorChar.before(newChar);
+			}
+
+			cursorChar.row().paragraph().cordinate();
+			cursor.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えない
+			return this;
+		}
+		toKatakanaAll() {
+			this.update(this.getKatakana());
+			return this;
+		}
+
+		addKeydownEventListener() {
+			this.container().removeKeydownEventListener();
+			super.addKeydownEventListener();
+			return this;
+		}
+		removeKeydownEventListener() {
+			super.removeKeydownEventListener();
+			this.container().addKeydownEventListener();
+			return this;
+		}
+		runKeyDown(e,keycode) {
+			switch (keycode) {
+				case 8:
+					// backspace
+					this.pop();
+					break;
+				case 13:
+					// enter
+					this.input();
+					break;
+				case 118:
+					// F7
+					this.toKatakanaAll();
+					break;
+				default:
+					this.push(keycode,e.shiftKey);
+					break;
+			}
+		}
 	}
 
 	window.SentenceContainer = class extends Sentence {
-		constructor(fileId,data) {
-			console.log('sentence constructor');
+		constructor(data) {
 			super(document.getElementById('sentence_container'));
 			// 文書情報
-			this._fileId = fileId;
+			this._userId = data.userId;
+			this._filename = data.filename;
+			this._fileId = data.fileId;
 			this._strLenOnRow = 40; // １行の文字数
 			this._rowLenOnPage = 40; // １ページの行数
 			// DOMの構築
-			this.emptyElem();
-			for (let paraData of data) {
+			if (window.sentence) window.sentence.emptyElem().removeKeydownEventListener();
+			for (let paraData of data.data.text) {
 				this.append(new Paragraph(paraData));
 			}
 
 			this._cursor = new Cursor(this);
+			this.resetDisplay();
+			this.breakPage();
 			this.addKeydownEventListener();
+			this._inputBuffer = new InputBuffer(this);
 		}
 
 		// ステータス関係
@@ -1048,6 +1359,12 @@ Util.createCharPosElement = (function () {
 			data.text = paraArr;
 
 			return JSON.stringify(data);
+		}
+		owner() {
+			return this._userId;
+		}
+		filename() {
+			return this._filename;
 		}
 		fileId() {
 			return this._fileId;
@@ -1087,12 +1404,21 @@ Util.createCharPosElement = (function () {
 
 		// Display関係
 		resetDisplay() {
+			console.time('display');
 			this.addDisplay(0,0);
+			console.timeEnd('display');
 		}
 		changeDisplay() {
+			console.time('change display');
+			const cursorChar = this.cursor().getChar();
+			if (cursorChar.isDisplay() && cursorChar.row().isDisplay()){
+				console.timeEnd('change display');
+				return;
+			}
 			const rowPos = this.computeDisplayRowPos();
-			const charPos = this.cursor().getChar().row().computeDisplayCharPos();
+			const charPos = cursorChar.row().computeDisplayCharPos();
 			this.addDisplay(rowPos,charPos);
+			console.timeEnd('change display');
 			return this;
 		}
 		// firstRow行目以降を表示する。文字はfirstChar文字目以降
@@ -1153,7 +1479,7 @@ Util.createCharPosElement = (function () {
 			let cnt = 0;
 			for (let paragraph of this.paragraphs()) {
 				for (let row of paragraph.rows()) {
-					if (row.hasClass('display'))
+					if (row.isDisplay())
 						return cnt;
 					cnt++;
 				}
@@ -1165,7 +1491,7 @@ Util.createCharPosElement = (function () {
 			let cnt = this.rowLenAll() -1;
 			for (let paragraph_i = this.childLen()-1,paragraph; paragraph =  this.paragraphs(paragraph_i); paragraph_i--) {
 				for (let row_i = paragraph.childLen()-1,row; row = paragraph.rows(row_i); row_i--) {
-					if (row.hasClass('display')) return cnt;
+					if (row.isDisplay()) return cnt;
 					cnt--;
 				}
 			}
@@ -1206,6 +1532,9 @@ Util.createCharPosElement = (function () {
 		cursorChar() {
 			return this.cursor().getChar();
 		}
+		inputBuffer() {
+			return this._inputBuffer;
+		}
 
 		//DOM操作関係
 		// 子を空にする
@@ -1219,7 +1548,6 @@ Util.createCharPosElement = (function () {
 			this.elem().appendChild(paragraph.elem());
 			paragraph.sentence(this);
 			if (!this.hasParagraph()) {
-				// this.paragraphs().push(paragraph);
 				this.pushParagraph(paragraph);
 				return this;
 			}
@@ -1235,8 +1563,44 @@ Util.createCharPosElement = (function () {
 			lastChar.next(paragraph.firstChild().firstChild());
 			paragraph.firstChild().firstChild().prev(lastChar);
 
-			// this.paragraphs().push(paragraph);
 			this.pushParagraph(paragraph);
+			return this;
+		}
+
+		// 文書チェック
+		// 改ページ
+		breakPage() {
+			const pageNum = this.rowLenOnpage();
+			let cnt1 = 0;
+			for (let paragraph of this.paragraphs()) {
+				for (let row of paragraph.rows()) {
+					if (cnt1 === 0 || cnt1 % pageNum === 0) { // １行目とpageNumの倍数行目
+						row.addClass('page-break');
+					} else {
+						row.removeClass('page-break');
+					}
+					cnt1++;
+				}
+			}
+			let cnt2 = 0;
+			const lastRow = this.rowLenAll() -1;
+			for (let paragraph of this.paragraphs()) {
+				for (let row of paragraph.rows()) {
+					if ((cnt2 + 1) % pageNum === 0 || cnt2 === lastRow) { // (pageNumの倍数-1)行目と最終行
+						row.addClass('page-last-row');
+					} else {
+						row.removeClass('page-last-row');
+					}
+					cnt2++;
+				}
+			}
+			return this;
+		}
+		// 指定文字数(strLenOnRow)と異なる文字数の行があれば調整する
+		cordinate() {
+			for (let paragraph of this.paragraphs()) {
+				paragraph.cordinate();
+			}
 			return this;
 		}
 
@@ -1253,28 +1617,36 @@ Util.createCharPosElement = (function () {
 				// ファイル名を表示
 				$('#file_title').val(json.filename).attr('data-file-id',fileId);
 				// 文章のhtml書き出し
-				const text = json.data.text;
-				window.sentence.emptyElem();
+				// window.sentence.emptyElem();
 				console.time('new SentenceContainer');
-				window.sentence = new SentenceContainer(fileId,text);
+				window.sentence = new SentenceContainer(json);
 				console.timeEnd('new SentenceContainer');
-				console.time('display');
-				window.sentence.resetDisplay();
-				console.timeEnd('display');
-				// FIXME: page-breakなどをつけないとprintDocInfo()が使えない(addPageBreak()を同時に使わない操作で使われると計算で無限ループとなってブラウザが落ちる)
-				$('.char').first().addClass('cursor')
-					$('.cursor').closest('.row').addClass('cursor-row');
-				$('#cursor_line > .char-pos').first().addClass('cursor-pos-memory');
 				$('.doc-info > .saved').text(json.saved);
 				console.timeEnd('readFile');
 				console.log(window.sentence);
 			});
 		}
 		saveFile() {
+			const nowDate_ms = Date.now();
+			Util.post('/tategaki/WiteJsonFile',{
+				user_id: this.owner(),
+				file_id: this.fileId(),
+				filename: this.filename(),
+				json: this.data(),
+				saved: nowDate_ms
+			},function (json) {
+				'use strict';
+
+			});
 		}
 		static newFile(filename) {
-			window.sentence = new SentenceContainer(-1,[[[],[]]]); // 空段落のデータ
-			return this;
+			window.sentence = new SentenceContainer({
+				fileId: -1,
+				filename: filename,
+				data: {
+					text:[[[],[]]]
+				}
+			}); // 空段落のデータ
 		}
 
 		// イベントリスナー関係
@@ -1299,9 +1671,10 @@ Util.createCharPosElement = (function () {
 					break;
 				case 188:
 					// ,
-					console.log(this);
+					console.log(this.data());
 					break;
 				default:
+					this.inputBuffer().transfer(keycode,e.shiftKey);
 					break;
 			}
 			return this;

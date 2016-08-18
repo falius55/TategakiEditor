@@ -55,7 +55,7 @@
 					ページ:<span class="page-num">-</span>/<span class="page-len">-</span>&nbsp;
 					最終更新日時:<span class="saved">-</span>
 				</div>
-				<div id="input_buffer" class="row"></div>
+				<div id="input_buffer" class="row"><span class="char EOL display"></span></div>
 				<div id="convert_container"></div>
 				<input type="text" id="command"></input>
 				<input type="text" id="find"></input>

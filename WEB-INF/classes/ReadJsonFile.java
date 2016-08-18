@@ -32,6 +32,9 @@ public class ReadJsonFile extends AbstractServlet  {
 			sb.append("{\"filename\":\"");
 			sb.append(fileName);
 			sb.append("\",");
+			sb.append("\"fileId\":\"");
+			sb.append(fileId);
+			sb.append("\",");
 			sb.append("\"saved\":\"");
 			sb.append(saved);
 			sb.append("\",");
@@ -47,6 +50,9 @@ public class ReadJsonFile extends AbstractServlet  {
 			}
 
 			//	ファイル読込
+			sb.append("\"userId\":\"");
+			sb.append(userId);
+			sb.append("\",");
 			sb.append("\"data\":");
 			sb.append(readFile(String.format("data/%d/%d.json",rootId,fileId)));
 			sb.append("}");
