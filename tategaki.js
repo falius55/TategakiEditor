@@ -183,7 +183,7 @@ $(function() {
 				// ctrlキーを使ったショートカットキー
 				keydownWithCTRL(e,keycode);
 			} else {
-				keydownOnDraft(e,keycode);
+				keydownOnContainer(e,keycode);
 			}
 
 		}
@@ -260,7 +260,7 @@ $(function() {
 				$inputBuffer.children('.EOL').prev().remove();
 				moveInput();
 				// input_bufferの文字がなくなればinput_bufferを空にして隠す
-				if ($inputBuffer.children('.vertical-char').first().hasClass('EOL')) {
+				if ($inputBuffer.children('.char').first().hasClass('EOL')) {
 					$inputBuffer.empty().hide(); // inputBufferを空にして隠す
 				}
 				break;
@@ -300,7 +300,7 @@ $(function() {
 				// b
 			case 68:
 				// d
-				backSpaceOnDraft();
+				backSpaceOnContainer();
 				checkText();
 				break;
 			case 190:
@@ -370,13 +370,13 @@ $(function() {
 		// printDocInfo();
 	}
 
-	function keydownOnDraft(e,keycode) {
+	function keydownOnContainer(e,keycode) {
 		'use strict';
 
 		switch (keycode) {
 			case 8:
 				// backspace
-				backSpaceOnDraft();
+				backSpaceOnContainer();
 				checkText();
 				break;
 			case 13:
@@ -435,7 +435,7 @@ $(function() {
 		'use strict';
 		const $inputBuffer = $('#input_buffer');
 		const $activeConvertView = $('.convert-view.active');
-		const currentSelectKana = $activeConvertView.children('.vertical-row').last().text();
+		const currentSelectKana = $activeConvertView.children('.row').last().text();
 
 		if (currentSelectKana.length >= 2) {
 			// 現在選択中の文節が２文字以上
@@ -449,7 +449,7 @@ $(function() {
 			// 現在選択中の文節がひらがなで１文字のみ
 			// 現在の文節を削除し、選択を次の文節に移す
 
-			if ($inputBuffer.children('.vertical-char').not('.EOL').length === 1) {
+			if ($inputBuffer.children('.char').not('.EOL').length === 1) {
 				// これを削除すればinput_bufferが空になる場合
 				// EOL含めて２文字
 				$('#convert_container').empty();
@@ -470,11 +470,11 @@ $(function() {
 			// convert-view
 			$('.convert-view.active').remove();
 			$newActiveConvertView.addClass('active');
-			$newActiveConvertView.children('.vertical-row').first().addClass('select');
+			$newActiveConvertView.children('.row').first().addClass('select');
 
 			// input_buffer > select-phrase
-			$('#input_buffer > .vertical-char.select-phrase').remove();
-			$('#input_buffer > .vertical-char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
+			$('#input_buffer > .char.select-phrase').remove();
+			$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
 
 			resetPhraseNum();
 
@@ -502,12 +502,12 @@ $(function() {
 		$newSelectConvertView.addClass('active');
 
 		// coanvert-view下のselectクラスの付け替え
-		$('.convert-view > .vertical-row.select').removeClass('select');
-		$newSelectConvertView.children('.vertical-row').first().addClass('select');
+		$('.convert-view > .row.select').removeClass('select');
+		$newSelectConvertView.children('.row').first().addClass('select');
 
 		// input_bufferのselect-phraseの変更
-		$('#input_buffer > .vertical-char.select-phrase').removeClass('select-phrase');
-		$('#input_buffer > .vertical-char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
+		$('#input_buffer > .char.select-phrase').removeClass('select-phrase');
+		$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
 	}
 
 	// 漢字変換中に<Down>
@@ -528,12 +528,12 @@ $(function() {
 		// convert-view
 		$oldSelectConvertView.removeClass('active');
 		$newSelectConvertView.addClass('active');
-		$('.convert-view.active > .vertical-row.select').removeClass('select');
-		$newSelectConvertView.children('.vertical-row').first().addClass('select');
+		$('.convert-view.active > .row.select').removeClass('select');
+		$newSelectConvertView.children('.row').first().addClass('select');
 
 		// input_bufferのselect-phrase
-		$('#input_buffer > .vertical-char.select-phrase').removeClass('select-phrase');
-		$('#input_buffer > .vertical-char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
+		$('#input_buffer > .char.select-phrase').removeClass('select-phrase');
+		$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
 	}
 
 	// 漢字変換中にShift+<Up>
@@ -542,7 +542,7 @@ $(function() {
 		'use strict';
 		const $firstConvertView = $('.convert-view.active');
 		const $secondConvertView = $firstConvertView.next('.convert-view');
-		const firstKana = $firstConvertView.children('.vertical-row').last().text();
+		const firstKana = $firstConvertView.children('.row').last().text();
 
 		if (firstKana.length < 2) return; // 選択中の文節が１文字しかないときは何もしない
 
@@ -557,7 +557,7 @@ $(function() {
 			return;
 		}
 
-		const secondKana = $secondConvertView.children('.vertical-row').last().text();
+		const secondKana = $secondConvertView.children('.row').last().text();
 
 		// 前半文節の最後の文字を、後半文節の最初に移動
 		const newStr = firstKana.substring(0,firstKana.length-1) +
@@ -574,8 +574,8 @@ $(function() {
 		'use strict';
 		const $firstConvertView = $('.convert-view.active');
 		const $secondConvertView = $firstConvertView.next('.convert-view');
-		const firstKana = $firstConvertView.children('.vertical-row').last().text();
-		const secondKana = $secondConvertView.children('.vertical-row').last().text();
+		const firstKana = $firstConvertView.children('.row').last().text();
+		const secondKana = $secondConvertView.children('.row').last().text();
 
 		if (!($secondConvertView[0])) return; // 最後の文節を選択していたら何もしない
 
@@ -594,8 +594,8 @@ $(function() {
 	// 漢字変換候補一覧のフォーカスを左にシフトさせる
 	function shiftLeftSelectKanjiFocus() {
 		'use strict';
-		const $oldSelect = $('.convert-view.active > .vertical-row.select');
-		const $newSelect = $oldSelect.next('.vertical-row');
+		const $oldSelect = $('.convert-view.active > .row.select');
+		const $newSelect = $oldSelect.next('.row');
 
 		shiftSelectKanjiFocus($oldSelect, $newSelect);
 	}
@@ -603,8 +603,8 @@ $(function() {
 	// 漢字変換候補一覧のフォーカスを右にシフトさせる
 	function shiftRightSelectKanjiFocus() {
 		'use strict';
-		const $oldSelect = $('.convert-view.active > .vertical-row.select');
-		const $newSelect = $oldSelect.prev('.vertical-row');
+		const $oldSelect = $('.convert-view.active > .row.select');
+		const $newSelect = $oldSelect.prev('.row');
 
 		shiftSelectKanjiFocus($oldSelect, $newSelect);
 	}
@@ -625,7 +625,7 @@ $(function() {
 
 		// selectphraseクラスの付け替え
 		$('#input_buffer .select-phrase').removeClass('select-phrase');
-		$('#input_buffer > .vertical-char[data-phrase-num='+ phraseNum +']').addClass('select-phrase');
+		$('#input_buffer > .char[data-phrase-num='+ phraseNum +']').addClass('select-phrase');
 
 		resizeInputBuffer();
 	}
@@ -653,19 +653,19 @@ $(function() {
 	}
 	function shiftRightDisplay() {
 		'use strict';
-		const $nextRow = $('.display-row').first().prevObj('#vertical_draft .vertical-row');
+		const $nextRow = $('.row.display').first().prevObj('#sentence_container .row');
 		if (!$nextRow[0]) { return; }
-		$nextRow.addClass('display-row');
-		$('.display-row').last().removeClass('display-row');
-		if (!($('.cursor-row').hasClass('display-row'))) { gCursor.shiftRight(); }
+		$nextRow.addClass('display');
+		$('.row.display').last().removeClass('display');
+		if (!($('.cursor-row').hasClass('display'))) { gCursor.shiftRight(); }
 	}
 	function shiftLeftDisplay() {
 		'use strict';
-		const $nextRow = $('.display-row').last().nextObj('#vertical_draft .vertical-row');
+		const $nextRow = $('.row.display').last().nextObj('#sentence_container .row');
 		if (!$nextRow[0]) { return; }
-		$nextRow.addClass('display-row');
-		$('.display-row').first().removeClass('display-row');
-		if (!($('.cursor-row').hasClass('display-row'))) { gCursor.shiftLeft(); }
+		$nextRow.addClass('display');
+		$('.row.display').first().removeClass('display');
+		if (!($('.cursor-row').hasClass('display'))) { gCursor.shiftLeft(); }
 	}
 
 	// ------------------------------- command mode ---------------------------------------
@@ -980,11 +980,11 @@ $(function() {
 	function find(word) {
 		// 検索字句にクラスを付与する
 		'use strict';
-		const eDraft = document.getElementById('vertical_draft');
+		const eSentence = document.getElementById('sentence_container');
 
 		// reset
-		const eOldLabel = eDraft.getElementsByClassName('find-label');
-		const eOldWord = eDraft.getElementsByClassName('find-word');
+		const eOldLabel = eSentence.getElementsByClassName('find-label');
+		const eOldWord = eSentence.getElementsByClassName('find-word');
 		while (eOldLabel[0]) { // クラスをremoveするとeOldLabelからその要素がなくなって詰められる
 			eOldLabel[0].classList.remove('find-label');
 		}
@@ -994,7 +994,7 @@ $(function() {
 		console.log('removed');
 		if (word === '') return; // 検索文字がなくなった場合は、すべての文字からクラスを除去するのみ
 
-		const eChars = eDraft.getElementsByClassName('vertical-char');
+		const eChars = eSentence.getElementsByClassName('char');
 		const indexArr = findIndex(word);
 		const wordLen = word.length;
 		for(let index of indexArr) {
@@ -1007,7 +1007,7 @@ $(function() {
 		}
 
 		// カーソル位置の次に位置する検索語句の頭にカーソルを移動する
-		if (!eDraft.getElementsByClassName('cursor')[0].classList.contains('find-label')) findNext();
+		if (!eSentence.getElementsByClassName('cursor')[0].classList.contains('find-label')) findNext();
 	}
 
 	function findIndex(word) {
@@ -1016,12 +1016,12 @@ $(function() {
 		 * 字句検索
 		 * 1文字目のインデックスの配列を返す
 		 * 検索字句を1文字ずつ確認
-		 * 検索字句の1文字目と、配列に残っているインデックスのvertical-charの文字を比較し、異なれば配列から除外する
-		 * 検索字句の2文字目と、配列に残っているインデックスのvertical-charの次のvertical-charの文字を比較し、異なれば配列から除外する
-		 * 検索字句の3文字目と、配列に残っているインデックスのvertical-charから２つ後のvertical-charの文字を比較し、異なれば配列から除外する
+		 * 検索字句の1文字目と、配列に残っているインデックスのcharの文字を比較し、異なれば配列から除外する
+		 * 検索字句の2文字目と、配列に残っているインデックスのcharの次のcharの文字を比較し、異なれば配列から除外する
+		 * 検索字句の3文字目と、配列に残っているインデックスのcharから２つ後のcharの文字を比較し、異なれば配列から除外する
 		 * 検索字句のすべての文字に対して以上を繰り返していき、最終的に配列要素として残っているインデックスが、検索文字列の１文字目のインデックスとなる
 		 */
-		const eChars = document.getElementById('vertical_draft').getElementsByClassName('vertical-char');
+		const eChars = document.getElementById('sentence_container').getElementsByClassName('char');
 		const indexArr = [];
 
 		// いったん、すべての文字のインデックスを配列に入れる
@@ -1046,7 +1046,7 @@ $(function() {
 	function findNext() {
 		'use strict';
 		const $oldCursor = $('.cursor');
-		const $newCursor = $oldCursor.nextObj('#vertical_draft .find-label,.cursor',true);
+		const $newCursor = $oldCursor.nextObj('#sentence_container .find-label,.cursor',true);
 
 		if (!$newCursor[0]) return;
 
@@ -1058,7 +1058,7 @@ $(function() {
 	function findPrev() {
 		'use strict';
 		const $oldCursor = $('.cursor');
-		const $newCursor = $oldCursor.prevObj('#vertical_draft .find-label,.cursor',true);
+		const $newCursor = $oldCursor.prevObj('#sentence_container .find-label,.cursor',true);
 
 		if (!$newCursor[0]) return;
 
@@ -1091,17 +1091,17 @@ $(function() {
 		}
 
 		// データに１文字もなければ上記for文に入れないので、空行を別に作成する
-		if ($('#vertical_draft > .vertical-paragraph').length === 0) {
+		if ($('#sentence_container > .paragraph').length === 0) {
 			html += createParagraphHtml('');
 		}
 
 		// innerHTMLで画面内に挿入する
-		document.getElementById('vertical_draft').innerHTML = html;
+		document.getElementById('sentence_container').innerHTML = html;
 	}
 
 	function appendParagraph(str) {
 		'use strict';
-		$('#vertical_draft').append(createParagraphHtml(str));
+		$('#sentence_container').append(createParagraphHtml(str));
 	}
 
 	function appendParagraphFromObj(paraObjArr) {
@@ -1111,7 +1111,7 @@ $(function() {
 		for (let paraObj of paraObjArr) {
 			html += createParagraphHtmlFromObj(paraObj);
 		}
-		document.getElementById('vertical_draft').innerHTML = html;
+		document.getElementById('sentence_container').innerHTML = html;
 		checkKinsoku(); // 禁則処理
 	}
 
@@ -1119,7 +1119,7 @@ $(function() {
 		'use strict';
 		console.log('ins string from cursor');
 		const $cursor = $('.cursor');
-		const $cursorRow = $('#vertical_draft .cursor-row')
+		const $cursorRow = $('#sentence_container .cursor-row')
 
 			for (let char of str) {
 				const $character = $(createCharHtml(char));
@@ -1146,7 +1146,7 @@ $(function() {
 						).attr('data-phrase-num',-1));
 		}
 
-		$inputBuffer.append($('<span class="vertical-char EOL"></span>'));
+		$inputBuffer.append($('<span class="char EOL"></span>'));
 		$inputBuffer.show();
 
 		moveInput();
@@ -1178,7 +1178,7 @@ $(function() {
 		'use strict';
 		// 文節番号phNumを、strで置き換える
 		// 新しい文字集合のオブジェクトを返す
-		const $selectPhrases = $('#input_buffer > .vertical-char[data-phrase-num='+ phNum +']');
+		const $selectPhrases = $('#input_buffer > .char[data-phrase-num='+ phNum +']');
 		const $insertPosChar = $selectPhrases.first();
 
 		for (let char of str) {
@@ -1188,7 +1188,7 @@ $(function() {
 		}
 		$selectPhrases.remove();
 
-		return $('#input_buffer > .vertical-char[data-phrase-num="-10"]').attr('data-phrase-num',phNum);
+		return $('#input_buffer > .char[data-phrase-num="-10"]').attr('data-phrase-num',phNum);
 	}
 
 	// --------------------------------------- create string html ------------------------------------
@@ -1196,7 +1196,7 @@ $(function() {
 	// 文字列を引数にして、段落のhtml文字列を作成する
 	function createParagraphHtml(str) {
 		'use strict';
-		let html = '<div class="vertical-paragraph">'
+		let html = '<div class="paragraph">'
 
 			// strLen文字ごとに区切って各行として連結する
 			const strLen = getStringLenOfRow();
@@ -1222,13 +1222,13 @@ $(function() {
 		'use strict';
 		if (str == null) return;
 
-		let html = '<div class="vertical-row">'
+		let html = '<div class="row">'
 
 			for (let char of str) {
 				html += createCharHtml(char);
 			}
 
-		html += '<span class="vertical-char EOL display-char"></span></div>';
+		html += '<span class="char EOL display"></span></div>';
 
 		return html;
 	}
@@ -1240,7 +1240,7 @@ $(function() {
 		// クラスを追加するには、最初に半角スペースを入れること
 		if (char.length > 1) { char = char.charAt(0); }
 		const classArr = getConfDecoChar();
-		let html = '<span class="vertical-char display-char';
+		let html = '<span class="char display';
 
 		for (let className of classArr) {
 			html += ' ' + className;
@@ -1290,7 +1290,7 @@ $(function() {
 		 * 					]
 		 * 			]
 		 */
-		let html = '<div class="vertical-paragraph"';
+		let html = '<div class="paragraph"';
 
 		// 段落そのものにクラスを付与する
 		for (let className of paraObj[0]) {
@@ -1328,12 +1328,12 @@ $(function() {
 		 * 					}
 		 * 					]
 		 */
-		let html = '<div class="vertical-row">';
+		let html = '<div class="row">';
 
 		for (let charObj of objArray) {
 			html += createCharHtmlFromObj(charObj);
 		}
-		html += '<span class="vertical-char EOL display-char"></span></div>'
+		html += '<span class="char EOL display"></span></div>'
 			return html;
 	}
 
@@ -1350,7 +1350,7 @@ $(function() {
 		 */
 		const char = obj['char'];
 		const classArr = obj['decolation'];
-		let html = '<span class="vertical-char';
+		let html = '<span class="char';
 
 		for (let className of classArr) {
 			html += ' ' + className;
@@ -1431,7 +1431,7 @@ $(function() {
 		 * 			] // textToObj()
 		 * 			}
 		 */
-		const $paragraphs = $('#vertical_draft > .vertical-paragraph');
+		const $paragraphs = $('#sentence_container > .paragraph');
 		const paragraphArrays = [];
 
 		for (let i = 0,len = $paragraphs.length; i < len; i++) {
@@ -1465,7 +1465,7 @@ $(function() {
 		paraArr[0] = splitParagraphClass($paragraph);
 
 		const charArray = [];
-		const $chars = $paragraph.find('.vertical-char').not('.EOL');
+		const $chars = $paragraph.find('.char').not('.EOL');
 		for (let i = 0,len = $chars.length; i < len; i++) {
 			charArray[i] = new CharacterData($chars.eq(i));
 		}
@@ -1530,7 +1530,7 @@ $(function() {
 				insertPhraseToInputBuffer(i,json[i][1][0]); // 第一候補の漢字でinputBufferの文字列を置き換える
 			}
 			// selectphraseクラスを設定する
-			$('#input_buffer').children('.vertical-char[data-phrase-num="0"]').addClass('select-phrase');
+			$('#input_buffer').children('.char[data-phrase-num="0"]').addClass('select-phrase');
 			// inputBufferの高さ調整
 			resizeInputBuffer();
 		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -1541,7 +1541,7 @@ $(function() {
 	// input_bufferの各文字に、文節番号を割り振る
 	function setPhraseNumToCharOnInputBuffer(json) {
 		'use strict';
-		const eChars = document.getElementById('input_buffer').getElementsByClassName('vertical-char');
+		const eChars = document.getElementById('input_buffer').getElementsByClassName('char');
 
 		// 各文節ループ
 		// pos: 各文節の１文字目のインデックスを保持
@@ -1578,7 +1578,7 @@ $(function() {
 		const $convertViews = $convertContainer.children('.convert-view');
 		const $activeView = $convertViews.first().addClass('active');
 
-		$activeView.children('.vertical-row').first().addClass('select');
+		$activeView.children('.row').first().addClass('select');
 
 		repositionConvertView();
 	}
@@ -1616,7 +1616,7 @@ $(function() {
 			this.$firstConvertView.remove();
 			this.$secondConvertView.remove();
 
-			$newFirstConvertView.children('.vertical-row').first().addClass('select');
+			$newFirstConvertView.children('.row').first().addClass('select');
 			repositionConvertView();
 
 			// input_buffer
@@ -1625,7 +1625,7 @@ $(function() {
 			insertPhraseToInputBuffer(secondPhraseNum,json[1][1][0]);
 
 			// selectphraseクラスの付け替え
-			$('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum +']').addClass('select-phrase');
+			$('#input_buffer > .char[data-phrase-num='+ firstPhraseNum +']').addClass('select-phrase');
 			// 最後にinputBufferの高さ調整
 			resizeInputBuffer();
 		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -1669,12 +1669,12 @@ $(function() {
 
 			// input_buffer
 			// 第一候補の文字でinputBufferの該当文字を置き換える
-			$newConvertView.children('.vertical-row').first().addClass('select');
+			$newConvertView.children('.row').first().addClass('select');
 			insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
 			const secondPhraseNum = this.$secondConvertView.children('.phrase-num').text();
-			$('#input_buffer > .vertical-char[data-phrase-num='+ secondPhraseNum +']').remove();
+			$('#input_buffer > .char[data-phrase-num='+ secondPhraseNum +']').remove();
 			// selectphraseクラスの付け替え
-			$('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum +']').addClass('select-phrase');
+			$('#input_buffer > .char[data-phrase-num='+ firstPhraseNum +']').addClass('select-phrase');
 			resetPhraseNum();
 			// inputBufferの高さ調整
 			resizeInputBuffer();
@@ -1719,12 +1719,12 @@ $(function() {
 			// input_buffer
 			// first phrase
 			// 第一候補の文字でinputBufferの該当文字を置き換える
-			$newFirstConvertView.children('.vertical-row').first().addClass('select');
+			$newFirstConvertView.children('.row').first().addClass('select');
 			const $newBufferChars = insertPhraseToInputBuffer(firstPhraseNum,json[0][1][0]);
 			$newBufferChars.addClass('select-phrase');
 			// second phrase
 			const secondFirstStr = json[1][1][0];
-			const $insertPosChar = $('#input_buffer > .vertical-char[data-phrase-num='+ firstPhraseNum + ']').last();
+			const $insertPosChar = $('#input_buffer > .char[data-phrase-num='+ firstPhraseNum + ']').last();
 			for (let i = secondFirstStr.length -1; i >= 0; i--) {
 				const $character = $(createCharHtml(secondFirstStr.charAt(i))).attr('data-phrase-num',secondPhraseNum);
 				$insertPosChar.after($character);
@@ -1768,7 +1768,7 @@ $(function() {
 			this.$firstConvertView.before($newConvertView);
 			this.$firstConvertView.remove();
 			// 第一候補の文字でinputBufferの該当文字を置き換える
-			$newConvertView.children('.vertical-row').first().addClass('select');
+			$newConvertView.children('.row').first().addClass('select');
 			repositionConvertView();
 
 			// input_buffer
@@ -1813,7 +1813,7 @@ $(function() {
 	// inputBufferの文節番号を振り直す
 	function resetPhraseNum() {
 		'use strict';
-		let $iterCharacter = $('#input_buffer > .vertical-char').first();
+		let $iterCharacter = $('#input_buffer > .char').first();
 		let $convertView = $('.convert-view').first();
 		let newNum = 0;
 		let tempPhraseNum = $iterCharacter.attr('data-phrase-num'); // 処理している文字の古い文節番号を保持する
@@ -1832,7 +1832,7 @@ $(function() {
 
 			// 同じ文節
 			$iterCharacter.attr('data-phrase-num',newNum);
-			$iterCharacter = $iterCharacter.next('.vertical-char');
+			$iterCharacter = $iterCharacter.next('.char');
 		}
 	}
 
@@ -1844,7 +1844,7 @@ $(function() {
 		'use strict';
 		let str = $('#input_buffer').text();
 		insertStringToInputBuffer(getKatakana(str))
-			.children('.vertical-char').not('.EOL')
+			.children('.char').not('.EOL')
 			.addClass('select-phrase');
 	}
 
@@ -1853,7 +1853,7 @@ $(function() {
 	function changeKatakanaAtConvert() {
 		'use strict';
 		const phraseNum = $('#input_buffer > .select-phrase').attr('data-phrase-num');
-		const str = getKatakana($('.convert-view.active > .vertical-row').last().text());
+		const str = getKatakana($('.convert-view.active > .row').last().text());
 		insertPhraseToInputBuffer(phraseNum,str).addClass('select-phrase');
 		resizeInputBuffer();
 	}
@@ -1891,7 +1891,7 @@ $(function() {
 
 		// 行途中での改行
 		if ($prevChar[0]) {
-			let $nextRow = $cursorRow.nextAll('.vertical-row').first(); //改行前の次の行
+			let $nextRow = $cursorRow.nextAll('.row').first(); //改行前の次の行
 
 			// paragraph
 			if (!($nextRow[0])) {
@@ -1904,18 +1904,18 @@ $(function() {
 			devideParagraph($nextRow);
 
 			// char移動
-			const $insertPosChar = $nextRow.children('.vertical-char').first(); //挿入先の先頭文字
+			const $insertPosChar = $nextRow.children('.char').first(); //挿入先の先頭文字
 			let $moveChar = $cursor; // 移動文字
 			// $nextRowの先頭にある$insertPosCharに、$prevChar以降の文字を挿入していく
 			while ($moveChar[0] && !($moveChar.hasClass('EOL'))) { // EOLは移動しない
 				$moveChar.remove();
 				$insertPosChar.before($moveChar);
-				$moveChar = $prevChar.nextAll('.vertical-char').first();
+				$moveChar = $prevChar.nextAll('.char').first();
 			}
 
 			if ($cursor.hasClass('EOL')) { // EOLにカーソルがあると、EOLが動かないために、カーソルが次の行に行かないので強制的に動かす必要あり
 				// = 段落末での改行
-				$nextRow.children('.vertical-char').first().addCursor();
+				$nextRow.children('.char').first().addCursor();
 			}
 			// 移動文字列を次の行に入れた結果規定文字数を超えた場合のために、次の行を文字数調整
 			cordinateStringNumber($nextRow,getStringLenOfRow());
@@ -1933,7 +1933,7 @@ $(function() {
 				devideParagraph($cursorRow);
 			} else {
 				// 段落最初での改行では、その前のところに空行挿入
-				const $baseParagraph = $cursorRow.closest('.vertical-paragraph');
+				const $baseParagraph = $cursorRow.closest('.paragraph');
 				$baseParagraph.before($(createParagraphHtml('')));
 				reDisplay();
 			}
@@ -1944,7 +1944,7 @@ $(function() {
 	}
 
 	// カーソルの前に位置する文字を削除する
-	function backSpaceOnDraft() {
+	function backSpaceOnContainer() {
 		'use strict';
 		// $delChar: 削除文字
 		// $rowofdelchar: 削除文字のある行
@@ -1960,7 +1960,7 @@ $(function() {
 
 		// 行頭からのBS
 		const $rowOfDelChar = $('.cursor-row');
-		let $preRow = $rowOfDelChar.prevAll('.vertical-row').first();
+		let $preRow = $rowOfDelChar.prevAll('.row').first();
 
 		// 段落途中の行頭からのBS
 		if($preRow[0]) {
@@ -1973,20 +1973,20 @@ $(function() {
 		// 第二段落以降の段落先頭でのBS
 		// 文章先頭でのBS
 		// 段落先頭でのBS
-		const $paragraphOfDelChar = $rowOfDelChar.closest('.vertical-paragraph');
-		const $preParagraph = $paragraphOfDelChar.prevAll('.vertical-paragraph').first();
+		const $paragraphOfDelChar = $rowOfDelChar.closest('.paragraph');
+		const $preParagraph = $paragraphOfDelChar.prevAll('.paragraph').first();
 
-		$preRow = $preParagraph.children('.vertical-row').last();
+		$preRow = $preParagraph.children('.row').last();
 
 		if ($preParagraph[0]) {
 			// 第二段落以降の段落
 
-			const $firstRowOfDelChar = $paragraphOfDelChar.children('.vertical-row').first();
-			if ($firstRowOfDelChar.children('.vertical-char').first().hasClass('EOL')) {
+			const $firstRowOfDelChar = $paragraphOfDelChar.children('.row').first();
+			if ($firstRowOfDelChar.children('.char').first().hasClass('EOL')) {
 				// 空段落でのBS
 				$paragraphOfDelChar.remove(); // 段落削除
 				// cursorの調整
-				$preRow.children('.vertical-char').last().addCursor(false); // 前の行の最終文字にカーソルを移動
+				$preRow.children('.char').last().addCursor(false); // 前の行の最終文字にカーソルを移動
 				reDisplay();
 				gCursor.repositionCharNum();
 				return '';
@@ -2006,15 +2006,15 @@ $(function() {
 
 	function deleteCharacter($delChar) {
 		'use strict';
-		const $rowOfDelChar = $delChar.closest('.vertical-row');
+		const $rowOfDelChar = $delChar.closest('.row');
 
 		backChar($rowOfDelChar); // 次の行から１文字持ってくる
 		$delChar.remove();
 
-		if ($rowOfDelChar.children('.vertical-char').first().hasClass('EOL') && ($rowOfDelChar.prev())[0]) {
+		if ($rowOfDelChar.children('.char').first().hasClass('EOL') && ($rowOfDelChar.prev())[0]) {
 			// 文字を削除後、削除文字のあった行が空行で、かつその前の行が存在する = 複数段落の最終行が１文字しかなく、その文字を削除した場合空となるので、削除文字のあった行を削除し、その前の行の最後にカーソルを移動する
 			// 先にカーソルの調整($rowOfDelChar削除前にカーソル位置取得)
-			$rowOfDelChar.prev().children('.vertical-char').last().addCursor(false);
+			$rowOfDelChar.prev().children('.char').last().addCursor(false);
 			// 行の削除
 			$rowOfDelChar.remove();
 			reDisplay();
@@ -2026,8 +2026,8 @@ $(function() {
 	// $row以降を新しい段落として、段落を２つに分ける
 	function devideParagraph($row) {
 		'use strict';
-		const $newParagraph = $('<div>').addClass('vertical-paragraph');
-		const $baseParagraph = $row.closest('.vertical-paragraph');
+		const $newParagraph = $('<div>').addClass('paragraph');
+		const $baseParagraph = $row.closest('.paragraph');
 		$baseParagraph.after($newParagraph);
 
 		let $nextRow;
@@ -2046,19 +2046,19 @@ $(function() {
 	// baseParagraphにanotherParagraphを吸収して統合する
 	function uniteParagraph($baseParagraph,$anotherParagraph) {
 		'use strict';
-		const $preRow = $baseParagraph.children('.vertical-row').last(); // baseparagraphの最終行をあらかじめ保持しておく
-		let $mvRow = $anotherParagraph.children('.vertical-row').first();
+		const $preRow = $baseParagraph.children('.row').last(); // baseparagraphの最終行をあらかじめ保持しておく
+		let $mvRow = $anotherParagraph.children('.row').first();
 
 		while ($mvRow[0]) {
 			// $anotherparagraphの行を$baseparagraphに移動
 			$mvRow.remove();
 			$baseParagraph.append($mvRow);
-			$mvRow = $anotherParagraph.children('.vertical-row').first();
+			$mvRow = $anotherParagraph.children('.row').first();
 		}
 		$anotherParagraph.remove();
 
 		// baseParagraphのもともとの最終行の文字数が規定数になるよう、その次の行から文字を持ってきて埋める
-		const cnt = getStringLenOfRow() - ($preRow.children('.vertical-char').length -1); // lengthではEOLも含まれるので-1
+		const cnt = getStringLenOfRow() - ($preRow.children('.char').length -1); // lengthではEOLも含まれるので-1
 		for (let i = 0; i < cnt; i++) {
 			backChar($preRow);
 		}
@@ -2075,7 +2075,7 @@ $(function() {
 		// strLen: １行の文字数
 		if ($row.children().length <= (strLen +1)) return; //調整行の文字数が規定値以下なら調整の必要なし(EOL含めると31個)
 
-		let $nextRow = $row.nextAll('.vertical-row').first();
+		let $nextRow = $row.nextAll('.row').first();
 
 		if (!($nextRow[0])) {
 			// 次の行がなければ新しく作る
@@ -2084,20 +2084,20 @@ $(function() {
 			reDisplay();
 		}
 
-		const $prevChar = $row.children('.vertical-char').eq(strLen -1); //移動しない文字の最後
-		const $insertPosChar = $nextRow.children('.vertical-char').first(); //挿入先の最初の文字
-		let $moveChar = $prevChar.nextAll('.vertical-char').first(); // 移動文字
+		const $prevChar = $row.children('.char').eq(strLen -1); //移動しない文字の最後
+		const $insertPosChar = $nextRow.children('.char').first(); //挿入先の最初の文字
+		let $moveChar = $prevChar.nextAll('.char').first(); // 移動文字
 		while ($moveChar[0] && !($moveChar.hasClass('EOL'))) { // EOLは移動しない
 			$moveChar.remove();
 			$insertPosChar.before($moveChar);
-			$moveChar = $prevChar.nextAll('.vertical-char').first();
+			$moveChar = $prevChar.nextAll('.char').first();
 		}
 
 		// 移動先の行がstrlen文字を超えている時のために再帰
 		cordinateStringNumber($nextRow,strLen);
 
 		// cursorが調整行の最後にあれば動いてくれないので、強制的に動かす
-		if ($prevChar.nextAll('.vertical-char').first().hasClass('cursor')) {
+		if ($prevChar.nextAll('.char').first().hasClass('cursor')) {
 			$insertPosChar.addCursor();
 			gCursor.repositionCharNum();
 		}
@@ -2107,11 +2107,11 @@ $(function() {
 	// $bringRowの次の行の最初の文字を、$bringRowの最後に移動する
 	function backChar($bringRow) {
 		'use strict';
-		const $nextRow = $bringRow.nextAll('.vertical-row').first();
+		const $nextRow = $bringRow.nextAll('.row').first();
 
 		if (!($nextRow[0])) return;
 
-		const $backChar = $nextRow.children('.vertical-char').first();
+		const $backChar = $nextRow.children('.char').first();
 
 		if ($backChar.next().hasClass('EOL')) {
 			// 削除すると空行ができる場合
@@ -2128,7 +2128,7 @@ $(function() {
 	// 禁則処理
 	function checkKinsoku() {
 		'use strict';
-		const $dots = $('#vertical_draft .vertical-char.vertical-dot').add('#vertical_draft .vertical-char.vertical-after-bracket');
+		const $dots = $('#sentence_container .char.vertical-dot').add('#sentence_container .char.vertical-after-bracket');
 
 		if ($dots[0]) {
 			let $self;
@@ -2139,8 +2139,8 @@ $(function() {
 
 				if (!($self.prev()[0])) {
 					// 行頭
-					$selfRow = $self.closest('.vertical-row');
-					$prevRow = $selfRow.prev('.vertical-row');	
+					$selfRow = $self.closest('.row');
+					$prevRow = $selfRow.prev('.row');	
 					if ($prevRow[0]) {
 						// 段落の最初ではない
 						backChar($prevRow);
@@ -2194,7 +2194,7 @@ $(function() {
 	// カーソルのある段落にtext-alignを適用する
 	function setAlignCursorParagraph(align) {
 		'use strict';
-		$('#vertical_draft').children('.vertical-paragraph').has('.cursor-row').removeClassByRegExp(/decolation-textalign-\S+/).addClass('decolation-textalign-'+ align);
+		$('#sentence_container').children('.paragraph').has('.cursor-row').removeClassByRegExp(/decolation-textalign-\S+/).addClass('decolation-textalign-'+ align);
 	}
 
 	// テキストボックスに入力できるように
@@ -2258,7 +2258,7 @@ $(function() {
 	// 文書内の行数
 	function getRowLen() {
 		'use strict';
-		const $rows = $('#vertical_draft > .vertical-paragraph > .vertical-row');
+		const $rows = $('#sentence_container > .paragraph > .row');
 		return $rows.length;
 	}
 
@@ -2271,7 +2271,7 @@ $(function() {
 		// 後ろに数える
 		while ($row[0] && !($row.hasClass('page-last-row'))) {
 			cnt++;
-			$row = $row.nextObj('#vertical_draft .vertical-row');
+			$row = $row.nextObj('#sentence_container .row');
 		}
 		return cnt;
 	}
@@ -2279,7 +2279,7 @@ $(function() {
 	// 文書内での現在行
 	function getCurrentRowPos() {
 		'use strict';
-		const rowNum = $('.vertical-paragraph > .vertical-row').index($('.cursor').closest('.vertical-row')) +1;
+		const rowNum = $('.paragraph > .row').index($('.cursor').closest('.row')) +1;
 		return rowNum;
 	}
 
@@ -2292,7 +2292,7 @@ $(function() {
 		// 前にさかのぼって数える
 		while ($row[0] && !($row.hasClass('page-break'))) {
 			cnt++;
-			$row = $row.prevObj('#vertical_draft .vertical-row');
+			$row = $row.prevObj('#sentence_container .row');
 		}
 		return cnt;
 	}
@@ -2301,14 +2301,14 @@ $(function() {
 	function getCurrentStringPosOnRow() {
 		'use strict';
 		const $cursor = $('.cursor');
-		const strNum = $('.cursor-row').children('.vertical-char').index($cursor);
+		const strNum = $('.cursor-row').children('.char').index($cursor);
 		return strNum;
 	}
 
 	// カーソル行の全文字数
 	function getStringLenOfCursorRow() {
 		'use strict';
-		const strLen = $('.cursor-row > .vertical-char').length;
+		const strLen = $('.cursor-row > .char').length;
 		return strLen - 1; // EOLの分を除く
 	}
 
@@ -2316,18 +2316,18 @@ $(function() {
 	function getCurrentPagePos() {
 		'use strict';
 		// page-breakを持つ行を探して段落をさかのぼり、その段落に複数のpage-breakがあればcursor行またはその段落の最後の行から行を遡ることでpage-breakを探している
-		let $currentParagraph = $('.cursor-row').closest('.vertical-paragraph');
+		let $currentParagraph = $('.cursor-row').closest('.paragraph');
 		let $currentPage;
 
-		while (!($currentPage = $currentParagraph.children('.vertical-row.page-break'))[0]) {
-			$currentParagraph = $currentParagraph.prev('.vertical-paragraph');
+		while (!($currentPage = $currentParagraph.children('.row.page-break'))[0]) {
+			$currentParagraph = $currentParagraph.prev('.paragraph');
 		}
 		if ($currentPage.length > 1) {
 
 			if (!($currentParagraph.children('.cursor-row'))[0]) {
 				const $row = $('.cursor-row');
 				while (!($row.hasClass('page-break'))) {
-					$row = $row.prev('.vertical-row');
+					$row = $row.prev('.row');
 					$currentPage = $row;
 				}
 			} else {
@@ -2394,18 +2394,18 @@ $(function() {
 		}
 	}
 
-	// クリック箇所にもっとも近い.vertical-charオブジェクトを返す
+	// クリック箇所にもっとも近い.charオブジェクトを返す
 	function getCharOnRowClick($row,rowEo) {
 		'use strict';
-		// @param $row .vertical-rowクラスのオブジェクトｊ
+		// @param $row .rowクラスのオブジェクトｊ
 		// @param rowEo クリックイベントのイベントオブジェクト
-		const $chars = $row.children('.vertical-char');
+		const $chars = $row.children('.char');
 		const clickPos = {
 			x: rowEo.pageX,
 			y: rowEo.pageY
 		};
 
-		let $resultObj = $chars.first('.vertical-char');
+		let $resultObj = $chars.first('.char');
 		for (let i = 0,min = Number.MAX_VALUE,$char; ($char = $chars.eq(i))[0]; i++) {
 			const distance = $char.computeDistanceP2O(clickPos);
 			if (distance < min) {
@@ -2473,25 +2473,25 @@ $(function() {
 	const gCursor = {
 		init: function () {
 			'use strict';
-			$('.vertical-char').first().addClass('cursor');
+			$('.char').first().addClass('cursor');
 			$('#cursor_line > .char-pos').first().addClass('cursor-pos-memory');
 			this.addCursorRow();
 			resetDisplayChar();
 		},
 		addCursorRow : function () {
 			'use strict';
-			const $oldCursorRow = $('.vertical-paragraph > .vertical-row.cursor-row');
+			const $oldCursorRow = $('.paragraph > .row.cursor-row');
 			if ($oldCursorRow[0]) {
 				$oldCursorRow.removeClass('cursor-row');
 			}
-			$('.cursor').closest('.vertical-row').addClass('cursor-row');
+			$('.cursor').closest('.row').addClass('cursor-row');
 		},
 		// カーソルを次の文字に移動する
 		next : function() {
 			'use strict';
 			const $prev = $('.cursor');
-			let $next = $prev.nextObj('#vertical_draft .vertical-char');
-			if ($next.hasClass('EOL') && $next.closest('.vertical-row').next('.vertical-row')[0]) { $next = $next.nextObj('#vertical_draft .vertical-char'); } // 段落途中のEOLにはカーソルを止めない
+			let $next = $prev.nextObj('#sentence_container .char');
+			if ($next.hasClass('EOL') && $next.closest('.row').next('.row')[0]) { $next = $next.nextObj('#sentence_container .char'); } // 段落途中のEOLにはカーソルを止めない
 			if (!($next[0])) {
 				// 文章の最後に達していたら、何もしない
 				return;
@@ -2504,8 +2504,8 @@ $(function() {
 		prev : function () {
 			'use strict';
 			const $prev = $('.cursor');
-			let $next = $prev.prevObj('#vertical_draft .vertical-char');
-			if ($next.hasClass('EOL') && $next.closest('.vertical-row').next('.vertical-row')[0]) { $next = $next.prevObj('#vertical_draft .vertical-char'); } // 段落途中のEOLにはカーソルを止めない
+			let $next = $prev.prevObj('#sentence_container .char');
+			if ($next.hasClass('EOL') && $next.closest('.row').next('.row')[0]) { $next = $next.prevObj('#sentence_container .char'); } // 段落途中のEOLにはカーソルを止めない
 			if (!($next[0])) {
 				return;
 			}
@@ -2517,15 +2517,15 @@ $(function() {
 			'use strict';
 			const $prev = $('.cursor');
 			const memoryPos = $('#cursor_line').children('.char-pos').index($('.cursor-pos-memory'));
-			let $next = $('#vertical_draft .cursor-row').prevObj('#vertical_draft .vertical-row').children('.vertical-char').eq(memoryPos);
+			let $next = $('#sentence_container .cursor-row').prevObj('#sentence_container .row').children('.char').eq(memoryPos);
 
 			if (!($next[0])) {
 				// 右の行の文字数が現在文字より小さい
-				$next = $('#vertical_draft div.cursor-row').prevObj('#vertical_draft .vertical-row').children('.vertical-char').last();
+				$next = $('#sentence_container div.cursor-row').prevObj('#sentence_container .row').children('.char').last();
 			}
 			if (!($next[0])) { return; }
 
-			if ($next.hasClass('EOL') && $next.closest('.vertical-row').next('.vertical-row')[0]) { $next = $next.prev('.vertical-char'); } // 段落途中のEOLにはカーソルを止めない
+			if ($next.hasClass('EOL') && $next.closest('.row').next('.row')[0]) { $next = $next.prev('.char'); } // 段落途中のEOLにはカーソルを止めない
 			$next.addCursor(false);
 		},
 		// カーソルを次の行に移動する
@@ -2533,20 +2533,20 @@ $(function() {
 			'use strict';
 			const $prev = $('.cursor');
 			const memoryPos = $('#cursor_line').children('.char-pos').index($('.cursor-pos-memory'));
-			let $next = $prev.closest('div.vertical-row').nextObj('#vertical_draft .vertical-row').children('.vertical-char').eq(memoryPos);
+			let $next = $prev.closest('div.row').nextObj('#sentence_container .row').children('.char').eq(memoryPos);
 
 			if (!($next[0])) {
-				$next = $prev.closest('.vertical-row').nextObj('#vertical_draft .vertical-row').children('.vertical-char').last();
+				$next = $prev.closest('.row').nextObj('#sentence_container .row').children('.char').last();
 			}
 			if (!($next[0])) { return; }
 
-			if ($next.hasClass('EOL') && $next.closest('.vertical-row').next('.vertical-row')[0]) { $next = $next.prev('.vertical-char'); } // 段落途中のEOLにはカーソルを止めない
+			if ($next.hasClass('EOL') && $next.closest('.row').next('.row')[0]) { $next = $next.prev('.char'); } // 段落途中のEOLにはカーソルを止めない
 			$next.addCursor(false);
 		},
 		// charNumの位置を再調整
 		repositionCharNum: function () {
 			'use strict';
-			const cursorPos = $('.cursor').closest('.vertical-row').children().index($('.cursor'));
+			const cursorPos = $('.cursor').closest('.row').children().index($('.cursor'));
 			$('.cursor-pos-memory').removeClass('cursor-pos-memory');
 			$('#cursor_line > .char-pos').eq(cursorPos).addClass('cursor-pos-memory');
 			// cursor-rowの 調整
@@ -2555,22 +2555,22 @@ $(function() {
 		// 指定行にジャンプする。画面中央に指定行及びカーソルが来るように調整
 		jumpForRow: function (rowNum) {
 			'use strict';
-			const $targetRow = $('#vertical_draft .vertical-row').eq(rowNum-1);
+			const $targetRow = $('#sentence_container .row').eq(rowNum-1);
 			if (!$targetRow[0]) { return; }
 			// cursor
-			$targetRow.children('.vertical-char').first().addCursor(true);
+			$targetRow.children('.char').first().addCursor(true);
 			this.repositionCharNum();
 		},
 		// 指定ページにジャンプする。カーソルは１行目
 		jumpForPage: function (pageNum) {
 			'use strict';
-			const $targetRow = $('#vertical_draft .vertical-row').eq(firstDispNum);
+			const $targetRow = $('#sentence_container .row').eq(firstDispNum);
 			if (!$targetRow[0]) { return; }
 			// cursor
-			$targetRow.children('.vertical-char').first().addCursor(false);
+			$targetRow.children('.char').first().addCursor(false);
 			this.repositionCharNum();
 			// display
-			const firstDispNum = $('#vertical_draft .vertical-row').index($('#vertical_draft .page-break').eq(pageNum-1));
+			const firstDispNum = $('#sentence_container .row').index($('#sentence_container .page-break').eq(pageNum-1));
 			addDisplayRow(firstDispNum,firstDispNum+getDisplayRowLen());
 		}
 	};
@@ -2584,7 +2584,7 @@ $(function() {
 	function reDisplay() {
 		'use strict';
 		console.log('reDisplay');
-		const firstDispNum = $('#vertical_draft .vertical-row').index($('#vertical_draft .display-row').first());
+		const firstDispNum = $('#sentence_container .row').index($('#sentence_container .row.display').first());
 		addDisplayRow(firstDispNum,firstDispNum+getDisplayRowLen()); // 途中行数変化
 	}
 
@@ -2593,31 +2593,31 @@ $(function() {
 		'use strict';
 		// opt_bl: trueならカーソルを画面中央に配置する
 		console.time('changeDisplayRow()');
-		const $cursor = $('#vertical_draft .cursor');
-		const $cursorRow = $cursor.closest('.vertical-row');
+		const $cursor = $('#sentence_container .cursor');
+		const $cursorRow = $cursor.closest('.row');
 
 
-		if ($cursorRow.hasClass('display-row')) {
+		if ($cursorRow.hasClass('display')) {
 			console.log('cursorRow has dispaly-row');
 			return;
 		}
 
-		$cursorRow.addClass('display-row');
-		if ($('.display-row').length <= getDisplayRowLen()) return;
-		const $nextRow = $cursorRow.nextObj('#vertical_draft .vertical-row');
-		const $prevRow = $cursorRow.prevObj('#vertical_draft .vertical-row');
+		$cursorRow.addClass('display');
+		if ($('.row.display').length <= getDisplayRowLen()) return;
+		const $nextRow = $cursorRow.nextObj('#sentence_container .row');
+		const $prevRow = $cursorRow.prevObj('#sentence_container .row');
 		let first;
-		if ($nextRow.hasClass('display-row')) {
+		if ($nextRow.hasClass('display')) {
 			// カーソルが一行前にはみ出した
-			$('.display-row').last().removeClass('display-row');
+			$('.row.display').last().removeClass('display');
 
-		} else if ($prevRow.hasClass('display-row')) {
+		} else if ($prevRow.hasClass('display')) {
 			// カーソルが一行後にはみ出した
-			$('.display-row').first().removeClass('display-row');
+			$('.row.display').first().removeClass('display');
 
 		} else if (opt_bl) {
 			// カーソルが二行以上はみ出し、かつカーソルを中央配置する
-			const $rows = $('#vertical_draft .vertical-row');
+			const $rows = $('#sentence_container .row');
 			const cursorRowPos = $rows.index($('.cursor-row'));
 			first = cursorRowPos - getDisplayRowLen()/2;
 			first = first>=0 ? first : 0;
@@ -2625,9 +2625,9 @@ $(function() {
 
 		} else {
 			// カーソルが二行以上はみ出した
-			const currentFirst = $('.vertical-row').index($('.display-row').first());
-			const cursorIndex = $('.vertical-row').index($cursorRow);
-			const currentEnd = $('.vertical-row').index($('.display-row').last());
+			const currentFirst = $('.row').index($('.row.display').first());
+			const cursorIndex = $('.row').index($cursorRow);
+			const currentEnd = $('.row').index($('.row.display').last());
 			first = 0;
 
 			if (cursorIndex < currentFirst) {
@@ -2637,7 +2637,7 @@ $(function() {
 				// カーソルが後ろにある
 				first = currentFirst + (cursorIndex - currentEnd);
 			} else {
-				// display-rowに囲まれた部分にdisplay-rowでない行がある場合
+				// displayに囲まれた部分にdisplayでない行がある場合
 				// 途中行数変化
 				first = currentFirst;
 			}
@@ -2654,13 +2654,13 @@ $(function() {
 		console.log('addDisplayRow('+ first + ','+ last +')');
 				first = Math.floor(first);
 				last = Math.floor(last);
-				const eOldDisplayRows = document.getElementsByClassName('display-row');
+				const eOldDisplayRows = document.querySelectorAll('.row.display');
 
 				while (eOldDisplayRows.length > 0) {
-					eOldDisplayRows.item(0).classList.remove('display-row');
+					eOldDisplayRows.item(0).classList.remove('display');
 				}
 
-				const eRows = document.getElementById('vertical_draft').getElementsByClassName('vertical-row');
+				const eRows = document.getElementById('sentence_container').getElementsByClassName('row');
 				const rowLen = eRows.length;
 				if (last > rowLen) {
 					last = rowLen;
@@ -2671,7 +2671,7 @@ $(function() {
 				console.log(getDisplayRowLen());
 				for (let i = first; i < last; i++) {
 					const eRow = eRows[i];
-					eRow.classList.add('display-row');
+					eRow.classList.add('display');
 				}
 				console.timeEnd('addDisplayRow()');
 				}
@@ -2682,19 +2682,19 @@ $(function() {
 	function changeDisplayChar() {
 		'use strict';
 		console.time('changeDisplayChar()');
-		const eCursor = document.getElementById('vertical_draft').getElementsByClassName('cursor')[0];
-		if (eCursor.classList.contains('display-char')) {
-			console.log('cursor has display-char');
+		const eCursor = document.getElementById('sentence_container').getElementsByClassName('cursor')[0];
+		if (eCursor.classList.contains('display')) {
+			console.log('cursor has display');
 			return;
 		}
 		if (eCursor.classList.contains('EOL') && eCursor.previousElementSibling) { eCursor = eCursor.previousElementSibling; }
 
 		const eCursorRow = eCursor.parentNode;
 		const eChars = eCursorRow.children;
-		const eDispChars = eCursorRow.querySelectorAll('.display-char');
+		const eDispChars = eCursorRow.querySelectorAll('.char.display');
 		const currentFirst = index(eDispChars[0],eChars);
 		const cursorIndex = index(eCursor,eChars);
-		const currentEnd = index(eDispChars[eDispChars.length-2] ? eDispChars[eDispChars.length-2] : eDispChars[eDispChars.length-1],eChars); // EOLは常にdisplay-charなので、EOL以外のcharがある行ではEOLの前のcharを最後のdisplay-charとしてindexを見る
+		const currentEnd = index(eDispChars[eDispChars.length-2] ? eDispChars[eDispChars.length-2] : eDispChars[eDispChars.length-1],eChars); // EOLは常にdisplayなので、EOL以外のcharがある行ではEOLの前のcharを最後のdisplayとしてindexを見る
 		let first;
 
 		if (cursorIndex < currentFirst) {
@@ -2706,8 +2706,8 @@ $(function() {
 			first = currentFirst + (cursorIndex - currentEnd);
 			console.log('cursor is backward');
 		} else {
-			// display-charに囲まれた部分にdisplay-charでない文字があり、かつその文字にカーソルがあたっている
-			// あるいはdisplay-charが一つもない(currentFirst == -1 && currentEnd == -1)
+			// displayに囲まれた部分にdisplayでない文字があり、かつその文字にカーソルがあたっている
+			// あるいはdisplayが一つもない(currentFirst == -1 && currentEnd == -1)
 			resetDisplayChar();
 			changeDisplayChar();
 			console.log('cursor is etc');
@@ -2728,17 +2728,17 @@ $(function() {
 
 	function dispCharAll() {
 		'use strict';
-		const eChars = document.getElementsByClassName('vertical-char');
+		const eChars = document.getElementsByClassName('char');
 
 		for (let i = 0,eChar; eChar = eChars[i]; i++) {
-			if (!eChar.classList.contains('display-char')) { eChar.classList.add('display-char'); }
+			if (!eChar.classList.contains('display')) { eChar.classList.add('display'); }
 		}
 	}
-	// 画面に表示されているrowのfirst文字以降にdisplay-charを付与して表示する
+	// 画面に表示されているrowのfirst文字以降にdisplayを付与して表示する
 	function addDisplayChar(first) {
 		'use strict';
 		console.log('char first:'+ first);
-		const eDisplayRows = document.querySelectorAll('#vertical_draft .display-row');
+		const eDisplayRows = document.querySelectorAll('#sentence_container .row.display');
 		let addArr = [];
 		let removeArr = [];
 
@@ -2748,10 +2748,10 @@ $(function() {
 			removeArr = removeArr.concat(result.remove);
 		}
 		for (let elem of addArr) {
-			elem.classList.add('display-char');
+			elem.classList.add('display');
 		}
 		for (let elem of removeArr) {
-			elem.classList.remove('display-char');
+			elem.classList.remove('display');
 		}
 	}
 
@@ -2765,21 +2765,21 @@ $(function() {
 		const eChars = eRow.children;
 		const addArr = [];
 		const removeArr = [];
-		// first文字以前の文字でdisplay-charを持つ文字があれば除去リストに加える
+		// first文字以前の文字でdisplayを持つ文字があれば除去リストに加える
 		for (let i = 0; i < first; i++) {
 			const eChar = eChars[i];
 			if (!eChar) { return {
 				add: addArr,
 				remove: removeArr
-			}; } // 行内文字数がfirst文字ない場合はEOL以外のdisplay-charをすべて外して終わり
-			if (eChar.classList.contains('display-char') && !eChar.classList.contains('EOL')) {
+			}; } // 行内文字数がfirst文字ない場合はEOL以外のdisplayをすべて外して終わり
+			if (eChar.classList.contains('display') && !eChar.classList.contains('EOL')) {
 				removeArr.push(eChar);
 			}
 		}
 
-		// first文字以降の文字でrowの高さに収まる文字のうち、display-charを持たない文字を追加リストに加える
-		// また、rowに収まらない文字でdisplay-charを持つ文字があれば除去リストに加える
-		// EOLは常にdisplay-charを持つようにする(そうしなければ、空行で一つもdisplay-charがない状態となり表示要素が一切なくなってしまうので、heightがautoであるrowは潰れた状態になってしまう)
+		// first文字以降の文字でrowの高さに収まる文字のうち、displayを持たない文字を追加リストに加える
+		// また、rowに収まらない文字でdisplayを持つ文字があれば除去リストに加える
+		// EOLは常にdisplayを持つようにする(そうしなければ、空行で一つもdisplayがない状態となり表示要素が一切なくなってしまうので、heightがautoであるrowは潰れた状態になってしまう)
 		const dispHeight = parseInt((eRow.currentStyle || document.defaultView.getComputedStyle(eRow,null)).width);
 		let fontHeight = 0;
 		let htcnt = 0;
@@ -2790,11 +2790,11 @@ $(function() {
 			fontHeight = eChar.dataset.fontSize === 'auto' ? 18 : parseInt(eChar.dataset.fontSize)+2;
 			htcnt += fontHeight;
 			if (htcnt < dispHeight) {
-				if (!(eChar.classList.contains('display-char'))) {
+				if (!(eChar.classList.contains('display'))) {
 					addArr.push(eChar);
 				}
 			} else {
-				if (eChar.classList.contains('display-char')) {
+				if (eChar.classList.contains('display')) {
 					removeArr.push(eChar);
 				}
 			}
@@ -2806,11 +2806,11 @@ $(function() {
 			remove: removeArr
 		};
 	}
-	$('body').on('click','.vertical-char',function (e) {
+	$('body').on('click','.char',function (e) {
 		'use strict';
 		console.log('char:' + $(this).css('height'));
 	});
-	$('body').on('click','.vertical-row',function (e) {
+	$('body').on('click','.row',function (e) {
 		'use strict';
 		console.log('row:' + $(this).css('height'));
 	});
@@ -2818,10 +2818,10 @@ $(function() {
 	// 表示する行数
 	function getDisplayRowLen() {
 		'use strict';
-		const dispWidth = parseInt($('#vertical_draft').css('height'));
+		const dispWidth = parseInt($('#sentence_container').css('height'));
 		const rowBorderWidth = 2;
-		let rowWidth = parseInt($('.vertical-paragraph > .vertical-row').css('height'));
-		console.log('tategaki rowWidgh:'+ rowWidth + ','+ $('.vertical-paragraph > .vertical-row').hasClass('display-row'));
+		let rowWidth = parseInt($('.paragraph > .row').css('height'));
+		console.log('tategaki rowWidgh:'+ rowWidth + ','+ $('.paragraph > .row').hasClass('display'));
 		if (dispWidth <= 0) { return 0; }
 		rowWidth += rowBorderWidth;
 		const dispLen = Math.floor(dispWidth / rowWidth);
@@ -2846,9 +2846,9 @@ $(function() {
 	function resizeInputBuffer() {
 		'use strict';
 		const $inputBuffer = $('#input_buffer');
-		const $character = $inputBuffer.children('.vertical-char').first();
+		const $character = $inputBuffer.children('.char').first();
 		// borderは上下合わせて２つある
-		const height = $character.outerHeight() * ($inputBuffer.children('.vertical-char').length-1) + 5;
+		const height = $character.outerHeight() * ($inputBuffer.children('.char').length-1) + 5;
 
 		$inputBuffer.css('height',height);
 	}
@@ -2871,11 +2871,11 @@ $(function() {
 		'use strict';
 
 		// reset
-		$('#vertical_draft > .vertical-paragraph > .vertical-row.page-break').removeClass('page-break');
-		$('#vertical_draft > .vertical-paragraph > .vertical-row.page-last-row').removeClass('page-last-row');
+		$('#sentence_container > .paragraph > .row.page-break').removeClass('page-break');
+		$('#sentence_container > .paragraph > .row.page-last-row').removeClass('page-last-row');
 
 		const pageNum = getRowLenOnPage();
-		const $rows = $('#vertical_draft > .vertical-paragraph > .vertical-row');
+		const $rows = $('#sentence_container > .paragraph > .row');
 		for (let i = 1,$row; ($row = $rows.eq(pageNum*i-1))[0]; i++) {
 			$row.addClass('page-last-row');
 		}
@@ -2889,7 +2889,7 @@ $(function() {
 	// 	選択操作(label:select)
 	// =====================================================================
 
-	// 選択範囲のvertical-charを配列に入れて返す
+	// 選択範囲のcharを配列に入れて返す
 	// bl: 実行後選択を解除するならtrue
 	function findSelect$obj(bl) {
 		'use strict';
@@ -2900,7 +2900,7 @@ $(function() {
 			// 選択範囲が一箇所の場合
 			const selRange = selection.getRangeAt(0); // 選択範囲のRange
 
-			const $chars = $('#vertical_draft .display-row .vertical-char').not('.EOL');
+			const $chars = $('#sentence_container .row.display .char').not('.EOL');
 			const charRange = document.createRange();
 			for (let i = 0,$char; ($char = $chars.eq(i))[0] ; i++) {
 				// そのcharacterが選択範囲内にある場合に配列に入れている
@@ -2923,7 +2923,7 @@ $(function() {
 		return retObjArray;
 	}
 
-	// 選択範囲のvertical-charを配列に入れて返す
+	// 選択範囲のcharを配列に入れて返す
 	// bl: 実行後選択を解除するならtrue
 	function findSelectElem(bl) {
 		'use strict';
@@ -2935,7 +2935,7 @@ $(function() {
 			const selRange = selection.getRangeAt(0); // 選択範囲のRange
 
 			// 選択範囲内にあるcharacterを配列に入れる
-			const eChars = document.querySelectorAll('#vertical_draft .display-row .vertical-char');
+			const eChars = document.querySelectorAll('#sentence_container .row.display .char');
 			const charRange = document.createRange();
 			for (let i = 0,eChar; eChar = eChars[i] ; i++) {
 				if (eChar.classList.contains('EOL')) { continue; }
@@ -3015,7 +3015,7 @@ $(function() {
 
 	function comReadFile(fileId) {
 		'use strict';
-		$('#vertical_draft > .vertical-paragraph').remove();
+		$('#sentence_container > .paragraph').remove();
 
 		$.ajax({
 			type : 'POST',
@@ -3057,7 +3057,7 @@ $(function() {
 		const userId = getUserId();
 		userAlert('読込中');
 		console.log('comReadJsonFile userId:"'+ userId);
-		$('#vertical_draft').empty();
+		$('#sentence_container').empty();
 		console.time('ReadJsonFile communication');
 
 		$.ajax({
@@ -3080,9 +3080,9 @@ $(function() {
 			const text = data.data.text;
 			console.time('append string');
 			// appendParagraphFromObj(text);
-			window.draft = new window.Draft(this.id,text);
+			window.sentence = new window.SentenceContainer(this.id,text);
 			console.timeEnd('append string');
-			console.log(window.draft);
+			console.log(window.sentence);
 			console.time('addDisplayRow');
 			addDisplayRow(0,getDisplayRowLen());
 			console.timeEnd('addDisplayRow');
@@ -3126,7 +3126,7 @@ $(function() {
 		}
 
 		// 段落ごとに配列に格納
-		const $paragraphs = $('#vertical_draft > .vertical-paragraph');
+		const $paragraphs = $('#sentence_container > .paragraph');
 		const contentsArray = [];
 		for (let i = 0,$paragraph; ($paragraph = $paragraphs.eq(i))[0]; i++) {
 			contentsArray.push($paragraph.text());
@@ -3409,12 +3409,12 @@ $(function() {
 
 	function newFile(filename) {
 		'use strict';
-		$('#vertical_draft').empty();
+		$('#sentence_container').empty();
 
 		// appendParagraph('');
-		window.Draft.newFile(filename);
-		console.log(window.draft);
-		$('.vertical-row').addClass('display-row').children('.vertical-char').first().addClass('cursor');
+		window.SentenceContainer.newFile(filename);
+		console.log(window.sentence);
+		$('.row').addClass('display').children('.char').first().addClass('cursor');
 		$('#file_title').val(filename).attr('data-file-id','-1');
 		addPageBreak();
 		gCursor.addCursorRow();
@@ -3841,10 +3841,10 @@ $(function() {
 						'use strict';
 						// opt_bl: trueなら、カーソルを画面中央に配置する(二行以上カーソル行がはみ出した場合)
 						console.log('addCursor');
-						if (!this.hasClass('vertical-char')) return this;
+						if (!this.hasClass('char')) return this;
 
 						const $prevCursor = $('.cursor');
-						const $prevChar = this.prev('.vertical-char');
+						const $prevChar = this.prev('.char');
 
 						$prevCursor.removeClass('cursor');
 						console.log('after prevcursor add class');
@@ -3964,14 +3964,14 @@ $(function() {
 					'use strict';
 					const fileId = $(this).attr('data-file-id');
 					// comReadJsonFile(fileId);
-					window.Draft.readFile({
+					window.SentenceContainer.readFile({
 						user_id: getUserId(),
 						file_id: fileId
 					});
 					$('#file_list_modal').modal('hide');
 				});
-				$('body').on('click','.vertical-paragraph > .vertical-row',moveCursorToClickPos);
-				$('body').on('mousewheel','#vertical_draft',wheelEvent);
+				$('body').on('click','.paragraph > .row',moveCursorToClickPos);
+				$('body').on('mousewheel','#sentence_container',wheelEvent);
 				document.getElementById('menu_new').addEventListener('click',function (e) { defaultNewFile(); },false);
 				document.getElementById('menu_save').addEventListener('click',function (e) { comSaveJsonFile(); },false);
 				document.getElementById('menu_delete').addEventListener('click',function (e) { defaultDeleteFile(); },false);
@@ -4088,7 +4088,7 @@ $(function() {
 				},false);
 				// selection
 				// 選択範囲に文字装飾が施されていればアクティブに
-				document.getElementById('vertical_draft').addEventListener('mouseup',function(e) {
+				document.getElementById('sentence_container').addEventListener('mouseup',function(e) {
 					'use strict';
 					const eSelChars = findSelectElem();
 					let bBold = false;
@@ -4111,7 +4111,7 @@ $(function() {
 
 					// 選択した最後のcharにカーソルを当てる
 					if (eSelChars.length > 0) {
-						$(eSelChars[eSelChars.length -1]).nextObj('#vertical_draft .vertical-char').addCursor();
+						$(eSelChars[eSelChars.length -1]).nextObj('#sentence_container .char').addCursor();
 					}
 				},false);
 				// align

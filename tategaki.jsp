@@ -48,14 +48,14 @@
 			<div id="app_container">
 				<input type="text" id="file_title" data-file-id="-1" value="newfile"></input>
 				<div id="cursor_line"></div>
-					<div id="vertical_draft"> </div>
+					<div id="sentence_container"> </div>
 				<div class="doc-info">
 					文字:<span class="str-num">-</span>/<span class="str-len">-</span>&nbsp;
 					行:<span class="row-num">-</span>/<span class="row-len">-</span>&nbsp;
 					ページ:<span class="page-num">-</span>/<span class="page-len">-</span>&nbsp;
 					最終更新日時:<span class="saved">-</span>
 				</div>
-				<div id="input_buffer" class="vertical-row"></div>
+				<div id="input_buffer" class="row"></div>
 				<div id="convert_container"></div>
 				<input type="text" id="command"></input>
 				<input type="text" id="find"></input>

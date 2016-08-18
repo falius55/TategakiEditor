@@ -1,6 +1,6 @@
 /*
  *	オブジェクト指向
- *	Draft,Paragraph,Row,Charは、親や子の参照を保持するのはもちろんのこと、木構造を無視して異なる親であっても次と前にある同種オブジェクトの参照を持つ
+ *	SentenceContainer,Paragraph,Row,Charは、親や子の参照を保持するのはもちろんのこと、木構造を無視して異なる親であっても次と前にある同種オブジェクトの参照を持つ
  *	Dom要素の参照を持つコンポジション
  *	要素の再利用のため、要素作成のみクロージャで行う
  */
@@ -62,7 +62,7 @@ const Util = {
 Util.createCharElement = (function () {
 	'use strict';
 	const eCharTemplate = document.createElement('span');
-	eCharTemplate.classList.add('vertical-char');
+	eCharTemplate.classList.add('char');
 
 	return function (data) {
 		const eChar = eCharTemplate.cloneNode(true);
@@ -110,12 +110,12 @@ Util.createRowElement = (function () {
 	 *	]
 	 */
 	const eRowTemplate = document.createElement('div');
-	eRowTemplate.classList.add('vertical-row');
-	eRowTemplate.classList.add('display-row');
+	eRowTemplate.classList.add('row');
+	eRowTemplate.classList.add('display');
 	const eEOL = document.createElement('span');
-	eEOL.classList.add('vertical-char');
+	eEOL.classList.add('char');
 	eEOL.classList.add('EOL');
-	eEOL.classList.add('display-char');
+	eEOL.classList.add('display');
 	eRowTemplate.appendChild(eEOL);
 
 	return function (data) {
@@ -142,7 +142,7 @@ Util.createParagraphElement = (function () {
 	 * 			]
 	 */
 	const eParagraphTemplate = document.createElement('div');
-	eParagraphTemplate.classList.add('vertical-paragraph');
+	eParagraphTemplate.classList.add('paragraph');
 
 	return function (data) {
 		const eParagraph = eParagraphTemplate.cloneNode(true);
@@ -172,11 +172,11 @@ Util.createCharPosElement = (function () {
 (function () {
 	'use strict';
 	class Cursor {
-		constructor(draft) {
-			this._draft = draft;
-			const firstChar = this._draft.firstChild().firstChild().firstChild();
+		constructor(sentence) {
+			this._sentence = sentence;
+			const firstChar = this._sentence.firstChild().firstChild().firstChild();
 			this._char = firstChar;
-			this._char.addClass('cursor'); // この時点ではDraftの_cursorにインスタンスが入っていないのでdraft.cursor()が使えず、そのためchar.addCursor()が利用できない
+			this._char.addClass('cursor'); // この時点ではSentenceContainerの_cursorにインスタンスが入っていないのでsentence.cursor()が使えず、そのためchar.addCursor()が利用できない
 			this.createCursorLine();
 			this.setPosMemory(this._char.index());
 		}
@@ -192,7 +192,7 @@ Util.createCharPosElement = (function () {
 			if (!nextChar) return this;
 			nextChar.addCursor();
 			this.setPosMemory(nextChar.index());
-			this.draft.changeDisplay();
+			this._sentence.changeDisplay();
 			return this;
 		}
 		movePrev() {
@@ -200,7 +200,7 @@ Util.createCharPosElement = (function () {
 			if (!prevChar) return this;
 			prevChar.addCursor();
 			this.setPosMemory(prevChar.index());
-			this.draft.changeDisplay();
+			this._sentence.changeDisplay();
 			return this;
 		}
 		moveRight() {
@@ -210,7 +210,7 @@ Util.createCharPosElement = (function () {
 			if (!prevRow) return this;
 			const rightChar = prevRow.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
 			rightChar.addCursor();
-			this.draft.changeDisplay();
+			this._sentence.changeDisplay();
 			return this;
 		}
 		moveLeft() {
@@ -220,7 +220,7 @@ Util.createCharPosElement = (function () {
 			if (!nextRow) return this;
 			const leftChar = nextRow.children(index);
 			leftChar.addCursor();
-			this.draft.changeDisplay();
+			this._sentence.changeDisplay();
 			return this;
 		}
 		// cursor-pos-memoryは、カーソルの左右移動の際にカーソルが何文字目の位置から移動してきたのかを記憶する要素
@@ -230,7 +230,7 @@ Util.createCharPosElement = (function () {
 			for (let i = 0,eOldCharPos; eOldCharPos = eOldCharPoses[0]; i++) {
 				eCursorLine.removeChild(eOldCharPos);
 			}
-			eCursorLine.appendChild(Util.createCharPosElement(this.draft.strLenOnRow()));
+			eCursorLine.appendChild(Util.createCharPosElement(this._sentence.strLenOnRow()));
 			return this;
 		}
 		getPosMemory() {
@@ -415,7 +415,6 @@ Util.createCharPosElement = (function () {
 		}
 		onKeydown(e) {
 			'use strict';
-			console.log('abstract event');
 			let keycode;
 			if (document.all) {
 				// IE
@@ -502,9 +501,9 @@ Util.createCharPosElement = (function () {
 		// trueなら表示、falseなら非表示
 		display(bDisplay) {
 			if (bDisplay) {
-				this._elem.classList.add('display-char');
+				this._elem.classList.add('display');
 			} else {
-				this._elem.classList.remove('display-char');
+				this._elem.classList.remove('display');
 			}
 			return this;
 		}
@@ -517,7 +516,7 @@ Util.createCharPosElement = (function () {
 			return this.parent(newRow);
 		}
 		cursor() {
-			return this.row().paragraph().draft().cursor();
+			return this.row().paragraph().sentence().cursor();
 		}
 		cursorChar() {
 			return this.cursor().getChar();
@@ -664,11 +663,11 @@ Util.createCharPosElement = (function () {
 		// displayがtrueであれば、first文字以降でその行に収まる文字を表示し、それ以外の文字は非表示にする
 		display(bDisplay,first) {
 			if (!bDisplay) {
-				this.elem().classList.remove('display-row');
+				this.elem().classList.remove('display');
 				return this;
 			}
 
-			this.elem().classList.add('display-row');
+			this.elem().classList.add('display');
 			const dispHeight = this.height();
 			let heightSum = 0;
 			const addArray = [];
@@ -701,14 +700,14 @@ Util.createCharPosElement = (function () {
 		}
 		firstDisplayCharPos() {
 			for (let char of this.children()) {
-				if (char.hasClass('display-char')) return char.index();
+				if (char.hasClass('display')) return char.index();
 			}
-			return -1; // display-charがひとつもない(EOLは常にdisplay-charなので、ここまで来たら異常)
+			return -1; // displayがひとつもない(EOLは常にdisplayなので、ここまで来たら異常)
 		}
 		lastDisplayCharPos() {
 			if (!this.hasChar) return -1;
 			for (let i = super.childLen()-1,char; char = this.chars(i); i--) {
-				if (char.hasClass('display-char')) return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
+				if (char.hasClass('display')) return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
 			}
 			return -1;
 		}
@@ -730,7 +729,7 @@ Util.createCharPosElement = (function () {
 			return this.EOL();
 		}
 		cursorChar() {
-			return this.paragraph().draft().cursor().getChar();
+			return this.paragraph().sentence().cursor().getChar();
 		}
 		hasChar() {
 			return super.hasChild();
@@ -926,8 +925,8 @@ Util.createCharPosElement = (function () {
 		deleteRow(row) {
 			return this.deleteChild(row);
 		}
-		draft(newDraft) {
-			return this.parent(newDraft);
+		sentence(newSentence) {
+			return this.parent(newSentence);
 		}
 
 		// DOM操作関係
@@ -964,7 +963,7 @@ Util.createCharPosElement = (function () {
 		}
 	}
 
-	// classは巻き上げが起こらないため、Char・Rowの下に作る必要がある。ただし、Draft内で利用するのでDraftよりは上になければならない
+	// classは巻き上げが起こらないため、Char・Rowの下に作る必要がある。ただし、SentenceContainer内で利用するのでSentenceContainerよりは上になければならない
 	class InputChar extends Char {
 		constructor(c,phraseNum) {
 			if (phraseNum === undefined) phraseNum = -1;
@@ -989,9 +988,9 @@ Util.createCharPosElement = (function () {
 		}
 	}
 	class InputBuffer extends Row {
-		constructor(draft) {
+		constructor(sentence) {
 			super(document.getElementById('input_buffer'));
-			this._draft = draft;
+			this._sentence = sentence;
 		}
 		add(keycode,isShift) {
 			const newInputStr = this.newString(keycode,isShift);
@@ -1020,10 +1019,10 @@ Util.createCharPosElement = (function () {
 		}
 	}
 
-	window.Draft = class extends Sentence {
+	window.SentenceContainer = class extends Sentence {
 		constructor(fileId,data) {
-			console.log('draft constructor');
-			super(document.getElementById('vertical_draft'));
+			console.log('sentence constructor');
+			super(document.getElementById('sentence_container'));
 			// 文書情報
 			this._fileId = fileId;
 			this._strLenOnRow = 40; // １行の文字数
@@ -1131,7 +1130,7 @@ Util.createCharPosElement = (function () {
 			const currentEnd = this.lastDisplayRowPos();
 
 			// opt_boolがtrueなら、カーソル位置を中央にする
-			// HACK:計算前のdisplay-rowの数を基準にするので、フォントの大きさなどによってずれもありうる
+			// HACK:計算前のdisplayの数を基準にするので、フォントの大きさなどによってずれもありうる
 			if (opt_bool) {
 				const harfRange = (currentEnd - currentFirst)/2;
 				const ret = cursorIndex - harfRange;
@@ -1145,7 +1144,7 @@ Util.createCharPosElement = (function () {
 				// カーソルが後ろにある
 				return currentFirst + (cursorIndex - currentEnd);
 			} else {
-				// display-rowに囲まれた部分にdisplay-rowでない行がある場合
+				// displayに囲まれた部分にdisplayでない行がある場合
 				// 途中行数変化
 				return currentFirst;
 			}
@@ -1154,7 +1153,7 @@ Util.createCharPosElement = (function () {
 			let cnt = 0;
 			for (let paragraph of this.paragraphs()) {
 				for (let row of paragraph.rows()) {
-					if (row.hasClass('display-row'))
+					if (row.hasClass('display'))
 						return cnt;
 					cnt++;
 				}
@@ -1166,7 +1165,7 @@ Util.createCharPosElement = (function () {
 			let cnt = this.rowLenAll() -1;
 			for (let paragraph_i = this.childLen()-1,paragraph; paragraph =  this.paragraphs(paragraph_i); paragraph_i--) {
 				for (let row_i = paragraph.childLen()-1,row; row = paragraph.rows(row_i); row_i--) {
-					if (row.hasClass('display-row')) return cnt;
+					if (row.hasClass('display')) return cnt;
 					cnt--;
 				}
 			}
@@ -1218,7 +1217,7 @@ Util.createCharPosElement = (function () {
 		// TODO: 配列が渡されたらフラグメントを使ってappendする
 		append(paragraph) {
 			this.elem().appendChild(paragraph.elem());
-			paragraph.draft(this);
+			paragraph.sentence(this);
 			if (!this.hasParagraph()) {
 				// this.paragraphs().push(paragraph);
 				this.pushParagraph(paragraph);
@@ -1255,26 +1254,26 @@ Util.createCharPosElement = (function () {
 				$('#file_title').val(json.filename).attr('data-file-id',fileId);
 				// 文章のhtml書き出し
 				const text = json.data.text;
-				window.draft.emptyElem();
-				console.time('new Draft');
-				window.draft = new Draft(fileId,text);
-				console.timeEnd('new Draft');
+				window.sentence.emptyElem();
+				console.time('new SentenceContainer');
+				window.sentence = new SentenceContainer(fileId,text);
+				console.timeEnd('new SentenceContainer');
 				console.time('display');
-				window.draft.resetDisplay();
+				window.sentence.resetDisplay();
 				console.timeEnd('display');
 				// FIXME: page-breakなどをつけないとprintDocInfo()が使えない(addPageBreak()を同時に使わない操作で使われると計算で無限ループとなってブラウザが落ちる)
-				$('.vertical-char').first().addClass('cursor')
-					$('.cursor').closest('.vertical-row').addClass('cursor-row');
+				$('.char').first().addClass('cursor')
+					$('.cursor').closest('.row').addClass('cursor-row');
 				$('#cursor_line > .char-pos').first().addClass('cursor-pos-memory');
 				$('.doc-info > .saved').text(json.saved);
 				console.timeEnd('readFile');
-				console.log(window.draft);
+				console.log(window.sentence);
 			});
 		}
 		saveFile() {
 		}
 		static newFile(filename) {
-			window.draft = new Draft(-1,[[[],[]]]); // 空段落のデータ
+			window.sentence = new SentenceContainer(-1,[[[],[]]]); // 空段落のデータ
 			return this;
 		}
 
@@ -1301,7 +1300,6 @@ Util.createCharPosElement = (function () {
 				case 188:
 					// ,
 					console.log(this);
-					console.log(window.draft);
 					break;
 				default:
 					break;

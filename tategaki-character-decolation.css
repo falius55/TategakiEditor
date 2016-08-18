@@ -1,4 +1,4 @@
-.style-strLen-30 .vertical-char {
+.style-strLen-30 .char {
 	padding: 1% 1% 0 0;
 }
 span.decolation-color-red {
@@ -7,12 +7,12 @@ span.decolation-color-red {
 span.decolation-color-blue {
 	color: blue;
 }
-.vertical-char[data-font-size="auto"] {
+.char[data-font-size="auto"] {
 	font-size: 18px;
 	height: 18px;
 	width: 18px;
 }
-.vertical-char[data-font-size="30"] {
+.char[data-font-size="30"] {
 	font-size: 30px;
 	height: 30px;
 	width: 30px;
@@ -22,10 +22,10 @@ span.decolation-font-big {
 	width: 45px;
 	height: auto;
 }
-.decolation-font-big > .vertical-row {
+.decolation-font-big > .row {
 	width: auto;
 }
-#vertical_draft span.EOL.vertical-char.decolation-font-big {
+#sentence_container span.EOL.char.decolation-font-big {
 	width: 45px;
 }
 span.decolation-font-small {
@@ -71,13 +71,13 @@ span.decolation-font-small {
 	color: white;
 	background-color: blue;
 }
-.decolation-textalign-left .vertical-row {
+.decolation-textalign-left .row {
 	text-align: left;
 }
-.decolation-textalign-center .vertical-row {
+.decolation-textalign-center .row {
 	text-align: center;
 }
-.decolation-textalign-right .vertical-row {
+.decolation-textalign-right .row {
 	text-align: right;
 }
 .decolation-fontsize-big {
