@@ -300,8 +300,8 @@ $(function() {
 				// b
 			case 68:
 				// d
-				backSpaceOnContainer();
-				checkText();
+				// backSpaceOnContainer();
+				// checkText();
 				break;
 			case 190:
 				// .
@@ -365,7 +365,7 @@ $(function() {
 
 	function checkText() {
 		checkKinsoku();
-		changeDisplayRow(false);
+		// changeDisplayRow(false);
 		addPageBreak();
 		// printDocInfo();
 	}
@@ -374,16 +374,16 @@ $(function() {
 		'use strict';
 
 		switch (keycode) {
-			case 8:
-				// backspace
-				backSpaceOnContainer();
-				checkText();
-				break;
-			case 13:
-				// Enter
-				lineBreak();
-				checkText();
-				break;
+			// case 8:
+			// 	// backspace
+			// 	backSpaceOnContainer();
+			// 	checkText();
+			// 	break;
+			// case 13:
+			// 	// Enter
+			// 	lineBreak();
+			// 	checkText();
+			// 	break;
 			// case 32:
 			// 	// space
 			// 	insertStringFromCursor('　');
@@ -1128,9 +1128,9 @@ $(function() {
 		cordinateStringNumber($cursorRow,getStringLenOfRow());
 		gCursor.repositionCharNum();
 		checkKinsoku();
-		changeDisplayRow(false);
-		resetDisplayChar();
-		changeDisplayChar();
+		// changeDisplayRow(false);
+		// resetDisplayChar();
+		// changeDisplayChar();
 		addPageBreak();
 		printDocInfo();
 	}
@@ -2473,10 +2473,10 @@ $(function() {
 	const gCursor = {
 		init: function () {
 			'use strict';
-			$('.char').first().addClass('cursor');
-			$('#cursor_line > .char-pos').first().addClass('cursor-pos-memory');
-			this.addCursorRow();
-			resetDisplayChar();
+			// $('.char').first().addClass('cursor');
+			// $('#cursor_line > .char-pos').first().addClass('cursor-pos-memory');
+			// this.addCursorRow();
+			// resetDisplayChar();
 		},
 		addCursorRow : function () {
 			'use strict';
@@ -2708,8 +2708,8 @@ $(function() {
 		} else {
 			// displayに囲まれた部分にdisplayでない文字があり、かつその文字にカーソルがあたっている
 			// あるいはdisplayが一つもない(currentFirst == -1 && currentEnd == -1)
-			resetDisplayChar();
-			changeDisplayChar();
+			// resetDisplayChar();
+			// changeDisplayChar();
 			console.log('cursor is etc');
 			return;
 		}
@@ -3037,9 +3037,9 @@ $(function() {
 				// 禁則処理
 				checkKinsoku();
 				// 最初の４０行のみ表示する
-				addDisplayRow(0,getDisplayRowLen());
-				gCursor.init();
-				resetDisplayChar();
+				// addDisplayRow(0,getDisplayRowLen());
+				// gCursor.init();
+				// resetDisplayChar();
 				$('.doc-info > .saved').text(data.saved);
 
 				addPageBreak();
@@ -3417,10 +3417,10 @@ $(function() {
 
 		// appendParagraph('');
 		window.SentenceContainer.newFile(filename);
-		console.log(window.sentence);
-		$('.row').addClass('display').children('.char').first().addClass('cursor');
+		console.log(window.container);
+		// $('.row').addClass('display').children('.char').first().addClass('cursor');
 		$('#file_title').val(filename).attr('data-file-id','-1');
-		addPageBreak();
+		// addPageBreak();
 		gCursor.addCursorRow();
 		printDocInfo();
 	}
@@ -3867,8 +3867,8 @@ $(function() {
 							document.getElementById('btn-italic').classList.remove('active');
 						}
 
-						changeDisplayRow(opt_bl);
-						changeDisplayChar();
+						// changeDisplayRow(opt_bl);
+						// changeDisplayChar();
 						// printDocInfo();
 						return this;
 					}
@@ -3989,7 +3989,7 @@ $(function() {
 				},false);
 				$(window).resize(function () {
 					'use strict';
-					resetDisplayChar();
+					// resetDisplayChar();
 				});
 				$('#file_list_modal').on('shown.bs.modal',function (e) {
 					'use strict';

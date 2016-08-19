@@ -172,6 +172,7 @@ Util.createCharPosElement = (function () {
 // Class
 (function () {
 	'use strict';
+	// 段落最後のEOL以外のEOLにカーソルは止まらない(EOLは基本、文字挿入のために存在)
 	class Cursor {
 		constructor(sentence) {
 			this._sentence = sentence;
@@ -184,11 +185,18 @@ Util.createCharPosElement = (function () {
 
 		// --参照取得
 
+		sentence() {
+			return this._sentence;
+		}
 		getChar() {
 			return this._char;
 		}
-
-		// --判定
+		getRow() {
+			return this.getChar().row();
+		}
+		getParagraph() {
+			return this.getRow().paragraph();
+		}
 
 		// --参照操作
 
@@ -233,44 +241,6 @@ Util.createCharPosElement = (function () {
 			return this;
 		}
 
-		// --カーソル操作
-
-		// カーソル移動
-		moveNext() {
-			const nextChar = this._char.next();
-			if (!nextChar) return this;
-			nextChar.addCursor().setPosMemory();
-			this._sentence.changeDisplay();
-			return this;
-		}
-		movePrev() {
-			const prevChar = this._char.prev();
-			if (!prevChar) return this;
-			prevChar.addCursor().setPosMemory();
-			this._sentence.changeDisplay();
-			return this;
-		}
-		moveRight() {
-			const currentChar = this.getChar();
-			const index = this.getPosMemory();
-			const prevRow = currentChar.row().prev();
-			if (!prevRow) return this;
-			const rightChar = prevRow.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
-			rightChar.addCursor();
-			this._sentence.changeDisplay();
-			return this;
-		}
-		moveLeft() {
-			const currentChar = this.getChar();
-			const index = this.getPosMemory();
-			const nextRow = currentChar.row().next();
-			if (!nextRow) return this;
-			const leftChar = nextRow.children(index);
-			leftChar.addCursor();
-			this._sentence.changeDisplay();
-			return this;
-		}
-
 		// カーソル位置に文字を挿入する
 		insert(str) {
 			const cursorChar = this.getChar();
@@ -279,25 +249,83 @@ Util.createCharPosElement = (function () {
 				cursorChar.before(newChar);
 			}
 
-			cursorChar.row().paragraph().cordinate();
+			cursorChar.paragraph().cordinate();
 			this.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えない
 			return this;
 		}
 		// カーソル位置でバックスペース
 		backSpace() {
-			// 行の途中でのバックスペース
-			//  カーソルの前の位置にある文字を削除する
-			if (this.getChar().hasPrevSibling()) {
-				this.getChar().prev().remove();
+			const cursorChar = this.getChar();
+			if (!cursorChar.prev()) return this; // 文章先頭からのバックスペースは何もしない
+
+			// 段落先頭からのバックスペースでは、前の行に段落をつなげる
+			if (cursorChar.isFirst() && cursorChar.row().isFirst()) {
+				const cursorParagraph = cursorChar.row().paragraph();
+				const newParagraph = cursorParagraph.prev(); // 融合先の段落
+				for (let moveRow of cursorParagraph.rows()) {
+					moveRow.moveLastBefore();
+				}
+				newParagraph.cordinate();
+				this.sentence().changeDisplay();
+				return this;
 			}
 
-			// 以下は行頭
-			if (this.getChar().row().hasPrevSibling()) {
-
+			//  段落先頭以外からのバックスペース
+			//  カーソルの前の位置にある文字を削除する(行頭なら行をまたいで前の文字)
+			if (!(cursorChar.isFirst() && cursorChar.row().isFirst())) {
+				cursorChar.prevChar().delete();
+				this.sentence().changeDisplay();
+				return this;
 			}
 		}
+
 		// カーソル位置で改行する
-		linebreak() {
+		lineBreak() {
+			// 段落の分割
+			const cursorParagraph = this.getParagraph().divide(this.getChar());
+			// 新しくできた段落の最初の文字にカーソルを移動する
+			const newParagraph = cursorParagraph.next(); // divide()で新しく挿入された段落
+			newParagraph.firstChild().firstChild().addCursor().setPosMemory();
+			this.sentence().changeDisplay(true);
+			return this;
+		}
+
+		// --カーソル操作
+
+		// カーソル移動
+		moveNext() {
+			const nextChar = this.getChar().next();
+			if (!nextChar) return this;
+			nextChar.slideNextCursor().addCursor().setPosMemory();
+			this._sentence.changeDisplay();
+			return this;
+		}
+		movePrev() {
+			const prevChar = this.getChar().prev();
+			if (!prevChar) return this;
+			prevChar.slidePrevCursor().addCursor().setPosMemory();
+			this._sentence.changeDisplay();
+			return this;
+		}
+		moveRight() {
+			const prevRow = this.getChar().row().prev();
+			this.moveRow(prevRow);
+			this.sentence().changeDisplay();
+			return this;
+		}
+		moveLeft() {
+			const nextRow = this.getChar().row().next();
+			this.moveRow(nextRow);
+			this.sentence().changeDisplay();
+			return this;
+		}
+		// 引数で指定された行にカーソルを移動する
+		moveRow(row) {
+			const index = this.getPosMemory();
+			if (!row) return this;
+			const char = row.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
+			char.slidePrevCursor().addCursor();
+			return this;
 		}
 	}
 
@@ -366,11 +394,19 @@ Util.createCharPosElement = (function () {
 
 		// --判定
 
+		// 引数が自分と同じオブジェクトならtrueを返す
+		is(char) {
+			return char === this;
+		}
 		hasClass(className) {
 			return this._elem.classList.contains(className);
 		}
 		hasChild() {
 			return this._children.length > 0;
+		}
+		isOnlyChild() {
+			return this.parent().childLen() === 1
+				&& this.parent().children(0) === this;
 		}
 		isEmpty() {
 			return this._children.length === 0;
@@ -388,6 +424,15 @@ Util.createCharPosElement = (function () {
 			} else {
 				return false;
 			}
+		}
+		// １文字目、一行目などその親の中で最初の子であればtrue
+		isFirst() {
+			return !this.hasPrevSibling();
+		}
+		// 最終文字、最終行などその親の中で最後の子であればtrue
+		// Charの場合は、hasNextSibling()はEOLの前の文字とEOL自身でfalseを返すため、isLast()でもEOLの前の文字とEOLの２つでtrueを返す
+		isLast() {
+			return !this.hasNextSibling();
 		}
 
 		// --参照操作
@@ -541,13 +586,50 @@ Util.createCharPosElement = (function () {
 		row(newRow) {
 			return this.parent(newRow);
 		}
+		paragraph() {
+			return this.row().paragraph();
+		}
 		cursor() {
-			return this.row().paragraph().sentence().cursor();
+			return this.row().paragraph().container().cursor();
 		}
 		cursorChar() {
 			return this.cursor().getChar();
 		}
+		// Cursor用
+		// カーソル文字として不適ならその次の文字に移動する
+		slideNextCursor() {
+			// 段落最後のEOL以外のEOLには止まらない
+			// 段落途中のEOLならその次の文字に変更する
+			if (this.isEOL() && this.row().hasNextSibling()) {
+				return this.next();
+			} else {
+				return this;
+			}
+		}
+		// カーソル文字として不適ならその前の文字に移動する
+		slidePrevCursor() {
+			// 段落最後のEOL以外のEOLには止まらない
+			// 段落途中のEOLならその前の文字に変更する
+			if (this.isEOL() && this.row().hasNextSibling()) {
+				return this.prev();
+			} else {
+				return this;
+			}
+		}
+		// EOLを含まない(段落最後であるなど関係なく、EOLは完全排除)
 		nextChar() {
+			if (this.next() && this.next().isEOL()) {
+				return this.next().nextChar();
+			} else {
+				return this.next();
+			}
+		}
+		prevChar() {
+			if (this.prev() && this.prev().isEOL()) {
+				return this.prev().prevChar();
+			} else {
+				return this.prev();
+			}
 		}
 
 		// --判定
@@ -555,13 +637,13 @@ Util.createCharPosElement = (function () {
 		isEOL() {
 			return this._isEOL;
 		}
-		isCursor() {
+		hasCursor() {
 			return this.hasClass('cursor');
 		}
 		isDisplay() {
 			return this.hasClass('display');
 		}
-		// 同一行内で最終文字でなければtrue、最終文字ならfalse。EOLは含まない(次の文字がEOLならfalse)
+		// 同一行内で最終文字でなければtrue、最終文字ならfalse。EOLは含まない(次の文字がEOLならfalse,自身がEOLの場合もfalse)
 		hasNextSibling() {
 			return !(this._isEOL || this.next().isEOL());
 		}
@@ -625,52 +707,76 @@ Util.createCharPosElement = (function () {
 		// --DOM操作関係
 
 		before(char) {
-			// oldPrev - char - this
+			// DOM
 			// this.elem().before(char.elem()); // before(),after()はまだサポートされず
-			const row = this.row();
-			row.elem().insertBefore(char.elem(),this._elem);
-			const oldPrev = this._prev;
-			if (oldPrev) this.prev().next(char);
-			char.prev(this.prev());
+			this.row().elem().insertBefore(char.elem(),this.elem());
+
+			// ポインタ調整
+			// oldPrev - char - this
+
+			// char
+			const oldPrev = this.prev();
+			oldPrev && this.prev().next(char);
+			char.prev(oldPrev);
 			char.next(this);
 			this.prev(char);
-			char.row(row);
-			// rowのcharsにcharを追加
+			// parent
+			char.row(this.row());
 			const pos = this.index();
-			row.insertChar(pos,char);
+			this.row().insertChar(pos,char);
 			return this;
 		}
 		after(char) {
-			// this - char - oldNextChar
 			if (this.isEOL()) { return this; } // todo: 例外を使用したほうがいいかも EOLからのafterはできない
-			// this.elem().after(char.elem());
-			// this.row().elem().insertAfter(char.elem(),this.elem()); // javascriptにinsertAfter()という関数は存在しない
-			if (this.next() && this.next().row() === this.row()) {
+			// DOM
+			if (this.hasNextSibling()) {
 				this.row().elem().insertBefore(char.elem(),this.next().elem());
 			} else {
 				this.row().elem().appendChild(char.elem());
 			}
+
+			// ポインタ調整
+			// this - char - oldNextChar
+
+			// char
 			const oldNextChar = this.next();
-			if (oldNextChar) oldNextChar.prev(char);
-			char.next(oldNextChar);
-			char.prev(this);
 			this.next(char);
-			const row = this.row();
-			char.row(row);
-			// rowのcharsにcharを追加
+			char.prev(this);
+			char.next(oldNextChar);
+			oldNextChar && oldNextChar.prev(char);
+			// parent
+			char.row(this.row());
 			const pos = this.index() + 1;
-			row.insertChar(pos,char);
+			this.row().insertChar(pos,char);
 			return this;
 		}
+		// 要素と参照の削除
 		remove() {
-			this.row().elem().removeChild(this.elem());
+			if (this.isEOL()) return this; // EOLは削除不可
+			const row = this.row();
+			row.elem().removeChild(this.elem());
 			// oldPrev - this - oldNext →　oldPrev - oldNext
 			const oldPrev = this.prev();
 			const oldNext = this.next();
 			if (oldPrev) oldPrev.next(oldNext);
 			if (oldNext) oldNext.prev(oldPrev);
 			// 古い親の配列から削除
-			this.row().deleteChar(this);
+			row.deleteChar(this);
+			return this;
+		}
+		// 文書整形も含む削除
+		delete() {
+			const row = this.row();
+			const paragraph = row.paragraph();
+			this.remove();
+
+			// 段落先頭以外の行で、文字を削除した結果行が空になった場合、その行を削除する
+			if (!row.isFirst() && row.isEmpty()) {
+				row.lastChild().hasCursor() && row.prev().EOL().addCursor().setPosMemory(); // 削除行にカーソルがあれば、その前の行のEOLにカーソルを移動する
+				row.remove();
+			}
+
+			paragraph.cordinate();
 			return this;
 		}
 		// 自分自身をnewCharと入れ替える
@@ -685,32 +791,33 @@ Util.createCharPosElement = (function () {
 			this.row(null);
 			return this;
 		}
-		// 前の行の最終行に移動する
+		// 前の行の最後に移動する
 		moveLastBefore() {
-			if (this.isEOL() || this !== this.row().firstChild()) { return this; } // 各行最初の文字でのみ有効
-			// 自分の次がEOLでなおかつカーソルがあれば動いてくれないので、記憶してカーソルを付けなおす(そうしなければbringChar()でカーソルごと行が削除される)
-			let isCursor = false;
-			if (this.next().isCursor()) isCursor = true;
+			if (this.isEOL() || !this.isFirst()) { return this; } // 各行最初の文字でのみ有効
+			if (this.row().isFirst()) return this; // 段落はまたがない
 
 			const oldRow = this.row();
-			this.remove();
+			this.remove(); // delete()内でcordinate()を使い、cordinate()内でmoveLastBefore()を使っているので、ここでdelete()を使うと無限再帰の恐れあり
 			oldRow.prev().append(this);
-			if (isCursor) this.next().addCursor().setPosMemory();
+
+			// 移動した結果、空行ができたら削除する
+			if (oldRow.isEmpty()){
+				oldRow.hasCursor() && this.next().addCursor(); // 削除行にカーソルが含まれていれば移動する
+				oldRow.remove();
+			}
 			this.setPosMemory();
 			return this;
 		}
 		// 次の行の最初に移動する
 		moveFirstAfter() {
-			if (this.isEOL() || this !== this.row().lastChar()) return this; // 各行最後の文字でのみ有効
-			// 自分の次がEOLでなおかつカーソルがあれば動いてくれないので、記憶してカーソルを付けなおす(そうしなければ元々自分の後ろにあったカーソルが自分の前に来てしまう)
-			let isCursor = false;
-			if (this.next().isCursor()) isCursor = true;
+			if (this.isEOL() || !this.isLast()) return this; // 各行最後の文字でのみ有効
+			if (this.row().isLast()) return this; // 段落はまたがない
 
 			const oldRow = this.row();
 			this.remove();
 			oldRow.next().prepend(this);
-			if (isCursor) this.next().addCursor();
-			this.setPosMemory();
+
+			this.setPosMemory(); // カーソルが付与されている文字は変わらないが、その文字の位置が変わる可能性があるためposMemoryを付け替える
 			return this;
 		}
 		// 自分を含めて、自分以降で同じ段落内のChar全てに処理を行う(EOLは含まない)
@@ -756,6 +863,16 @@ Util.createCharPosElement = (function () {
 		setPosMemory() {
 			const index = this.index();
 			this.cursor().setPosMemory(index);
+			return this;
+		}
+
+		afterEach(func) {
+			const index = this.index();
+			let cnt = 0;
+			for (let char of this.row().chars()) {
+				if (cnt >= index) func(char);
+				cnt++;
+			}
 			return this;
 		}
 	}
@@ -808,14 +925,14 @@ Util.createCharPosElement = (function () {
 		EOL() {
 			return this._EOL;
 		}
-		sentence() {
-			return this.paragraph().sentence();
+		container() {
+			return this.paragraph().container();
 		}
 		paragraph(newParagraph) {
 			return this.parent(newParagraph);
 		}
 		cursorChar() {
-			return this.paragraph().sentence().cursor().getChar();
+			return this.paragraph().container().cursor().getChar();
 		}
 		// 空行ではEOLが選択されるため、firstChar()ではなくfirstChild()
 		// RowではEOLが絡むためオーバーライドする
@@ -851,8 +968,24 @@ Util.createCharPosElement = (function () {
 		hasChar() {
 			return super.hasChild();
 		}
+		// 行内にカーソルが含まれていればtrue
+		hasCursor() {
+			for (let char of this.children()) {
+				if (char.hasCursor()) return true;
+			}
+			return false;
+		}
 		isDisplay() {
 			return this.hasClass('display');
+		}
+		// objが行内にあるCharおよびEOLのいずれかに一致するとtrue
+		contains(obj) {
+			if (obj instanceof Char) {
+				for (let char of this.children()) {
+					if (char.is(obj)) return true;
+				}
+			}
+			return false;
 		}
 
 		// --参照操作
@@ -928,109 +1061,158 @@ Util.createCharPosElement = (function () {
 			return this;
 		}
 		before(row) {
-			// oldPrev - row - this
-			// row
-			// this.elem().before(row.elem());
+			// DOM
 			this.paragraph().elem().insertBefore(row.elem(),this.elem());
-			row.paragraph(this.paragraph());
+
+			// ポインタ調整
+			// oldPrev - row - this
+
+			// row
 			const oldPrev = this.prev();
-			if (oldPrev) oldPrev.next(row);
+			oldPrev && oldPrev.next(row);
 			row.prev(oldPrev);
 			row.next(this);
 			this.prev(row);
 			// char
-			if (oldPrev) row.firstChild().prev(oldPrev.lastChild());
+			oldPrev && oldPrev.lastChild().next(row.firstChild());
+			oldPrev && row.firstChild().prev(oldPrev.lastChild());
 			row.lastChild().next(this.firstChild());
 			this.firstChild().prev(row.lastChild());
-			if (oldPrev) oldPrev.lastChild().next(row.firstChild());
-			// parentのrowsにrowを追加
+			// parent
+			row.paragraph(this.paragraph());
 			const pos = this.index();
 			this.paragraph().insertRow(pos,row);
 			return this;
 		}
 		after(row) {
-			// this - row - oldNext
-			// row
-			// this.elem().after(row.elem());
-			// this.paragraph().elem().insertAfter(row.elem(),this.elem());
-			if (this.next() && this.next().paragraph() === this.paragraph()) {
+			// DOM
+			if (this.hasNextSibling()) {
 				this.paragraph().elem().insertBefore(row.elem(),this.next().elem());
 			} else {
 				this.paragraph().elem().appendChild(row.elem());
 			}
-			row.paragraph(this.paragraph());
+
+			// ポインタ調整
+			// this - row - oldNext
+
+			// row
 			const oldNext = this.next();
-			if (oldNext) oldNext.prev(row);
-			row.next(oldNext);
-			row.prev(this);
 			this.next(row);
+			row.prev(this);
+			row.next(oldNext);
+			oldNext && oldNext.prev(row);
 			// char
-			row.firstChild().prev(this.lastChild());
-			if (oldNext) row.lastChild().next(oldNext.firstChild());
 			this.lastChild().next(row.firstChild());
-			if (oldNext) oldNext.firstChild().prev(row.lastChild());
-			// parentのrowsにrowを追加
+			row.firstChild().prev(this.lastChild());
+			oldNext && row.lastChild().next(oldNext.firstChild());
+			oldNext && oldNext.firstChild().prev(row.lastChild());
+			// parent
+			row.paragraph(this.paragraph());
 			const pos = this.index() + 1;
 			this.paragraph().insertRow(pos,row);
 			return this;
 		}
 		// 行を削除する
+		// 要素と参照のみ
 		remove() {
+			// 段落に自分しか行がない場合、段落ごと削除する
+			if (this.isOnlyChild()) {
+				this.paragraph().remove();
+				return this;
+			}
+
 			this.paragraph().elem().removeChild(this.elem());
 			// oldPrev - this - oldNext →　oldPrev - oldNext
-			const oldPrev = this.prev();
-			const oldNext = this.next();
-			if (oldPrev) {
-				// row
-				oldPrev.next(oldNext);
-				// char
-				oldPrev.lastChild().next(oldNext.firstChild());
-			}
-			if (oldNext) {
-				// row
-				oldNext.prev(oldPrev);
-				// char
-				oldNext.firstChild().prev(oldPrev.lastChild());
-			}
-			this.paragraph.deleteRow(this);
+			// row
+			const oldPrevRow = this.prev();
+			const oldNextRow = this.next();
+			oldPrevRow && oldPrevRow.next(oldNextRow);
+			oldNextRow && oldNextRow.prev(oldPrevRow);
+			// char
+			const oldPrevChar = oldPrevRow && oldPrevRow.lastChild();
+			const oldNextChar = oldNextRow && oldNextRow.firstChild();
+			oldPrevChar && oldPrevChar.next(oldNextChar);
+			oldNextChar && oldNextChar.prev(oldPrevChar);
+
+			this.paragraph().deleteRow(this);
+
 			this.next(null);
 			this.prev(null);
 			this.firstChild().prev(null);
 			this.lastChild().next(null);
 			return this;
 		}
-		static createEmptyRow() {
-			return new Row([]);
+		// 文章整形を含む削除
+		// カーソルが含まれていれば前の行に平行移動する
+		// カーソルを動かしたくなければremove()を使う
+		delete() {
+			const oldPrevRow = this.prev();
+			const oldNextRow = this.next();
+
+			this.remove();
+
+			// カーソルが削除行に含まれていれば、その前の行にカーソルを移動する
+			if (this.hasCursor()) {
+				if (oldPrevRow) {
+					this.cursor().moveRow(oldPrevRow);
+				} else {
+					this.cursor().moveRow(oldNextRow);
+				}
+			}
+			return this;
+		}
+		// 前の段落の最終行として移動する
+		moveLastBefore() {
+			if (!this.isFirst()) { return this; } // 各段落最初の行でのみ有効
+			if (this.paragraph().isFirst()) return this; // 文章先頭では無効
+
+			const prevParagraph = this.paragraph().prev();
+
+			// 空行を移動しようとした時の処理
+			if (this.isEmpty()) {
+				// 前の段落に移動せず削除する
+				// カーソルが含まれていれば、カーソルを前の行のEOLに移動
+				this.remove();
+				this.hasCursor() && prevParagraph.lastChild().EOL().addCursor().setPosMemory();
+				return this;
+			}
+
+			// 空行ではない
+			if (!this.isEmpty()) {
+				this.remove(); // カーソルはいじる必要なし
+				prevParagraph.append(this);
+				return this;
+			}
 		}
 		// 隣のRowの第一文字を、自らの最後に移動する
-		// 持ってきた結果次の行が空になったら、その行は削除する
+		// 段落内でのみ有効
 		bringChar() {
-			if (!this.hasNextSibling()) return this;
+			if (this.isLast()) return this;
 			this.next().firstChild().moveLastBefore();
-			if (this.next().isEmpty()) {
-				this.next().remove();
-			}
 			return this;
 		}
 		bringChars(num) {
 			for (let i = 0; i < num; i++) {
 				this.bringChar();
 			}
+			return this;
 		}
 		// 自分の最後の文字を、次の行の最初に移動する
 		takeChar() {
+			if (!this.hasChar()) return this; // lastChar()でnullが取得される可能性があるため
 			// 次の行がなければ新しく作る
-			if (!this.hasNextSibling()) {
+			if (this.isLast()) {
 				this.after(Row.createEmptyRow());
-				this.sentence().changeDisplay();
+				this.container().changeDisplay();
 			}
-			this.lastChar().moveFirstAfter();
+			this.lastChar().moveFirstAfter(); // lastChild()では毎回EOLが取得されるのでlastChar()
 			return this;
 		}
 		takeChars(num) {
 			for (let i = 0; i < num; i++) {
 				this.takeChar();
 			}
+			return this;
 		}
 
 		// 自分を含めて、自分以降で同じ段落内のRow全てに処理を行う
@@ -1045,9 +1227,12 @@ Util.createCharPosElement = (function () {
 
 		// --文章整理
 
-		// 指定文字数と異なる文字数なら、指定文字数に合わせる
+		// 空行の整理
+		// 指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節する
 		cordinate() {
-			const strLen = this.sentence().strLenOnRow();
+			if (this.index > 0 && this.isEmpty()) return this.delete(); // 空段落以外での空行は削除する
+
+			const strLen = this.container().strLenOnRow();
 			const len = this.charLen();
 			if (len === strLen) return;
 			if (len < strLen) {
@@ -1112,6 +1297,26 @@ Util.createCharPosElement = (function () {
 			}
 			return -1;
 		}
+
+		// --静的メソッド
+
+		static createEmptyRow() {
+			return new Row([]);
+		}
+
+		// -- other
+
+		// 同一段落で自分以降の行に処理を行う
+		// 処理中に同一段落の行でなくなったなどしても影響しない
+		afterEach(func) {
+			const index = this.index();
+			let cnt = 0;
+			for (let row of this.paragraph().rows()) {
+				if (cnt >= index) func(row);
+				cnt++;
+			}
+			return this;
+		}
 	}
 
 	class Paragraph extends Sentence {
@@ -1130,8 +1335,8 @@ Util.createCharPosElement = (function () {
 
 		// --参照取得
 
-		sentence(newSentence) {
-			return this.parent(newSentence);
+		container(newContainer) {
+			return this.parent(newContainer);
 		}
 		rows(index) {
 			return this.children(index);
@@ -1141,6 +1346,26 @@ Util.createCharPosElement = (function () {
 
 		hasRow() {
 			return this.hasChild();
+		}
+		// 内部に行が存在しないか、空行が一つだけならtrue
+		// 空行は空段落にしか存在しないのが正常
+		isEmpty() {
+			return !this.hasChild() || this.firstChild().isEmpty();
+		}
+		// 段落内にカーソルが含まれていればtrue
+		hasCursor() {
+			for (let row of this.rows()) {
+				if (row.hasCursor()) return true;
+			}
+			return false;
+		}
+		// 引数で渡されたオブジェクトが段落内にある行か文字のいずれかに一致するとtrue
+		contains(obj) {
+			for (let row of this.rows()) {
+				if (row.is(obj)) return true;
+				if (row.contains(obj)) return true;
+			}
+			return false;
 		}
 
 		// --参照操作
@@ -1207,14 +1432,145 @@ Util.createCharPosElement = (function () {
 
 			return this;
 		}
+		after(paragraph) {
+			// DOM
+			if (this.hasNextSibling()) {
+				this.container().elem().insertBefore(paragraph.elem(),this.next().elem());
+			} else {
+				this.container().elem().appendChild(paragraph.elem());
+			}
+
+			// ポインタ調整
+			// this - paragraph - oldNext
+
+			// paragraph
+			const oldNext = this.next();
+			this.next(paragraph);
+			paragraph.prev(this);
+			paragraph.next(oldNext);
+			oldNext && oldNext.prev(paragraph);
+			// row
+			this.lastChild().next(paragraph.firstChild());
+			paragraph.firstChild().prev(this.lastChild());
+			oldNext && paragraph.lastChild().next(oldNext.firstChild());
+			oldNext && oldNext.firstChild().prev(paragraph.lastChild());
+			// char
+			this.lastChild().lastChild().next(paragraph.firstChild().firstChild());
+			paragraph.firstChild().firstChild().prev(this.lastChild().lastChild());
+			oldNext && paragraph.lastChild().lastChild().next(oldNext.firstChild().firstChild());
+			oldNext && oldNext.firstChild().firstChild().prev(paragraph.lastChild().lastChild());
+			// parent
+			paragraph.container(this.container());
+			const pos = this.index() + 1;
+			this.container().insertParagraph(pos,paragraph);
+			return this;
+		}
+		// 要素と参照の削除
+		remove() {
+			this.container().elem().removeChild(this.elem());
+			// oldPrev - this - oldNext →　oldPrev - oldNext
+
+			// paragraph
+			// oldPrevParagraph - oldNextParagraph
+			const oldPrevParagraph = this.prev();
+			const oldNextParagraph = this.next();
+			oldPrevParagraph && oldPrevParagraph.next(oldNextParagraph);
+			oldNextParagraph && oldNextParagraph.prev(oldPrevParagraph);
+
+			// row
+			// oldPrevParagraph.lastChild() - oldNextParagraph.firstChild();
+			// oldPrevRow - oldNextRow
+			const oldPrevRow = oldPrevParagraph && oldPrevParagraph.lastChild();
+			const oldNextRow = oldNextParagraph && oldNextParagraph.firstChild();
+			oldPrevRow && oldPrevRow.next(oldNextRow);
+			oldNextRow && oldNextRow.prev(oldPrevRow);
+
+			// char
+			// oldPrevRow.lastChild() - oldNextRow.lastChild();
+			// oldPrevChar - oldNextChar
+			const oldPrevChar = oldPrevRow && oldPrevRow.lastChild();
+			const oldNextChar = oldNextRow && oldNextRow.firstChild();
+			oldPrevChar && oldPrevChar.next(oldNextChar);
+			oldNextChar && oldNextChar.prev(oldPrevChar);
+
+			this.container().deleteParagraph(this);
+			this.prev(null).firstChild() && this.firstChild().prev(null).firstChild() && this.firstChild().firstChild().prev(null);
+			this.next(null).lastChild() && this.lastChild().next(null).lastChild() && this.lastChild().lastChild().next(null);
+			return this;
+		}
+		// 文章整形を含む削除
+		// カーソルは削除範囲直前の行に平行移動
+		delete() {
+			const oldPrevRow = this.prev() && this.prev().lastChild();
+			const oldNextRow = this.next() && this.next().firstChild();
+
+			this.remove();
+
+			if (this.hasCursor()) {
+				if (oldPrevRow) {
+					this.cursor().moveRow(oldPrevRow);
+				} else { // 直前の行がなければ直後
+					this.cursor().moveRow(oldNextRow);
+				}
+			}
+			return this;
+		}
+		// 渡された文字以降を新しい段落に移動して、段落を２つに分ける
+		// 段落先頭から:一行目の文字が丸々新しい行に移って次の段落の一行目となる。二行目以降は行ごと次の段落へ →　基準文字のあった行は空行となりもともとの段落の唯一の行となるため、あたかも空段落が基準行の前に挿入されたようになる
+		// 行頭から:基準行の文字がまるまる新しい行に移って次の段落の一行目になる。基準行以降の行は行ごと新しい段落に移る。　→　基準行以降が新しい段落に移り、それ以前の行はもともとの段落に残るため、段落が２つに別れる。この時点では、もともとの段落の最後に空行が残っている状態なので、cordinate()で対応する
+		// 行の途中から:基準文字以降の同じ行の文字が新しい行に移って次の段落の一行目になる。それ以降は行ごと次の段落に移る。　→　基準文字以降が新しい段落になる。この時点では一行目の文字数がおかしいので、cordinate()で調整する
+		// 段落最後のEOLから: 基準文字のインデックスが同一行の他の文字より大きいため、afterEach()が一度も実行されない。次の行も存在しないのでnextRowが存在せず、nextRow.afterEach()は実行されない。ただし、新しい行はnewParagraphを作成した時点で存在している。 →　新しい段落が今いる段落の後ろに追加されるだけ
+		divide(char) {
+			if (!this.contains(char)) return this;
+			const paragraph = char.row().paragraph();
+			const newParagraph = Paragraph.createEmptyParagraph(); // 作成時点で空行が含まれている
+			const nextRow = char.row().hasNextSibling() ? char.row().next() : null; // この行以降を新しい段落に移動
+			// 一行目
+			// 基準文字以降を新しい行に移し、新しい段落に挿入する
+			// 元々の行は空になってもそのまま
+			const newRow = newParagraph.firstChild();
+			char.afterEach(function (c) {
+				c.remove();
+				newRow.append(c);
+			});
+
+			// 二行目以降
+			// 行ごと新しい段落に移動
+			if (nextRow) {
+				console.log('there are multi lines');
+				nextRow.afterEach(function (row) {
+					row.remove();
+					newParagraph.append(row);
+				});
+			}
+
+			this.after(newParagraph);
+			paragraph.cordinate();
+			newParagraph.cordinate();
+			return this;
+		}
 
 		// --文章整理
 
 		cordinate() {
+			// エラー原因まとめ
+			// ここで一旦rows()の内容が保存され、そこから一つ一つrowを取り出す(rows()はコピーされた配列が返される)
+			// row.cordinate()内のbringChar()によって、最終行が削除されることがある
+			// 削除された最終行でも、先に保存されていたためrow.cordinate()が実行される
+			// 削除行の参照は保持されているのでcordinate()はエラーが起きずに実行される
+			// ただしremove()された時にparentにnullが代入されているので、内部でparagraph().container()が実行されているときにNullPointer
 			for (let row of this.rows()) {
+				if (!row.paragraph()) continue;
 				row.cordinate();
 			}
 			return this;
+		}
+
+		static createEmptyParagraph() {
+			const arg = [];
+			arg[0] = [];
+			arg[1] = [];
+			return new Paragraph(arg);
 		}
 	}
 
@@ -1461,7 +1817,7 @@ Util.createCharPosElement = (function () {
 			this._strLenOnRow = 40; // １行の文字数
 			this._rowLenOnPage = 40; // １ページの行数
 			// DOMの構築
-			if (window.sentence) window.sentence.emptyElem().removeKeydownEventListener();
+			if (window.container) window.container.emptyElem().removeKeydownEventListener();
 			for (let paraData of data.data.text) {
 				this.append(new Paragraph(paraData));
 			}
@@ -1575,7 +1931,7 @@ Util.createCharPosElement = (function () {
 		// TODO: 配列が渡されたらフラグメントを使ってappendする
 		append(paragraph) {
 			this.elem().appendChild(paragraph.elem());
-			paragraph.sentence(this);
+			paragraph.container(this);
 			if (!this.hasParagraph()) {
 				this.pushParagraph(paragraph);
 				return this;
@@ -1650,9 +2006,9 @@ Util.createCharPosElement = (function () {
 				// ファイル名を表示
 				$('#file_title').val(json.filename).attr('data-file-id',fileId);
 				// 文章のhtml書き出し
-				// window.sentence.emptyElem();
+				// window.container.emptyElem();
 				console.time('new SentenceContainer');
-				window.sentence = new SentenceContainer(json);
+				window.container = new SentenceContainer(json);
 				console.timeEnd('new SentenceContainer');
 				$('.doc-info > .saved').text(json.saved);
 				console.timeEnd('readFile');
@@ -1672,7 +2028,7 @@ Util.createCharPosElement = (function () {
 			});
 		}
 		static newFile(filename) {
-			window.sentence = new SentenceContainer({
+			window.container = new SentenceContainer({
 				fileId: -1,
 				filename: filename,
 				data: {
@@ -1688,10 +2044,10 @@ Util.createCharPosElement = (function () {
 			this.addDisplay(0,0);
 			console.timeEnd('display');
 		}
-		changeDisplay() {
+		changeDisplay(isForce) {
 			console.time('change display');
 			const cursorChar = this.cursor().getChar();
-			if (cursorChar.isDisplay() && cursorChar.row().isDisplay()){
+			if (isForce === undefined && cursorChar.isDisplay() && cursorChar.row().isDisplay()){
 				console.timeEnd('change display');
 				return;
 			}
@@ -1797,6 +2153,14 @@ Util.createCharPosElement = (function () {
 			if (e.ctrlKey) return this.runControlKeyDown();
 
 			switch (keycode) {
+				case 8:
+					// backspace
+					this.cursor().backSpace();
+					break;
+				case 13:
+					// Enter
+					this.cursor().lineBreak();
+					break;
 				case 32:
 					// space
 					this.cursor().insert('　');
