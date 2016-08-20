@@ -40,7 +40,7 @@ const Util = {
 			if (sendData != '') {
 				sendData += '&';
 			}
-			sendData += name + '=' + escape(data[name]); // HACK:escape()は非推奨？
+			sendData += name + '=' + encodeURI(data[name]);
 		}
 
 		xhr.addEventListener('load',function (e) {
@@ -166,6 +166,17 @@ Util.createCharPosElement = (function () {
 			flagment.appendChild(eCharPos);
 		}
 		return flagment;
+	}
+})();
+Util.createConvertViewElement = (function () {
+	'use strict';
+	const eViewTemplate = document.createElement('div');
+	eViewTemplate.classList.add('convert-view');
+
+	return function () {
+		'use strict';
+		const eView = eViewTemplate.cloneNode(true);
+		return eView;
 	}
 })();
 
@@ -470,6 +481,10 @@ Util.createCharPosElement = (function () {
 		text() {
 			return this.elem().textContent;
 		}
+		// 文字数
+		length() {
+			return this.text().length;
+		}
 		// 同一の親を持つ兄弟の中での０始まりのインデックス
 		index() {
 			const siblings = this.parent().children();
@@ -540,7 +555,7 @@ Util.createCharPosElement = (function () {
 			return this;
 		}
 		removeKeydownEventListener() {
-			if (!this._keydownArg) return;
+			if (!this._keydownArg) return this;
 			document.removeEventListener('keydown',this._keydownArg);
 			this._keydownArg = null;
 			return this;
@@ -557,6 +572,8 @@ Util.createCharPosElement = (function () {
 			}
 			if (keycode === 123) { return; } // F12のみブラウザショートカットキー
 			this.runKeyDown(e,keycode);
+			// デフォルトの動作を無効化する
+			e.preventDefault();
 		}
 		runKeyDown(e,keycode) {
 		}
@@ -855,6 +872,13 @@ Util.createCharPosElement = (function () {
 		}
 		static currentFontSize() {
 			const ret = 'auto';
+			return ret;
+		}
+		static createPlainCharData(c) {
+			const ret = {};
+			ret['char'] = c;
+			ret['decolation'] = [];
+			ret['fontSize'] = 'auto';
 			return ret;
 		}
 
@@ -1214,13 +1238,10 @@ Util.createCharPosElement = (function () {
 			}
 			return this;
 		}
-
-		// 自分を含めて、自分以降で同じ段落内のRow全てに処理を行う
-		afterEach(func) {
-			func(this);
-			for (let row = this; row.hasNextSibling(); ) {
-				row = row.next();
-				func(this);
+		// 引数の文字列から、装飾のない文字を中に追加する
+		createPlainContent(str) {
+			for (let c of str) {
+				this.append(new Char(Char.createPlainCharData(c)));
 			}
 			return this;
 		}
@@ -1317,6 +1338,17 @@ Util.createCharPosElement = (function () {
 			}
 			return this;
 		}
+
+		// 影響する側の書き方
+		// // 自分を含めて、自分以降で同じ段落内のRow全てに処理を行う
+		// afterEach(func) {
+		// 	func(this);
+		// 	for (let row = this; row.hasNextSibling(); ) {
+		// 		row = row.next();
+		// 		func(this);
+		// 	}
+		// 	return this;
+		// }
 	}
 
 	class Paragraph extends Sentence {
@@ -1537,7 +1569,6 @@ Util.createCharPosElement = (function () {
 			// 二行目以降
 			// 行ごと新しい段落に移動
 			if (nextRow) {
-				console.log('there are multi lines');
 				nextRow.afterEach(function (row) {
 					row.remove();
 					newParagraph.append(row);
@@ -1575,11 +1606,333 @@ Util.createCharPosElement = (function () {
 	}
 
 	// classは巻き上げが起こらないため、Char・Rowの下に作る必要がある。ただし、SentenceContainer内で利用するのでSentenceContainerよりは上になければならない
+	class ConvertView extends Sentence {
+		// 文節番号は、ConvertViewのindex()と同じ
+		constructor(data) {
+			super(Util.createConvertViewElement());
+			data[1].push(data[0]); // 末尾に明確にひらがなを入れる
+			for (let str of data[1]) {
+				const row = Row.createEmptyRow();
+				row.createPlainContent(str);
+				this.append(row);
+			}
+			this.removeClass('paragraph');
+			this.addClass('convert-view');
+		}
+
+		// --参照取得
+
+		container(newContainer) {
+			return this.parent(newContainer);
+		}
+		rows(index) {
+			return this.children(index);
+		}
+		// 現在選択中の行を取得する
+		getSelect() {
+			for (let row of this.rows()) {
+				if (row.hasClass('select')) return row;
+			}
+			return this.lastChild(); // 選択行がなければひらがな行
+		}
+
+		// --判定
+		isActive() {
+			return this.hasClass('active');
+		}
+
+		// --Status
+
+		// 文節のひらがなを文字列で返す
+		hiragana() {
+			return this.lastChild().text(); // 最終行は必ずひらがな
+		}
+
+		// ひらがなでの文字数
+		kanaLength() {
+			return this.hiragana().length;
+		}
+		phraseNum() {
+			return this.index();
+		}
+
+		// --Style
+		active() {
+			for (let view of this.container().views()) {
+				if (view.hasClass('active')) { view.removeClass('active'); }
+			}
+			this.addClass('active');
+			return this;
+		}
+
+		// --DOM操作
+
+		// index行目を選択
+		select(index) {
+			for (let row of this.rows()) {
+				if (row.hasClass('select')) row.removeClass('select');
+			}
+			const newRow = this.rows(index);
+			newRow.addClass('select');
+			this.container().inputBuffer().insertPhrase(this.phraseNum(),newRow.text());
+			return this;
+		}
+		append(row) {
+			// DOM
+			this.elem().appendChild(row.elem());
+			// ポインタ調整
+			// view
+			if (this.hasChild()) {
+				this.lastChild().next(row);
+				row.prev(this.lastChild());
+			}
+			// parent
+			row.parent(this);
+			this.pushChild(row);
+			return this;
+		}
+		before(view) {
+			// DOM
+			this.container().elem().insertBefore(view.elem(),this.elem());
+
+			// ポインタ調整
+			// oldPrev - view - this
+
+			// view
+			const oldPrev = this.prev();
+			oldPrev && oldPrev.next(view);
+			view.prev(oldPrev);
+			view.next(this);
+			this.prev(view);
+			// paretn
+			view.container(this.container());
+			const pos = this.index();
+			this.container().insertChild(pos,view);
+			return this;
+		}
+		after(view) {
+			// DOM
+			if (this.hasNextSibling()) {
+				this.container().elem().insertBefore(view.elem(),this.next().elem());
+			} else {
+				this.container().elem().appendChild(view.elem());
+			}
+
+			// ポインタ調整
+			// this - view - oldNext
+
+			// view
+			const oldNext = this.next();
+			this.next(view);
+			view.prev(this);
+			view.next(oldNext);
+			oldNext && oldNext.prev(view);
+			// parent
+			view.container(this.container());
+			const pos = this.index() + 1;
+			this.container().insertChild(pos,view);
+			return this;
+		}
+		remove() {
+			// DOM
+			this.container().elem().removeChild(this.elem());
+
+			// ポインタ調整
+			// oldPrev - this - oldNext →　oldPrev - oldNext
+
+			// view
+			const oldPrev = this.prev();
+			const oldNext = this.next();
+			oldPrev && oldPrev.next(oldNext);
+			oldNext && oldNext.prev(oldPrev);
+			this.prev(null);
+			this.next(null);
+			// parent
+			this.container().deleteChild(this);
+			this.container(null);
+			return this;
+		}
+		replace(viewArray) {
+			for (let view of viewArray) {
+				this.before(view);
+			}
+			return this.remove();
+		}
+	}
+	class ConvertContainer extends Sentence {
+		constructor(inputBuffer) {
+			super(document.getElementById('convert_container'));
+			this._inputBuffer = inputBuffer;
+		}
+
+		// --参照取得
+
+		inputBuffer() {
+			return this._inputBuffer;
+		}
+		views(index) {
+			return super.children(index);
+		}
+		activeView() {
+			for (let view of this.views()) {
+				if (view.isActive()) return view;
+			}
+			return null;
+		}
+
+		// --Style
+
+		reposition() {
+			const x = this.cursorX();
+			const y = this.cursorY();
+			this.elem().style.top = y + 'px';
+			this.elem().style.left = (x - this.width()) + 'px';
+			return this;
+		}
+		cursorX() {
+			return this.inputBuffer().cursorX();
+		}
+		cursorY() {
+			return this.inputBuffer().cursorY();
+		}
+
+		// --DOM操作
+
+		createViews(data) {
+		/*
+		 * data形式
+		 * [[ひらがな,[漢字１,漢字２,漢字３]],[ひらがな２,[漢字４,漢字５]],[[ひらがな３,[漢字６,漢字７]]]]
+		 */
+			this.empty();
+			for (let phraseData of data) {
+				this.append(new ConvertView(phraseData));
+			}
+		}
+		// 初変換
+		convert(str) {
+			Util.post("/tategaki/KanjiProxy",{
+				sentence: str
+			},function (json) {
+				this.createViews(json);
+				this.inputBuffer().setPhraseNum();
+				// すべて変換第一候補を選択する
+				for (let view of this.views()) {
+					view.select(0);
+				}
+				// 最初の文節を選択
+				this.inputBuffer().select(0);
+
+				this.reposition();
+				this.addKeydownEventListener();
+			}.bind(this));
+		}
+		backSpace() {
+			const activeView = this.activeView();
+			// buffer文字がひらがなにして一文字しかない
+			// 文字を削除してinput終了
+			if (activeView.isOnlyChild() && activeView.kanaLength() === 1) {
+				this.empty();
+				this.inputBuffer().pop();
+				return this;
+			}
+
+			// 文節がひらがなにして一文字しかない
+			// その文節を削除してその前の文節を選択する
+			if (activeView.kanaLength() === 1) {
+				const phraseNum = activeView.phraseNum();
+				const phraseChar = this.inputBuffer().phrases(phraseNum)[0];
+				phraseChar.remove();
+				activeView.remove();
+				this.inputBuffer().setPhraseNum()
+					.select(phraseNum <= 0 ? phraseNum : phraseNum - 1);
+				return this;
+			}
+
+			// 文節にひらがなにして二文字以上ある
+			// 最後の一字を削除して、その文節を変換し直す
+			const phraseNum = activeView.phraseNum();
+			const newString = activeView.hiragana().slice(0,-1) + ','; // 文節を区切られないよう、,を末尾に追加する
+			Util.post("/tategaki/KanjiProxy",{
+				sentence: newString
+			},function (json) {
+				this.replace(phraseNum,json);
+				this.inputBuffer().select(phraseNum); // replace()内の文節番号振りなおしで影響を受けるのはphraseNum以降なので、phraseNumはそのまま使える(入替えた文節のひとつ目になる)
+			}.bind(this));
+			return this;
+		}
+		// 文節番号がnumのviewをdataで入れ替える
+		// buffer.select()はしない
+		replace(num,data) {
+			const oldView = this.views(num);
+			const replaced = []; // 文節番号を振り直した後でないとview.select()できない(中でinsertPhrase()をしているため)ので、いったん新しいインスタンスを入れておく
+			// viewを入れ替え、bufferにはいったんひらがなを挿入する
+			for (let phraseData of data.entries()) {
+				const newView = new ConvertView(phraseData[1]);
+				replaced.push(newView);
+				oldView.before(newView);
+				// setPhraseNum()で使う文字列の長さは、new時点ではひらがななので、ひらがなを入替え・挿入する
+				if (phraseData[0] === 0) // ひとつめだけ入替えで、他はその後に追加していく
+					this.inputBuffer().insertPhrase(num,oldView.prev().hiragana()); // 古いbuffer文字はここでなくなる
+				else
+					this.inputBuffer().insertPhraseAfter(num,oldView.prev().hiragana());
+			}
+			oldView.remove();
+
+			// 文節番号の振り直し
+			this.inputBuffer().setPhraseNum();
+			// 最初の候補で置き換える
+			for (let newView of replaced) {
+				newView.select(0);
+			}
+			return this;
+		}
+		append(view) {
+			this.elem().appendChild(view.elem());
+			if (this.hasChild()) {
+				this.lastChild().next(view);
+				view.prev(this.lastChild());
+			}
+			view.container(this);
+			this.pushChild(view);
+			return this;
+		}
+		empty() {
+			super.emptyElem();
+			super.emptyChild();
+			return this;
+		}
+
+		// --イベント
+
+		addKeydownEventListener() {
+			this.inputBuffer().removeKeydownEventListener()
+				.container().removeKeydownEventListener();
+			super.addKeydownEventListener();
+			return this;
+		}
+		runKeyDown(e,keycode) {
+			switch (keycode) {
+				case 8:
+					this.backSpace();
+					break;
+				default:
+					break;
+			}
+		}
+	}
 	class InputChar extends Char {
 		constructor(c,phraseNum) {
 			super(Char.createData(c));
 			if (phraseNum === undefined) phraseNum = -1;
 			this.phraseNum(phraseNum);
+		}
+
+		// --判定
+		isPhraseNum(num) {
+			return num === this.phraseNum();
+		}
+		isSelect() {
+			return this.hasClass('select-phrase');
 		}
 
 		// --Status
@@ -1594,21 +1947,24 @@ Util.createCharPosElement = (function () {
 			}
 		}
 
-		// --静的メソッド
+		// --Stylw
 
-		static createPlainCharData(c) {
-			const ret = {};
-			ret['char'] = c;
-			ret['decolation'] = [];
-			ret['fontSize'] = 'auto';
-			return ret;
+		select() {
+			this.addClass('select-phrase');
+			return this;
 		}
+		removeSelect() {
+			this.removeClass('select-phrase');
+			return this;
+		}
+
 	}
 
 	class InputBuffer extends Row {
 		constructor(container) {
 			super(document.getElementById('input_buffer'));
 			this._container = container;
+			this._convertContainer = new ConvertContainer(this);
 		}
 
 		// --参照取得
@@ -1622,11 +1978,44 @@ Util.createCharPosElement = (function () {
 		cursorChar() {
 			return this.cursor().getChar();
 		}
+		convertContainer() {
+			return this._convertContainer;
+		}
+		// 引数で指定された文節番号を持つInputCharを配列にして返す
+		phrases(num) {
+			const ret = [];
+			for (let char of this.chars()) {
+				if (char.isPhraseNum(num)) ret.push(char);
+			}
+			return ret;
+		}
+		selectPhrases() {
+			const ret = [];
+			for (let char of this.chars()) {
+				if (char.isSelect()) ret.push(char);
+			}
+			return ret;
+		}
 
 		// --判定
 
 		isDisplay() {
 			return this.elem().style.display === 'block';
+		}
+
+		// --Status
+
+		// ConvertViewsを作成した後に、各文字に文節番号をふる
+		setPhraseNum() {
+			let cnt = 0;
+			for (let view of this.convertContainer().views()) {
+				const num = view.phraseNum();
+				const len = view.getSelect().length();
+				for (let i = 0; i < len; i++,cnt++) {
+					this.chars(cnt).phraseNum(num);
+				}
+			}
+			return this;
 		}
 
 		// --Style
@@ -1656,6 +2045,17 @@ Util.createCharPosElement = (function () {
 			this.elem().style.display = 'none';
 			return this;
 		}
+		// 文節番号がindexの文字を選択する
+		select(index) {
+			for (let char of this.chars()) {
+				if (char.phraseNum() === index)
+					char.select();
+				else
+					char.removeSelect();
+			}
+			this.convertContainer().views(index).active();
+			return this;
+		}
 
 		// --DOM操作
 
@@ -1670,15 +2070,18 @@ Util.createCharPosElement = (function () {
 			this.resize();
 			return this;
 		}
+		// bufferの最後の文字を削除する
+		// 文字が全てなくなればinputを終了する
+		// 戻り値は削除したInputCharオブジェクト
 		pop() {
 			if (!this.hasChar) return this;
-			this.lastChar().remove();
+			const ret = this.lastChar().remove();
 			this.resize();
 			if (!this.hasChar()) {
 				this.hide();
-				this.removeKeydownEventListener();
+				this.container().addKeydownEventListener();
 			}
-			return this;
+			return ret;
 		}
 		update(str) {
 			this.empty();
@@ -1691,14 +2094,43 @@ Util.createCharPosElement = (function () {
 		// カーソル位置に文字を挿入し、後処理を行ってinput状態を終了する
 		input() {
 			this.cursor().insert(this.text());
-			this.hide();
-			this.empty();
-			this.removeKeydownEventListener();
+			this.empty().hide();
+			this.container().addKeydownEventListener();
 			this.container().changeDisplay();
 			return this;
 		}
 		toKatakanaAll() {
 			this.update(this.getKatakana());
+			return this;
+		}
+		convert() {
+			this.convertContainer().convert(this.text());
+			return this;
+		}
+		// 文節文字を入れ替える
+		insertPhrase(num,str) {
+			const phrases = this.phrases(num);
+			if (phrases.length === 0) return this; // 指定された文節番号の文字が見つからなかった
+			// 新しいInputCharをもともとあった文字の前に挿入していく
+			for (let c of str) {
+				const newChar = new InputChar(c,num);
+				phrases[0].before(newChar);
+				if (phrases[0].isSelect()) newChar.select(); // 選択中の文節なら入替え文字も選択
+			}
+			// 古い文字を削除
+			for (let old of phrases) {
+				old.remove();
+			}
+			return this;
+		}
+		// 指定した文節の後ろに文節を追加する
+		insertPhraseAfter(num,str) {
+			const phrases = this.phrases(num);
+			if (phrases.length === 0) return this; // 指定された文節番号の文字が見つからなかった
+			const nextChar = phrases[phrases.length -1].next(); // 挿入用の文字。最後にはEOLがあるので、必ず存在する
+			for (let c of str) {
+				nextChar.before(new InputChar(c,-num));
+			}
 			return this;
 		}
 
@@ -1778,12 +2210,8 @@ Util.createCharPosElement = (function () {
 		}
 		addKeydownEventListener() {
 			this.container().removeKeydownEventListener();
+			this.convertContainer().removeKeydownEventListener();
 			super.addKeydownEventListener();
-			return this;
-		}
-		removeKeydownEventListener() {
-			super.removeKeydownEventListener();
-			this.container().addKeydownEventListener();
 			return this;
 		}
 		runKeyDown(e,keycode) {
@@ -1795,6 +2223,10 @@ Util.createCharPosElement = (function () {
 				case 13:
 					// enter
 					this.input();
+					break;
+				case 32:
+					// space
+					this.convert();
 					break;
 				case 118:
 					// F7
@@ -1823,10 +2255,10 @@ Util.createCharPosElement = (function () {
 			}
 
 			this._cursor = new Cursor(this);
+			this._inputBuffer = new InputBuffer(this);
 			this.resetDisplay();
 			this.breakPage();
 			this.addKeydownEventListener();
-			this._inputBuffer = new InputBuffer(this);
 		}
 
 		// --参照取得
@@ -2148,8 +2580,13 @@ Util.createCharPosElement = (function () {
 
 		// --イベント
 
+		addKeydownEventListener() {
+			this.inputBuffer().removeKeydownEventListener()
+				.convertContainer().removeKeydownEventListener();
+			super.addKeydownEventListener();
+			return this;
+		}
 		runKeyDown(e,keycode) {
-			console.log('runKeyDown:'+ keycode);
 			if (e.ctrlKey) return this.runControlKeyDown();
 
 			switch (keycode) {

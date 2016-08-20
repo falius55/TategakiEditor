@@ -166,6 +166,7 @@ $(function() {
 
 	function keydownOnDoc(e) {
 		'use strict';
+		return;
 		userAlert('');
 		const keycode = getKeyCode(e);
 
@@ -195,6 +196,7 @@ $(function() {
 
 	function keydownOnConvertView(e,keycode) {
 		'use strict';
+		return;
 
 		switch (keycode) {
 			case 8:
@@ -251,6 +253,7 @@ $(function() {
 
 	function keydownOnInputBuffer(e,keycode) {
 		'use strict';
+		return;
 		const $inputBuffer = $('#input_buffer');
 
 		switch (keycode) {
@@ -273,7 +276,7 @@ $(function() {
 				break;
 			case 32:
 				// space
-				comKanjiForFullString($inputBuffer.text());
+				// comKanjiForFullString($inputBuffer.text());
 				break;
 			case 118:
 				// F7
