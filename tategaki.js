@@ -910,7 +910,8 @@ $(function() {
 				.removeClass('command-modal')
 				.modal('hide');
 		}
-		comFileList(getUserId());
+		// comFileList(getUserId());
+		container.fileList().read(getUserId());
 	}
 
 	function endCommandMode() {
@@ -3058,7 +3059,7 @@ $(function() {
 		// console.log('comReadJsonFile("'+ fileId +'")');
 		// console.time('comReadJsonFile()');
 		const userId = getUserId();
-		window.SentenceContainer.readFile({
+		window.container.readFile({
 			user_id: userId,
 			file_id: fileId
 		});
@@ -3160,7 +3161,8 @@ $(function() {
 			// 表示データを受け取ってからの処理
 			console.log(data.result);
 			$('.saved').text(data.strDate);
-			comFileList(this.userId);
+			// comFileList(this.userId);
+			container.fileList().read(this.userId);
 			console.log('保存しました:fileId=' + this.fileId);
 		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveFile');
@@ -3217,7 +3219,8 @@ $(function() {
 			// 表示データを受け取ってからの処理
 			console.log(data.result);
 			$('.saved').text(data.strDate);
-			comFileList(this.userId);
+			// comFileList(this.userId);
+			container.fileList().read(this.userId);
 			console.log('保存しました:fileId=' + this.fileId);
 			userAlert('保存しました');
 		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -3308,10 +3311,12 @@ $(function() {
 			}
 			$('#file_list_modal').modal('hide');
 			document.addEventListener('keydown',keydownOnDoc,false);
-			comFileList(getUserId());
+			// comFileList(getUserId());
+			container.fileList().read(getUserId());
 
 		} else if (searchWord.length === 0) {
-			comFileList(getUserId());
+			// comFileList(getUserId());
+			container.fileList().read(getUserId());
 		} else {
 			comSearchFile(searchWord);
 		}
@@ -3380,7 +3385,8 @@ $(function() {
 	// 開くボタンを押した時
 	function readyFileModal() {
 		'use strict';
-		comFileList(getUserId());
+		// comFileList(getUserId());
+		container.fileList().read(getUserId());
 		$('#search_file').val('').focus();
 	}
 
@@ -3419,7 +3425,7 @@ $(function() {
 		$('#sentence_container').empty();
 
 		// appendParagraph('');
-		window.SentenceContainer.newFile(filename);
+		container.newFile(filename);
 		console.log(window.container);
 		// $('.row').addClass('display').children('.char').first().addClass('cursor');
 		$('#file_title').val(filename).attr('data-file-id','-1');
@@ -3502,7 +3508,8 @@ $(function() {
 						break;
 					}
 				}
-				comFileList(getUserId());
+				// comFileList(getUserId());
+				container.fileList().read(getUserId());
 			} else {
 				alert('ファイル削除エラーです(ファイル番号：'+ this.fileId + ')');
 			}
@@ -3648,7 +3655,8 @@ $(function() {
 						}
 					}).done(function (json) {
 						// 表示データを受け取ってからの処理
-						comFileList(this.userId);
+						// comFileList(this.userId);
+						container.fileList().read(this.userId);
 					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMvFileToDirectory');
 					});
@@ -3676,7 +3684,8 @@ $(function() {
 						}
 					}).done(function (json) {
 						// 表示データを受け取ってからの処理
-						comFileList(this.userId);
+						// comFileList(this.userId);
+						container.fileList().read(this.userId);
 					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMakeDirectory');
 					});
@@ -3700,7 +3709,8 @@ $(function() {
 						}
 					}).done(function (json) {
 						// 表示データを受け取ってからの処理
-						comFileList(this.userId);
+						// comFileList(this.userId);
+						container.fileList().read(this.userId);
 						if (json.result === 'within') {
 							userAlert('ディレクトリが空ではないので削除できませんでした。');
 						}
@@ -3962,7 +3972,8 @@ $(function() {
 
 				setCursorLine();
 				defaultNewFile();
-				comFileList(globalUserId);
+				// comFileList(globalUserId);
+				container.fileList().read(globalUserId);
 				// Event
 				document.addEventListener('keydown',keydownOnDoc ,false);
 				addFocusEvent('file_title');
@@ -3971,7 +3982,7 @@ $(function() {
 					'use strict';
 					const fileId = $(this).attr('data-file-id');
 					// comReadJsonFile(fileId);
-					window.SentenceContainer.readFile({
+					container.readFile({
 						user_id: getUserId(),
 						file_id: fileId
 					});

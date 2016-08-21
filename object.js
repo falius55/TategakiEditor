@@ -179,6 +179,109 @@ Util.createConvertViewElement = (function () {
 		return eView;
 	}
 })();
+// file_listの中に入れるファイル行を作成する
+Util.createFileElement = (function () {
+	'use strict';
+	/*
+	 * 作成例
+	 * <li>
+	 * <a class="file"
+	 * data-type="file"
+	 * href="#"
+	 * data-file-id="1"
+	 * data-file-name="filename"
+	 * >
+	 * filename
+	 * </a>
+	 * </li>
+	 */
+	const eFileTemplate = document.createElement('li');
+	eFileTemplate.classList.add('fileLi');
+	const eFileLinkTemplate = document.createElement('a');
+	eFileLinkTemplate.classList.add('file');
+	eFileLinkTemplate.dataset.type = 'file';
+	eFileLinkTemplate.href = '#';
+
+	return function (id,filename) {
+		const eFile = eFileTemplate.cloneNode(true);
+		const eFileLink = eFileLinkTemplate.cloneNode(true);
+		eFileLink.dataset.fileId = id;
+		eFileLink.dataset.fileName = filename;
+		eFileLink.textContent = filename;
+		eFile.appendChild(eFileLink);
+		return eFile;
+	}
+})();
+// file_listの中に入れるディレクトリ行を作成する
+Util.createDirectoryElement = (function () {
+	'use strict';
+	/*
+	 * 作成例
+	 * <li>
+	 * 	<a class="directory"
+	 * 	data-type="directory"
+	 * 	data-toggle="collapse"
+	 * 	data-directory-id="1"
+	 * 	data-directory-name="filename.directoryname"
+	 * 	href="#directory1"
+	 * 	>
+	 *		<span
+	 *		class="glyphicon glyphicon-folder-close"
+	 *		aria-hidden="true">
+	 *		</span>
+	 *		filename.directoryname
+	 *		</a>
+	 *
+	 *		<div class="collapse" id="directory1">
+	 *			<div class="well">
+	 *				<ul>
+	 *					<li>filename</li>
+	 *					<li>filename</li>
+	 *					<li>filename</li>
+	 *				</ul>
+	 *			</div>
+	 *		</div>
+	 *	</li>
+	 */
+	const eDirectoryTemplete = document.createElement('li');
+	eDirectoryTemplete.classList.add('dirLi');
+	const eDirLinkTemplete = document.createElement('a');
+	eDirLinkTemplete.classList.add('directory');
+	eDirLinkTemplete.dataset.type = 'directory';
+	eDirLinkTemplete.dataset.toggle = 'collapse';
+	eDirLinkTemplete.innerHTML = '<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'; // フォルダアイコン
+
+	const eCollapseTemplate = document.createElement('div');
+	const eInnerUlTemplate = document.createElement('ul');
+	const eWellTemplate = document.createElement('div');
+	eCollapseTemplate.classList.add('collapse');
+	eWellTemplate.classList.add('well');
+
+	return function (id,innerData) {
+		const eDirectory = eDirectoryTemplete.cloneNode(true);
+		const eDirLink = eDirLinkTemplete.cloneNode(true);
+		const directoryname = innerData.directoryname;
+		eDirLink.dataset.directoryId = id;
+		eDirLink.dataset.directoryName = directoryname;
+		eDirLink.href = '#directory' + id;
+		eDirLink.insertAdjacentHTML('beforeend',directoryname);
+
+		eDirectory.appendChild(eDirLink);
+
+		const eCollapse = eCollapseTemplate.cloneNode(true);
+		const eInnerUl = eInnerUlTemplate.cloneNode(true);
+		const eWell = eWellTemplate.cloneNode(true);
+		eCollapse.id = 'directory' + id;
+
+		// eInnerUl内にファイルリストを加える
+
+		eCollapse.appendChild(eWell);
+		eWell.appendChild(eInnerUl);
+
+		eDirectory.appendChild(eCollapse); // コラプスも加える
+		return eDirectory;
+	}
+})();
 
 // Class
 (function () {
@@ -187,11 +290,14 @@ Util.createConvertViewElement = (function () {
 	class Cursor {
 		constructor(sentence) {
 			this._sentence = sentence;
-			const firstChar = this._sentence.firstChild().firstChild().firstChild();
+		}
+		init() {
+			const firstChar = this.sentence().firstChild().firstChild().firstChild();
 			this._char = firstChar;
 			this._char.addClass('cursor'); // この時点ではSentenceContainerの_cursorにインスタンスが入っていないのでsentence.cursor()が使えず、そのためchar.addCursor()が利用できない
 			this.createCursorLine();
 			this.setPosMemory(this._char.index());
+			return this;
 		}
 
 		// --参照取得
@@ -544,6 +650,11 @@ Util.createConvertViewElement = (function () {
 			while (child = children[0]) {
 				this.elem().removeChild(child);
 			}
+			return this;
+		}
+		empty() {
+			this.emptyElem();
+			this.emptyChild();
 			return this;
 		}
 
@@ -1916,7 +2027,7 @@ Util.createConvertViewElement = (function () {
 
 			if (activeView.isLast()) return;
 
-			// 次の文節の文字数が１文字だけなら融合して、１文節としてとして変換する
+			// 次の文節の文字数が１文字だけなら融合して、１文節として変換する
 			if (nextView.kanaLength() === 1) {
 				const nextPhrase = this.inputBuffer().phrases(nextView.phraseNum())[0];
 				const sendString = activeView.hiragana() + nextView.hiragana() + ','; // 文節を区切られないよう、,を末尾に追加する
@@ -2019,11 +2130,6 @@ Util.createConvertViewElement = (function () {
 			}
 			view.container(this);
 			this.pushChild(view);
-			return this;
-		}
-		empty() {
-			super.emptyElem();
-			super.emptyChild();
 			return this;
 		}
 
@@ -2416,9 +2522,255 @@ Util.createConvertViewElement = (function () {
 		}
 	}
 
+	class File extends Sentence {
+		constructor(id,filename) {
+			super(Util.createFileElement(id,filename));
+			this._nextFile = null;
+			this._prevFile = null;
+		}
+
+		// --参照取得
+		
+		// 通常のnext()やprev()はディレクトリも含め同階層をつなぐ
+		// nextFile()とprevFile()はファイルのみ、ディレクトリ横断的につなぐ
+		nextFile(file) {
+			if (file === undefined) {
+				return this._nextFile;
+			} else {
+				this._nextFile = file;
+				return this;
+			}
+		}
+		prevFile(file) {
+			if (file === undefined) {
+				return this._prevFile;
+			} else {
+				this._prevFile = file;
+				return this;
+			}
+		}
+
+		// --判定
+
+		isRoot() {
+			return false;
+		}
+		isDirectory() {
+			return false;
+		}
+		isFile() {
+			return true;
+		}
+	}
+	class Directory extends Sentence {
+		constructor(dirId,data) {
+			/*
+			 * dataの中身例(rootから見て)
+			 * data = {
+			 * 	"directoryname": "root",
+			 * 	"1":"sample",
+			 * 	"8":"file",
+			 * 	"6": {
+			 * 		"directoryname": "dirname",
+			 * 		"4":"indirfile",
+			 * 		"9":"file",
+			 * 		"12": {
+			 * 			"directoryname": "seconddir",
+			 * 			"17": "file"
+			 * 		}
+			 * 	}
+			 * }
+			 * fileId:filename
+			 */
+			super(Util.createDirectoryElement(dirId,data));
+			this._link = this.elem().getElementsByTagName('a')[0];
+			this._innerList = this.elem().getElementsByTagName('ul')[0];
+
+			this._id = parseInt(dirId);
+			this._name = data['directoryname'];
+			for (let id in data) {
+				if (id === 'directoryname') continue;
+				if (typeof data[id] === 'string') {
+					this.append(new File(id,data[id]));
+				} else {
+					this.append(new Directory(id,data[id]));
+				}
+			}
+		}
+
+		// --参照取得
+		link() {
+			return this._link;
+		}
+		innerList() {
+			return this._innerList;
+		}
+
+		// --判定
+
+		isRoot() {
+			return false;
+		}
+		isDirectory() {
+			return true;
+		}
+		isFile() {
+			return false;
+		}
+
+		// --参照操作
+
+		// --Status
+
+		id() {
+			return this._id;
+		}
+		name() {
+			return this._name;
+		}
+
+		// --DOM操作
+		append(file) {
+			// DOM
+			this.innerList().appendChild(file.elem());
+
+			// ポインタ調整
+			// 最初の要素と最後の要素はつなげる
+
+			if (this.hasChild()) {
+				this.lastChild().next(file);
+				file.prev(this.lastChild());
+			}
+			file.parent(this);
+			this.pushChild(file);
+			return this;
+		}
+	}
+	class FileList extends Sentence {
+		constructor(data) {
+			super(document.getElementById('file_list'));
+			if (data) this.init(data);
+		}
+		init(data) {
+			this.empty();
+			for (let id in data) {
+				if (id === 'directoryname') continue;
+				if (typeof data[id] === 'string') {
+					this.append(new File(id,data[id]));
+				} else {
+					this.append(new Directory(id,data[id]));
+				}
+			}
+			this.chainFile();
+			return this;
+		}
+		// --参照取得
+
+		searchFromElem(elem) {
+		}
+		
+		// --判定
+
+		isRoot() {
+			return true;
+		}
+		isFile() {
+			return false;
+		}
+		isDirectory() {
+			return false;
+		}
+
+		// --参照操作
+
+		// 自分以降のファイル同士をポインタでつなぐ
+		chainFile() {
+			let cnt = 0;
+			for (let file = this.findNextFile(this),next; next = this.findNextFile(file); file = next) {
+				file.nextFile(next);
+				next.prevFile(file);
+			}
+			return this;
+		}
+		// リストで上からファイルだけを数えた場合の、引数の次のファイルを返す
+		// チェックする順番は、ファイルならその次のファイルをチェックし、ディレクトリなら下に潜って最初に見つけたファイルをチェックする
+		// -- 全要素を順に探索していくための道のり --
+		// 引数がファイルなら。引数の次を確認する
+		// 引数がディレクトリなら、その最初の子を確認する(FileListはディレクトリ扱い)
+		// 空ディレクトリなら(firstChild()===null)、引数の次を確認する
+		// 引数の次が同じ階層になければ(ディレクトリ内の最後と判断する)、親ディレクトリの次を確認する(それでもなければ、さらに上の親ディレクトリの次、と繰り返す)
+		// 引数の次の要素が見つからず親をたどっていく過程でルートディレクトリ(FileList)に辿り着いた場合は、探索が最後に達したとしてnullを返す
+		// -- ここまでで確認要素を取得 --
+		// 取得した確認要素がディレクトリなら、さらに潜って探索を次に進めるため再帰する
+		// 取得した確認要素がファイルなら、その要素が引数の次のファイルなので返す
+		//
+		findNextFile(file) {
+			let check;
+			if (file.isFile()) {
+				check = file.next();
+			}
+			if (file.isDirectory() || file.isRoot()) {
+				check = file.firstChild() || file.next();
+			}
+			if (!check) {
+				for (let parentDir = file.parent(); !(check = parentDir.next()); parentDir = parentDir.parent()) {
+					if (parentDir.isRoot()) return null;
+				}
+			}
+			if (check.isDirectory()) {
+				return this.findNextFile(check);
+			}
+			if (check.isFile()) {
+				return check;
+			}
+			return null;
+		}
+
+		// --DOM操作
+
+		append(file) {
+			// DOM
+			this.elem().appendChild(file.elem());
+
+			// ポインタ調整
+			// 最初の要素と最後の要素はつなげる
+
+			if (this.hasChild()) {
+				this.lastChild().next(file);
+				file.prev(this.lastChild());
+			}
+			file.parent(this);
+			this.pushChild(file);
+			return this;
+		}
+
+		read(userId) {
+			Util.post("/tategaki/FileListMaker",{
+				user_id: userId
+			},function (json) {
+				this.init(json);
+			}.bind(this));
+			return this;
+		}
+
+		// --イベント
+
+		runClickEvent(e) {
+		}
+	}
+
 	window.SentenceContainer = class extends Sentence {
 		constructor(data) {
 			super(document.getElementById('sentence_container'));
+			if (data) this.init(data);
+			this._cursor = new Cursor(this);
+			this._inputBuffer = new InputBuffer(this);
+			this._fileList = new FileList();
+		}
+		// データの構築
+		// ajax通信とのタイムラグを埋めるため、コンストラクタと切り離す
+		init(data) {
+			this.empty();
 			// 文書情報
 			this._userId = data.userId;
 			this._filename = data.filename;
@@ -2426,16 +2778,16 @@ Util.createConvertViewElement = (function () {
 			this._strLenOnRow = 40; // １行の文字数
 			this._rowLenOnPage = 40; // １ページの行数
 			// DOMの構築
-			if (window.container) window.container.emptyElem().removeKeydownEventListener();
+			// if (window.container) window.container.empty();
 			for (let paraData of data.data.text) {
 				this.append(new Paragraph(paraData));
 			}
 
-			this._cursor = new Cursor(this);
-			this._inputBuffer = new InputBuffer(this);
+			this.cursor().init();
 			this.resetDisplay();
 			this.breakPage();
 			this.addKeydownEventListener();
+			return this;
 		}
 
 		// --参照取得
@@ -2451,6 +2803,9 @@ Util.createConvertViewElement = (function () {
 		}
 		inputBuffer() {
 			return this._inputBuffer;
+		}
+		fileList() {
+			return this._fileList;
 		}
 
 		// --判定
@@ -2535,6 +2890,7 @@ Util.createConvertViewElement = (function () {
 		empty() {
 			this.emptyElem();
 			this.emptyChild();
+			this.removeKeydownEventListener();
 			return this;
 		}
 		// TODO: 配列が渡されたらフラグメントを使ってappendする
@@ -2603,7 +2959,7 @@ Util.createConvertViewElement = (function () {
 
 		// --ファイル操作
 
-		static readFile(data) { // static factory method
+		readFile(data) { // static factory method
 			console.time('readFile');
 			const userId = data.user_id;
 			const fileId = data.file_id;
@@ -2617,11 +2973,12 @@ Util.createConvertViewElement = (function () {
 				// 文章のhtml書き出し
 				// window.container.emptyElem();
 				console.time('new SentenceContainer');
-				window.container = new SentenceContainer(json);
+				this.init(json);
 				console.timeEnd('new SentenceContainer');
 				$('.doc-info > .saved').text(json.saved);
 				console.timeEnd('readFile');
-			});
+			}.bind(this));
+			return this;
 		}
 		saveFile() {
 			const nowDate_ms = Date.now();
@@ -2636,8 +2993,8 @@ Util.createConvertViewElement = (function () {
 
 			});
 		}
-		static newFile(filename) {
-			window.container = new SentenceContainer({
+		newFile(filename) {
+			this.init({
 				fileId: -1,
 				filename: filename,
 				data: {
@@ -2657,7 +3014,6 @@ Util.createConvertViewElement = (function () {
 			console.time('change display');
 			const cursorChar = this.cursor().getChar();
 			if (isForce === undefined && cursorChar.isDisplay() && cursorChar.row().isDisplay()){
-				console.timeEnd('change display');
 				return;
 			}
 			const rowPos = this.computeDisplayRowPos();
@@ -2831,3 +3187,4 @@ Util.createConvertViewElement = (function () {
 	}
 
 })();
+container = new SentenceContainer(); // グローバルオブジェクト
