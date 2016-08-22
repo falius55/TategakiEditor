@@ -49,11 +49,11 @@
 				<input type="text" id="file_title" data-file-id="-1" value="newfile"></input>
 				<div id="cursor_line"></div>
 					<div id="sentence_container"> </div>
-				<div class="doc-info">
-					文字:<span class="str-num">-</span>/<span class="str-len">-</span>&nbsp;
-					行:<span class="row-num">-</span>/<span class="row-len">-</span>&nbsp;
-					ページ:<span class="page-num">-</span>/<span class="page-len">-</span>&nbsp;
-					最終更新日時:<span class="saved">-</span>
+				<div id="doc_info">
+					文字:<span id="str_num">-</span>/<span id="str_len">-</span>&nbsp;
+					行:<span id="row_num">-</span>/<span id="row_len">-</span>&nbsp;
+					ページ:<span id="page_num">-</span>/<span id="page_len">-</span>&nbsp;
+					最終更新日時:<span id="saved">-</span>
 				</div>
 				<div id="input_buffer" class="row"><span class="char EOL display"></span></div>
 				<div id="convert_container"></div>

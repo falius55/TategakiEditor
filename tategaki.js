@@ -4,133 +4,133 @@ console.log('tategaki.js');
  * アンドゥ
  */
 $(function() {
-	// ===================================================================
-	// 		クロージャ(label:closer)
-	// ===================================================================
-	// 巻き上げが起こらないため、ファイル先頭に記述する
-
-	// file_listの中に入れるファイル行を作成する
-	const createFileElement = (function () {
-		'use strict';
-		/*
-		 * 作成例
-		 * <li>
-		 * <a class="file"
-		 * data-type="file"
-		 * href="#"
-		 * data-file-id="1"
-		 * data-file-name="filename"
-		 * >
-		 * filename
-		 * </a>
-		 * </li>
-		 */
-		const eFileTemplate = document.createElement('li');
-		const eFileLinkTemplate = document.createElement('a');
-		eFileLinkTemplate.classList.add('file');
-		eFileLinkTemplate.dataset.type = 'file';
-		eFileLinkTemplate.href = '#';
-
-		return function (id,filename) {
-			const eFile = eFileTemplate.cloneNode(true);
-			const eFileLink = eFileLinkTemplate.cloneNode(true);
-			eFileLink.dataset.fileId = id;
-			eFileLink.dataset.fileName = filename;
-			eFileLink.textContent = filename;
-			eFile.appendChild(eFileLink);
-			return eFile;
-		}
-	})();
-	
-	// file_listの中に入れるディレクトリ行を作成する
-	const createDirectoryElement = (function () {
-		'use strict';
-		/*
-		 * 作成例
-		 * <li>
-		 * 	<a class="directory"
-		 * 	data-type="directory"
-		 * 	data-toggle="collapse"
-		 * 	data-directory-id="1"
-		 * 	data-directory-name="filename.directoryname"
-		 * 	href="#directory1"
-		 * 	>
-		 *		<span
-		 *		class="glyphicon glyphicon-folder-close"
-		 *		aria-hidden="true">
-		 *		</span>
-		 *		filename.directoryname
-		 *		</a>
-		 *
-		 *		<div class="collapse" id="directory1">
-		 *			<div class="well">
-		 *				<ul>
-		 *					<li>filename</li>
-		 *					<li>filename</li>
-		 *					<li>filename</li>
-		 *				</ul>
-		 *			</div>
-		 *		</div>
-		 *	</li>
-		 */
-		const eDirectoryTemplete = document.createElement('li');
-		const eDirLinkTemplete = document.createElement('a');
-		eDirLinkTemplete.classList.add('directory');
-		eDirLinkTemplete.dataset.type = 'directory';
-		eDirLinkTemplete.dataset.toggle = 'collapse';
-		eDirLinkTemplete.innerHTML = '<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'; // フォルダアイコン
-
-		return function (id,innerData) {
-			const eDirectory = eDirectoryTemplete.cloneNode(true);
-			const eDirLink = eDirLinkTemplete.cloneNode(true);
-			const directoryname = innerData.directoryname;
-			eDirLink.dataset.directoryId = id;
-			eDirLink.dataset.directoryName = directoryname;
-			eDirLink.href = '#directory' + id;
-			eDirLink.insertAdjacentHTML('beforeend',directoryname);
-
-			eDirectory.appendChild(eDirLink);
-			eDirectory.appendChild(createDirCollapseElement(id,innerData)); // コラプスも加える
-			return eDirectory;
-		}
-	})();
-
-	// ディレクトリ行の中に入れるディレクトリ内を表すコラプスを作成する
-	const createDirCollapseElement = (function () {
-		'use strict';
-		/*
-		 * 作成例
-		 *		<div class="collapse" id="directory1">
-		 *			<div class="well">
-		 *				<ul>
-		 *					<li>filename</li>
-		 *					<li>filename</li>
-		 *					<li>filename</li>
-		 *				</ul>
-		 *			</div>
-		 *		</div>
-		 */
-		const eCollapseTemplate = document.createElement('div');
-		const eInnerUlTemplate = document.createElement('ul');
-		const eWellTemplate = document.createElement('div');
-		eCollapseTemplate.classList.add('collapse');
-		eWellTemplate.classList.add('well');
-
-		return function (id,innerData) {
-			'use strict';
-			const eCollapse = eCollapseTemplate.cloneNode(true);
-			const eInnerUl = eInnerUlTemplate.cloneNode(true);
-			const eWell = eWellTemplate.cloneNode(true);
-			eCollapse.id = 'directory' + id;
-
-			// コラプス内にファイルリストを加える
-			setFileListFromObject(innerData, eInnerUl);
-
-			eCollapse.appendChild(eWell);
-			eWell.appendChild(eInnerUl);
-			return eCollapse;
-		}
-	})();
+	// // ===================================================================
+	// // 		クロージャ(label:closer)
+	// // ===================================================================
+	// // 巻き上げが起こらないため、ファイル先頭に記述する
+	//
+	// // file_listの中に入れるファイル行を作成する
+	// const createFileElement = (function () {
+	// 	'use strict';
+	// 	/*
+	// 	 * 作成例
+	// 	 * <li>
+	// 	 * <a class="file"
+	// 	 * data-type="file"
+	// 	 * href="#"
+	// 	 * data-file-id="1"
+	// 	 * data-file-name="filename"
+	// 	 * >
+	// 	 * filename
+	// 	 * </a>
+	// 	 * </li>
+	// 	 */
+	// 	const eFileTemplate = document.createElement('li');
+	// 	const eFileLinkTemplate = document.createElement('a');
+	// 	eFileLinkTemplate.classList.add('file');
+	// 	eFileLinkTemplate.dataset.type = 'file';
+	// 	eFileLinkTemplate.href = '#';
+	//
+	// 	return function (id,filename) {
+	// 		const eFile = eFileTemplate.cloneNode(true);
+	// 		const eFileLink = eFileLinkTemplate.cloneNode(true);
+	// 		eFileLink.dataset.fileId = id;
+	// 		eFileLink.dataset.fileName = filename;
+	// 		eFileLink.textContent = filename;
+	// 		eFile.appendChild(eFileLink);
+	// 		return eFile;
+	// 	}
+	// })();
+	//
+	// // file_listの中に入れるディレクトリ行を作成する
+	// const createDirectoryElement = (function () {
+	// 	'use strict';
+	// 	/*
+	// 	 * 作成例
+	// 	 * <li>
+	// 	 * 	<a class="directory"
+	// 	 * 	data-type="directory"
+	// 	 * 	data-toggle="collapse"
+	// 	 * 	data-directory-id="1"
+	// 	 * 	data-directory-name="filename.directoryname"
+	// 	 * 	href="#directory1"
+	// 	 * 	>
+	// 	 *		<span
+	// 	 *		class="glyphicon glyphicon-folder-close"
+	// 	 *		aria-hidden="true">
+	// 	 *		</span>
+	// 	 *		filename.directoryname
+	// 	 *		</a>
+	// 	 *
+	// 	 *		<div class="collapse" id="directory1">
+	// 	 *			<div class="well">
+	// 	 *				<ul>
+	// 	 *					<li>filename</li>
+	// 	 *					<li>filename</li>
+	// 	 *					<li>filename</li>
+	// 	 *				</ul>
+	// 	 *			</div>
+	// 	 *		</div>
+	// 	 *	</li>
+	// 	 */
+	// 	const eDirectoryTemplete = document.createElement('li');
+	// 	const eDirLinkTemplete = document.createElement('a');
+	// 	eDirLinkTemplete.classList.add('directory');
+	// 	eDirLinkTemplete.dataset.type = 'directory';
+	// 	eDirLinkTemplete.dataset.toggle = 'collapse';
+	// 	eDirLinkTemplete.innerHTML = '<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'; // フォルダアイコン
+	//
+	// 	return function (id,innerData) {
+	// 		const eDirectory = eDirectoryTemplete.cloneNode(true);
+	// 		const eDirLink = eDirLinkTemplete.cloneNode(true);
+	// 		const directoryname = innerData.directoryname;
+	// 		eDirLink.dataset.directoryId = id;
+	// 		eDirLink.dataset.directoryName = directoryname;
+	// 		eDirLink.href = '#directory' + id;
+	// 		eDirLink.insertAdjacentHTML('beforeend',directoryname);
+	//
+	// 		eDirectory.appendChild(eDirLink);
+	// 		eDirectory.appendChild(createDirCollapseElement(id,innerData)); // コラプスも加える
+	// 		return eDirectory;
+	// 	}
+	// })();
+	//
+	// // ディレクトリ行の中に入れるディレクトリ内を表すコラプスを作成する
+	// const createDirCollapseElement = (function () {
+	// 	'use strict';
+	// 	/*
+	// 	 * 作成例
+	// 	 *		<div class="collapse" id="directory1">
+	// 	 *			<div class="well">
+	// 	 *				<ul>
+	// 	 *					<li>filename</li>
+	// 	 *					<li>filename</li>
+	// 	 *					<li>filename</li>
+	// 	 *				</ul>
+	// 	 *			</div>
+	// 	 *		</div>
+	// 	 */
+	// 	const eCollapseTemplate = document.createElement('div');
+	// 	const eInnerUlTemplate = document.createElement('ul');
+	// 	const eWellTemplate = document.createElement('div');
+	// 	eCollapseTemplate.classList.add('collapse');
+	// 	eWellTemplate.classList.add('well');
+	//
+	// 	return function (id,innerData) {
+	// 		'use strict';
+	// 		const eCollapse = eCollapseTemplate.cloneNode(true);
+	// 		const eInnerUl = eInnerUlTemplate.cloneNode(true);
+	// 		const eWell = eWellTemplate.cloneNode(true);
+	// 		eCollapse.id = 'directory' + id;
+	//
+	// 		// コラプス内にファイルリストを加える
+	// 		setFileListFromObject(innerData, eInnerUl);
+	//
+	// 		eCollapse.appendChild(eWell);
+	// 		eWell.appendChild(eInnerUl);
+	// 		return eCollapse;
+	// 	}
+	// })();
 	
 	// ===================================================================
 	// 		ユーザー操作(label:user)
@@ -166,7 +166,6 @@ $(function() {
 
 	function keydownOnDoc(e) {
 		'use strict';
-		return;
 		userAlert('');
 		const keycode = getKeyCode(e);
 
@@ -174,9 +173,9 @@ $(function() {
 
 		const $inputBuffer = $('#input_buffer');
 		if (isConvertMode()) {
-			keydownOnConvertView(e,keycode);
+			// keydownOnConvertView(e,keycode);
 		} else if (isInputMode()) {
-			keydownOnInputBuffer(e,keycode);
+			// keydownOnInputBuffer(e,keycode);
 		} else {
 			// 非入力(通常)状態
 
@@ -194,100 +193,100 @@ $(function() {
 		e.preventDefault();
 	}
 
-	function keydownOnConvertView(e,keycode) {
-		'use strict';
-		return;
-
-		switch (keycode) {
-			case 8:
-				// backspace
-				backSpaceOnConvert();
-				break;
-			case 13:
-				// Enter
-				// inputBufferの文字を挿入
-				const $inputBuffer = $('#input_buffer');
-				$('.convert-view').remove();
-				insertStringFromCursor($inputBuffer.text());
-				$inputBuffer.empty().hide(); // inputBufferを空にして隠す
-				break;
-			case 32:
-			case 37:
-				// space
-				// Left
-				// 候補のフォーカスを移動する
-				shiftLeftSelectKanjiFocus();
-				break;
-			case 38:
-				// Up
-				if (e.shiftKey) {
-					// shift & Up
-					shiftUpOnConvert();
-				} else {
-					// Up のみ
-					upOnConvert();
-				}
-				break;
-			case 39:
-				// Right
-				shiftRightSelectKanjiFocus();
-				break;
-			case 40:
-				// Down
-				if (e.shiftKey) {
-					// shift + Down
-					shiftDownOnConvert();
-				} else {
-					// Down のみ
-					downOnConvert();
-				}
-				break;
-			case 118:
-				// F7
-				changeKatakanaAtConvert();
-				break;
-			default:
-				break;
-		}
-	}
-
-	function keydownOnInputBuffer(e,keycode) {
-		'use strict';
-		return;
-		const $inputBuffer = $('#input_buffer');
-
-		switch (keycode) {
-			case 8:
-				// backspace
-				// input_bufferの最後の１文字を削除
-				// $inputBuffer.children('.EOL').prev().remove();
-				// moveInput();
-				// input_bufferの文字がなくなればinput_bufferを空にして隠す
-				// if ($inputBuffer.children('.char').first().hasClass('EOL')) {
-				// 	$inputBuffer.empty().hide(); // inputBufferを空にして隠す
-				// }
-				break;
-			case 13:
-				// Enter
-				// inputBufferの文字を挿入
-				console.log('push enter');
-				// insertStringFromCursor($inputBuffer.text());
-				// $inputBuffer.empty().hide(); // inputBufferを空にして隠す
-				break;
-			case 32:
-				// space
-				// comKanjiForFullString($inputBuffer.text());
-				break;
-			case 118:
-				// F7
-				changeKatakanaAll();
-				break;
-			default:
-				// inputBufferの更新
-				// updateInputBuffer(keycode,e.shiftKey);
-				break;
-		}
-	}
+	// function keydownOnConvertView(e,keycode) {
+	// 	'use strict';
+	// 	return;
+	//
+	// 	switch (keycode) {
+	// 		case 8:
+	// 			// backspace
+	// 			backSpaceOnConvert();
+	// 			break;
+	// 		case 13:
+	// 			// Enter
+	// 			// inputBufferの文字を挿入
+	// 			const $inputBuffer = $('#input_buffer');
+	// 			$('.convert-view').remove();
+	// 			insertStringFromCursor($inputBuffer.text());
+	// 			$inputBuffer.empty().hide(); // inputBufferを空にして隠す
+	// 			break;
+	// 		case 32:
+	// 		case 37:
+	// 			// space
+	// 			// Left
+	// 			// 候補のフォーカスを移動する
+	// 			shiftLeftSelectKanjiFocus();
+	// 			break;
+	// 		case 38:
+	// 			// Up
+	// 			if (e.shiftKey) {
+	// 				// shift & Up
+	// 				shiftUpOnConvert();
+	// 			} else {
+	// 				// Up のみ
+	// 				upOnConvert();
+	// 			}
+	// 			break;
+	// 		case 39:
+	// 			// Right
+	// 			shiftRightSelectKanjiFocus();
+	// 			break;
+	// 		case 40:
+	// 			// Down
+	// 			if (e.shiftKey) {
+	// 				// shift + Down
+	// 				shiftDownOnConvert();
+	// 			} else {
+	// 				// Down のみ
+	// 				downOnConvert();
+	// 			}
+	// 			break;
+	// 		case 118:
+	// 			// F7
+	// 			changeKatakanaAtConvert();
+	// 			break;
+	// 		default:
+	// 			break;
+	// 	}
+	// }
+	//
+	// function keydownOnInputBuffer(e,keycode) {
+	// 	'use strict';
+	// 	return;
+	// 	const $inputBuffer = $('#input_buffer');
+	//
+	// 	switch (keycode) {
+	// 		case 8:
+	// 			// backspace
+	// 			// input_bufferの最後の１文字を削除
+	// 			// $inputBuffer.children('.EOL').prev().remove();
+	// 			// moveInput();
+	// 			// input_bufferの文字がなくなればinput_bufferを空にして隠す
+	// 			// if ($inputBuffer.children('.char').first().hasClass('EOL')) {
+	// 			// 	$inputBuffer.empty().hide(); // inputBufferを空にして隠す
+	// 			// }
+	// 			break;
+	// 		case 13:
+	// 			// Enter
+	// 			// inputBufferの文字を挿入
+	// 			console.log('push enter');
+	// 			// insertStringFromCursor($inputBuffer.text());
+	// 			// $inputBuffer.empty().hide(); // inputBufferを空にして隠す
+	// 			break;
+	// 		case 32:
+	// 			// space
+	// 			// comKanjiForFullString($inputBuffer.text());
+	// 			break;
+	// 		case 118:
+	// 			// F7
+	// 			changeKatakanaAll();
+	// 			break;
+	// 		default:
+	// 			// inputBufferの更新
+	// 			// updateInputBuffer(keycode,e.shiftKey);
+	// 			break;
+	// 	}
+	// }
 
 	function keydownWithCTRL(e,keycode) {
 		'use strict';
@@ -299,13 +298,13 @@ $(function() {
 				readyFileModal();
 				$('#file_list_modal').modal();
 				break;
-			case 66:
-				// b
-			case 68:
-				// d
-				// backSpaceOnContainer();
-				// checkText();
-				break;
+			// case 66:
+			// 	// b
+			// case 68:
+			// 	// d
+			// 	backSpaceOnContainer();
+			// 	checkText();
+			// 	break;
 			case 190:
 				// .
 				findPrev();
@@ -418,258 +417,258 @@ $(function() {
 			case 58: // firefox developer edition
 			case 186: // chrome
 				// :
-				startCommandMode();
+				// startCommandMode();
 				break;
 			case 191:
 				// /
 				startFindMode();
 				break;
-			default:
-				// bufferの更新
-				// updateInputBuffer(keycode,e.shiftKey);
-				break;
+			// default:
+			// 	// bufferの更新
+			// 	updateInputBuffer(keycode,e.shiftKey);
+			// 	break;
 		}
 	}
 
-	// -------------------------------- keydown function -----------------------------------------
+	// // -------------------------------- keydown function -----------------------------------------
+	//
+	// // 漢字変換時にバックスペース
+	// function backSpaceOnConvert() {
+	// 	'use strict';
+	// 	const $inputBuffer = $('#input_buffer');
+	// 	const $activeConvertView = $('.convert-view.active');
+	// 	const currentSelectKana = $activeConvertView.children('.row').last().text();
+	//
+	// 	if (currentSelectKana.length >= 2) {
+	// 		// 現在選択中の文節が２文字以上
+	// 		// 現在選択中の文節から１文字削って、その文節だけ再変換
+	// 		comKanjiForOnePhrase(
+	// 				currentSelectKana.substring(0,currentSelectKana.length-1) // １文字削除
+	// 				,$('.convert-view.active')
+	// 				);
+	//
+	// 	} else {
+	// 		// 現在選択中の文節がひらがなで１文字のみ
+	// 		// 現在の文節を削除し、選択を次の文節に移す
+	//
+	// 		if ($inputBuffer.children('.char').not('.EOL').length === 1) {
+	// 			// これを削除すればinput_bufferが空になる場合
+	// 			// EOL含めて２文字
+	// 			$('#convert_container').empty();
+	// 			$inputBuffer.empty().hide(); // inputBufferを空にして隠す
+	// 			return;
+	// 		}
+	//
+	// 		// 削除後のフォーカス移動先
+	// 		let $newActiveConvertView = $activeConvertView.next('.convert-view');
+	// 		let newPhraseNum = $newActiveConvertView.children('.phrase-num').text();
+	// 		// 現在選択中の文節が最後の文節なら一つ前に戻る
+	// 		// 見つからなかった場合は下のselectPhraseのセレクタがエラー(newPhraseNumが空になる)
+	// 		if (!($newActiveConvertView[0])) {
+	// 			$newActiveConvertView = $activeConvertView.prev('.convert-view');
+	// 			newPhraseNum = $newActiveConvertView.children('.phrase-num').text();
+	// 		} 
+	//
+	// 		// convert-view
+	// 		$('.convert-view.active').remove();
+	// 		$newActiveConvertView.addClass('active');
+	// 		$newActiveConvertView.children('.row').first().addClass('select');
+	//
+	// 		// input_buffer > select-phrase
+	// 		$('#input_buffer > .char.select-phrase').remove();
+	// 		$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
+	//
+	// 		resetPhraseNum();
+	//
+	// 	}
+	//
+	// }
+	//
+	// // 漢字変換中に<Up>キー
+	// // 選択文節を一つ上に変更
+	// function upOnConvert() {
+	// 	'use strict';
+	// 	// 選択文節の変更
+	// 	const $oldSelectConvertView = $('.convert-view.active');
+	// 	let $newSelectConvertView = $oldSelectConvertView.prev('.convert-view');
+	// 	let newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
+	//
+	// 	// 最初に達していたら最後に戻る
+	// 	if (!($newSelectConvertView[0])) {
+	// 		$newSelectConvertView = $('.convert-view').last();
+	// 		newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
+	// 	} 
+	//
+	// 	// 表示convert-viewの変更
+	// 	$oldSelectConvertView.removeClass('active');
+	// 	$newSelectConvertView.addClass('active');
+	//
+	// 	// coanvert-view下のselectクラスの付け替え
+	// 	$('.convert-view > .row.select').removeClass('select');
+	// 	$newSelectConvertView.children('.row').first().addClass('select');
+	//
+	// 	// input_bufferのselect-phraseの変更
+	// 	$('#input_buffer > .char.select-phrase').removeClass('select-phrase');
+	// 	$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
+	// }
+	//
+	// // 漢字変換中に<Down>
+	// // 選択文節を次の文節に変更
+	// function downOnConvert() {
+	// 	'use strict';
+	// 	// 選択文節の変更
+	// 	const $oldSelectConvertView = $('.convert-view.active');
+	// 	let $newSelectConvertView = $oldSelectConvertView.next('.convert-view');
+	// 	let newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
+	//
+	// 	// 最後に達していたら最初に戻る
+	// 	if (!($newSelectConvertView[0])) {
+	// 		$newSelectConvertView = $('.convert-view').first();
+	// 		newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
+	// 	} 
+	//
+	// 	// convert-view
+	// 	$oldSelectConvertView.removeClass('active');
+	// 	$newSelectConvertView.addClass('active');
+	// 	$('.convert-view.active > .row.select').removeClass('select');
+	// 	$newSelectConvertView.children('.row').first().addClass('select');
+	//
+	// 	// input_bufferのselect-phrase
+	// 	$('#input_buffer > .char.select-phrase').removeClass('select-phrase');
+	// 	$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
+	// }
+	//
+	// // 漢字変換中にShift+<Up>
+	// // 文節区切りを一つ前にずらす
+	// function shiftUpOnConvert() {
+	// 	'use strict';
+	// 	const $firstConvertView = $('.convert-view.active');
+	// 	const $secondConvertView = $firstConvertView.next('.convert-view');
+	// 	const firstKana = $firstConvertView.children('.row').last().text();
+	//
+	// 	if (firstKana.length < 2) return; // 選択中の文節が１文字しかないときは何もしない
+	//
+	// 	if (!($secondConvertView[0])) {
+	// 		// 最後の文節の場合
+	// 		// 分離
+	// 		const newStr = firstKana.substring(0,firstKana.length-1) +
+	// 			',' +
+	// 			firstKana.substring(firstKana.length-1,firstKana.length);
+	//
+	// 		comKanjiForSplit(newStr,$firstConvertView);
+	// 		return;
+	// 	}
+	//
+	// 	const secondKana = $secondConvertView.children('.row').last().text();
+	//
+	// 	// 前半文節の最後の文字を、後半文節の最初に移動
+	// 	const newStr = firstKana.substring(0,firstKana.length-1) +
+	// 		',' +
+	// 		firstKana.substring(firstKana.length-1,firstKana.length) +
+	// 		secondKana;
+	//
+	// 	comKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
+	// }
+	//
+	// // 漢字変換中にShift+<Down>
+	// // 文節区切りの変更
+	// function shiftDownOnConvert() {
+	// 	'use strict';
+	// 	const $firstConvertView = $('.convert-view.active');
+	// 	const $secondConvertView = $firstConvertView.next('.convert-view');
+	// 	const firstKana = $firstConvertView.children('.row').last().text();
+	// 	const secondKana = $secondConvertView.children('.row').last().text();
+	//
+	// 	if (!($secondConvertView[0])) return; // 最後の文節を選択していたら何もしない
+	//
+	// 	if (secondKana.length < 2) {
+	// 		//二番目の文字列が１文字しかないので、２つを統合する
+	// 		const newStr = firstKana + secondKana + ',';
+	// 		comKanjiForFusion(newStr,$firstConvertView,$secondConvertView);
+	// 		return;
+	// 	}
+	//
+	// 	// 後半の１文字を前半に移す
+	// 	const newStr = firstKana + secondKana.charAt(0) + ',' + secondKana.substring(1);
+	// 	comKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
+	// }
+	//
+	// // 漢字変換候補一覧のフォーカスを左にシフトさせる
+	// function shiftLeftSelectKanjiFocus() {
+	// 	'use strict';
+	// 	const $oldSelect = $('.convert-view.active > .row.select');
+	// 	const $newSelect = $oldSelect.next('.row');
+	//
+	// 	shiftSelectKanjiFocus($oldSelect, $newSelect);
+	// }
+	//
+	// // 漢字変換候補一覧のフォーカスを右にシフトさせる
+	// function shiftRightSelectKanjiFocus() {
+	// 	'use strict';
+	// 	const $oldSelect = $('.convert-view.active > .row.select');
+	// 	const $newSelect = $oldSelect.prev('.row');
+	//
+	// 	shiftSelectKanjiFocus($oldSelect, $newSelect);
+	// }
+	//
+	// // convert-viewのselectを$oldSelectから$newSelectに動かす
+	// function shiftSelectKanjiFocus($oldSelect, $newSelect) {
+	// 	'use strict';
+	// 	if (!($newSelect[0])) return;
+	//
+	// 	// selectクラス
+	// 	$oldSelect.removeClass('select');
+	// 	$newSelect.addClass('select');
+	//
+	// 	// inputBufferの文字を入れ替える
+	// 	const phraseNum = $newSelect.siblings('.phrase-num').text();
+	// 	const selectKanji = $newSelect.text();
+	// 	insertPhraseToInputBuffer(phraseNum,selectKanji);
+	//
+	// 	// selectphraseクラスの付け替え
+	// 	$('#input_buffer .select-phrase').removeClass('select-phrase');
+	// 	$('#input_buffer > .char[data-phrase-num='+ phraseNum +']').addClass('select-phrase');
+	//
+	// 	resizeInputBuffer();
+	// }
 
-	// 漢字変換時にバックスペース
-	function backSpaceOnConvert() {
-		'use strict';
-		const $inputBuffer = $('#input_buffer');
-		const $activeConvertView = $('.convert-view.active');
-		const currentSelectKana = $activeConvertView.children('.row').last().text();
-
-		if (currentSelectKana.length >= 2) {
-			// 現在選択中の文節が２文字以上
-			// 現在選択中の文節から１文字削って、その文節だけ再変換
-			comKanjiForOnePhrase(
-					currentSelectKana.substring(0,currentSelectKana.length-1) // １文字削除
-					,$('.convert-view.active')
-					);
-
-		} else {
-			// 現在選択中の文節がひらがなで１文字のみ
-			// 現在の文節を削除し、選択を次の文節に移す
-
-			if ($inputBuffer.children('.char').not('.EOL').length === 1) {
-				// これを削除すればinput_bufferが空になる場合
-				// EOL含めて２文字
-				$('#convert_container').empty();
-				$inputBuffer.empty().hide(); // inputBufferを空にして隠す
-				return;
-			}
-
-			// 削除後のフォーカス移動先
-			let $newActiveConvertView = $activeConvertView.next('.convert-view');
-			let newPhraseNum = $newActiveConvertView.children('.phrase-num').text();
-			// 現在選択中の文節が最後の文節なら一つ前に戻る
-			// 見つからなかった場合は下のselectPhraseのセレクタがエラー(newPhraseNumが空になる)
-			if (!($newActiveConvertView[0])) {
-				$newActiveConvertView = $activeConvertView.prev('.convert-view');
-				newPhraseNum = $newActiveConvertView.children('.phrase-num').text();
-			} 
-
-			// convert-view
-			$('.convert-view.active').remove();
-			$newActiveConvertView.addClass('active');
-			$newActiveConvertView.children('.row').first().addClass('select');
-
-			// input_buffer > select-phrase
-			$('#input_buffer > .char.select-phrase').remove();
-			$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
-
-			resetPhraseNum();
-
-		}
-
-	}
-
-	// 漢字変換中に<Up>キー
-	// 選択文節を一つ上に変更
-	function upOnConvert() {
-		'use strict';
-		// 選択文節の変更
-		const $oldSelectConvertView = $('.convert-view.active');
-		let $newSelectConvertView = $oldSelectConvertView.prev('.convert-view');
-		let newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
-
-		// 最初に達していたら最後に戻る
-		if (!($newSelectConvertView[0])) {
-			$newSelectConvertView = $('.convert-view').last();
-			newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
-		} 
-
-		// 表示convert-viewの変更
-		$oldSelectConvertView.removeClass('active');
-		$newSelectConvertView.addClass('active');
-
-		// coanvert-view下のselectクラスの付け替え
-		$('.convert-view > .row.select').removeClass('select');
-		$newSelectConvertView.children('.row').first().addClass('select');
-
-		// input_bufferのselect-phraseの変更
-		$('#input_buffer > .char.select-phrase').removeClass('select-phrase');
-		$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
-	}
-
-	// 漢字変換中に<Down>
-	// 選択文節を次の文節に変更
-	function downOnConvert() {
-		'use strict';
-		// 選択文節の変更
-		const $oldSelectConvertView = $('.convert-view.active');
-		let $newSelectConvertView = $oldSelectConvertView.next('.convert-view');
-		let newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
-
-		// 最後に達していたら最初に戻る
-		if (!($newSelectConvertView[0])) {
-			$newSelectConvertView = $('.convert-view').first();
-			newPhraseNum = $newSelectConvertView.children('.phrase-num').text();
-		} 
-
-		// convert-view
-		$oldSelectConvertView.removeClass('active');
-		$newSelectConvertView.addClass('active');
-		$('.convert-view.active > .row.select').removeClass('select');
-		$newSelectConvertView.children('.row').first().addClass('select');
-
-		// input_bufferのselect-phrase
-		$('#input_buffer > .char.select-phrase').removeClass('select-phrase');
-		$('#input_buffer > .char[data-phrase-num='+ newPhraseNum + ']').addClass('select-phrase');
-	}
-
-	// 漢字変換中にShift+<Up>
-	// 文節区切りを一つ前にずらす
-	function shiftUpOnConvert() {
-		'use strict';
-		const $firstConvertView = $('.convert-view.active');
-		const $secondConvertView = $firstConvertView.next('.convert-view');
-		const firstKana = $firstConvertView.children('.row').last().text();
-
-		if (firstKana.length < 2) return; // 選択中の文節が１文字しかないときは何もしない
-
-		if (!($secondConvertView[0])) {
-			// 最後の文節の場合
-			// 分離
-			const newStr = firstKana.substring(0,firstKana.length-1) +
-				',' +
-				firstKana.substring(firstKana.length-1,firstKana.length);
-
-			comKanjiForSplit(newStr,$firstConvertView);
-			return;
-		}
-
-		const secondKana = $secondConvertView.children('.row').last().text();
-
-		// 前半文節の最後の文字を、後半文節の最初に移動
-		const newStr = firstKana.substring(0,firstKana.length-1) +
-			',' +
-			firstKana.substring(firstKana.length-1,firstKana.length) +
-			secondKana;
-
-		comKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
-	}
-
-	// 漢字変換中にShift+<Down>
-	// 文節区切りの変更
-	function shiftDownOnConvert() {
-		'use strict';
-		const $firstConvertView = $('.convert-view.active');
-		const $secondConvertView = $firstConvertView.next('.convert-view');
-		const firstKana = $firstConvertView.children('.row').last().text();
-		const secondKana = $secondConvertView.children('.row').last().text();
-
-		if (!($secondConvertView[0])) return; // 最後の文節を選択していたら何もしない
-
-		if (secondKana.length < 2) {
-			//二番目の文字列が１文字しかないので、２つを統合する
-			const newStr = firstKana + secondKana + ',';
-			comKanjiForFusion(newStr,$firstConvertView,$secondConvertView);
-			return;
-		}
-
-		// 後半の１文字を前半に移す
-		const newStr = firstKana + secondKana.charAt(0) + ',' + secondKana.substring(1);
-		comKanjiForChangePhrase(newStr,$firstConvertView,$secondConvertView);
-	}
-
-	// 漢字変換候補一覧のフォーカスを左にシフトさせる
-	function shiftLeftSelectKanjiFocus() {
-		'use strict';
-		const $oldSelect = $('.convert-view.active > .row.select');
-		const $newSelect = $oldSelect.next('.row');
-
-		shiftSelectKanjiFocus($oldSelect, $newSelect);
-	}
-
-	// 漢字変換候補一覧のフォーカスを右にシフトさせる
-	function shiftRightSelectKanjiFocus() {
-		'use strict';
-		const $oldSelect = $('.convert-view.active > .row.select');
-		const $newSelect = $oldSelect.prev('.row');
-
-		shiftSelectKanjiFocus($oldSelect, $newSelect);
-	}
-
-	// convert-viewのselectを$oldSelectから$newSelectに動かす
-	function shiftSelectKanjiFocus($oldSelect, $newSelect) {
-		'use strict';
-		if (!($newSelect[0])) return;
-
-		// selectクラス
-		$oldSelect.removeClass('select');
-		$newSelect.addClass('select');
-
-		// inputBufferの文字を入れ替える
-		const phraseNum = $newSelect.siblings('.phrase-num').text();
-		const selectKanji = $newSelect.text();
-		insertPhraseToInputBuffer(phraseNum,selectKanji);
-
-		// selectphraseクラスの付け替え
-		$('#input_buffer .select-phrase').removeClass('select-phrase');
-		$('#input_buffer > .char[data-phrase-num='+ phraseNum +']').addClass('select-phrase');
-
-		resizeInputBuffer();
-	}
-
-	// -------------------------------- wheel event ---------------------------------
-
-	function wheelEvent(e,delta,deltaX,deltaY) {
-		'use strict';
-		// マウスホイールを動かすと、ページが左右に動く
-		const mvRowNum = 4; // 一度に動かす行数
-
-		if (delta > 0) {
-			// ホイールを上に動かす
-			for (let i = 0; i < mvRowNum; i++) {
-				shiftRightDisplay();
-			}
-		} else {
-			// ホイールを下に動かす
-			for (let i = 0; i < mvRowNum; i++) {
-				shiftLeftDisplay();
-			}
-		}
-
-		// printDocInfo();
-	}
-	function shiftRightDisplay() {
-		'use strict';
-		const $nextRow = $('.row.display').first().prevObj('#sentence_container .row');
-		if (!$nextRow[0]) { return; }
-		$nextRow.addClass('display');
-		$('.row.display').last().removeClass('display');
-		if (!($('.cursor-row').hasClass('display'))) { gCursor.shiftRight(); }
-	}
-	function shiftLeftDisplay() {
-		'use strict';
-		const $nextRow = $('.row.display').last().nextObj('#sentence_container .row');
-		if (!$nextRow[0]) { return; }
-		$nextRow.addClass('display');
-		$('.row.display').first().removeClass('display');
-		if (!($('.cursor-row').hasClass('display'))) { gCursor.shiftLeft(); }
-	}
+	// // -------------------------------- wheel event ---------------------------------
+	//
+	// function wheelEvent(e,delta,deltaX,deltaY) {
+	// 	'use strict';
+	// 	// マウスホイールを動かすと、ページが左右に動く
+	// 	const mvRowNum = 4; // 一度に動かす行数
+	//
+	// 	if (delta > 0) {
+	// 		// ホイールを上に動かす
+	// 		for (let i = 0; i < mvRowNum; i++) {
+	// 			shiftRightDisplay();
+	// 		}
+	// 	} else {
+	// 		// ホイールを下に動かす
+	// 		for (let i = 0; i < mvRowNum; i++) {
+	// 			shiftLeftDisplay();
+	// 		}
+	// 	}
+	//
+	// 	// printDocInfo();
+	// }
+	// function shiftRightDisplay() {
+	// 	'use strict';
+	// 	const $nextRow = $('.row.display').first().prevObj('#sentence_container .row');
+	// 	if (!$nextRow[0]) { return; }
+	// 	$nextRow.addClass('display');
+	// 	$('.row.display').last().removeClass('display');
+	// 	if (!($('.cursor-row').hasClass('display'))) { gCursor.shiftRight(); }
+	// }
+	// function shiftLeftDisplay() {
+	// 	'use strict';
+	// 	const $nextRow = $('.row.display').last().nextObj('#sentence_container .row');
+	// 	if (!$nextRow[0]) { return; }
+	// 	$nextRow.addClass('display');
+	// 	$('.row.display').first().removeClass('display');
+	// 	if (!($('.cursor-row').hasClass('display'))) { gCursor.shiftLeft(); }
+	// }
 
 	// ------------------------------- command mode ---------------------------------------
 
@@ -823,7 +822,6 @@ $(function() {
 		console.log('startCommandMode');
 		const $command = $('#command').addClass('active');
 
-		$('#app_container').after($command);
 		document.removeEventListener('keydown',keydownOnDoc,false);
 		// フォーカスを当ててからvalueをセットすることで末尾にカーソルが移動される
 		$command.focus();
@@ -911,7 +909,7 @@ $(function() {
 				.modal('hide');
 		}
 		// comFileList(getUserId());
-		container.fileList().read(getUserId());
+		container.fileList().read();
 	}
 
 	function endCommandMode() {
@@ -2381,6 +2379,7 @@ $(function() {
 	// クリックした行のうち最も近い文字にカーソルが当たる
 	function moveCursorToClickPos(e) {
 		'use strict';
+		console.log('moveCursorToClickPos');
 		if ($('#input_buffer').text() !== '') { return; }
 		getCharOnRowClick($(this),e).addCursor();
 		gCursor.repositionCharNum();
@@ -2810,14 +2809,14 @@ $(function() {
 			remove: removeArr
 		};
 	}
-	$('body').on('click','.char',function (e) {
-		'use strict';
-		console.log('char:' + $(this).css('height'));
-	});
-	$('body').on('click','.row',function (e) {
-		'use strict';
-		console.log('row:' + $(this).css('height'));
-	});
+	// $('body').on('click','.char',function (e) {
+	// 	'use strict';
+	// 	console.log('char:' + $(this).css('height'));
+	// });
+	// $('body').on('click','.row',function (e) {
+	// 	'use strict';
+	// 	console.log('row:' + $(this).css('height'));
+	// });
 
 	// 表示する行数
 	function getDisplayRowLen() {
@@ -3044,7 +3043,7 @@ $(function() {
 				// addDisplayRow(0,getDisplayRowLen());
 				// gCursor.init();
 				// resetDisplayChar();
-				$('.doc-info > .saved').text(data.saved);
+				$('#doc-info > #saved').text(data.saved);
 
 				addPageBreak();
 				printDocInfo();
@@ -3059,10 +3058,7 @@ $(function() {
 		// console.log('comReadJsonFile("'+ fileId +'")');
 		// console.time('comReadJsonFile()');
 		const userId = getUserId();
-		window.container.readFile({
-			user_id: userId,
-			file_id: fileId
-		});
+		window.container.readFile(fileId);
 		// userAlert('読込中');
 		// console.log('comReadJsonFile userId:"'+ userId);
 		// $('#sentence_container').empty();
@@ -3100,7 +3096,7 @@ $(function() {
 		// 	// console.time('resetDisplayChar');
 		// 	// resetDisplayChar();
 		// 	// console.timeEnd('resetDisplayChar');
-		// 	$('.doc-info > .saved').text(data.saved);
+		// 	$('#doc-info > #saved').text(data.saved);
 		//
 		// 	addPageBreak();
 		// 	printDocInfo();
@@ -3160,9 +3156,9 @@ $(function() {
 		}).done(function (data) {
 			// 表示データを受け取ってからの処理
 			console.log(data.result);
-			$('.saved').text(data.strDate);
+			$('#saved').text(data.strDate);
 			// comFileList(this.userId);
-			container.fileList().read(this.userId);
+			container.fileList().read();
 			console.log('保存しました:fileId=' + this.fileId);
 		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveFile');
@@ -3171,6 +3167,8 @@ $(function() {
 
 	function comSaveJsonFile() {
 		'use strict';
+		container.saveFile();
+		return;
 		const userId = getUserId();
 		const $fileTitle = $('#file_title');
 		const filename = $fileTitle.val();
@@ -3197,7 +3195,7 @@ $(function() {
 		console.log('user_id:'+ userId);
 		console.log('file_id:'+ fileId);
 		console.log('filename:'+ filename);
-		console.log('json:'+ contentsJson);
+		console.log('sendData:'+ contentsJson);
 		console.log('saved:'+ nowDate_ms);
 
 		$.ajax({
@@ -3218,9 +3216,9 @@ $(function() {
 		}).done(function (data) {
 			// 表示データを受け取ってからの処理
 			console.log(data.result);
-			$('.saved').text(data.strDate);
+			// $('#saved').text(data.strDate);
 			// comFileList(this.userId);
-			container.fileList().read(this.userId);
+			container.fileList().read();
 			console.log('保存しました:fileId=' + this.fileId);
 			userAlert('保存しました');
 		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -3312,11 +3310,11 @@ $(function() {
 			$('#file_list_modal').modal('hide');
 			document.addEventListener('keydown',keydownOnDoc,false);
 			// comFileList(getUserId());
-			container.fileList().read(getUserId());
+			container.fileList().read();
 
 		} else if (searchWord.length === 0) {
 			// comFileList(getUserId());
-			container.fileList().read(getUserId());
+			container.fileList().read();
 		} else {
 			comSearchFile(searchWord);
 		}
@@ -3386,7 +3384,7 @@ $(function() {
 	function readyFileModal() {
 		'use strict';
 		// comFileList(getUserId());
-		container.fileList().read(getUserId());
+		container.fileList().read();
 		$('#search_file').val('').focus();
 	}
 
@@ -3509,7 +3507,7 @@ $(function() {
 					}
 				}
 				// comFileList(getUserId());
-				container.fileList().read(getUserId());
+				container.fileList().read();
 			} else {
 				alert('ファイル削除エラーです(ファイル番号：'+ this.fileId + ')');
 			}
@@ -3521,12 +3519,12 @@ $(function() {
 	function printDocInfo() {
 		'use strict';
 		console.log('printDocInfo()');
-		$('.doc-info > .str-num').text(getCurrentStringPosOnRow());
-		$('.doc-info > .str-len').text(getStringLenOfCursorRow());
-		$('.doc-info > .row-num').text(getCurrentRowOnPage());
-		$('.doc-info > .row-len').text(getRowLenOnCursorPage());
-		$('.doc-info > .page-num').text(getCurrentPagePos());
-		$('.doc-info > .page-len').text(getPageLen());
+		$('#doc-info > #str-num').text(getCurrentStringPosOnRow());
+		$('#doc-info > #str-len').text(getStringLenOfCursorRow());
+		$('#doc-info > #row-num').text(getCurrentRowOnPage());
+		$('#doc-info > #row-len').text(getRowLenOnCursorPage());
+		$('#doc-info > #page-num').text(getCurrentPagePos());
+		$('#doc-info > #page-len').text(getPageLen());
 	}
 
 	function setFileTitle(filename) {
@@ -3656,7 +3654,7 @@ $(function() {
 					}).done(function (json) {
 						// 表示データを受け取ってからの処理
 						// comFileList(this.userId);
-						container.fileList().read(this.userId);
+						container.fileList().read();
 					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMvFileToDirectory');
 					});
@@ -3685,7 +3683,7 @@ $(function() {
 					}).done(function (json) {
 						// 表示データを受け取ってからの処理
 						// comFileList(this.userId);
-						container.fileList().read(this.userId);
+						container.fileList().read();
 					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMakeDirectory');
 					});
@@ -3710,7 +3708,7 @@ $(function() {
 					}).done(function (json) {
 						// 表示データを受け取ってからの処理
 						// comFileList(this.userId);
-						container.fileList().read(this.userId);
+						container.fileList().read();
 						if (json.result === 'within') {
 							userAlert('ディレクトリが空ではないので削除できませんでした。');
 						}
@@ -3973,23 +3971,23 @@ $(function() {
 				setCursorLine();
 				defaultNewFile();
 				// comFileList(globalUserId);
-				container.fileList().read(globalUserId);
+				container.fileList().read();
 				// Event
-				document.addEventListener('keydown',keydownOnDoc ,false);
+				// document.addEventListener('keydown',keydownOnDoc ,false);
 				addFocusEvent('file_title');
 				$('body').on('keyup','#search_file',keyupInSearchFileInput);
-				$('body').on('click','#file_list .file',function (e) {
-					'use strict';
-					const fileId = $(this).attr('data-file-id');
-					// comReadJsonFile(fileId);
-					container.readFile({
-						user_id: getUserId(),
-						file_id: fileId
-					});
-					$('#file_list_modal').modal('hide');
-				});
-				$('body').on('click','.paragraph > .row',moveCursorToClickPos);
-				$('body').on('mousewheel','#sentence_container',wheelEvent);
+				// $('body').on('click','#file_list .file',function (e) {
+				// 	'use strict';
+				// 	const fileId = $(this).attr('data-file-id');
+				// 	// comReadJsonFile(fileId);
+				// 	container.readFile({
+				// 		user_id: getUserId(),
+				// 		file_id: fileId
+				// 	});
+					// $('#file_list_modal').modal('hide');
+				// });
+				// $('body').on('click','.paragraph > .row',moveCursorToClickPos);
+				// $('body').on('mousewheel','#sentence_container',wheelEvent);
 				document.getElementById('menu_new').addEventListener('click',function (e) { defaultNewFile(); },false);
 				document.getElementById('menu_save').addEventListener('click',function (e) { comSaveJsonFile(); },false);
 				document.getElementById('menu_delete').addEventListener('click',function (e) { defaultDeleteFile(); },false);
@@ -4013,12 +4011,14 @@ $(function() {
 				$('div.modal').on('shown.bs.modal',function (e) {
 					'use strict';
 					// modalが完全に表示されてからのイベント
-					document.removeEventListener('keydown',keydownOnDoc,false);
+					// document.removeEventListener('keydown',keydownOnDoc,false);
+					// container.removeKeydownEventListener();
 				});
 				$('div.modal').on('hidden.bs.modal',function (e) {
 					'use strict';
 					if ($('#command').hasClass('active')) { return; }
-					document.addEventListener('keydown',keydownOnDoc,false);
+					// document.addEventListener('keydown',keydownOnDoc,false);
+					// container.addKeydownEventListener();
 				});
 				function addFocusEvent(id) {
 					'use strict';

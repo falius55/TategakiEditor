@@ -62,7 +62,7 @@ html,body {
 	margin-bottom: 0px;
 	font-size: 20px;
 }
-.doc-info {
+#doc_info {
 	background-color: yellow;
 	position: fixed;
 	bottom: 0;
