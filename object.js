@@ -28,6 +28,7 @@ const Util = {
 		}
 		return retArray;
 	},
+	// ２点間の距離を計算する
 	computeDistanceP2P:function(x1,y1,x2,y2) {
 		'use strict';
 		// ２乗を使っているので、戻り値は必ず正の数になる
@@ -309,15 +310,18 @@ Util.createDirectoryElement = (function () {
 		sentenceContainer() {
 			return this._sentenceContainer;
 		}
+		fileList() {
+			return this.sentenceContainer().fileList();
+		}
 
 		// --判定
-		
+
 		isActive() {
 			return this.elem().classList.contains('active');
 		}
 
 		// --Style
-		
+
 		active() {
 			this.elem().classList.add('active');
 			return this;
@@ -330,6 +334,11 @@ Util.createDirectoryElement = (function () {
 			this.elem().focus();
 			return this;
 		}
+		displayFileModal() {
+			$('#file_list_modal').addClass('command-modal').modal();
+			$('.modal-backdrop.fade.in').addClass('none_modal-backdrop'); // モーダルウィンドウ表示時の半透明背景を見えなくする
+			return this;
+		}
 		hideFileModal() {
 			if ($('body').hasClass('modal-open')) {
 				// あらかじめbootstrapより先回りしてstyle適用で非表示にしておかなければ、消える前に一瞬中央表示になってしまう
@@ -339,7 +348,10 @@ Util.createDirectoryElement = (function () {
 					.modal('hide');
 			}
 			// TODO:ここは通信せずにファイルリストをリセットできるようにしたい
-			this.sentenceContainer().fileList().read();
+			// this.sentenceContainer().fileList().read();
+			this.fileList().resetElem();
+
+			return this;
 		}
 
 
@@ -408,11 +420,47 @@ Util.createDirectoryElement = (function () {
 				e.stopPropagation(); // 親要素へのイベントの伝播(バブリング)を止める。そうしなければ先にaddeventlistenerをしてしまっているので、documentにまでエンターキーが渡ってしまい改行されてしまう。
 			} else if (keycode == 27 || this.val() == '') {
 				// Esc
-				// あるいは全文字削除
+				//command あるいは全文字削除
 				this.stop();
 				e.stopPropagation();
 			} else {
 				// :eなどの後に途中まで引数を打てばファイルの検索ダイアログが出るようにする
+				let command = this.val().split(' ');
+				if (command.length < 2) command = this.val().split('　'); // 全角スペースも区切りとして有効。ただし、半角スペースとの混在は現状不可
+				switch (command[0]) {
+					case ':e':
+					case ':o':
+					case ':open':
+					case ':mv':
+					case ':delete':
+					case ':del':
+					case ':d':
+					case ':え':
+					case ':お':
+					case ':おぺｎ':
+					case ':ｍｖ':
+					case ':でぇて':
+					case ':でｌ':
+					case ':ｄ':
+							 if (keycode !== 8 && command[1] && !($('body').hasClass('modal-open'))) {
+								 // モーダルウィンドウを表示する
+								 this.displayFileModal();
+								 this.fileList().filter(command[1]);
+							 } else if (keycode === 8 && !(command[1])) {
+								 // BSを押した結果、引数がなくなった
+								 // モーダルウィンドウを非表示にする
+								 this.hideFileModal();
+							 } else if (command[1] && command[2]) {
+								 // 引数ふたつ目
+								 this.fileList().filter(command[2]);
+							 } else if (command[1]) {
+								 // 引数ひとつ
+								 this.fileList().filter(command[1]);
+							 }
+							 break;
+					default:
+							 break;
+				}
 			}
 			e.preventDefault();
 		}
@@ -480,10 +528,8 @@ Util.createDirectoryElement = (function () {
 		init() {
 			const firstChar = this.sentence().firstChild().firstChild().firstChild();
 			this._char = firstChar;
-			// this._char.addCass('cursor'); // この時点ではSentenceContainerの_cursorにインスタンスが入っていないのでsentence.cursor()が使えず、そのためchar.addCursor()が利用できない
 			this.createCursorLine();
 			this._char.addCursor().setPosMemory();
-			// this.setPosMemory(this._char.index());
 			return this;
 		}
 
@@ -2786,7 +2832,7 @@ Util.createDirectoryElement = (function () {
 			super(Util.createFileElement(id,filename));
 			this._link = this.elem().getElementsByTagName('a')[0];
 			this._id = id;
-			this._filename = filename;
+			this._name = filename;
 			this._nextFile = null;
 			this._prevFile = null;
 			this.addClickEventListener();
@@ -2852,14 +2898,14 @@ Util.createDirectoryElement = (function () {
 		id() {
 			return this._id;
 		}
-		filename() {
-			return this._filename;
+		name() {
+			return this._name;
 		}
 
 		// --DOM操作
 
 		// コンテナにファイルを読み込む
-		read() {
+		open() {
 			const sentenceContainer = this.fileList().sentenceContainer();
 			sentenceContainer.readFile(this.id());
 		}
@@ -2879,7 +2925,7 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		runClick(e) {
-			this.read();
+			this.open();
 			$('#file_list_modal').modal('hide');
 		}
 	}
@@ -3104,7 +3150,29 @@ Util.createDirectoryElement = (function () {
 			this.pushChild(file);
 			return this;
 		}
+		resetElem() {
+			this.emptyElem();
+			this.each(function (file) {
+				file.parent().elem().appendChild(file.elem());
+			});
+			return this;
+		}
+		// ファイルリストの内容をstrから始まる名前を持つファイル・ディレクトリのみに置き換える
 		filter(str) {
+			this.emptyElem();
+			console.log('filter:'+ str);
+			const regexp = new RegExp('^'+ str +'.*');
+			this.each(function (file) {
+				if (regexp.test(file.name())) {
+					this.elem().appendChild(file.elem());
+				}
+			}.bind(this));
+			if (this.elem().children.length === 0) {
+				const li = document.createElement('li');
+				li.textContent = '該当するファイルは見つかりませんでした。';
+				this.elem().appendChild(li);
+			}
+			return this;
 		}
 
 		// ファイルリストをサーバーから読み込む
