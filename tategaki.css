@@ -445,7 +445,7 @@ button {
 .navbar-default {
 	height: 40px;
 }
-#find{
+#search{
 	display: none;
 	position: fixed;
 	bottom: 30px;
@@ -454,10 +454,10 @@ button {
 	width: 100%;
 	z-index: 20;
 }
-#find.active {
+#search.active {
 	display: block;
 }
-.find-word {
+.search-word {
 	color: white;
 	background-color: #33cc33;
 }

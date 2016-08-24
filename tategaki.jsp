@@ -58,7 +58,7 @@
 				<div id="input_buffer" class="row"><span class="char EOL display"></span></div>
 				<div id="convert_container"></div>
 				<input type="text" id="command"></input>
-				<input type="text" id="find"></input>
+				<input type="text" id="search"></input>
 			</div>
 
 			<nav id="palette" class="nav navbar-default">
@@ -113,8 +113,8 @@
 						</div>
 						<div class="modal-footer">
 							<div class="form-group">
-								<label for="search_file" class="control-label"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>ファイルを検索 </label>
-								<input type="text" name="search_file" id="search_file" class="form-control" placeholder="ファイル名"></input>
+								<label for="file_list_filter" class="control-label"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>ファイルを検索 </label>
+								<input type="text" name="file_list_filter" id="file_list_filter" class="form-control" placeholder="ファイル名"></input>
 							</div>
 						</div>
 					</div>

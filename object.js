@@ -5,6 +5,7 @@
  *	要素の再利用のため、要素作成のみクロージャで行う
  *	jQyeryの使用箇所:width(),height(),addwheeleventlistener(),removeWheelEventListener(),bootstrap関係
  */
+// TODO: 字句検索、メニュークラス(palette)、コピーアンドペースト、禁則処理
 console.log('object.js');
 const Util = {
 	// baseArrayをcnt個ずつの配列に分割する
@@ -295,6 +296,12 @@ Util.createDirectoryElement = (function () {
 // Class
 (function () {
 	'use strict';
+	// 語句検索のクラス
+	class Search {
+		constructor(sentenceContainer) {
+			this._sentenceContainer = sentenceContainer;
+		}
+	}
 	class CommandLine {
 		constructor(sentenceContainer) {
 			console.log('new comand line');
@@ -335,21 +342,19 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		displayFileModal() {
-			$('#file_list_modal').addClass('command-modal').modal();
+			this.fileList().$modal().addClass('command-modal').modal();
 			$('.modal-backdrop.fade.in').addClass('none_modal-backdrop'); // モーダルウィンドウ表示時の半透明背景を見えなくする
 			return this;
 		}
 		hideFileModal() {
-			if ($('body').hasClass('modal-open')) {
+			if (this.fileList().isOpen()) {
 				// あらかじめbootstrapより先回りしてstyle適用で非表示にしておかなければ、消える前に一瞬中央表示になってしまう
-				$('#file_list_modal')
+				this.fileList().$modal()
 					.attr('style','display: none;')
 					.removeClass('command-modal')
 					.modal('hide');
 			}
-			// TODO:ここは通信せずにファイルリストをリセットできるようにしたい
-			// this.sentenceContainer().fileList().read();
-			this.fileList().resetElem();
+			this.fileList().resetList();
 
 			return this;
 		}
@@ -375,7 +380,6 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		stop() {
-			console.log('command stop');
 			this.unActive();
 			this.removeKeyupEventListener().removeFocusoutEventListener();
 			this.sentenceContainer().addKeydownEventListener();
@@ -448,7 +452,6 @@ Util.createDirectoryElement = (function () {
 								 this.fileList().filter(command[1]);
 							 } else if (keycode === 8 && !(command[1])) {
 								 // BSを押した結果、引数がなくなった
-								 // モーダルウィンドウを非表示にする
 								 this.hideFileModal();
 							 } else if (command[1] && command[2]) {
 								 // 引数ふたつ目
@@ -477,7 +480,6 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		onFocusout(e) {
-			console.log('onfocusout');
 			this.stop();
 		}
 		runCommand() {
@@ -745,8 +747,8 @@ Util.createDirectoryElement = (function () {
 		// --判定
 
 		// 引数が自分と同じオブジェクトならtrueを返す
-		is(char) {
-			return char === this;
+		is(obj) {
+			return obj === this;
 		}
 		hasClass(className) {
 			return this._elem.classList.contains(className);
@@ -846,6 +848,12 @@ Util.createDirectoryElement = (function () {
 		}
 		removeClass(className) {
 			this._elem.classList.remove(className);
+			return this;
+		}
+		removeClassAll(className) {
+			for (let child of this._children) {
+				child.removeClass(className);
+			}
 			return this;
 		}
 		// elementが不可視状態にあれば長さが０になったり、ブラウザごとに取得手段に違いがあったり直接指定されているstyleとcssでの指定の違い、cssでの指定が'auto'になっていると文字列が返ってきたりと
@@ -987,11 +995,6 @@ Util.createDirectoryElement = (function () {
 			super(data.char ? Util.createCharElement(data) : data); // dataオブジェクトにcharプロパティがなければEOLからの呼び出しで、dataにはエレメントが入っている
 			this._isEOL = false;
 			data.fontSize && (this._fontSize = data.fontSize);
-			// if (!data.fontSize || data.fontSize === 'auto') {
-			// 	this._fontSize = 18;
-			// } else {
-			// 	this._fontSize = parseInt(data.fontSize);
-			// }
 		}
 
 		// --参照取得
@@ -1023,7 +1026,7 @@ Util.createDirectoryElement = (function () {
 		slidePrevCursor() {
 			// 段落最後のEOL以外のEOLには止まらない
 			// 段落途中のEOLならその前の文字に変更する
-			if (this.isEOL() && this.row().hasNextSibling()) {
+			if (this.isEOL() && this.row().hasNextSibling()) {h
 				return this.prev();
 			} else {
 				return this;
@@ -1044,6 +1047,12 @@ Util.createDirectoryElement = (function () {
 				return this.prev();
 			}
 		}
+		nextCharOnParagraph() {
+			if (this.hasNextCharOnParagraph()) {
+				return this.nextChar();
+			}
+			return null;
+		}
 
 		// --判定
 
@@ -1059,6 +1068,13 @@ Util.createDirectoryElement = (function () {
 		// 同一行内で最終文字でなければtrue、最終文字ならfalse。EOLは含まない(次の文字がEOLならfalse,自身がEOLの場合もfalse)
 		hasNextSibling() {
 			return !(this._isEOL || this.next().isEOL());
+		}
+		// 同一段落内で次のCharがあるか
+		hasNextCharOnParagraph() {
+			return this.nextChar() && this.nextChar().paragraph() === this.paragraph();
+		}
+		// この要素がrangeの中にあればtrue
+		isInRange(range) {
 		}
 
 		// --Status
@@ -1123,6 +1139,21 @@ Util.createDirectoryElement = (function () {
 
 			if (className === 'decolation-color-black') return; // ブラックなら外して終わり
 			this.addClass(className);
+		}
+		// この文字から始まる文字列がstrと合致するなら、その文字列のCharにクラスを付与する
+		markSearchedPhrase(str) {
+			// 合致しているかの判定
+			// 合致しない文字が現れたか、文字列を比較し終える前に段落の最後に達したらreturn
+			for (let i = 0,len = str.length,char = this; i < len && char; i++,char = char.nextCharOnParagraph()) {
+				if (str.charAt(i) !== char.text() || !char.hasNextCharOnParagraph()) return this;
+			}
+
+			// クラスの付与
+			this.addClass('search-label');
+			for (let i = 0,len = str.length,char = this; i < len; char = char.nextChar(),i++) {
+				char.addClass('search-word');
+			}
+			return this;
 		}
 
 		// --DOM操作関係
@@ -1846,6 +1877,34 @@ Util.createDirectoryElement = (function () {
 		classArray() {
 			return this.elem().className.match(/decolation-\S+/g) || [];
 		}
+		// 段落内の文字数
+		countChar() {
+			let cnt = 0;
+			for (let row of this.rows()) {
+				cnt += row.charLen();
+			}
+			return cnt;
+		}
+
+		// --Style
+
+		// すべてのCharから指定クラスを除去する
+		removeClassAllChar(className) {
+			for (let row of this.rows()) {
+				row.removeClassAll(className);
+			}
+			return this;
+		}
+		search(str) {
+			this.removeClassAllChar('search-label');
+			this.removeClassAllChar('search-word');
+			for (let row of this.rows()) {
+				for (let char of row.chars()) {
+					char.markSearchedPhrase(str);
+				}
+			}
+			return this;
+		}
 
 		// --DOM操作関係
 
@@ -2224,6 +2283,11 @@ Util.createDirectoryElement = (function () {
 				if (view.isActive()) return view;
 			}
 			return null;
+		}
+
+		// --判定
+		isActive() {
+			return this.childLength() > 0;
 		}
 
 		// --Style
@@ -2906,8 +2970,23 @@ Util.createDirectoryElement = (function () {
 
 		// コンテナにファイルを読み込む
 		open() {
+			console.log('open file');
 			const sentenceContainer = this.fileList().sentenceContainer();
-			sentenceContainer.readFile(this.id());
+			// sentenceContainer.readFile(this.id());
+
+			console.time('readFile');
+			const data = {};
+			data.user_id = sentenceContainer.userId();
+			data.file_id = this.id();
+			console.time('post()');
+			Util.post('/tategaki/ReadJsonFile',data,function (json) {
+				'use strict';
+				console.timeEnd('post()');
+				console.time('SentenceContainer init');
+				sentenceContainer.init(json);
+				console.timeEnd('SentenceContainer init');
+			}.bind(this));
+			return this;
 		}
 
 		// --イベント
@@ -2999,7 +3078,7 @@ Util.createDirectoryElement = (function () {
 		// --DOM操作
 		append(file) {
 			// DOM
-			this.innerList().appendChild(file.elem());
+			this.appendElem(file);
 
 			// ポインタ調整
 			// 最初の要素と最後の要素はつなげる
@@ -3012,12 +3091,23 @@ Util.createDirectoryElement = (function () {
 			this.pushChild(file);
 			return this;
 		}
+		appendElem(file) {
+			this.innerList().appendChild(file.elem());
+			return this;
+		}
 	}
 	class FileList extends Sentence {
 		constructor(sentenceContainer,data) {
 			super(document.getElementById('file_list'));
 			this._sentenceContainer = sentenceContainer;
-			if (data) this.init(data);
+			this._$modal = $('#file_list_modal');
+			this._filterInputElem = document.getElementById('file_list_filter');
+			this.addEventListenerOnInput();
+			if (data) {
+				this.init(data);
+			} else {
+				this.read();
+			}
 		}
 		init(data) {
 			this.empty();
@@ -3052,6 +3142,20 @@ Util.createDirectoryElement = (function () {
 			}
 			return null;
 		}
+		$modal() {
+			return this._$modal;
+		}
+		filterInputElem() {
+			return this._filterInputElem;
+		}
+		findFile(idOrName) {
+			for (let file = this.firstFile(); file; file = file.nextFile()) {
+				if (file.id() === idOrName || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(file.name()))) {
+					return file;
+				}
+			}
+			return null;
+		}
 
 		// --判定
 
@@ -3064,12 +3168,18 @@ Util.createDirectoryElement = (function () {
 		isDirectory() {
 			return false;
 		}
+		// HACK: このままではヘルプモーダルなどが開いていてもtrueになる
+		isOpen() {
+			return $('body').hasClass('modal-open');
+		}
+		hasFile() {
+			return this.firstFile() !== null;
+		}
 
 		// --参照操作
 
 		// 自分以降のファイル同士をポインタでつなぐ
 		chainFile() {
-			console.log('chainFile()');
 			let prev;
 			this.each(function (file) {
 				if (!file.isFile()) return;
@@ -3077,7 +3187,6 @@ Util.createDirectoryElement = (function () {
 				file.prevFile(prev);
 				prev = file;
 			});
-			console.log(this);
 			// for (let file = this.findNextFile(this),next; next = this.findNextFile(file); file = next) {
 			// 	file.nextFile(next);
 			// 	next.prevFile(file);
@@ -3096,6 +3205,7 @@ Util.createDirectoryElement = (function () {
 		// 取得した確認要素がディレクトリなら、さらに潜って探索を次に進めるため再帰する
 		// 取得した確認要素がファイルなら、その要素が引数の次のファイルなので返す
 		findNextFile(file) {
+			if (file.isEmpty() && file.isRoot()) return null;
 			let check;
 			if (file.isFile()) {
 				check = file.next();
@@ -3133,11 +3243,24 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 
+		// --Style
+		showModal() {
+			this.filterInputElem().value = '';
+			this.filterInputElem().focus();
+			this.resetList();
+			this.$modal().modal();
+			return this;
+		}
+		hideModal() {
+			this.$modal().modal('hide');
+			return this;
+		}
+
 		// --DOM操作
 
 		append(file) {
 			// DOM
-			this.elem().appendChild(file.elem());
+			this.appendElem(file);
 
 			// ポインタ調整
 			// 最初の要素と最後の要素はつなげる
@@ -3150,18 +3273,21 @@ Util.createDirectoryElement = (function () {
 			this.pushChild(file);
 			return this;
 		}
-		resetElem() {
+		appendElem(file) {
+			this.elem().appendChild(file.elem());
+			return this;
+		}
+		resetList() {
 			this.emptyElem();
 			this.each(function (file) {
-				file.parent().elem().appendChild(file.elem());
+				file.parent().appendElem(file);
 			});
 			return this;
 		}
 		// ファイルリストの内容をstrから始まる名前を持つファイル・ディレクトリのみに置き換える
 		filter(str) {
 			this.emptyElem();
-			console.log('filter:'+ str);
-			const regexp = new RegExp('^'+ str +'.*');
+			const regexp = new RegExp('^'+ str +'.*','i');
 			this.each(function (file) {
 				if (regexp.test(file.name())) {
 					this.elem().appendChild(file.elem());
@@ -3185,9 +3311,65 @@ Util.createDirectoryElement = (function () {
 			}.bind(this));
 			return this;
 		}
+		openNextFile() {
+			const currentFile = this.currentFile();
+			const file = currentFile && currentFile.nextFile();
+			if (file) {
+				file.open();
+			} else if(this.hasFile()) {
+				this.firstFile().open();
+			}
+			return this;
+		}
+		openPrevFile() {
+			const currentFile = this.currentFile();
+			const file = currentFile && currentFile.prevFile();
+			if (file) {
+				file.open();
+			} else {
+				this.lastFile().open();
+			}
+			return this;
+		}
 
 		// --イベント
 
+		addEventListenerOnInput() {
+			// モーダルが開くと、検索欄にフォーカスが移動する
+			this.$modal().on('shown.bs.modal',function (e) {
+				this.filterInputElem().focus();
+				this.sentenceContainer().removeKeydownEventListener();
+			}.bind(this));
+			// ファイル検索欄
+			this.filterInputElem().addEventListener('keyup',this.onKeyupOnInput.bind(this));
+		}
+		onKeyupOnInput(e) {
+			let keycode;
+			if (document.all) {
+				// IE
+				keycode = e.keyCode
+			} else {
+				// IE以外
+				keycode = e.which;
+			}
+			if (keycode === 123) { return; } // F12のみブラウザショートカットキー
+			if (keycode == 13) {
+				// enter
+				const file = this.findFile(this.filterInputElem().value);
+				console.log('enter file');
+				console.log(file);
+				if (file) {
+					file.open();
+				}
+				this.hideModal();
+				this.sentenceContainer().addKeydownEventListener();
+				this.resetList();
+			} else if (this.filterInputElem().value.length === 0) {
+				this.resetList();
+			} else {
+				this.filter(this.filterInputElem().value);
+			}
+		}
 	}
 
 	window.SentenceContainer = class extends Sentence {
@@ -3196,10 +3378,13 @@ Util.createDirectoryElement = (function () {
 			if (data) this.init(data);
 			this._userId = userId;
 			this._titleElem = document.getElementById('file_title');
+			this._searchInputElem = document.getElementById('search');
 			this._cursor = new Cursor(this);
 			this._inputBuffer = new InputBuffer(this);
 			this._fileList = new FileList(this);
 			this._command = new CommandLine(this);
+
+			this.newFile();
 		}
 		// データの構築
 		// ajax通信とのタイムラグを埋めるため、コンストラクタと切り離す
@@ -3263,7 +3448,8 @@ Util.createDirectoryElement = (function () {
 		titleElem() {
 			return this._titleElem;
 		}
-		currentFile() {
+		searchInputElem() {
+			return this._searchInputElem;
 		}
 
 		// --判定
@@ -3344,12 +3530,18 @@ Util.createDirectoryElement = (function () {
 			}
 		}
 		// 全行数
-		rowLenAll() {
+		countRow() {
 			let cnt = 0;
 			for (let paragraph of this.paragraphs()) {
-				for (let row of paragraph.rows()) {
-					cnt++;
-				}
+				cnt += paragraph.childLength();
+			}
+			return cnt;
+		}
+		// 全文字数
+		countChar() {
+			let cnt = 0;
+			for (let paragraph of this.paragraphs()) {
+				cnt += paragraph.countChar();
 			}
 			return cnt;
 		}
@@ -3362,6 +3554,69 @@ Util.createDirectoryElement = (function () {
 		height(useCache) {
 			return super.width(useCache);
 		}
+		removeClassAllChar(className) {
+			for (let paragraph of this.paragraphs()) {
+				paragraph.removeClassAllChar(className);
+			}
+			return this;
+		}
+		search(str) {
+			for (let paragraph of this.paragraphs()) {
+				paragraph.search(str);
+			}
+			return this;
+		}
+		startSearchMode() {
+			console.log('search mode start');
+			this.searchInputElem().classList.add('active');
+			this.searchInputElem().focus();
+			this.searchInputElem().value = '/';
+			this.removeKeydownEventListener();
+			if (!this._keyupOnSearchArg) {
+				this._keyupOnSearchArg = this.onKeyupOnSearchMode.bind(this);
+				this.searchInputElem().addEventListener('keyup',this._keyupOnSearchArg,false);
+				this.searchInputElem().addEventListener('focusin',this.onFocusinOnSearchMode.bind(this));
+				this.searchInputElem().addEventListener('focusout',this.onFocusoutOnSearchMode.bind(this));
+			}
+			return this;
+		}
+		stopSearchMode() {
+			this.addKeydownEventListener();
+			this.searchInputElem().value = '';
+			this.searchInputElem().classList.remove('active');
+			this.removeClassAllChar('search-label').removeClassAllChar('search-word');
+			return this;
+		}
+		onKeyupOnSearchMode(e) {
+			let keycode;
+			if (document.all) {
+				// IE
+				keycode = e.keyCode
+			} else {
+				// IE以外
+				keycode = e.which;
+			}
+			if (keycode === 13) {
+				// enter
+				this.addKeydownEventListener();
+				return;
+			}
+
+			// $findの中身が空になればfindモードを完全に終了する
+			if (this.searchInputElem().value === '') {
+				this.searchInputElem().blur();
+				this.stopSearchMode();
+				return;
+			}
+
+			this.search(this.searchInputElem().value.slice(1));
+		}
+		onFocusoutOnSearchMode() {
+			this.addKeydownEventListener();
+		}
+		onFocusinOnSearchMode() {
+			this.removeKeydownEventListener();
+		}
 
 		// --DOM操作関係
 
@@ -3371,6 +3626,12 @@ Util.createDirectoryElement = (function () {
 			this.emptyChild();
 			this.removeKeydownEventListener();
 			this.removeWheelEventListener();
+			if (this.inputBuffer().convertContainer().isActive()) {
+				this.inputBuffer().convertContainer().empty().hide();
+			}
+			if (this.inputBuffer().isDisplay()) {
+				this.inputBuffer().empty().hide();
+			}
 			return this;
 		}
 		// TODO: 配列が渡されたらフラグメントを使ってappendする
@@ -3423,7 +3684,7 @@ Util.createDirectoryElement = (function () {
 			}
 			// page-last-row
 			let cnt2 = 0;
-			const lastRow = this.rowLenAll() -1;
+			const lastRow = this.countRow() -1;
 			for (let paragraph of this.paragraphs()) {
 				for (let row of paragraph.rows()) {
 					if ((cnt2 + 1) % pageNum === 0 || cnt2 === lastRow) { // (pageNumの倍数-1)行目と最終行
@@ -3440,18 +3701,8 @@ Util.createDirectoryElement = (function () {
 		// --ファイル操作
 
 		readFile(fileId) {
-			console.time('readFile');
-			const data = {};
-			data.user_id = this.userId();
-			data.file_id = fileId;
-			console.time('post()');
-			Util.post('/tategaki/ReadJsonFile',data,function (json) {
-				'use strict';
-				console.timeEnd('post()');
-				console.time('new SentenceContainer');
-				this.init(json);
-				console.timeEnd('new SentenceContainer');
-			}.bind(this));
+			const file = this.fileList().findFile(fileId);
+			file.open();
 			return this;
 		}
 		saveFile() {
@@ -3564,15 +3815,7 @@ Util.createDirectoryElement = (function () {
 			return -1;
 		}
 		lastDisplayRowPos() {
-			// let cnt = this.rowLenAll() -1;
-			// for (let paragraph_i = this.childLength()-1,paragraph; paragraph =  this.paragraphs(paragraph_i); paragraph_i--) {
-			// 	for (let row_i = paragraph.childLength()-1,row; row = paragraph.rows(row_i); row_i--) {
-			// 		if (row.isDisplay()) return cnt;
-			// 		cnt--;
-			// 	}
-			// }
-
-			for (let row = this.lastRow(),cnt = this.rowLenAll() -1; row; row = row.prev(),cnt--) {
+			for (let row = this.lastRow(),cnt = this.countRow() -1; row; row = row.prev(),cnt--) {
 				if (row.isDisplay()) return cnt;
 			}
 			return -1;
@@ -3624,13 +3867,14 @@ Util.createDirectoryElement = (function () {
 		// --イベント
 
 		addKeydownEventListener() {
+			console.log('container add keydown');
 			this.inputBuffer().removeKeydownEventListener()
 				.convertContainer().removeKeydownEventListener();
 			super.addKeydownEventListener();
 			return this;
 		}
 		runKeydown(e,keycode) {
-			if (e.ctrlKey) return this.runControlKeyDown();
+			if (e.ctrlKey) return this.runControlKeyDown(e,keycode);
 
 			switch (keycode) {
 				case 8:
@@ -3670,6 +3914,10 @@ Util.createDirectoryElement = (function () {
 					// ,
 					console.log(this);
 					break;
+				case 191:
+					// /
+					this.startSearchMode();
+					break;
 				default:
 					this.inputBuffer().transfer(keycode,e.shiftKey);
 					break;
@@ -3678,9 +3926,18 @@ Util.createDirectoryElement = (function () {
 		}
 		runControlKeyDown(e,keycode) {
 			switch (keycode) {
+				case 18:
+				case 70:
+					// f
+					this.fileList().showModal();
+					break;
 				case 72:
 					// h
 					this.cursor().moveLeft();
+					break;
+				case 73:
+					// i
+					this.fileList().openNextFile();
 					break;
 				case 74:
 					// j
@@ -3693,6 +3950,14 @@ Util.createDirectoryElement = (function () {
 				case 76:
 					// l
 					this.cursor().moveRight();
+					break;
+				case 79:
+					// o
+					this.fileList().openPrevFile();
+					break;
+				case 83:
+					// s
+					this.saveFile();
 					break;
 				default:
 					break;
