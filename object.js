@@ -296,12 +296,6 @@ Util.createDirectoryElement = (function () {
 // Class
 (function () {
 	'use strict';
-	// 語句検索のクラス
-	class Search {
-		constructor(sentenceContainer) {
-			this._sentenceContainer = sentenceContainer;
-		}
-	}
 	class CommandLine {
 		constructor(sentenceContainer) {
 			console.log('new comand line');
@@ -517,6 +511,10 @@ Util.createDirectoryElement = (function () {
 							 this.sentenceContainer().newFile();
 						 }
 						 break;
+				case ':noh':
+				case ':のｈ':
+						 this.sentenceContainer().stopSearchMode();
+						 break;
 				default:
 						 break;
 			}
@@ -524,11 +522,11 @@ Util.createDirectoryElement = (function () {
 	}
 	// 段落最後のEOL以外のEOLにカーソルは止まらない(EOLは基本、文字挿入のために存在)
 	class Cursor {
-		constructor(sentence) {
-			this._sentence = sentence;
+		constructor(sentenceContainer) {
+			this._sentenceContainer = sentenceContainer;
 		}
 		init() {
-			const firstChar = this.sentence().firstChild().firstChild().firstChild();
+			const firstChar = this.sentenceContainer().firstChild().firstChild().firstChild();
 			this._char = firstChar;
 			this.createCursorLine();
 			this._char.addCursor().setPosMemory();
@@ -537,8 +535,8 @@ Util.createDirectoryElement = (function () {
 
 		// --参照取得
 
-		sentence() {
-			return this._sentence;
+		sentenceContainer() {
+			return this._sentenceContainer;
 		}
 		getChar() {
 			return this._char;
@@ -589,7 +587,7 @@ Util.createDirectoryElement = (function () {
 			for (let i = 0,eOldCharPos; eOldCharPos = eOldCharPoses[0]; i++) {
 				eCursorLine.removeChild(eOldCharPos);
 			}
-			eCursorLine.appendChild(Util.createCharPosElement(this._sentence.strLenOnRow()));
+			eCursorLine.appendChild(Util.createCharPosElement(this.sentenceContainer().strLenOnRow()));
 			return this;
 		}
 
@@ -618,7 +616,7 @@ Util.createDirectoryElement = (function () {
 					moveRow.moveLastBefore();
 				}
 				newParagraph.cordinate();
-				this.sentence().changeDisplay();
+				this.sentenceContainer().changeDisplay();
 				return this;
 			}
 
@@ -626,7 +624,7 @@ Util.createDirectoryElement = (function () {
 			//  カーソルの前の位置にある文字を削除する(行頭なら行をまたいで前の文字)
 			if (!(cursorChar.isFirst() && cursorChar.row().isFirst())) {
 				cursorChar.prevChar().delete();
-				this.sentence().changeDisplay();
+				this.sentenceContainer().changeDisplay();
 				return this;
 			}
 		}
@@ -638,7 +636,7 @@ Util.createDirectoryElement = (function () {
 			// 新しくできた段落の最初の文字にカーソルを移動する
 			const newParagraph = cursorParagraph.next(); // divide()で新しく挿入された段落
 			newParagraph.firstChild().firstChild().addCursor().setPosMemory();
-			this.sentence().changeDisplay(true);
+			this.sentenceContainer().changeDisplay(true);
 			return this;
 		}
 
@@ -649,26 +647,26 @@ Util.createDirectoryElement = (function () {
 			const nextChar = this.getChar().next();
 			if (!nextChar) return this;
 			nextChar.slideNextCursor().addCursor().setPosMemory();
-			this._sentence.changeDisplay();
+			this.sentenceContainer().changeDisplay();
 			return this;
 		}
 		movePrev() {
 			const prevChar = this.getChar().prev();
 			if (!prevChar) return this;
 			prevChar.slidePrevCursor().addCursor().setPosMemory();
-			this._sentence.changeDisplay();
+			this.sentenceContainer().changeDisplay();
 			return this;
 		}
 		moveRight() {
 			const prevRow = this.getChar().row().prev();
 			this.moveRow(prevRow);
-			this.sentence().changeDisplay();
+			this.sentenceContainer().changeDisplay();
 			return this;
 		}
 		moveLeft() {
 			const nextRow = this.getChar().row().next();
 			this.moveRow(nextRow);
-			this.sentence().changeDisplay();
+			this.sentenceContainer().changeDisplay();
 			return this;
 		}
 		// 引数で指定された行にカーソルを移動する
@@ -678,6 +676,33 @@ Util.createDirectoryElement = (function () {
 			const char = row.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
 			char.slidePrevCursor().addCursor();
 			return this;
+		}
+		// 次の検索語句にカーソルを移動する
+		nextSearch() {
+			const next = this.nextSearchChar();
+			if (!next) { return this; }
+			next.addCursor().setPosMemory();
+			this.sentenceContainer().changeDisplay();
+			return this;
+		}
+		nextSearchChar() {
+			for (let char = this.getChar().nextChar() || this.sentenceContainer().firstChar(); !char.is(this.getChar()); (char = char.nextChar()) || (char = this.sentenceContainer().firstChar())) {
+				if (char.hasClass('search-label')) return char;
+			}
+			return null;
+		}
+		prevSearch() {
+			const prev = this.prevSearchChar();
+			if (!prev) { return this; }
+			prev.addCursor().setPosMemory();
+			this.sentenceContainer().changeDisplay();
+			return this;
+		}
+		prevSearchChar() {
+			for (let char = this.getChar().prevChar() || this.sentenceContainer().lastChar(); !char.is(this.getChar()); (char = char.prevChar()) || (char = this.sentenceContainer().lastChar())) {
+				if (char.hasClass('search-label')) return char;
+			}
+			return null;
 		}
 	}
 
@@ -1026,7 +1051,7 @@ Util.createDirectoryElement = (function () {
 		slidePrevCursor() {
 			// 段落最後のEOL以外のEOLには止まらない
 			// 段落途中のEOLならその前の文字に変更する
-			if (this.isEOL() && this.row().hasNextSibling()) {h
+			if (this.isEOL() && this.row().hasNextSibling()) {
 				return this.prev();
 			} else {
 				return this;
@@ -1141,11 +1166,13 @@ Util.createDirectoryElement = (function () {
 			this.addClass(className);
 		}
 		// この文字から始まる文字列がstrと合致するなら、その文字列のCharにクラスを付与する
-		markSearchedPhrase(str) {
+		// １文字ずつ比較し、渡された文字列の長さ分のループを終えるまでに異なる文字が現れるか段落に残りの文字がなくなればreturn
+		// 最初のループを無事に終えればこの文字から始まる文字列はstrに合致しているということなので、それぞれクラスを付与する
+		markSearchPhrase(str) {
 			// 合致しているかの判定
 			// 合致しない文字が現れたか、文字列を比較し終える前に段落の最後に達したらreturn
-			for (let i = 0,len = str.length,char = this; i < len && char; i++,char = char.nextCharOnParagraph()) {
-				if (str.charAt(i) !== char.text() || !char.hasNextCharOnParagraph()) return this;
+			for (let i = 0,len = str.length,char = this; i < len; i++,char = char.nextCharOnParagraph()) {
+				if (!char || str.charAt(i) !== char.text()) return this;
 			}
 
 			// クラスの付与
@@ -1900,7 +1927,7 @@ Util.createDirectoryElement = (function () {
 			this.removeClassAllChar('search-word');
 			for (let row of this.rows()) {
 				for (let char of row.chars()) {
-					char.markSearchedPhrase(str);
+					char.markSearchPhrase(str);
 				}
 			}
 			return this;
@@ -3356,8 +3383,6 @@ Util.createDirectoryElement = (function () {
 			if (keycode == 13) {
 				// enter
 				const file = this.findFile(this.filterInputElem().value);
-				console.log('enter file');
-				console.log(file);
 				if (file) {
 					file.open();
 				}
@@ -3423,6 +3448,9 @@ Util.createDirectoryElement = (function () {
 		}
 		firstChar() {
 			return this.firstRow().firstChild();
+		}
+		lastChar() {
+			return this.lastEOL().prevChar();
 		}
 		lastEOL() {
 			return this.lastRow().lastChild();
@@ -3560,6 +3588,12 @@ Util.createDirectoryElement = (function () {
 			}
 			return this;
 		}
+		/*
+		 * 字句検索
+		 * 「/」で字句検索モードに入る
+		 * search()に文字列を渡すと、渡された文字列を本文内から探し、見つかった文字列にsearch-wordクラスを付与する
+		 * さらに、見つかった文字列の先頭文字にsearch-labelクラスを付与する
+		 */
 		search(str) {
 			for (let paragraph of this.paragraphs()) {
 				paragraph.search(str);
@@ -3598,7 +3632,7 @@ Util.createDirectoryElement = (function () {
 			}
 			if (keycode === 13) {
 				// enter
-				this.addKeydownEventListener();
+				this.searchInputElem().blur(); // enterを押しただけではフォーカスが外れない
 				return;
 			}
 
@@ -3632,6 +3666,7 @@ Util.createDirectoryElement = (function () {
 			if (this.inputBuffer().isDisplay()) {
 				this.inputBuffer().empty().hide();
 			}
+			this.stopSearchMode();
 			return this;
 		}
 		// TODO: 配列が渡されたらフラグメントを使ってappendする
@@ -3706,7 +3741,6 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		saveFile() {
-			console.log('saveFile()');
 			const nowDate_ms = Date.now() + '';
 			Util.post('/tategaki/WriteJsonFile',{
 				user_id: this.userId(),
@@ -3867,7 +3901,6 @@ Util.createDirectoryElement = (function () {
 		// --イベント
 
 		addKeydownEventListener() {
-			console.log('container add keydown');
 			this.inputBuffer().removeKeydownEventListener()
 				.convertContainer().removeKeydownEventListener();
 			super.addKeydownEventListener();
@@ -3958,6 +3991,14 @@ Util.createDirectoryElement = (function () {
 				case 83:
 					// s
 					this.saveFile();
+					break;
+				case 188:
+					// ,
+					this.cursor().nextSearch();
+					break;
+				case 190:
+					// .
+					this.cursor().prevSearch();
 					break;
 				default:
 					break;

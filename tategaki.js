@@ -305,18 +305,18 @@ $(function() {
 			// 	backSpaceOnContainer();
 			// 	checkText();
 			// 	break;
-			case 190:
-				// .
-				findPrev();
-				break;
+			// case 190:
+			// 	// .
+			// 	findPrev();
+			// 	break;
 			// case 79:
 			// 	// o
 			// 	comOpenPrevFile();
 			// 	break;
-			case 188:
-				// ,
-				findNext();
-				break;
+			// case 188:
+			// 	// ,
+			// 	findNext();
+			// 	break;
 			// case 73:
 			// 	// i
 			// 	comOpenNextFile();
@@ -925,149 +925,149 @@ $(function() {
 	// }
 	//
 	// // ---------------------------- find mode ----------------------------------
-
-	/*
-	 * 字句検索
-	 * 「/」で字句検索モードに入る
-	 * find()に文字列を渡すと、渡された文字列を本文内から探し、見つかった文字列にfind-wordクラスを付与する
-	 * さらに、見つかった文字列の先頭文字にfind-labelクラスを付与する
-	 */
-	// 字句検索を開始する
-	function startFindMode() {
-		'use strict';
-		const $find = $('#search').addClass('active');
-		// フォーカスを当ててからvalueをセットすることで末尾にカーソルが移動される
-		$find.focus();
-		$find.val('/');
-
-		document.removeEventListener('keydown',keydownOnDoc,false);
-
-		$('body').on('keyup','#find',function(e) {
-
-			// エンターキーが押されればフォーカスをdraftに戻す(付与されたクラスは除去しない)
-			if (e.keyCode == 13) {
-				// enter
-				$find.blur();
-				document.addEventListener('keydown',keydownOnDoc,false);
-				return;
-			}
-
-			// $findの中身が空になればfindモードを完全に終了する
-			if ($find.val() == '') {
-				$find.blur();
-				document.addEventListener('keydown',keydownOnDoc,false);
-				endFindMode();
-				return;
-			}
-
-			find($find.val().substring(1));
-		});
-
-		$('body').on('blur','#search',function(e) {
-			document.addEventListener('keydown',keydownOnDoc,false);
-		});
-		$('body').on('focus','#search',function(e) {
-			document.removeEventListener('keydown',keydownOnDoc,false);
-		});
-	}
-
-	// 字句検索を完全に終了する
-	function endFindMode() {
-		'use strict';
-		$('#search').removeClass('active').val('');
-		$('.search-label').removeClass('search-label');
-		$('.search-word').removeClass('search-word');
-	}
-
-	function find(word) {
-		// 検索字句にクラスを付与する
-		'use strict';
-		const eSentence = document.getElementById('sentence_container');
-
-		// reset
-		const eOldLabel = eSentence.getElementsByClassName('search-label');
-		const eOldWord = eSentence.getElementsByClassName('search-word');
-		while (eOldLabel[0]) { // クラスをremoveするとeOldLabelからその要素がなくなって詰められる
-			eOldLabel[0].classList.remove('search-label');
-		}
-		while (eOldWord[0]) {
-			eOldWord[0].classList.remove('search-word');
-		}
-		console.log('removed');
-		if (word === '') return; // 検索文字がなくなった場合は、すべての文字からクラスを除去するのみ
-
-		const eChars = eSentence.getElementsByClassName('char');
-		const indexArr = findIndex(word);
-		const wordLen = word.length;
-		for(let index of indexArr) {
-			// 先頭文字にfind-label
-			eChars[index].classList.add('search-label');
-			for (let word_i = 0;word_i < wordLen;word_i++) {
-				// 該当文字全てにfind-word
-				eChars[index + word_i].classList.add('search-word');
-			}
-		}
-
-		// カーソル位置の次に位置する検索語句の頭にカーソルを移動する
-		if (!eSentence.getElementsByClassName('cursor')[0].classList.contains('search-label')) findNext();
-	}
-
-	function findIndex(word) {
-		'use strict';
-		/*
-		 * 字句検索
-		 * 1文字目のインデックスの配列を返す
-		 * 検索字句を1文字ずつ確認
-		 * 検索字句の1文字目と、配列に残っているインデックスのcharの文字を比較し、異なれば配列から除外する
-		 * 検索字句の2文字目と、配列に残っているインデックスのcharの次のcharの文字を比較し、異なれば配列から除外する
-		 * 検索字句の3文字目と、配列に残っているインデックスのcharから２つ後のcharの文字を比較し、異なれば配列から除外する
-		 * 検索字句のすべての文字に対して以上を繰り返していき、最終的に配列要素として残っているインデックスが、検索文字列の１文字目のインデックスとなる
-		 */
-		const eChars = document.getElementById('sentence_container').getElementsByClassName('char');
-		const indexArr = [];
-
-		// いったん、すべての文字のインデックスを配列に入れる
-		for (let i = 0,len = eChars.length;i < len;i++) {
-			indexArr[i] = i;
-		}
-
-		for (let search_i = 0,wordLen = word.length;search_i < wordLen;search_i++) {
-			const searchChar = word.charAt(search_i);
-			// 配列から、条件に合わない要素のインデックスを除外する
-			for (let index_i = 0;index_i < indexArr.length;index_i++) { // lengthは変動するため、キャッシュ不可
-				if (eChars[indexArr[index_i]+search_i].textContent != searchChar) {
-					indexArr.splice(index_i,1); // index_i番目から要素を一つ削除する
-					index_i--; // 要素を削除して配列が詰められているので、再び同じ添字の要素を確認する
-				}
-			}
-		}
-		return indexArr;
-	}
-
-	// 次の検索語句にカーソルを当てる
-	function findNext() {
-		'use strict';
-		const $oldCursor = $('.cursor');
-		const $newCursor = $oldCursor.nextObj('#sentence_container .search-label,.cursor',true);
-
-		if (!$newCursor[0]) return;
-
-		$newCursor.addCursor(true);
-		gCursor.repositionCharNum();
-	}
-
-	// 前の検索語句にカーソルを戻す
-	function findPrev() {
-		'use strict';
-		const $oldCursor = $('.cursor');
-		const $newCursor = $oldCursor.prevObj('#sentence_container .search-label,.cursor',true);
-
-		if (!$newCursor[0]) return;
-
-		$newCursor.addCursor(true);
-		gCursor.repositionCharNum();
-	}
-
+	//
+	// /*
+	//  * 字句検索
+	//  * 「/」で字句検索モードに入る
+	//  * find()に文字列を渡すと、渡された文字列を本文内から探し、見つかった文字列にfind-wordクラスを付与する
+	//  * さらに、見つかった文字列の先頭文字にfind-labelクラスを付与する
+	//  */
+	// // 字句検索を開始する
+	// function startFindMode() {
+	// 	'use strict';
+	// 	const $find = $('#search').addClass('active');
+	// 	// フォーカスを当ててからvalueをセットすることで末尾にカーソルが移動される
+	// 	$find.focus();
+	// 	$find.val('/');
+	//
+	// 	document.removeEventListener('keydown',keydownOnDoc,false);
+	//
+	// 	$('body').on('keyup','#find',function(e) {
+	//
+	// 		// エンターキーが押されればフォーカスをdraftに戻す(付与されたクラスは除去しない)
+	// 		if (e.keyCode == 13) {
+	// 			// enter
+	// 			$find.blur();
+	// 			document.addEventListener('keydown',keydownOnDoc,false);
+	// 			return;
+	// 		}
+	//
+	// 		// $findの中身が空になればfindモードを完全に終了する
+	// 		if ($find.val() == '') {
+	// 			$find.blur();
+	// 			document.addEventListener('keydown',keydownOnDoc,false);
+	// 			endFindMode();
+	// 			return;
+	// 		}
+	//
+	// 		find($find.val().substring(1));
+	// 	});
+	//
+	// 	$('body').on('blur','#search',function(e) {
+	// 		document.addEventListener('keydown',keydownOnDoc,false);
+	// 	});
+	// 	$('body').on('focus','#search',function(e) {
+	// 		document.removeEventListener('keydown',keydownOnDoc,false);
+	// 	});
+	// }
+	//
+	// // 字句検索を完全に終了する
+	// function endFindMode() {
+	// 	'use strict';
+	// 	$('#search').removeClass('active').val('');
+	// 	$('.search-label').removeClass('search-label');
+	// 	$('.search-word').removeClass('search-word');
+	// }
+	//
+	// function find(word) {
+	// 	// 検索字句にクラスを付与する
+	// 	'use strict';
+	// 	const eSentence = document.getElementById('sentence_container');
+	//
+	// 	// reset
+	// 	const eOldLabel = eSentence.getElementsByClassName('search-label');
+	// 	const eOldWord = eSentence.getElementsByClassName('search-word');
+	// 	while (eOldLabel[0]) { // クラスをremoveするとeOldLabelからその要素がなくなって詰められる
+	// 		eOldLabel[0].classList.remove('search-label');
+	// 	}
+	// 	while (eOldWord[0]) {
+	// 		eOldWord[0].classList.remove('search-word');
+	// 	}
+	// 	console.log('removed');
+	// 	if (word === '') return; // 検索文字がなくなった場合は、すべての文字からクラスを除去するのみ
+	//
+	// 	const eChars = eSentence.getElementsByClassName('char');
+	// 	const indexArr = findIndex(word);
+	// 	const wordLen = word.length;
+	// 	for(let index of indexArr) {
+	// 		// 先頭文字にfind-label
+	// 		eChars[index].classList.add('search-label');
+	// 		for (let word_i = 0;word_i < wordLen;word_i++) {
+	// 			// 該当文字全てにfind-word
+	// 			eChars[index + word_i].classList.add('search-word');
+	// 		}
+	// 	}
+	//
+	// 	// カーソル位置の次に位置する検索語句の頭にカーソルを移動する
+	// 	if (!eSentence.getElementsByClassName('cursor')[0].classList.contains('search-label')) findNext();
+	// }
+	//
+	// function findIndex(word) {
+	// 	'use strict';
+	// 	/*
+	// 	 * 字句検索
+	// 	 * 1文字目のインデックスの配列を返す
+	// 	 * 検索字句を1文字ずつ確認
+	// 	 * 検索字句の1文字目と、配列に残っているインデックスのcharの文字を比較し、異なれば配列から除外する
+	// 	 * 検索字句の2文字目と、配列に残っているインデックスのcharの次のcharの文字を比較し、異なれば配列から除外する
+	// 	 * 検索字句の3文字目と、配列に残っているインデックスのcharから２つ後のcharの文字を比較し、異なれば配列から除外する
+	// 	 * 検索字句のすべての文字に対して以上を繰り返していき、最終的に配列要素として残っているインデックスが、検索文字列の１文字目のインデックスとなる
+	// 	 */
+	// 	const eChars = document.getElementById('sentence_container').getElementsByClassName('char');
+	// 	const indexArr = [];
+	//
+	// 	// いったん、すべての文字のインデックスを配列に入れる
+	// 	for (let i = 0,len = eChars.length;i < len;i++) {
+	// 		indexArr[i] = i;
+	// 	}
+	//
+	// 	for (let search_i = 0,wordLen = word.length;search_i < wordLen;search_i++) {
+	// 		const searchChar = word.charAt(search_i);
+	// 		// 配列から、条件に合わない要素のインデックスを除外する
+	// 		for (let index_i = 0;index_i < indexArr.length;index_i++) { // lengthは変動するため、キャッシュ不可
+	// 			if (eChars[indexArr[index_i]+search_i].textContent != searchChar) {
+	// 				indexArr.splice(index_i,1); // index_i番目から要素を一つ削除する
+	// 				index_i--; // 要素を削除して配列が詰められているので、再び同じ添字の要素を確認する
+	// 			}
+	// 		}
+	// 	}
+	// 	return indexArr;
+	// }
+	//
+	// // 次の検索語句にカーソルを当てる
+	// function findNext() {
+	// 	'use strict';
+	// 	const $oldCursor = $('.cursor');
+	// 	const $newCursor = $oldCursor.nextObj('#sentence_container .search-label,.cursor',true);
+	//
+	// 	if (!$newCursor[0]) return;
+	//
+	// 	$newCursor.addCursor(true);
+	// 	gCursor.repositionCharNum();
+	// }
+	//
+	// // 前の検索語句にカーソルを戻す
+	// function findPrev() {
+	// 	'use strict';
+	// 	const $oldCursor = $('.cursor');
+	// 	const $newCursor = $oldCursor.prevObj('#sentence_container .search-label,.cursor',true);
+	//
+	// 	if (!$newCursor[0]) return;
+	//
+	// 	$newCursor.addCursor(true);
+	// 	gCursor.repositionCharNum();
+	// }
+	//
 	// -------------------------------- for user utility ---------------------------------------
 	function userAlert(str) {
 		'use strict';
