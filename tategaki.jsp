@@ -37,7 +37,6 @@
 					</li>
 					<li><button class="btn btn-primary" href="#configue-modal" data-toggle="modal">設定</button></li>
 					<li><button class="btn btn-primary" href="#help_modal" data-toggle="modal">ヘルプ</button></li>
-					<li><button class="btn btn-primary" id="test">test</button></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><div class="navbar-brand alert alert-info" role="alert" id="user_info"></div></li>
@@ -68,7 +67,7 @@
 							<div class="btn-group">
 								<button type="button" id="color_btn" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-text-color"></span></button>
 								<button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span> </button>
-								<ul class="dropdown-menu">
+								<ul id="color_dropdown" class="dropdown-menu">
 									<li id="select_color_black"><a href="#">black</a></li>
 									<li id="select_color_red" class="select-red"><a href="#">red</a></li>
 									<li id="select_color_blue" class="select-blue"><a href="#">blue</a></li>
@@ -91,7 +90,7 @@
 									</div>
 							</li>
 							<li>
-								<div class="btn-group">
+								<div id="align_btns" class="btn-group">
 									<button type="button" id="text-btn-left" class="btn btn-default"><span class="glyphicon glyphicon-align-left"></button>
 									<button type="button" id="text-btn-center" class="btn btn-default"><span class="glyphicon glyphicon-align-center"></button>
 									<button type="button" id="text-btn-right" class="btn btn-default"><span class="glyphicon glyphicon-align-right"></button>

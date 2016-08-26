@@ -3,9 +3,9 @@
  *	Paragraph,Row,Charは、親や子の参照を保持するのはもちろんのこと、木構造を無視して異なる親であっても次と前にある同種オブジェクトの参照を持つ
  *	Dom要素の参照を持つコンポジション
  *	要素の再利用のため、要素作成のみクロージャで行う
- *	jQyeryの使用箇所:width(),height(),addwheeleventlistener(),removeWheelEventListener(),bootstrap関係
+ *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
  */
-// TODO: 字句検索、メニュークラス(palette)、コピーアンドペースト、禁則処理
+// TODO: メニュークラス(palette)、コピーアンドペースト、禁則処理
 console.log('object.js');
 const Util = {
 	// baseArrayをcnt個ずつの配列に分割する
@@ -63,8 +63,6 @@ const Util = {
 			'use strict';
 			alert('abort');
 		});
-		console.log('sendData:');
-		console.log(sendData);
 		xhr.send(sendData);
 	}
 };
@@ -82,6 +80,9 @@ Util.createCharElement = (function () {
 		const fontSize = data['fontSize'];
 		eChar.textContent = char;
 		eChar.dataset.fontSize = fontSize || 'auto';
+		for (let decolation of classArr) {
+			eChar.classList.add(decolation);
+		}
 
 		// 文字の種類に応じて付与するクラス
 		if (/[。、,.,]/.test(char))
@@ -296,9 +297,190 @@ Util.createDirectoryElement = (function () {
 // Class
 (function () {
 	'use strict';
+	class Menu {
+		constructor(sentenceContainer) {
+			this._sentenceContainer = sentenceContainer;
+			this.addEventListeners();
+		}
+
+		// 現在アクティブになっている文字装飾のクラスを配列にする
+		charDecolations() {
+			const ret = [];
+			if (this.boldButton()) {
+				ret.push('decolation-font-bold');
+			}
+			if (this.italicButton()) {
+				ret.push('decolation-font-italic');
+			}
+			if (this.colorButton() !== 'black') {
+				ret.push('decolation-color-'+ this.colorButton());
+			}
+			return ret;
+		}
+
+		// --参照取得
+		
+		sentenceContainer() {
+			return this._sentenceContainer;
+		}
+
+		// --判定
+
+		hasActiveBold() {
+			return document.getElementById('btn-bold').classList.contains('active');
+		}
+		hasActiveItalic() {
+			return document.getElementById('btn-italic').classList.contains('active');
+		}
+
+		// --Style
+
+		// 文字色ボタンに色を付ける
+		// 引数省略で現在の色を取得
+		colorButton(color) {
+			const eColorButton = document.getElementById('color_btn');
+			if(color) {
+				const oldColor = eColorButton.className.match(/select-\S+/);
+				if (oldColor) eColorButton.classList.remove(oldColor[0]);
+				if (color === 'black') return this;
+				eColorButton.classList.add('select-'+ color);
+				return this;
+			}
+			if (color === undefined) {
+				color = eColorButton.className.match(/select-(\S+)/);
+				return color ? color[1] : 'black';
+			}
+		}
+		// 選択範囲の文字色を変える
+		addColor(color) {
+			const chars = this.sentenceContainer().selectChars();
+			for (let char of chars) {
+				char.color(color);
+			}
+			getSelection().removeAllRanges(); // 選択を解除する
+			return this;
+		}
+		italic(bl) {
+			const chars = this.sentenceContainer().selectChars();
+			for (let char of chars) {
+				char.italic(bl);
+			}
+			getSelection().removeAllRanges(); // 選択を解除する
+			return this;
+		}
+		bold(bl) {
+			const chars = this.sentenceContainer().selectChars();
+			for (let char of chars) {
+				char.bold(bl);
+			}
+			getSelection().removeAllRanges(); // 選択を解除する
+			return this;
+		}
+		align(align) {
+			const cursorParagraph = this.sentenceContainer().cursor().getParagraph();
+			cursorParagraph.align(align);
+		}
+		// 引数省略で、現在の太字ボタンのオンオフをbool値で返す
+		// trueで太字ボタンをオンにする。falseでオフにする
+		boldButton(bl) {
+			const eButton = document.getElementById('btn-bold');
+			if (bl === undefined) {
+				return eButton.classList.contains('active');
+			}
+			if (bl) {
+				eButton.classList.add('active');
+			} else {
+				eButton.classList.remove('active');
+			}
+			return this;
+		}
+		italicButton(bl) {
+			const eButton = document.getElementById('btn-italic');
+			if (bl === undefined) {
+				return eButton.classList.contains('active');
+			}
+			if (bl) {
+				eButton.classList.add('active');
+			} else {
+				eButton.classList.remove('active');
+			}
+			return this;
+		}
+
+		addEventListeners() {
+			// メニューボタン
+			document.getElementById('menu_new').addEventListener('click',function (e) { this.sentenceContainer().newFile(); }.bind(this),false);
+			document.getElementById('menu_save').addEventListener('click',function (e) { this.sentenceContainer().saveFile(); }.bind(this),false);
+			document.getElementById('menu_delete').addEventListener('click',function (e) { this.sentenceContainer().fileList().currentFile().delete(); }.bind(this),false);
+			document.getElementById('modal_fileopen_link').addEventListener('click',function (e) {
+				const filterInputElem = this.sentenceContainer().fileList().filterInputElem();
+				// モーダルが開くのはブートストラップで行われるので、その前処理だけを行う
+				filterInputElem.value = '';
+				filterInputElem.focus();
+				this.sentenceContainer().fileList().resetList();
+			},false);
+
+			// モーダル開閉
+			$('div.modal').on('shown.bs.modal',function (e) {
+				this.sentenceContainer().removeKeydownEventListener();
+				if (this.sentenceContainer().inputBuffer().isDisplay()) {
+					this.sentenceContainer().inputBuffer().empty().hide();
+				}
+			}.bind(this));
+			$('div.modal').on('hidden.bs.modal',function (e) {
+				if (this.sentenceContainer().command().isActive()) { return; }
+				this.sentenceContainer().addKeydownEventListener();
+			}.bind(this));
+
+			// パレットボタン
+			// 文字色ボタン
+			document.getElementById('color_btn').addEventListener('click',function (e) {
+				this.addColor(this.colorButton());
+			}.bind(this),false);
+			// 文字色ドロップダウン
+			this.setColorSelectClickEvent();
+
+			// bold italic
+			document.getElementById('btn-bold').addEventListener('click',function (e) {
+				const eBtn = document.getElementById('btn-bold');
+				eBtn.classList.toggle('active');
+				this.bold(this.boldButton());
+			}.bind(this),false);
+			document.getElementById('btn-italic').addEventListener('click',function (e) {
+				const eBtn = document.getElementById('btn-italic');
+				eBtn.classList.toggle('active');
+				this.italic(this.italicButton());
+			}.bind(this),false);
+
+			// align
+			this.setAlignClickEvent();
+		}
+
+		// 文字色(ドロップダウンの方)をクリックするとボタンの色が変わるイベントを付加する
+		setColorSelectClickEvent() {
+			const eSelectColors = document.querySelectorAll('#color_dropdown li');
+			for (let i = 0,eSelColor; eSelColor = eSelectColors[i]; i++) {
+				const color = eSelColor.id.match(/select_color_(\S+)/);
+				eSelColor.addEventListener('click',function (e) {
+					this.colorButton(color[1]);
+					this.addColor(color[1]);
+				}.bind(this),false);
+			}
+			return this;
+		}
+		// 段落のtext-align
+		setAlignClickEvent() {
+			const eAligns = document.querySelectorAll('#align_btns button');
+			for (let i = 0,eAlign; eAlign = eAligns[i]; i++) {
+				eAlign.addEventListener('click',function (e) {
+					const align = eAlign.id.match(/text-btn-(\S+)/);
+					this.align(align[1]);
+				}.bind(this),false);
+			}
+		}
+	}
 	class CommandLine {
 		constructor(sentenceContainer) {
-			console.log('new comand line');
 			this._elem = document.getElementById('command');
 			this._sentenceContainer = sentenceContainer;
 		}
@@ -365,7 +547,6 @@ Util.createDirectoryElement = (function () {
 			}
 		}
 		start() {
-			console.log('start command');
 			console.log(this.sentenceContainer());
 			this.active();
 			this.sentenceContainer().removeKeydownEventListener();
@@ -554,6 +735,21 @@ Util.createDirectoryElement = (function () {
 			this._char = newChar;
 			return this;
 		}
+		addCursor(char) {
+			if (this.getChar()) this.getChar().removeClass('cursor');
+			char.addClass('cursor');
+			this.setChar(char);
+
+			// 前の文字に装飾があれば、そのボタンをオンにする
+			const prevChar = char.prevCharOnParagraph();
+			if (prevChar) {
+				const menu = this.sentenceContainer().menu();
+				menu.colorButton(prevChar.color());
+				menu.boldButton(prevChar.isBold());
+				menu.italicButton(prevChar.isItalic());
+			}
+			return this;
+		}
 
 		// --Status
 
@@ -595,12 +791,13 @@ Util.createDirectoryElement = (function () {
 		insert(str) {
 			const cursorChar = this.getChar();
 			for (let char of str) {
-				const newChar = new Char(Char.createData(char));
+				const newChar = new Char(cursorChar.createData(char));
 				cursorChar.before(newChar);
 			}
 
 			cursorChar.paragraph().cordinate();
-			this.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えない
+			this.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えず取得しなおし
+			this.sentenceContainer().changeDisplay(true);
 			return this;
 		}
 		// カーソル位置でバックスペース
@@ -984,7 +1181,6 @@ Util.createDirectoryElement = (function () {
 		runClick(e) {
 		}
 		addWheelEventListener() {
-			console.log('addWheelEventListener');
 			if (this._wheelArg) return this;
 			this._wheelArg = this.onWheel.bind(this); // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
 			const selector = '#' + this.elem().id;
@@ -992,7 +1188,6 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		removeWheelEventListener() {
-			console.log('removeWheelEventListener');
 			if (!this._wheelArg) return this;
 			const selector = '#' + this.elem().id;
 			$('body').off('mousewheel',selector,this._wheelArg);
@@ -1000,7 +1195,6 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		onWheel(e,delta,deltaX,deltaY) {
-			console.log('onWheel');
 			this.runWheel(e,delta > 0);
 		}
 		runWheel(e,isUp) {
@@ -1032,9 +1226,6 @@ Util.createDirectoryElement = (function () {
 		}
 		cursor() {
 			return this.row().paragraph().container().cursor();
-		}
-		cursorChar() {
-			return this.cursor().getChar();
 		}
 		// Cursor用
 		// カーソル文字として不適ならその次の文字に移動する
@@ -1072,9 +1263,16 @@ Util.createDirectoryElement = (function () {
 				return this.prev();
 			}
 		}
+		// 同一段落内で次の文字
 		nextCharOnParagraph() {
 			if (this.hasNextCharOnParagraph()) {
 				return this.nextChar();
+			}
+			return null;
+		}
+		prevCharOnParagraph() {
+			if (this.hasPrevCharOnParagraph()) {
+				return this.prevChar();
 			}
 			return null;
 		}
@@ -1098,8 +1296,29 @@ Util.createDirectoryElement = (function () {
 		hasNextCharOnParagraph() {
 			return this.nextChar() && this.nextChar().paragraph() === this.paragraph();
 		}
+		hasPrevCharOnParagraph() {
+			return this.prevChar() && this.prevChar().paragraph() === this.paragraph();
+		}
 		// この要素がrangeの中にあればtrue
 		isInRange(range) {
+			const charRange = document.createRange();
+			// 現在の要素を囲む範囲をcharRangeとして設定。selectNodeContentsをselectNodeにする、あるいは引数をテキストノードではなくspan要素にすると、選択中最初と最終文字が反応しないことがある
+			charRange.selectNodeContents(this.elem().childNodes.item(0));
+			// 開始位置が同じかselectの開始位置より文字の開始位置が後ろにあり、
+			// 終了位置が同じかselectの終了位置より文字の終了位置が前にある
+			if (charRange.compareBoundaryPoints(Range.START_TO_START,range) >= 0
+					&& charRange.compareBoundaryPoints(Range.END_TO_END,range) <= 0) {
+				charRange.detach();
+				return true;
+			}
+			charRange.detach();
+			return false;
+		}
+		isBold() {
+			return this.hasClass('decolation-font-bold');
+		}
+		isItalic() {
+			return this.hasClass('decolation-font-italic');
 		}
 
 		// --Status
@@ -1118,9 +1337,7 @@ Util.createDirectoryElement = (function () {
 		// --Style
 
 		addCursor() {
-			if (this.cursorChar()) this.cursorChar().removeClass('cursor');
-			this.addClass('cursor');
-			this.cursor().setChar(this);
+			this.cursor().addCursor(this);
 			return this;
 		}
 
@@ -1145,25 +1362,47 @@ Util.createDirectoryElement = (function () {
 		}
 		color(color) {
 			if (color) {
-				this.addDecolationClass('decolation-color-'+ color);
-				return this;
-			} else {
-				// TODO: 現在の文字色の取得
+				this.addColor(color);
 				return this;
 			}
+			if (color === false) {
+				this.removeColor();
+				return this;
+			}
+			if (color === undefined) {
+				const color = this.className().match(/decolation-color-(.+)/);
+				return color ? color[1] : 'black';
+			}
 		}
-		// 文字装飾用のクラスを付与する
-		addDecolationClass(className) {
+		// trueなら太字にして、falseなら外す
+		bold(bl) {
+			if (bl) {
+				this.addClass('decolation-font-bold');
+			} else {
+				this.removeClass('decolation-font-bold');
+			}
+			return this;
+		}
+		italic(bl) {
+			if (bl) {
+				this.addClass('decolation-font-italic');
+			} else {
+				this.removeClass('decolation-font-italic');
+			}
+			return this;
+		}
+		addColor(color) {
 			// 同一種のクラスをすでに持っていたら外す
-			let kind = className.match(/(decolation-.+)-.+/);
-			if (!kind) return this; // 引数が文字装飾用のクラスではない
-			kind = kind[1];
-			const regexp = new RegExp(kind +'-\\S+');
+			this.removeColor();
+			if (color === 'decolation-color-black') return; // ブラックなら外して終わり
+			this.addClass('decolation-color-'+ color);
+			return this;
+		}
+		removeColor() {
+			const regexp = new RegExp('decolation-color-\\S+');
 			const rmClass = this.className().match(regexp);
 			if (rmClass) { this.removeClass(rmClass[0]); }
-
-			if (className === 'decolation-color-black') return; // ブラックなら外して終わり
-			this.addClass(className);
+			return this;
 		}
 		// この文字から始まる文字列がstrと合致するなら、その文字列のCharにクラスを付与する
 		// １文字ずつ比較し、渡された文字列の長さ分のループを終えるまでに異なる文字が現れるか段落に残りの文字がなくなればreturn
@@ -1320,16 +1559,14 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 
-		// 静的メソッド
-		static createData(c) {
+		// Utility
+
+		createData(c) {
 			const ret = {};
 			ret["char"] = c;
-			ret["decolation"] = Char.activeDecolation();
+			const menu = this.paragraph().container().menu();
+			ret["decolation"] = menu.charDecolations();
 			ret["fontSize"] = Char.currentFontSize();
-			return ret;
-		}
-		static activeDecolation() {
-			const ret = [];
 			return ret;
 		}
 		static currentFontSize() {
@@ -1915,6 +2152,22 @@ Util.createDirectoryElement = (function () {
 
 		// --Style
 
+		align(align) {
+			if (align === undefined) {
+				const align = this.className().match(/decolation-textalign-(\S+)/);
+				return align ? align[1] : 'left';
+			}
+			if (align) {
+				const oldAlign = this.className().match(/decolation-textalign-\S+/);
+				if (oldAlign) this.removeClass(oldAlign[0]);
+				if (align !== 'left') this.addClass('decolation-textalign-'+ align);
+			} else {
+				const oldAlign = this.className().match(/decolation-textalign-\S+/);
+				if (oldAlign) this.removeClass(oldAlign[0]);
+			}
+			return this;
+		}
+
 		// すべてのCharから指定クラスを除去する
 		removeClassAllChar(className) {
 			for (let row of this.rows()) {
@@ -2057,7 +2310,7 @@ Util.createDirectoryElement = (function () {
 		divide(char) {
 			if (!this.contains(char)) return this;
 			const paragraph = char.row().paragraph();
-			const newParagraph = Paragraph.createEmptyParagraph(); // 作成時点で空行が含まれている
+			const newParagraph = Paragraph.createEmptyParagraph().align(paragraph.align()); // 作成時点で空行が含まれている 段落にテキストアラインが付与されていれば、新しい段落も同様にする
 			const nextRow = char.row().hasNextSibling() ? char.row().next() : null; // この行以降を新しい段落に移動
 			// 一行目
 			// 基準文字以降を新しい行に移し、新しい段落に挿入する
@@ -2338,6 +2591,7 @@ Util.createDirectoryElement = (function () {
 		}
 		hide() {
 			this.elem().style.display = 'none';
+			this.removeKeydownEventListener();
 			return this;
 		}
 
@@ -2345,7 +2599,6 @@ Util.createDirectoryElement = (function () {
 
 		// 文字を挿入してviewsを破棄する
 		input() {
-			this.empty().hide();
 			this.inputBuffer().input();
 			return this;
 		}
@@ -2582,8 +2835,8 @@ Util.createDirectoryElement = (function () {
 		}
 	}
 	class InputChar extends Char {
-		constructor(c,phraseNum) {
-			super(Char.createData(c));
+		constructor(data,phraseNum) {
+			super(data);
 			if (phraseNum === undefined) phraseNum = -1;
 			this.phraseNum(phraseNum);
 		}
@@ -2608,7 +2861,7 @@ Util.createDirectoryElement = (function () {
 			}
 		}
 
-		// --Stylw
+		// --Style
 
 		select() {
 			this.addClass('select-phrase');
@@ -2710,6 +2963,7 @@ Util.createDirectoryElement = (function () {
 		}
 		hide() {
 			this.elem().style.display = 'none';
+			this.removeKeydownEventListener();
 			return this;
 		}
 		selectNext() {
@@ -2737,6 +2991,13 @@ Util.createDirectoryElement = (function () {
 
 		// --DOM操作
 
+		empty() {
+			super.empty();
+			if (this.convertContainer().isActive()) {
+				this.convertContainer().empty().hide();
+			}
+			return this;
+		}
 		push(keycode,isShift) {
 			const newInputStr = this.newString(keycode,isShift);
 
@@ -2764,7 +3025,7 @@ Util.createDirectoryElement = (function () {
 		update(str) {
 			this.empty();
 			for (let char of str) {
-				this.append(new InputChar(char));
+				this.append(new InputChar(this.cursorChar().createData(char)));
 			}
 			this.show();
 			return this;
@@ -2791,7 +3052,7 @@ Util.createDirectoryElement = (function () {
 			if (phrases.length === 0) return this; // 指定された文節番号の文字が見つからなかった
 			// 新しいInputCharをもともとあった文字の前に挿入していく
 			for (let c of str) {
-				const newChar = new InputChar(c,num);
+				const newChar = new InputChar(this.cursorChar().createData(c),num);
 				phrases[0].before(newChar);
 				if (phrases[0].isSelect()) newChar.select(); // 選択中の文節なら入替え文字も選択
 			}
@@ -2809,7 +3070,7 @@ Util.createDirectoryElement = (function () {
 			if (phrases.length === 0) return this; // 指定された文節番号の文字が見つからなかった
 			const nextChar = phrases[phrases.length -1].next(); // 挿入用の文字。最後にはEOLがあるので、必ず存在する
 			for (let c of str) {
-				nextChar.before(new InputChar(c,-num));
+				nextChar.before(new InputChar(this.getChar().createData(c),-num));
 			}
 			this.resize();
 			return this;
@@ -2997,9 +3258,7 @@ Util.createDirectoryElement = (function () {
 
 		// コンテナにファイルを読み込む
 		open() {
-			console.log('open file');
 			const sentenceContainer = this.fileList().sentenceContainer();
-			// sentenceContainer.readFile(this.id());
 
 			console.time('readFile');
 			const data = {};
@@ -3014,6 +3273,31 @@ Util.createDirectoryElement = (function () {
 				console.timeEnd('SentenceContainer init');
 			}.bind(this));
 			return this;
+		}
+		delete() {
+			Util.post('/tategaki/DeleteFile',{
+				user_id: this.fileList().sentenceContainer().userId(),
+				file_id: this.id()
+			},function (json) {
+				if (!result) { alert('ファイル削除エラーです(ファイル番号：'+ this.id() + ')'); }
+				// 現在開いているファイルを削除したなら、前後どちらかのファイルを開く
+				// 同じディレクトリに他のファイルがなければ新しいファイルを開く
+				// 最後に、ファイルリストを作り直す
+				if (this.sentenceContainer().fileList().currentFile() === this) {
+					const nextFile = this.next() || this.prev();
+					if (nextFile) {
+						nextFile.open();
+						this.sentenceContainer().fileList().read();
+						return;
+					}
+					if (!nextFile) {
+						this.sentenceContainer().newFile();
+						this.sentenceContainer().fileList().read();
+						return;
+					}
+				}
+				this.sentenceContainer().fileList().read();
+				}.bind(this));
 		}
 
 		// --イベント
@@ -3195,9 +3479,8 @@ Util.createDirectoryElement = (function () {
 		isDirectory() {
 			return false;
 		}
-		// HACK: このままではヘルプモーダルなどが開いていてもtrueになる
 		isOpen() {
-			return $('body').hasClass('modal-open');
+			return this.$modal.hasClass('in');
 		}
 		hasFile() {
 			return this.firstFile() !== null;
@@ -3365,7 +3648,6 @@ Util.createDirectoryElement = (function () {
 			// モーダルが開くと、検索欄にフォーカスが移動する
 			this.$modal().on('shown.bs.modal',function (e) {
 				this.filterInputElem().focus();
-				this.sentenceContainer().removeKeydownEventListener();
 			}.bind(this));
 			// ファイル検索欄
 			this.filterInputElem().addEventListener('keyup',this.onKeyupOnInput.bind(this));
@@ -3387,7 +3669,6 @@ Util.createDirectoryElement = (function () {
 					file.open();
 				}
 				this.hideModal();
-				this.sentenceContainer().addKeydownEventListener();
 				this.resetList();
 			} else if (this.filterInputElem().value.length === 0) {
 				this.resetList();
@@ -3404,10 +3685,13 @@ Util.createDirectoryElement = (function () {
 			this._userId = userId;
 			this._titleElem = document.getElementById('file_title');
 			this._searchInputElem = document.getElementById('search');
+			this.addFileTitleEvent();
+			this.addSelectEvent();
 			this._cursor = new Cursor(this);
 			this._inputBuffer = new InputBuffer(this);
 			this._fileList = new FileList(this);
 			this._command = new CommandLine(this);
+			this._menu = new Menu(this);
 
 			this.newFile();
 		}
@@ -3478,6 +3762,9 @@ Util.createDirectoryElement = (function () {
 		}
 		searchInputElem() {
 			return this._searchInputElem;
+		}
+		menu() {
+			return this._menu;
 		}
 
 		// --判定
@@ -3601,7 +3888,6 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		startSearchMode() {
-			console.log('search mode start');
 			this.searchInputElem().classList.add('active');
 			this.searchInputElem().focus();
 			this.searchInputElem().value = '/';
@@ -3621,35 +3907,29 @@ Util.createDirectoryElement = (function () {
 			this.removeClassAllChar('search-label').removeClassAllChar('search-word');
 			return this;
 		}
-		onKeyupOnSearchMode(e) {
-			let keycode;
-			if (document.all) {
-				// IE
-				keycode = e.keyCode
-			} else {
-				// IE以外
-				keycode = e.which;
-			}
-			if (keycode === 13) {
-				// enter
-				this.searchInputElem().blur(); // enterを押しただけではフォーカスが外れない
-				return;
-			}
 
-			// $findの中身が空になればfindモードを完全に終了する
-			if (this.searchInputElem().value === '') {
-				this.searchInputElem().blur();
-				this.stopSearchMode();
-				return;
+		// selection
+		// 選択範囲にあるCharを配列で返す
+		selectChars(bl) {
+			const ret = [];
+			const selection = getSelection();
+			if (this.selectText().length === 0) return ret; // rangeCount===0とすると、EOLのみ選択されることがある
+			const selRange = selection.getRangeAt(0);
+			for (let char = this.firstChar(); char; char = char.nextChar()) {
+				if (char.isInRange(selRange)) ret.push(char);
 			}
-
-			this.search(this.searchInputElem().value.slice(1));
+			selRange.detach();
+			if (bl) selection.removeAllRanges(); // 選択を解除する
+			return ret;
 		}
-		onFocusoutOnSearchMode() {
-			this.addKeydownEventListener();
-		}
-		onFocusinOnSearchMode() {
-			this.removeKeydownEventListener();
+		selectText() {
+			const selection = getSelection();
+			let ret = '';
+			for (let i = 0,cnt = selection.rangeCount; i < cnt; i++) {
+				const selRange = selection.getRangeAt(i);
+				ret += selRange.toString();
+			}
+			return ret;
 		}
 
 		// --DOM操作関係
@@ -3660,9 +3940,6 @@ Util.createDirectoryElement = (function () {
 			this.emptyChild();
 			this.removeKeydownEventListener();
 			this.removeWheelEventListener();
-			if (this.inputBuffer().convertContainer().isActive()) {
-				this.inputBuffer().convertContainer().empty().hide();
-			}
 			if (this.inputBuffer().isDisplay()) {
 				this.inputBuffer().empty().hide();
 			}
@@ -3900,6 +4177,7 @@ Util.createDirectoryElement = (function () {
 
 		// --イベント
 
+		// keydown
 		addKeydownEventListener() {
 			this.inputBuffer().removeKeydownEventListener()
 				.convertContainer().removeKeydownEventListener();
@@ -4005,8 +4283,9 @@ Util.createDirectoryElement = (function () {
 			}
 			return this;
 		}
+
+		// wheel
 		runWheel(e,isUp) {
-			console.log('run wheel');
 			const mvRowNum = 4; // 一度に動かす行数
 			if (isUp) {
 				for (let i = 0; i < mvRowNum; i++) { this.shiftRightDisplay(); }
@@ -4014,6 +4293,63 @@ Util.createDirectoryElement = (function () {
 				for (let i = 0; i < mvRowNum; i++) { this.shiftLeftDisplay(); }
 			}
 			return this;
+		}
+
+		// 語句検索
+		onKeyupOnSearchMode(e) {
+			let keycode;
+			if (document.all) {
+				// IE
+				keycode = e.keyCode
+			} else {
+				// IE以外
+				keycode = e.which;
+			}
+			if (keycode === 13) {
+				// enter
+				this.searchInputElem().blur(); // enterを押しただけではフォーカスが外れない
+				return;
+			}
+
+			// $findの中身が空になればfindモードを完全に終了する
+			if (this.searchInputElem().value === '') {
+				this.searchInputElem().blur();
+				this.stopSearchMode();
+				return;
+			}
+
+			this.search(this.searchInputElem().value.slice(1));
+		}
+		onFocusoutOnSearchMode() {
+			this.addKeydownEventListener();
+		}
+		onFocusinOnSearchMode() {
+			this.removeKeydownEventListener();
+		}
+
+		// ファイル名input
+		addFileTitleEvent() {
+			const eFileTitle = document.getElementById('file_title');
+			eFileTitle.addEventListener('focusin',function (e) {
+				if (this.inputBuffer().isDisplay) { this.inputBuffer().empty().hide(); }
+				this.removeKeydownEventListener();
+			}.bind(this),false);
+			eFileTitle.addEventListener('focusout',function (e) {
+				this.addKeydownEventListener();
+			}.bind(this),false);
+		}
+
+		// selection
+		addSelectEvent() {
+			this.elem().addEventListener('mouseup',function (e) {
+				const selChars = this.selectChars();
+				// 選択範囲の直後にカーソルを当てる
+				if (selChars.length > 0) {
+					const lastCharOnSelect = selChars[selChars.length -1];
+					const newCursor = lastCharOnSelect.hasNextSibling() ? lastCharOnSelect.next() : lastCharOnSelect;
+					newCursor.addCursor().setPosMemory();
+				}
+			}.bind(this),false);
 		}
 	}
 

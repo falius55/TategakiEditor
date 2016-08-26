@@ -165,32 +165,32 @@ $(function() {
 	}
 
 	function keydownOnDoc(e) {
-		'use strict';
-		userAlert('');
-		const keycode = getKeyCode(e);
-
-		if (keycode === 123) { return; } // F12のみブラウザショートカットキー
-
-		const $inputBuffer = $('#input_buffer');
-		if (isConvertMode()) {
-			// keydownOnConvertView(e,keycode);
-		} else if (isInputMode()) {
-			// keydownOnInputBuffer(e,keycode);
-		} else {
-			// 非入力(通常)状態
-
-			// if (e.ctrlKey) {
-			// 	// ctrlキーを使ったショートカットキー
-			// 	keydownWithCTRL(e,keycode);
-			// } else {
-			// 	keydownOnContainer(e,keycode);
-			// }
-
-		}
-
-		console.log(keycode);
-		// デフォルトの動作を無効化する
-		e.preventDefault();
+		// 'use strict';
+		// userAlert('');
+		// const keycode = getKeyCode(e);
+		//
+		// if (keycode === 123) { return; } // F12のみブラウザショートカットキー
+		//
+		// const $inputBuffer = $('#input_buffer');
+		// if (isConvertMode()) {
+		// 	// keydownOnConvertView(e,keycode);
+		// } else if (isInputMode()) {
+		// 	// keydownOnInputBuffer(e,keycode);
+		// } else {
+		// 	// 非入力(通常)状態
+		//
+		// 	if (e.ctrlKey) {
+		// 		// ctrlキーを使ったショートカットキー
+		// 		keydownWithCTRL(e,keycode);
+		// 	} else {
+		// 		keydownOnContainer(e,keycode);
+		// 	}
+		//
+		// }
+		//
+		// console.log(keycode);
+		// // デフォルトの動作を無効化する
+		// e.preventDefault();
 	}
 
 	// function keydownOnConvertView(e,keycode) {
@@ -371,65 +371,65 @@ $(function() {
 		addPageBreak();
 		// printDocInfo();
 	}
-
-	function keydownOnContainer(e,keycode) {
-		'use strict';
-
-		switch (keycode) {
-			// case 8:
-			// 	// backspace
-			// 	backSpaceOnContainer();
-			// 	checkText();
-			// 	break;
-			// case 13:
-			// 	// Enter
-			// 	lineBreak();
-			// 	checkText();
-			// 	break;
-			// case 32:
-			// 	// space
-			// 	insertStringFromCursor('　');
-			// 	break;
-			// case 37:
-			// 	// Left
-			// 	// readySelection();
-			// 	// gCursor.shiftLeft();
-			// 	// extendSelection(e.shiftKey);
-			// 	break;
-			// case 38:
-			// 	// Up
-			// 	// readySelection();
-			// 	// gCursor.prev();
-			// 	// extendSelection(e.shiftKey);
-			// 	break;
-			// case 39:
-			// 	// Right
-			// 	// readySelection();
-			// 	// gCursor.shiftRight();
-			// 	// extendSelection(e.shiftKey);
-			// 	break;
-			// case 40:
-			// 	// Down
-			// 	// readySelection();
-			// 	// gCursor.next();
-			// 	// extendSelection(e.shiftKey);
-			// 	break;
-			case 58: // firefox developer edition
-			case 186: // chrome
-				// :
-				// startCommandMode();
-				// break;
-			case 191:
-				// /
-				startFindMode();
-				break;
-			// default:
-			// 	// bufferの更新
-			// 	updateInputBuffer(keycode,e.shiftKey);
-			// 	break;
-		}
-	}
-
+	//
+	// function keydownOnContainer(e,keycode) {
+	// 	'use strict';
+	//
+	// 	switch (keycode) {
+	// 		case 8:
+	// 			// backspace
+	// 			backSpaceOnContainer();
+	// 			checkText();
+	// 			break;
+	// 		case 13:
+	// 			// Enter
+	// 			lineBreak();
+	// 			checkText();
+	// 			break;
+	// 		case 32:
+	// 			// space
+	// 			insertStringFromCursor('　');
+	// 			break;
+	// 		case 37:
+	// 			// Left
+	// 			readySelection();
+	// 			gCursor.shiftLeft();
+	// 			extendSelection(e.shiftKey);
+	// 			break;
+	// 		case 38:
+	// 			// Up
+	// 			readySelection();
+	// 			gCursor.prev();
+	// 			extendSelection(e.shiftKey);
+	// 			break;
+	// 		case 39:
+	// 			// Right
+	// 			readySelection();
+	// 			gCursor.shiftRight();
+	// 			extendSelection(e.shiftKey);
+	// 			break;
+	// 		case 40:
+	// 			// Down
+	// 			readySelection();
+	// 			gCursor.next();
+	// 			extendSelection(e.shiftKey);
+	// 			break;
+	// 		case 58: // firefox developer edition
+	// 		case 186: // chrome
+	// 			// :
+	// 			startCommandMode();
+	// 			break;
+	// 		case 191:
+	// 			// /
+	// 			startFindMode();
+	// 			break;
+	// 		default:
+	// 			// bufferの更新
+	// 			updateInputBuffer(keycode,e.shiftKey);
+	// 			break;
+	// 	}
+	// }
+	//
 	// // -------------------------------- keydown function -----------------------------------------
 	//
 	// // 漢字変換時にバックスペース
@@ -2153,51 +2153,51 @@ $(function() {
 		}
 	}
 
-	// --------------------------- text decolation -----------------------------------
-
-	// 選択範囲の文字に文字色を適用する
-	function setColorOnSelect(color) {
-		'use strict';
-		switch (color) {
-			case 'black':
-				removeClassOnSelect('decolation-color');
-				break;
-			case 'red':
-				addDecolationClassOnSelect('decolation-color-red');
-				break;
-			case 'blue':
-				addDecolationClassOnSelect('decolation-color-blue');
-				break;
-			default:
-				break;
-		}
-	}
-
-	// 選択範囲の文字から文字色を外す
-	function removeColorOnSelect() {
-		'use strict';
-		removeClassOnSelect('decolation-color');
-	}
-
-	// 文字色ボタンに色を付ける
-	function setColor(color) {
-		'use strict';
-		console.log('set color:'+ color);
-		$('#color_btn').removeClassByRegExp(/select-\S+/).addClass('select-'+ color);
-	}
-
-	// 文字装飾ボタン(bold,italic)のactiveをトグルする
-	function toggleFont(font) {
-		'use strict';
-		const elem = document.getElementById('btn-'+ font);
-		elem.classList.toggle('active');
-	}
-
-	// カーソルのある段落にtext-alignを適用する
-	function setAlignCursorParagraph(align) {
-		'use strict';
-		$('#sentence_container').children('.paragraph').has('.cursor-row').removeClassByRegExp(/decolation-textalign-\S+/).addClass('decolation-textalign-'+ align);
-	}
+	// // --------------------------- text decolation -----------------------------------
+	//
+	// // 選択範囲の文字に文字色を適用する
+	// function setColorOnSelect(color) {
+	// 	'use strict';
+	// 	switch (color) {
+	// 		case 'black':
+	// 			removeClassOnSelect('decolation-color');
+	// 			break;
+	// 		case 'red':
+	// 			addDecolationClassOnSelect('decolation-color-red');
+	// 			break;
+	// 		case 'blue':
+	// 			addDecolationClassOnSelect('decolation-color-blue');
+	// 			break;
+	// 		default:
+	// 			break;
+	// 	}
+	// }
+	//
+	// // 選択範囲の文字から文字色を外す
+	// function removeColorOnSelect() {
+	// 	'use strict';
+	// 	removeClassOnSelect('decolation-color');
+	// }
+	//
+	// // 文字色ボタンに色を付ける
+	// function setColor(color) {
+	// 	'use strict';
+	// 	console.log('set color:'+ color);
+	// 	$('#color_btn').removeClassByRegExp(/select-\S+/).addClass('select-'+ color);
+	// }
+	//
+	// // 文字装飾ボタン(bold,italic)のactiveをトグルする
+	// function toggleFont(font) {
+	// 	'use strict';
+	// 	const elem = document.getElementById('btn-'+ font);
+	// 	elem.classList.toggle('active');
+	// }
+	//
+	// // カーソルのある段落にtext-alignを適用する
+	// function setAlignCursorParagraph(align) {
+	// 	'use strict';
+	// 	$('#sentence_container').children('.paragraph').has('.cursor-row').removeClassByRegExp(/decolation-textalign-\S+/).addClass('decolation-textalign-'+ align);
+	// }
 
 	// テキストボックスに入力できるように
 	document.getElementById('input_text_size').addEventListener('focus',function (e) {
@@ -2358,20 +2358,20 @@ $(function() {
 		return 40;
 	}
 
-	// 現在activeになっている文字装飾ボタンを配列にする
-	function getConfDecoChar() {
-		'use strict';
-		const rtnArr = [];
-		const color = document.getElementById('color_btn').className.match(/select-(\S+)/);
-
-		if (color) {
-			rtnArr.push('decolation-color-' + color[1]);
-		}
-		if (document.getElementById('btn-bold').classList.contains('active')) rtnArr.push('decolation-font-bold');
-		if (document.getElementById('btn-italic').classList.contains('active')) rtnArr.push('decolation-font-italic');
-		return rtnArr;
-	}
-
+	// // 現在activeになっている文字装飾ボタンを配列にする
+	// function getConfDecoChar() {
+	// 	'use strict';
+	// 	const rtnArr = [];
+	// 	const color = document.getElementById('color_btn').className.match(/select-(\S+)/);
+	//
+	// 	if (color) {
+	// 		rtnArr.push('decolation-color-' + color[1]);
+	// 	}
+	// 	if (document.getElementById('btn-bold').classList.contains('active')) rtnArr.push('decolation-font-bold');
+	// 	if (document.getElementById('btn-italic').classList.contains('active')) rtnArr.push('decolation-font-italic');
+	// 	return rtnArr;
+	// }
+	//
 	// // ===================================================================
 	// // 		カーソル操作(label:cursor)
 	// // ===================================================================
@@ -2887,106 +2887,106 @@ $(function() {
 	// 		$row.addClass('page-break');
 	// 	}
 	// }
-
-	// =====================================================================
-	// 	選択操作(label:select)
-	// =====================================================================
-
-	// 選択範囲のcharを配列に入れて返す
-	// bl: 実行後選択を解除するならtrue
-	function findSelect$obj(bl) {
-		'use strict';
-		const retObjArray = [];
-		const selection = getSelection();
-
-		if (selection.rangeCount === 1) {
-			// 選択範囲が一箇所の場合
-			const selRange = selection.getRangeAt(0); // 選択範囲のRange
-
-			const $chars = $('#sentence_container .row.display .char').not('.EOL');
-			const charRange = document.createRange();
-			for (let i = 0,$char; ($char = $chars.eq(i))[0] ; i++) {
-				// そのcharacterが選択範囲内にある場合に配列に入れている
-				// 現在の要素を囲む範囲をcharRangeとして設定(jqueryオブジェクトからDOM要素を取得し、引数に渡している)。selectNodeContentsをselectNodeにする、あるいは引数をテキストノードではなくspan要素にすると、選択中最初と最終文字が反応しないことがある
-				charRange.selectNodeContents($char[0].childNodes.item(0));
-				// 開始位置が同じかselectの開始位置より文字の開始位置が後ろにあり、
-				// 終了位置が同じかselectの終了位置より文字の終了位置が前にある
-				if ((charRange.compareBoundaryPoints(Range.START_TO_START,selRange) >= 0
-							&& charRange.compareBoundaryPoints(Range.END_TO_END,selRange) <= 0)) {
-					retObjArray.push($char);
-				}
-			}
-
-			selRange.detach();
-		}
-
-		charRange.detach();
-		if (bl) selection.removeAllRanges(); // 選択を解除する
-
-		return retObjArray;
-	}
-
-	// 選択範囲のcharを配列に入れて返す
-	// bl: 実行後選択を解除するならtrue
-	function findSelectElem(bl) {
-		'use strict';
-		const retObjArray = [];
-		const selection = getSelection();
-
-		if (selection.rangeCount === 1) {
-			// 選択範囲が一箇所の場合
-			const selRange = selection.getRangeAt(0); // 選択範囲のRange
-
-			// 選択範囲内にあるcharacterを配列に入れる
-			const eChars = document.querySelectorAll('#sentence_container .row.display .char');
-			const charRange = document.createRange();
-			for (let i = 0,eChar; eChar = eChars[i] ; i++) {
-				if (eChar.classList.contains('EOL')) { continue; }
-				// 現在の要素を囲む範囲をcharRangeとして設定。selectNodeContentsをselectNodeにする、あるいは引数をテキストノードではなくspan要素にすると、選択中最初と最終文字が反応しないことがある
-				charRange.selectNodeContents(eChar.childNodes.item(0));
-				// 開始位置が同じかselectの開始位置より文字の開始位置が後ろにあり、
-				// 終了位置が同じかselectの終了位置より文字の終了位置が前にある
-				if ((charRange.compareBoundaryPoints(Range.START_TO_START,selRange) >= 0
-							&& charRange.compareBoundaryPoints(Range.END_TO_END,selRange) <= 0)) {
-					retObjArray.push(eChar);
-				}
-			}
-
-			selRange.detach();
-			charRange.detach();
-		}
-
-		if (bl) selection.removeAllRanges(); // 選択を解除する
-
-		return retObjArray;
-	}
-
-	// 選択中の文字に装飾用クラスを付与する
-	// 同じ種類のクラスをすでに持っていた場合は除去する
-	function addDecolationClassOnSelect(strClass) {
-		'use strict';
-		const eSelChars = findSelectElem(true);
-		const kind = (strClass.match(/(decolation-.+)-.+/))[1];
-		const regexp = new RegExp(kind +'-\\S+');
-
-		for (let eChar of eSelChars) {
-			const rmClass = eChar.className.match(regexp);
-			eChar.classList.add(strClass);
-			if (rmClass) { eChar.classList.remove(rmClass[0]); }
-		}
-
-	}
-
-	function removeClassOnSelect(kind) {
-		'use strict';
-		const eSelChars = findSelectElem(true);
-		const regexp = new RegExp(kind +'-\\S+');
-
-		for (let eChar of eSelChars) {
-			const rmClass = eChar.className.match(regexp);
-			if (rmClass) { eChar.classList.remove(rmClass[0]); }
-		}
-	}
+	//
+	// // =====================================================================
+	// // 	選択操作(label:select)
+	// // =====================================================================
+	//
+	// // 選択範囲のcharを配列に入れて返す
+	// // bl: 実行後選択を解除するならtrue
+	// function findSelect$obj(bl) {
+	// 	'use strict';
+	// 	const retObjArray = [];
+	// 	const selection = getSelection();
+	//
+	// 	if (selection.rangeCount === 1) {
+	// 		// 選択範囲が一箇所の場合
+	// 		const selRange = selection.getRangeAt(0); // 選択範囲のRange
+	//
+	// 		const $chars = $('#sentence_container .row.display .char').not('.EOL');
+	// 		const charRange = document.createRange();
+	// 		for (let i = 0,$char; ($char = $chars.eq(i))[0] ; i++) {
+	// 			// そのcharacterが選択範囲内にある場合に配列に入れている
+	// 			// 現在の要素を囲む範囲をcharRangeとして設定(jqueryオブジェクトからDOM要素を取得し、引数に渡している)。selectNodeContentsをselectNodeにする、あるいは引数をテキストノードではなくspan要素にすると、選択中最初と最終文字が反応しないことがある
+	// 			charRange.selectNodeContents($char[0].childNodes.item(0));
+	// 			// 開始位置が同じかselectの開始位置より文字の開始位置が後ろにあり、
+	// 			// 終了位置が同じかselectの終了位置より文字の終了位置が前にある
+	// 			if ((charRange.compareBoundaryPoints(Range.START_TO_START,selRange) >= 0
+	// 						&& charRange.compareBoundaryPoints(Range.END_TO_END,selRange) <= 0)) {
+	// 				retObjArray.push($char);
+	// 			}
+	// 		}
+	//
+	// 		selRange.detach();
+	// 	}
+	//
+	// 	charRange.detach();
+	// 	if (bl) selection.removeAllRanges(); // 選択を解除する
+	//
+	// 	return retObjArray;
+	// }
+	//
+	// // 選択範囲のcharを配列に入れて返す
+	// // bl: 実行後選択を解除するならtrue
+	// function findSelectElem(bl) {
+	// 	'use strict';
+	// 	const retObjArray = [];
+	// 	const selection = getSelection();
+	//
+	// 	if (selection.rangeCount === 1) {
+	// 		// 選択範囲が一箇所の場合
+	// 		const selRange = selection.getRangeAt(0); // 選択範囲のRange
+	//
+	// 		// 選択範囲内にあるcharacterを配列に入れる
+	// 		const eChars = document.querySelectorAll('#sentence_container .row.display .char');
+	// 		const charRange = document.createRange();
+	// 		for (let i = 0,eChar; eChar = eChars[i] ; i++) {
+	// 			if (eChar.classList.contains('EOL')) { continue; }
+	// 			// 現在の要素を囲む範囲をcharRangeとして設定。selectNodeContentsをselectNodeにする、あるいは引数をテキストノードではなくspan要素にすると、選択中最初と最終文字が反応しないことがある
+	// 			charRange.selectNodeContents(eChar.childNodes.item(0));
+	// 			// 開始位置が同じかselectの開始位置より文字の開始位置が後ろにあり、
+	// 			// 終了位置が同じかselectの終了位置より文字の終了位置が前にある
+	// 			if ((charRange.compareBoundaryPoints(Range.START_TO_START,selRange) >= 0
+	// 						&& charRange.compareBoundaryPoints(Range.END_TO_END,selRange) <= 0)) {
+	// 				retObjArray.push(eChar);
+	// 			}
+	// 		}
+	//
+	// 		selRange.detach();
+	// 		charRange.detach();
+	// 	}
+	//
+	// 	if (bl) selection.removeAllRanges(); // 選択を解除する
+	//
+	// 	return retObjArray;
+	// }
+	//
+	// // 選択中の文字に装飾用クラスを付与する
+	// // 同じ種類のクラスをすでに持っていた場合は除去する
+	// function addDecolationClassOnSelect(strClass) {
+	// 	'use strict';
+	// 	const eSelChars = findSelectElem(true);
+	// 	const kind = (strClass.match(/(decolation-.+)-.+/))[1];
+	// 	const regexp = new RegExp(kind +'-\\S+');
+	//
+	// 	for (let eChar of eSelChars) {
+	// 		const rmClass = eChar.className.match(regexp);
+	// 		eChar.classList.add(strClass);
+	// 		if (rmClass) { eChar.classList.remove(rmClass[0]); }
+	// 	}
+	//
+	// }
+	//
+	// function removeClassOnSelect(kind) {
+	// 	'use strict';
+	// 	const eSelChars = findSelectElem(true);
+	// 	const regexp = new RegExp(kind +'-\\S+');
+	//
+	// 	for (let eChar of eSelChars) {
+	// 		const rmClass = eChar.className.match(regexp);
+	// 		if (rmClass) { eChar.classList.remove(rmClass[0]); }
+	// 	}
+	// }
 
 	// カーソル移動前に、selectionにカーソル位置を覚えさせる
 	function readySelection() {
@@ -3378,15 +3378,15 @@ $(function() {
 	// 	}
 	//
 	// }
-
-	// 開くボタンを押した時
-	function readyFileModal() {
-		'use strict';
-		// comFileList(getUserId());
-		container.fileList().read();
-		$('#search_file').val('').focus();
-	}
-
+	//
+	// // 開くボタンを押した時
+	// function readyFileModal() {
+	// 	'use strict';
+	// 	// comFileList(getUserId());
+	// 	container.fileList().read();
+	// 	$('#search_file').val('').focus();
+	// }
+	//
 	// // ファイル検索
 	// function filterFileNameMatch(str) {
 	// 	'use strict';
@@ -3466,54 +3466,54 @@ $(function() {
 			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveAs');
 		});
 	}
-
-	function defaultDeleteFile() {
-		'use strict';
-		const fileId = $('#file_title').attr('data-file-id');
-		if (fileId === '-1') {
-			userAlert('保存していないファイルです。');
-			return;
-		}
-		comDeleteFile(fileId);
-	}
-
-	function comDeleteFile(fileId) {
-		'use strict';
-		const userId = getUserId();
-		if (!window.confirm('本当に削除しますか:'+ getFileNameFromFileId(fileId) + '('+ fileId +')')) { return; }
-
-		$.ajax({
-			type : 'POST',
-			url : '/tategaki/DeleteFile',
-			data : {
-				user_id: userId,
-				file_id : fileId
-			},
-			context : {
-				fileId : fileId
-			},
-			dataType : 'json'
-		}).done(function (data) {
-			const successRecord = data.successRecord; // 処理行数の文字列
-			const result = data.result; // true or false の文字列
-			if (successRecord === '1' && result) {
-				// 別ファイルに移動
-				const $files = $('#file_list .file');
-				for (let i = 0,$file; ($file = $files.eq(i))[0]; i++) {
-					if ($file.attr('data-file-id') != this.fileId) {
-						comReadJsonFile($file.attr('data-file-id'));
-						break;
-					}
-				}
-				// comFileList(getUserId());
-				container.fileList().read();
-			} else {
-				alert('ファイル削除エラーです(ファイル番号：'+ this.fileId + ')');
-			}
-			}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					alert('Error:' + textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteFile ');
-				});
-	}
+	//
+	// function defaultDeleteFile() {
+	// 	'use strict';
+	// 	const fileId = $('#file_title').attr('data-file-id');
+	// 	if (fileId === '-1') {
+	// 		userAlert('保存していないファイルです。');
+	// 		return;
+	// 	}
+	// 	comDeleteFile(fileId);
+	// }
+	//
+	// function comDeleteFile(fileId) {
+	// 	'use strict';
+	// 	const userId = getUserId();
+	// 	if (!window.confirm('本当に削除しますか:'+ getFileNameFromFileId(fileId) + '('+ fileId +')')) { return; }
+	//
+	// 	$.ajax({
+	// 		type : 'POST',
+	// 		url : '/tategaki/DeleteFile',
+	// 		data : {
+	// 			user_id: userId,
+	// 			file_id : fileId
+	// 		},
+	// 		context : {
+	// 			fileId : fileId
+	// 		},
+	// 		dataType : 'json'
+	// 	}).done(function (data) {
+	// 		const successRecord = data.successRecord; // 処理行数の文字列
+	// 		const result = data.result; // true or false の文字列
+	// 		if (successRecord === '1' && result) {
+	// 			// 別ファイルに移動
+	// 			const $files = $('#file_list .file');
+	// 			for (let i = 0,$file; ($file = $files.eq(i))[0]; i++) {
+	// 				if ($file.attr('data-file-id') != this.fileId) {
+	// 					comReadJsonFile($file.attr('data-file-id'));
+	// 					break;
+	// 				}
+	// 			}
+	// 			// comFileList(getUserId());
+	// 			container.fileList().read();
+	// 		} else {
+	// 			alert('ファイル削除エラーです(ファイル番号：'+ this.fileId + ')');
+	// 		}
+	// 		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	// 				alert('Error:' + textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteFile ');
+	// 			});
+	// }
 
 	function printDocInfo() {
 		'use strict';
@@ -3530,40 +3530,40 @@ $(function() {
 	// 	'use strict';
 	// 	$('#file_title').val(filename);
 	// }
-
-	function comOpenNextFile() {
-		'use strict';
-		console.log('comOpenNextFile()');
-		const $currentFileLi = $('#file_list > li').has('.file[data-file-id="'+ $('#file_title').attr('data-file-id') +'"]');
-
-		let $nextFile;
-		if ($currentFileLi[0]) {
-			$nextFile = $currentFileLi.nextAll('li').first().children('.file');
-		} else {
-			$nextFile = $('#file_list .file').first();
-		}
-
-		if ($nextFile[0]) comReadJsonFile($nextFile.attr('data-file-id'));
-	}
-
-	function comOpenPrevFile() {
-		'use strict';
-		console.log('comOpenPrevFile()');
-		const $currentFileLi = $('#file_list > li').has('.file[data-file-id="'+ $('#file_title').attr('data-file-id') +'"]');
-		const $nextFile = $currentFileLi.prevAll('li').first().children('.file');
-		if ($nextFile[0]) comReadJsonFile($nextFile.attr('data-file-id'));
-	}
-
-	function comOpenFile(filename) {
-		'use strict';
-		console.log('comOpenFile('+ filename +')');
-				const $file = getFileObjectFromFileName(filename);
-
-				if (!$file[0]) { return; }
-
-				comReadJsonFile($file.attr('data-file-id'));
-
-				}
+	//
+	// function comOpenNextFile() {
+	// 	'use strict';
+	// 	console.log('comOpenNextFile()');
+	// 	const $currentFileLi = $('#file_list > li').has('.file[data-file-id="'+ $('#file_title').attr('data-file-id') +'"]');
+	//
+	// 	let $nextFile;
+	// 	if ($currentFileLi[0]) {
+	// 		$nextFile = $currentFileLi.nextAll('li').first().children('.file');
+	// 	} else {
+	// 		$nextFile = $('#file_list .file').first();
+	// 	}
+	//
+	// 	if ($nextFile[0]) comReadJsonFile($nextFile.attr('data-file-id'));
+	// }
+	//
+	// function comOpenPrevFile() {
+	// 	'use strict';
+	// 	console.log('comOpenPrevFile()');
+	// 	const $currentFileLi = $('#file_list > li').has('.file[data-file-id="'+ $('#file_title').attr('data-file-id') +'"]');
+	// 	const $nextFile = $currentFileLi.prevAll('li').first().children('.file');
+	// 	if ($nextFile[0]) comReadJsonFile($nextFile.attr('data-file-id'));
+	// }
+	//
+	// function comOpenFile(filename) {
+	// 	'use strict';
+	// 	console.log('comOpenFile('+ filename +')');
+	// 			const $file = getFileObjectFromFileName(filename);
+	//
+	// 			if (!$file[0]) { return; }
+	//
+	// 			comReadJsonFile($file.attr('data-file-id'));
+	//
+	// 			}
 
 				function getFileObjectFromFileName(filename) {
 					'use strict';
@@ -3745,235 +3745,235 @@ $(function() {
 					return fileId;
 				}
 
-				// ====================================================
-				// 	ユーティリティ(label:utility)
-				// ====================================================
-				$.fn.extend( {
-					nextObj:function(selector,bl) {
-						'use strict';
-						// selectorに合致するオブジェクト群の中で、$objの次のオブジェクトを返す
-						// bl: trueなら、最後のオブジェクトからnextObjをすると最初のオブジェクトを返す
-						const $objs = $(selector);
-						const objLen = $objs.length;
-						const currentIndex = $objs.index(this);
-
-						if (currentIndex === objLen -1) {
-							if (bl) {
-								return $objs.first();
-							} else {
-								return $();
-							}
-						}
-
-						return $objs.eq(currentIndex + 1);
-					},
-					prevObj:function (selector,bl) {
-						'use strict';
-						const $objs = $(selector);
-						const currentIndex = $objs.index(this);
-						if (currentIndex === 0) {
-							if (bl) {
-								return $objs.last();
-							} else {
-								return $();
-							}
-						} else {
-							return $objs.eq(currentIndex -1);
-						}
-					},
-					addId:function (id) {
-						'use strict';
-						$('#'+id).removeAttr('id');
-						this.attr('id',id);
-						return this;
-					},
-					// DOM要素の文字列表現を返す
-					toString:function () {
-						'use strict';
-						const $tmp = $('<div>');
-						return $tmp.append(this.clone()).html();
-					},
-					// ２つの要素の中心点同士の距離を求める
-					computeDistanceBetweenObj:function($other) {
-						'use strict';
-						const tCenterPos = this.computeCenterPoint();
-						const oCenterPos = $other.computeCenterPoint();
-						return jQuery.computeDistanceP2P(tCenterPos.x,tCenterPos.y,oCenterPos.x,oCenterPos.y);
-					},
-					// ある点とオブジェクトの中心点の距離を求める
-					computeDistanceP2O:function(po) {
-						'use strict';
-						// ex: po = {x:10,y:10}
-						const objPos = this.computeCenterPoint();
-						return jQuery.computeDistanceP2P(po.x,po.y,objPos.x,objPos.y);
-					},
-					// オブジェクトの中心点の座標を求める
-					computeCenterPoint:function() {
-						'use strict';
-						const objPos = this.getPosObj();
-						const objWidth = parseInt(this.css('width'));
-						const objHeight = parseInt(this.css('height'));
-						return {
-							x: objPos.x + objWidth/2,
-							y: objPos.y + objHeight/2
-						}
-					},
-					// window上の絶対座標
-					getPosObj:function() {
-						'use strict';
-						const offset = this.offset();
-						const x = offset.left;
-						const y = offset.top;
-						return {
-							'x' : x,
-							'y' : y
-						}
-					},
-					// 正規表現にマッチしたクラスを取り除く
-					// 複数クラスを外す場合にはgオプション
-					removeClassByRegExp:function (regexp) {
-						'use strict';
-						const strClass = this.attr('class') || ''; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
-						const classArr = strClass.match(regexp) || []; // 正規表現にマッチしない場合、nullが返ってくる
-						for (let className of classArr) {
-							this.removeClass(className);
-						}
-						return this;
-					},
-					hasClassByRegExp:function(regexp) {
-						'use strict';
-						const strClass = this.attr('class') || '';
-						return regexp.test(strClass);
-					},
-					// 正規表現に合うクラスを文字列で返す
-					getOneClassByRegExp:function(regexp) {
-						'use strict';
-						const strClass = this.attr('class') || ''; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
-						return regexp.test(strClass) ? strClass.match(regexp)[0] : null;
-					},
-					addCursor: function(opt_bl) {
-						'use strict';
-						// opt_bl: trueなら、カーソルを画面中央に配置する(二行以上カーソル行がはみ出した場合)
-						console.log('addCursor');
-						if (!this.hasClass('char')) return this;
-
-						const $prevCursor = $('.cursor');
-						const $prevChar = this.prev('.char');
-
-						$prevCursor.removeClass('cursor');
-						console.log('after prevcursor add class');
-						this.addClass('cursor');
-						gCursor.addCursorRow();
-
-						// fontが付いている文字の次にカーソルが来た場合、そのfontをオンにする
-						if ($prevChar.hasClass('decolation-font-bold')) {
-							document.getElementById('btn-bold').classList.add('active');
-						} else {
-							document.getElementById('btn-bold').classList.remove('active');
-						}
-						if ($prevChar.hasClass('decolation-font-italic')) {
-							document.getElementById('btn-italic').classList.add('active');
-						} else {
-							document.getElementById('btn-italic').classList.remove('active');
-						}
-
-						// changeDisplayRow(opt_bl);
-						// changeDisplayChar();
-						// printDocInfo();
-						return this;
-					}
-				});
-
-				$.extend({
-					// ２点間の距離を求める
-					computeDistanceP2P:function(x1,y1,x2,y2) {
-						'use strict';
-						// ２乗を使っているので、戻り値は必ず正の数になる
-						// √{(b.x - a.x)^2+ (b.y - a.y)^2}
-						return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
-					}
-				});
-
-				// selectorに合致するオブジェクト群の中で、$objの次のオブジェクトを返す
-				function nextObj(selector,$obj) {
-					'use strict';
-					const $objs = $(selector);
-					const currentIndex = $objs.index($obj);
-					return $objs.eq(currentIndex + 1);
-				}
-
-				function prevObj(selector,$obj) {
-					'use strict';
-					const $objs = $(selector);
-					const currentIndex = $objs.index($obj);
-					const newObj = $objs.eq(currentIndex - 1);
-
-					if (newObj[0] === $objs.last()[0]) {
-						// eq()に負の引数を渡すと、最後の要素に戻ってしまうのを防止
-						return $();
-					} else {
-						return newObj;
-					}
-				}
-
-				function hasClass(elem,classRegExp) {
-					'use strict';
-					if (classRegExp.test(elem.className)) {
-						return true;
-					}
-					return false;
-				}
-
-				// baseArrayをcnt個ずつの配列に分割する
-				function splitArray(baseArray,cnt) {
-					'use strict';
-					const b = baseArray.length;
-					const newArray = [];
-
-					for (let i = 0,j,p; i < Math.ceil(b/cnt); i++) {
-						j = i*cnt;
-						p = baseArray.slice(j,j+cnt);
-						newArray.push(p);
-					}
-					return newArray;
-				}
-
-				// 要素内を空にする
-				function empty(elem) {
-					'use strict';
-					while (elem.childNodes.length > 0) {
-						elem.removeChild(elem.firstChild);
-					}
-				}
-
-				// ノードリストelementsのうち、targetのインデックスを返す
-				function index(target,elements) {
-					'use strict';
-					for (let i = 0,elem; elem = elements[i];i++) {
-						if (elem == target)
-							return i;
-					}
-
-					return -1;
-				}
-
-				function getUserId() {
-					'use strict';
-					const userId = $('#site_title').attr('data-user-id');
-					return userId;
-				}
-
-				// ====================================================
-				// 	initialize(label:init)
-				// ====================================================
-
+				// // ====================================================
+				// // 	ユーティリティ(label:utility)
+				// // ====================================================
+				// $.fn.extend( {
+				// 	nextObj:function(selector,bl) {
+				// 		'use strict';
+				// 		// selectorに合致するオブジェクト群の中で、$objの次のオブジェクトを返す
+				// 		// bl: trueなら、最後のオブジェクトからnextObjをすると最初のオブジェクトを返す
+				// 		const $objs = $(selector);
+				// 		const objLen = $objs.length;
+				// 		const currentIndex = $objs.index(this);
+				//
+				// 		if (currentIndex === objLen -1) {
+				// 			if (bl) {
+				// 				return $objs.first();
+				// 			} else {
+				// 				return $();
+				// 			}
+				// 		}
+				//
+				// 		return $objs.eq(currentIndex + 1);
+				// 	},
+				// 	prevObj:function (selector,bl) {
+				// 		'use strict';
+				// 		const $objs = $(selector);
+				// 		const currentIndex = $objs.index(this);
+				// 		if (currentIndex === 0) {
+				// 			if (bl) {
+				// 				return $objs.last();
+				// 			} else {
+				// 				return $();
+				// 			}
+				// 		} else {
+				// 			return $objs.eq(currentIndex -1);
+				// 		}
+				// 	},
+				// 	addId:function (id) {
+				// 		'use strict';
+				// 		$('#'+id).removeAttr('id');
+				// 		this.attr('id',id);
+				// 		return this;
+				// 	},
+				// 	// DOM要素の文字列表現を返す
+				// 	toString:function () {
+				// 		'use strict';
+				// 		const $tmp = $('<div>');
+				// 		return $tmp.append(this.clone()).html();
+				// 	},
+				// 	// ２つの要素の中心点同士の距離を求める
+				// 	computeDistanceBetweenObj:function($other) {
+				// 		'use strict';
+				// 		const tCenterPos = this.computeCenterPoint();
+				// 		const oCenterPos = $other.computeCenterPoint();
+				// 		return jQuery.computeDistanceP2P(tCenterPos.x,tCenterPos.y,oCenterPos.x,oCenterPos.y);
+				// 	},
+				// 	// ある点とオブジェクトの中心点の距離を求める
+				// 	computeDistanceP2O:function(po) {
+				// 		'use strict';
+				// 		// ex: po = {x:10,y:10}
+				// 		const objPos = this.computeCenterPoint();
+				// 		return jQuery.computeDistanceP2P(po.x,po.y,objPos.x,objPos.y);
+				// 	},
+				// 	// オブジェクトの中心点の座標を求める
+				// 	computeCenterPoint:function() {
+				// 		'use strict';
+				// 		const objPos = this.getPosObj();
+				// 		const objWidth = parseInt(this.css('width'));
+				// 		const objHeight = parseInt(this.css('height'));
+				// 		return {
+				// 			x: objPos.x + objWidth/2,
+				// 			y: objPos.y + objHeight/2
+				// 		}
+				// 	},
+				// 	// window上の絶対座標
+				// 	getPosObj:function() {
+				// 		'use strict';
+				// 		const offset = this.offset();
+				// 		const x = offset.left;
+				// 		const y = offset.top;
+				// 		return {
+				// 			'x' : x,
+				// 			'y' : y
+				// 		}
+				// 	},
+				// 	// 正規表現にマッチしたクラスを取り除く
+				// 	// 複数クラスを外す場合にはgオプション
+				// 	removeClassByRegExp:function (regexp) {
+				// 		'use strict';
+				// 		const strClass = this.attr('class') || ''; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
+				// 		const classArr = strClass.match(regexp) || []; // 正規表現にマッチしない場合、nullが返ってくる
+				// 		for (let className of classArr) {
+				// 			this.removeClass(className);
+				// 		}
+				// 		return this;
+				// 	},
+				// 	hasClassByRegExp:function(regexp) {
+				// 		'use strict';
+				// 		const strClass = this.attr('class') || '';
+				// 		return regexp.test(strClass);
+				// 	},
+				// 	// 正規表現に合うクラスを文字列で返す
+				// 	getOneClassByRegExp:function(regexp) {
+				// 		'use strict';
+				// 		const strClass = this.attr('class') || ''; // classが一つもない場合、attr()はundefinedを返してくるため、match()が使えない
+				// 		return regexp.test(strClass) ? strClass.match(regexp)[0] : null;
+				// 	},
+				// 	addCursor: function(opt_bl) {
+				// 		'use strict';
+				// 		// opt_bl: trueなら、カーソルを画面中央に配置する(二行以上カーソル行がはみ出した場合)
+				// 		console.log('addCursor');
+				// 		if (!this.hasClass('char')) return this;
+				//
+				// 		const $prevCursor = $('.cursor');
+				// 		const $prevChar = this.prev('.char');
+				//
+				// 		$prevCursor.removeClass('cursor');
+				// 		console.log('after prevcursor add class');
+				// 		this.addClass('cursor');
+				// 		gCursor.addCursorRow();
+				//
+				// 		// fontが付いている文字の次にカーソルが来た場合、そのfontをオンにする
+				// 		if ($prevChar.hasClass('decolation-font-bold')) {
+				// 			document.getElementById('btn-bold').classList.add('active');
+				// 		} else {
+				// 			document.getElementById('btn-bold').classList.remove('active');
+				// 		}
+				// 		if ($prevChar.hasClass('decolation-font-italic')) {
+				// 			document.getElementById('btn-italic').classList.add('active');
+				// 		} else {
+				// 			document.getElementById('btn-italic').classList.remove('active');
+				// 		}
+				//
+				// 		// changeDisplayRow(opt_bl);
+				// 		// changeDisplayChar();
+				// 		// printDocInfo();
+				// 		return this;
+				// 	}
+				// });
+				//
+				// $.extend({
+				// 	// ２点間の距離を求める
+				// 	computeDistanceP2P:function(x1,y1,x2,y2) {
+				// 		'use strict';
+				// 		// ２乗を使っているので、戻り値は必ず正の数になる
+				// 		// √{(b.x - a.x)^2+ (b.y - a.y)^2}
+				// 		return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
+				// 	}
+				// });
+				//
+				// // selectorに合致するオブジェクト群の中で、$objの次のオブジェクトを返す
+				// function nextObj(selector,$obj) {
+				// 	'use strict';
+				// 	const $objs = $(selector);
+				// 	const currentIndex = $objs.index($obj);
+				// 	return $objs.eq(currentIndex + 1);
+				// }
+				//
+				// function prevObj(selector,$obj) {
+				// 	'use strict';
+				// 	const $objs = $(selector);
+				// 	const currentIndex = $objs.index($obj);
+				// 	const newObj = $objs.eq(currentIndex - 1);
+				//
+				// 	if (newObj[0] === $objs.last()[0]) {
+				// 		// eq()に負の引数を渡すと、最後の要素に戻ってしまうのを防止
+				// 		return $();
+				// 	} else {
+				// 		return newObj;
+				// 	}
+				// }
+				//
+				// function hasClass(elem,classRegExp) {
+				// 	'use strict';
+				// 	if (classRegExp.test(elem.className)) {
+				// 		return true;
+				// 	}
+				// 	return false;
+				// }
+				//
+				// // baseArrayをcnt個ずつの配列に分割する
+				// function splitArray(baseArray,cnt) {
+				// 	'use strict';
+				// 	const b = baseArray.length;
+				// 	const newArray = [];
+				//
+				// 	for (let i = 0,j,p; i < Math.ceil(b/cnt); i++) {
+				// 		j = i*cnt;
+				// 		p = baseArray.slice(j,j+cnt);
+				// 		newArray.push(p);
+				// 	}
+				// 	return newArray;
+				// }
+				//
+				// // 要素内を空にする
+				// function empty(elem) {
+				// 	'use strict';
+				// 	while (elem.childNodes.length > 0) {
+				// 		elem.removeChild(elem.firstChild);
+				// 	}
+				// }
+				//
+				// // ノードリストelementsのうち、targetのインデックスを返す
+				// function index(target,elements) {
+				// 	'use strict';
+				// 	for (let i = 0,elem; elem = elements[i];i++) {
+				// 		if (elem == target)
+				// 			return i;
+				// 	}
+				//
+				// 	return -1;
+				// }
+				//
+				// function getUserId() {
+				// 	'use strict';
+				// 	const userId = $('#site_title').attr('data-user-id');
+				// 	return userId;
+				// }
+				//
+				// // ====================================================
+				// // 	initialize(label:init)
+				// // ====================================================
+				//
 				// setCursorLine();
 				// defaultNewFile();
 				// comFileList(globalUserId);
 				// container.fileList().read();
 				// Event
 				// document.addEventListener('keydown',keydownOnDoc ,false);
-				addFocusEvent('file_title');
+				// addFocusEvent('file_title');
 				// $('body').on('keyup','#search_file',keyupInSearchFileInput);
 				// $('body').on('click','#file_list .file',function (e) {
 				// 	'use strict';
@@ -3987,55 +3987,55 @@ $(function() {
 				// });
 				// $('body').on('click','.paragraph > .row',moveCursorToClickPos);
 				// $('body').on('mousewheel','#sentence_container',wheelEvent);
-				document.getElementById('menu_new').addEventListener('click',function (e) { defaultNewFile(); },false);
-				document.getElementById('menu_save').addEventListener('click',function (e) { comSaveJsonFile(); },false);
-				document.getElementById('menu_delete').addEventListener('click',function (e) { defaultDeleteFile(); },false);
-				document.getElementById('modal_fileopen_link').addEventListener('click',function (e) { readyFileModal(); },false);
-				document.getElementById('test').addEventListener('click',function (e) {
-					'use strict';
-					// addDisplayRow(0,getDisplayRowLen());
-					// gCursor.init();
-					// addPageBreak();
-					// printDocInfo(); // page-breakなどがなければフリーズする(計算に無限ループ？)
-				},false);
-				$(window).resize(function () {
-					'use strict';
-					// resetDisplayChar();
-				});
+				// document.getElementById('menu_new').addEventListener('click',function (e) { defaultNewFile(); },false);
+				// document.getElementById('menu_save').addEventListener('click',function (e) { comSaveJsonFile(); },false);
+				// document.getElementById('menu_delete').addEventListener('click',function (e) { defaultDeleteFile(); },false);
+				// document.getElementById('modal_fileopen_link').addEventListener('click',function (e) { readyFileModal(); },false);
+				// document.getElementById('test').addEventListener('click',function (e) {
+				// 	'use strict';
+				// 	// addDisplayRow(0,getDisplayRowLen());
+				// 	// gCursor.init();
+				// 	// addPageBreak();
+				// 	// printDocInfo(); // page-breakなどがなければフリーズする(計算に無限ループ？)
+				// },false);
+				// $(window).resize(function () {
+				// 	'use strict';
+				// 	// resetDisplayChar();
+				// });
 				// $('#file_list_modal').on('shown.bs.modal',function (e) {
 				// 	'use strict';
 				// 	// modalが完全に表示されてからのイベント
 				// 	$('#search_file').focus();
 				// });
-				$('div.modal').on('shown.bs.modal',function (e) {
-					'use strict';
-					// modalが完全に表示されてからのイベント
-					// document.removeEventListener('keydown',keydownOnDoc,false);
-					// container.removeKeydownEventListener();
-				});
-				$('div.modal').on('hidden.bs.modal',function (e) {
-					'use strict';
-					if ($('#command').hasClass('active')) { return; }
-					// document.addEventListener('keydown',keydownOnDoc,false);
-					// container.addKeydownEventListener();
-				});
-				function addFocusEvent(id) {
-					'use strict';
-					document.getElementById(id).addEventListener('focus',function (e) {
-						document.removeEventListener('keydown',keydownOnDoc,false);
-					},false);
-					document.getElementById(id).addEventListener('blur',function (e) {
-						document.addEventListener('keydown',keydownOnDoc,false);
-					});
-					document.getElementById(id).addEventListener('keyup',function (e) {
-						'use strict';
-						const keycode = getKeyCode(e);
-						if (keycode === 13) {
-							// enter
-						}
-					});
-				}
-
+				// $('div.modal').on('shown.bs.modal',function (e) {
+				// 	'use strict';
+				// 	// modalが完全に表示されてからのイベント
+				// 	// document.removeEventListener('keydown',keydownOnDoc,false);
+				// 	// container.removeKeydownEventListener();
+				// });
+				// $('div.modal').on('hidden.bs.modal',function (e) {
+				// 	'use strict';
+				// 	if ($('#command').hasClass('active')) { return; }
+				// 	// document.addEventListener('keydown',keydownOnDoc,false);
+				// 	// container.addKeydownEventListener();
+				// });
+				// function addFocusEvent(id) {
+				// 	'use strict';
+				// 	document.getElementById(id).addEventListener('focus',function (e) {
+				// 		document.removeEventListener('keydown',keydownOnDoc,false);
+				// 	},false);
+				// 	document.getElementById(id).addEventListener('blur',function (e) {
+				// 		document.addEventListener('keydown',keydownOnDoc,false);
+				// 	});
+				// 	document.getElementById(id).addEventListener('keyup',function (e) {
+				// 		'use strict';
+				// 		const keycode = getKeyCode(e);
+				// 		if (keycode === 13) {
+				// 			// enter
+				// 		}
+				// 	});
+				// }
+/*
 				// palette
 				// color
 				document.getElementById('color_btn').addEventListener('click',function (e) {
@@ -4103,34 +4103,34 @@ $(function() {
 						}
 					}
 				},false);
-				// selection
-				// 選択範囲に文字装飾が施されていればアクティブに
-				document.getElementById('sentence_container').addEventListener('mouseup',function(e) {
-					'use strict';
-					const eSelChars = findSelectElem();
-					let bBold = false;
-					let bItalic = false;
-
-					for (let eChar of eSelChars) {
-						if (eChar.classList.contains('decolation-font-bold')) { bBold = true; }
-						if (eChar.classList.contains('decolation-font-italic')) { bItalic = true; }
-					}
-					if (bBold) {
-						document.getElementById('btn-bold').classList.add('active');
-					} else {
-						document.getElementById('btn-bold').classList.remove('active');
-					}
-					if (bItalic) {
-						document.getElementById('btn-italic').classList.add('active');
-					} else {
-						document.getElementById('btn-italic').classList.remove('active');
-					}
-
-					// 選択した最後のcharにカーソルを当てる
-					if (eSelChars.length > 0) {
-						$(eSelChars[eSelChars.length -1]).nextObj('#sentence_container .char').addCursor();
-					}
-				},false);
+				// // selection
+				// // 選択範囲に文字装飾が施されていればアクティブに
+				// document.getElementById('sentence_container').addEventListener('mouseup',function(e) {
+				// 	'use strict';
+				// 	const eSelChars = findSelectElem();
+				// 	let bBold = false;
+				// 	let bItalic = false;
+				//
+				// 	for (let eChar of eSelChars) {
+				// 		if (eChar.classList.contains('decolation-font-bold')) { bBold = true; }
+				// 		if (eChar.classList.contains('decolation-font-italic')) { bItalic = true; }
+				// 	}
+				// 	if (bBold) {
+				// 		document.getElementById('btn-bold').classList.add('active');
+				// 	} else {
+				// 		document.getElementById('btn-bold').classList.remove('active');
+				// 	}
+				// 	if (bItalic) {
+				// 		document.getElementById('btn-italic').classList.add('active');
+				// 	} else {
+				// 		document.getElementById('btn-italic').classList.remove('active');
+				// 	}
+				//
+				// 	// 選択した最後のcharにカーソルを当てる
+				// 	if (eSelChars.length > 0) {
+				// 		$(eSelChars[eSelChars.length -1]).nextObj('#sentence_container .char').addCursor();
+				// 	}
+				// },false);
 				// align
 				setTextAlignClickEvent('left');
 				setTextAlignClickEvent('center');
@@ -4141,5 +4141,6 @@ $(function() {
 						setAlignCursorParagraph(align);
 					},false);
 				}
+				*/
 });
 
