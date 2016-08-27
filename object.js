@@ -88,7 +88,7 @@ Util.createCharElement = (function () {
 		if (/[。、,.,]/.test(char))
 			eChar.classList.add('vertical-dot');
 		else if (/[「『]/.test(char))
-			eChar.classList.add('vertical-before-kagi-brachet');
+			eChar.classList.add('vertical-before-kagi-bracket');
 		else if (/[」』]/.test(char))
 			eChar.classList.add('vertical-after-kagi-bracket');
 		else if (/[（\[<\{【\(［〈]/.test(char))
@@ -319,19 +319,12 @@ Util.createDirectoryElement = (function () {
 		}
 
 		// --参照取得
-		
+
 		sentenceContainer() {
 			return this._sentenceContainer;
 		}
 
 		// --判定
-
-		hasActiveBold() {
-			return document.getElementById('btn-bold').classList.contains('active');
-		}
-		hasActiveItalic() {
-			return document.getElementById('btn-italic').classList.contains('active');
-		}
 
 		// --Style
 
@@ -360,6 +353,7 @@ Util.createDirectoryElement = (function () {
 			getSelection().removeAllRanges(); // 選択を解除する
 			return this;
 		}
+		// trueで付与、falseで解除
 		italic(bl) {
 			const chars = this.sentenceContainer().selectChars();
 			for (let char of chars) {
@@ -376,6 +370,15 @@ Util.createDirectoryElement = (function () {
 			getSelection().removeAllRanges(); // 選択を解除する
 			return this;
 		}
+		fontSize(size) {
+			const chars = this.sentenceContainer().selectChars();
+			for (let char of chars) {
+				char.fontSize(size);
+			}
+			getSelection().removeAllRanges(); // 選択を解除する
+			return this;
+		}
+		// 'center','left','right'
 		align(align) {
 			const cursorParagraph = this.sentenceContainer().cursor().getParagraph();
 			cursorParagraph.align(align);
@@ -418,7 +421,7 @@ Util.createDirectoryElement = (function () {
 				filterInputElem.value = '';
 				filterInputElem.focus();
 				this.sentenceContainer().fileList().resetList();
-			},false);
+			}.bind(this),false);
 
 			// モーダル開閉
 			$('div.modal').on('shown.bs.modal',function (e) {
@@ -438,7 +441,7 @@ Util.createDirectoryElement = (function () {
 				this.addColor(this.colorButton());
 			}.bind(this),false);
 			// 文字色ドロップダウン
-			this.setColorSelectClickEvent();
+			this.addColorSelectClickEvent();
 
 			// bold italic
 			document.getElementById('btn-bold').addEventListener('click',function (e) {
@@ -453,23 +456,26 @@ Util.createDirectoryElement = (function () {
 			}.bind(this),false);
 
 			// align
-			this.setAlignClickEvent();
+			this.addAlignClickEvent();
+
+			// font size
+			this.addFontSizeEvnet();
 		}
 
 		// 文字色(ドロップダウンの方)をクリックするとボタンの色が変わるイベントを付加する
-		setColorSelectClickEvent() {
-			const eSelectColors = document.querySelectorAll('#color_dropdown li');
+		addColorSelectClickEvent() {
+			const eSelectColors = document.querySelectorAll('#color_dropdown a');
 			for (let i = 0,eSelColor; eSelColor = eSelectColors[i]; i++) {
-				const color = eSelColor.id.match(/select_color_(\S+)/);
+				const color = eSelColor.dataset.color;
 				eSelColor.addEventListener('click',function (e) {
-					this.colorButton(color[1]);
-					this.addColor(color[1]);
+					this.colorButton(color);
+					this.addColor(color);
 				}.bind(this),false);
 			}
 			return this;
 		}
 		// 段落のtext-align
-		setAlignClickEvent() {
+		addAlignClickEvent() {
 			const eAligns = document.querySelectorAll('#align_btns button');
 			for (let i = 0,eAlign; eAlign = eAligns[i]; i++) {
 				eAlign.addEventListener('click',function (e) {
@@ -477,6 +483,21 @@ Util.createDirectoryElement = (function () {
 					this.align(align[1]);
 				}.bind(this),false);
 			}
+		}
+
+		// font size
+
+		addFontSizeEvnet() {
+			const eFontSizeDropdowns = document.querySelectorAll('#fontsize_dropdown a');
+			const eInput = document.getElementById('input_text_size');
+			for (let i = 0,eFontSize; eFontSize = eFontSizeDropdowns[i]; i++) {
+				eFontSize.addEventListener('click',function (e) {
+					const size = parseInt(e.target.dataset.size);
+					eInput.value = size;
+					this.fontSize(size);
+				}.bind(this),false);
+			}
+			return this;
 		}
 	}
 	class CommandLine {
@@ -668,7 +689,11 @@ Util.createDirectoryElement = (function () {
 				case ': ｗ':
 				case ':さヴぇ':
 				case ':ｓ':
-						 this.sentenceContainer().saveFile();
+						 if (command[1]) {
+							 this.saveAsFile(command[1]);
+						 } else {
+							 this.sentenceContainer().saveFile();
+						 }
 						 break;
 				case ':e':
 				case ':o':
@@ -677,20 +702,42 @@ Util.createDirectoryElement = (function () {
 				case ':お':
 				case ':おぺｎ':
 						 if (command[1]) {
+							 const files = this.fileList().findFile(commnad[1]);
+							 files.length > 0 && files[0].open();
 						 } else {
 							 this.sentenceContainer().newFile();
 						 }
-
 						 break;
 				case ':new':
 				case ':n':
 				case ':ねｗ':
 				case ':ｎ':
+						 this.sentenceContainer().newFile(command[1]);
+						 break;
+				case ':delete':
+				case ':del':
+				case ':d':
+				case ':rm':
+				case ':でぇて':
+				case ':でｌ':
+				case ':ｄ':
+				case ':ｒｍ':
 						 if (command[1]) {
-							 this.sentenceContainer().newFile(command[1]);
+							 this.fileList().deleteFile(command[1]);
 						 } else {
-							 this.sentenceContainer().newFile();
+							 const currentFile = this.fileList().currentFile();
+							 currentFile && currentFile.delete();
 						 }
+						 break;
+				case ':next':
+				case ':ねｘｔ':
+						 // 次のファイルを開く
+						 this.fileList().openNextFile();
+						 break;
+				case ':prev':
+				case ':ｐれｖ':
+						 // 前のファイルを開く
+						 this.fileList().openPrevFile();
 						 break;
 				case ':noh':
 				case ':のｈ':
@@ -705,6 +752,7 @@ Util.createDirectoryElement = (function () {
 	class Cursor {
 		constructor(sentenceContainer) {
 			this._sentenceContainer = sentenceContainer;
+			this._cursorLineElem = document.getElementById('cursor_line');
 		}
 		init() {
 			const firstChar = this.sentenceContainer().firstChild().firstChild().firstChild();
@@ -728,6 +776,9 @@ Util.createDirectoryElement = (function () {
 		getParagraph() {
 			return this.getRow().paragraph();
 		}
+		cursorLineElem() {
+			return this._cursorLineElem;
+		}
 
 		// --参照操作
 
@@ -735,27 +786,30 @@ Util.createDirectoryElement = (function () {
 			this._char = newChar;
 			return this;
 		}
-		addCursor(char) {
-			if (this.getChar()) this.getChar().removeClass('cursor');
+		addCursor(char,isShift) {
+			if (this.getChar()) {
+				this.memorySelection();
+				this.getChar().removeClass('cursor');
+			}
 			char.addClass('cursor');
 			this.setChar(char);
 
 			// 前の文字に装飾があれば、そのボタンをオンにする
 			const prevChar = char.prevCharOnParagraph();
-			if (prevChar) {
-				const menu = this.sentenceContainer().menu();
-				menu.colorButton(prevChar.color());
-				menu.boldButton(prevChar.isBold());
-				menu.italicButton(prevChar.isItalic());
-			}
+			const menu = this.sentenceContainer().menu();
+			menu.colorButton(prevChar ? prevChar.color() : 'black');
+			menu.boldButton(prevChar ? prevChar.isBold() : false);
+			menu.italicButton(prevChar ? prevChar.isItalic() : false);
+
+			// シフトキーが押されながらなら、選択範囲を広げる
+			this.extendSelection(isShift);
 			return this;
 		}
 
 		// --Status
 
 		getPosMemory() {
-			const eCursorLine = document.getElementById('cursor_line');
-			const eCharPoses = eCursorLine.children;
+			const eCharPoses = this.cursorLineElem().children;
 			for (let i = 0,eCharPos; eCharPos = eCharPoses[i]; i++) {
 				if (eCharPos.classList.contains('cursor-pos-memory'))
 					return i;
@@ -767,9 +821,10 @@ Util.createDirectoryElement = (function () {
 			if (index === oldPos) {
 				return this;
 			}
-			const eCursorLine = document.getElementById('cursor_line');
-			const eCharPoses = eCursorLine.children;
+			const eCharPoses = this.cursorLineElem().children;
 			if (eCharPoses[oldPos]) eCharPoses[oldPos].classList.remove('cursor-pos-memory');
+			const maxIndex = eCharPoses.length - 1;
+			if (index > maxIndex) index = maxIndex;
 			eCharPoses[index].classList.add('cursor-pos-memory');
 			return this;
 		}
@@ -795,7 +850,7 @@ Util.createDirectoryElement = (function () {
 				cursorChar.before(newChar);
 			}
 
-			cursorChar.paragraph().cordinate();
+			cursorChar.paragraph().cordinate().checkKinsoku();
 			this.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えず取得しなおし
 			this.sentenceContainer().changeDisplay(true);
 			return this;
@@ -812,8 +867,8 @@ Util.createDirectoryElement = (function () {
 				for (let moveRow of cursorParagraph.rows()) {
 					moveRow.moveLastBefore();
 				}
-				newParagraph.cordinate();
-				this.sentenceContainer().changeDisplay();
+				newParagraph.cordinate().checkKinsoku();
+				this.sentenceContainer().changeDisplay(true).breakPage();
 				return this;
 			}
 
@@ -821,7 +876,7 @@ Util.createDirectoryElement = (function () {
 			//  カーソルの前の位置にある文字を削除する(行頭なら行をまたいで前の文字)
 			if (!(cursorChar.isFirst() && cursorChar.row().isFirst())) {
 				cursorChar.prevChar().delete();
-				this.sentenceContainer().changeDisplay();
+				this.sentenceContainer().changeDisplay(true).breakPage();
 				return this;
 			}
 		}
@@ -833,45 +888,45 @@ Util.createDirectoryElement = (function () {
 			// 新しくできた段落の最初の文字にカーソルを移動する
 			const newParagraph = cursorParagraph.next(); // divide()で新しく挿入された段落
 			newParagraph.firstChild().firstChild().addCursor().setPosMemory();
-			this.sentenceContainer().changeDisplay(true);
+			this.sentenceContainer().changeDisplay(true).breakPage();
 			return this;
 		}
 
 		// --カーソル操作
 
 		// カーソル移動
-		moveNext() {
+		moveNext(isShift) {
 			const nextChar = this.getChar().next();
 			if (!nextChar) return this;
-			nextChar.slideNextCursor().addCursor().setPosMemory();
+			nextChar.slideNextCursor().addCursor(isShift).setPosMemory();
 			this.sentenceContainer().changeDisplay();
 			return this;
 		}
-		movePrev() {
+		movePrev(isShift) {
 			const prevChar = this.getChar().prev();
 			if (!prevChar) return this;
-			prevChar.slidePrevCursor().addCursor().setPosMemory();
+			prevChar.slidePrevCursor().addCursor(isShift).setPosMemory();
 			this.sentenceContainer().changeDisplay();
 			return this;
 		}
-		moveRight() {
+		moveRight(isShift) {
 			const prevRow = this.getChar().row().prev();
-			this.moveRow(prevRow);
+			this.moveRow(prevRow,isShift);
 			this.sentenceContainer().changeDisplay();
 			return this;
 		}
-		moveLeft() {
+		moveLeft(isShift) {
 			const nextRow = this.getChar().row().next();
-			this.moveRow(nextRow);
+			this.moveRow(nextRow,isShift);
 			this.sentenceContainer().changeDisplay();
 			return this;
 		}
 		// 引数で指定された行にカーソルを移動する
-		moveRow(row) {
+		moveRow(row,isShift) {
 			const index = this.getPosMemory();
 			if (!row) return this;
 			const char = row.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
-			char.slidePrevCursor().addCursor();
+			char.slidePrevCursor().addCursor(isShift);
 			return this;
 		}
 		// 次の検索語句にカーソルを移動する
@@ -900,6 +955,25 @@ Util.createDirectoryElement = (function () {
 				if (char.hasClass('search-label')) return char;
 			}
 			return null;
+		}
+		// カーソル移動前に、selectionにカーソル位置を覚えさせる
+		memorySelection() {
+			const selection = getSelection();
+			if (selection.rangeCount === 0) {
+				selection.selectAllChildren(this.getChar().elem());
+			}
+			return this;
+		}
+		// 選択範囲を動かす(カーソル移動時)
+		extendSelection(bShift) {
+			const selection = getSelection();
+			if (bShift) {
+				// シフトキーが押されていれば、カーソルのオフセット０までselectionを拡張
+				selection.extend(this.getChar().elem(),0);
+			} else {
+				// シフトキー無しでカーソルが動いたならselectionを解除する
+				selection.removeAllRanges();
+			}
 		}
 	}
 
@@ -959,7 +1033,7 @@ Util.createDirectoryElement = (function () {
 			}
 		}
 		lastChild() {
-			if (this.hasChild) {
+			if (this.hasChild()) {
 				return this._children[this.childLength()-1];
 			} else {
 				return null;
@@ -1224,11 +1298,14 @@ Util.createDirectoryElement = (function () {
 		paragraph() {
 			return this.row().paragraph();
 		}
+		sentenceContainer() {
+			return this.paragraph().container();
+		}
 		cursor() {
 			return this.row().paragraph().container().cursor();
 		}
 		// Cursor用
-		// カーソル文字として不適ならその次の文字に移動する
+		// カーソル文字として不適ならその次の文字を返す
 		slideNextCursor() {
 			// 段落最後のEOL以外のEOLには止まらない
 			// 段落途中のEOLならその次の文字に変更する
@@ -1238,7 +1315,7 @@ Util.createDirectoryElement = (function () {
 				return this;
 			}
 		}
-		// カーソル文字として不適ならその前の文字に移動する
+		// カーソル文字として不適ならその前の文字を返す
 		slidePrevCursor() {
 			// 段落最後のEOL以外のEOLには止まらない
 			// 段落途中のEOLならその前の文字に変更する
@@ -1336,8 +1413,8 @@ Util.createDirectoryElement = (function () {
 
 		// --Style
 
-		addCursor() {
-			this.cursor().addCursor(this);
+		addCursor(isShift) {
+			this.cursor().addCursor(this,isShift);
 			return this;
 		}
 
@@ -1494,7 +1571,7 @@ Util.createDirectoryElement = (function () {
 				row.remove();
 			}
 
-			paragraph.cordinate();
+			paragraph.cordinate().checkKinsoku();
 			return this;
 		}
 		// 自分自身をnewCharと入れ替える
@@ -1532,6 +1609,12 @@ Util.createDirectoryElement = (function () {
 			if (this.row().isLast()) return this; // 段落はまたがない
 
 			const oldRow = this.row();
+			// 次の行がなければ新しく作る
+			if (oldRow.isLast()) {
+				oldRow.after(Row.createEmptyRow());
+				oldRow.container().changeDisplay();
+			}
+
 			this.remove();
 			oldRow.next().prepend(this);
 
@@ -1925,11 +2008,6 @@ Util.createDirectoryElement = (function () {
 		// 自分の最後の文字を、次の行の最初に移動する
 		takeChar() {
 			if (!this.hasChar()) return this; // lastChar()でnullが取得される可能性があるため
-			// 次の行がなければ新しく作る
-			if (this.isLast()) {
-				this.after(Row.createEmptyRow());
-				this.container().changeDisplay();
-			}
 			this.lastChar().moveFirstAfter(); // lastChild()では毎回EOLが取得されるのでlastChar()
 			return this;
 		}
@@ -1962,6 +2040,18 @@ Util.createDirectoryElement = (function () {
 			}
 			if (len > strLen) {
 				this.takeChars(len - strLen);
+			}
+			return this;
+		}
+		checkKinsoku() {
+			if (this.isEmpty()) { return this; }
+			// 行頭にあるべきではないもの
+			for (let firstText = this.firstChild().text(); !this.isFirst() && /[」』）。、？]/.test(firstText); firstText = this.firstChild().text()) {
+				this.firstChild().moveLastBefore();
+			}
+			// 行末にあるべきではないもの
+			for (let lastText = this.lastChar().text(); !this.isLast() && /[「『（]/.test(lastText); lastText = this.lastChar().text()) {
+				this.lastChar().moveFirstAfter();
 			}
 			return this;
 		}
@@ -2037,7 +2127,7 @@ Util.createDirectoryElement = (function () {
 					closestChar = char;
 				}
 			}
-			closestChar.slidePrevCursor().addCursor().setPosMemory();
+			closestChar.slidePrevCursor().addCursor(e.shiftKey).setPosMemory();
 		}
 
 		// --静的メソッド
@@ -2331,8 +2421,8 @@ Util.createDirectoryElement = (function () {
 			}
 
 			this.after(newParagraph);
-			paragraph.cordinate();
-			newParagraph.cordinate();
+			paragraph.cordinate().checkKinsoku();
+			newParagraph.cordinate().checkKinsoku();
 			return this;
 		}
 
@@ -2344,10 +2434,17 @@ Util.createDirectoryElement = (function () {
 			// row.cordinate()内のbringChar()によって、最終行が削除されることがある
 			// 削除された最終行でも、先に保存されていたためrow.cordinate()が実行される
 			// 削除行の参照は保持されているのでcordinate()はエラーが起きずに実行される
-			// ただしremove()された時にparentにnullが代入されているので、内部でparagraph().container()が実行されているときにNullPointer
+			// ただしremove()された時にparentにnullが代入されているので、内部でparagraph().container()が実行されるときにNullPointer
+			for (let row of this.rows()) {
+				if (!row.paragraph()) continue; // cordinate()内で行が削除された場合の対策
+				row.cordinate();
+			}
+			return this;
+		}
+		checkKinsoku() {
 			for (let row of this.rows()) {
 				if (!row.paragraph()) continue;
-				row.cordinate();
+				row.checkKinsoku();
 			}
 			return this;
 		}
@@ -3299,6 +3396,16 @@ Util.createDirectoryElement = (function () {
 				this.sentenceContainer().fileList().read();
 				}.bind(this));
 		}
+		move(newParentDir) {
+			const fileList = this.fileList();
+			Util.post("/tategaki/MoveFile",{
+				user_id: fileList.sentenceContainer().userId(),
+				file_id: this.id(),
+				directory_id: newParentDir.id()
+			},function (data) {
+				fileList.read();
+			});
+		}
 
 		// --イベント
 
@@ -3362,6 +3469,12 @@ Util.createDirectoryElement = (function () {
 		innerList() {
 			return this._innerList;
 		}
+		fileList() {
+			for (let parentDir = this.parent(); parentDir ;parentDir = parentDir.parent() ) {
+				if (parentDir.isRoot()) return parentDir;
+			}
+			return null;
+		}
 
 		// --判定
 
@@ -3405,6 +3518,18 @@ Util.createDirectoryElement = (function () {
 		appendElem(file) {
 			this.innerList().appendChild(file.elem());
 			return this;
+		}
+		// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
+		delete(bl) {
+			Util.post("/tategaki/DeleteDirectory",{
+				directory_id: this.id(),
+				option: bl
+			},function (data) {
+				this.fileList().read();
+				if (data.result === 'within') {
+					alert('ディレクトリが空ではないので削除できませんでした。');
+				}
+			},bind(this));
 		}
 	}
 	class FileList extends Sentence {
@@ -3460,12 +3585,23 @@ Util.createDirectoryElement = (function () {
 			return this._filterInputElem;
 		}
 		findFile(idOrName) {
+			const ret = [];
 			for (let file = this.firstFile(); file; file = file.nextFile()) {
 				if (file.id() === idOrName || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(file.name()))) {
-					return file;
+					ret.push(file);
 				}
 			}
-			return null;
+			return ret;
+		}
+		// ディレクトリをIDか名前で探す
+		findDirectory(idOrName) {
+			const ret = [];
+			this.each(function (dir) {
+				if (dir.isDirectory && (dir.id() === idOrName || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(dir.name())))) {
+					ret.push(file);
+				}
+			});
+			return ret;
 		}
 
 		// --判定
@@ -3480,7 +3616,7 @@ Util.createDirectoryElement = (function () {
 			return false;
 		}
 		isOpen() {
-			return this.$modal.hasClass('in');
+			return this.$modal().hasClass('in');
 		}
 		hasFile() {
 			return this.firstFile() !== null;
@@ -3497,10 +3633,6 @@ Util.createDirectoryElement = (function () {
 				file.prevFile(prev);
 				prev = file;
 			});
-			// for (let file = this.findNextFile(this),next; next = this.findNextFile(file); file = next) {
-			// 	file.nextFile(next);
-			// 	next.prevFile(file);
-			// }
 			return this;
 		}
 		// リストで上からファイルだけを数えた場合の、引数の次のファイルを返す
@@ -3641,6 +3773,39 @@ Util.createDirectoryElement = (function () {
 			}
 			return this;
 		}
+		deleteFile(filename) {
+			const files = this.findFile(filename);
+			const fileLength = files.length;
+			if (fileLength === 0) return this;
+			if (fileLength === 1) {
+				files[0].delete();
+				return this;
+			}
+			if (fileLength > 0) {
+				if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
+					for (let i = 0,file; file = files[i]; i++) {
+						file.delete();
+					}
+				} else {
+					console.log('[複数ファイル]削除できませんでした。:' + filename);
+				}
+			}
+		}
+		mkdir(dirname) {
+			Util.post("/tategaki/DirectoryMaker",{
+				user_id: this.sentenceContainer().userId(),
+				directoryname: dirname,
+				saved: Date.now()
+			},function (data) {
+				this.fileList().read();
+			}.bind(this));
+		}
+		moveFile(filename,dirname) {
+			const files = this.findFile(filename);
+			const dirs = this.findDirectory(dirname);
+			files[0].move(dirs[0]);
+			return this;
+		}
 
 		// --イベント
 
@@ -3664,7 +3829,7 @@ Util.createDirectoryElement = (function () {
 			if (keycode === 123) { return; } // F12のみブラウザショートカットキー
 			if (keycode == 13) {
 				// enter
-				const file = this.findFile(this.filterInputElem().value);
+				const file = this.findFile(this.filterInputElem().value)[0];
 				if (file) {
 					file.open();
 				}
@@ -3922,6 +4087,16 @@ Util.createDirectoryElement = (function () {
 			if (bl) selection.removeAllRanges(); // 選択を解除する
 			return ret;
 		}
+		copySelectText() {
+			localStorage.clipBoard = this.selectText();
+			return this;
+		}
+		// ペースト
+		pasteText() {
+			console.log('paste:'+ localStorage.clipBoard);
+			this.cursor().insert(localStorage.clipBoard);
+			return this;
+		}
 		selectText() {
 			const selection = getSelection();
 			let ret = '';
@@ -3979,6 +4154,14 @@ Util.createDirectoryElement = (function () {
 			}
 			return this;
 		}
+		// 禁則処理
+		// 必ずcordinate()の後に行うこと
+		checkKinsoku() {
+			for (let paragraph of this.paragraphs()) {
+				paragraph.checkKinsoku();
+			}
+			return this;
+		}
 		// 改ページ
 		breakPage() {
 			const pageNum = this.rowLenOnpage();
@@ -4013,22 +4196,40 @@ Util.createDirectoryElement = (function () {
 		// --ファイル操作
 
 		readFile(fileId) {
-			const file = this.fileList().findFile(fileId);
+			const file = this.fileList().findFile(fileId)[0];
 			file.open();
 			return this;
 		}
 		saveFile() {
-			const nowDate_ms = Date.now() + '';
+			if (this.fileId() === -1) {
+				this.saveAsFile();
+				return this;
+			}
 			Util.post('/tategaki/WriteJsonFile',{
 				user_id: this.userId(),
 				file_id: this.fileId(),
 				filename: this.filename(),
 				json: this.data(),
-				saved: nowDate_ms
+				saved: Date.now()
 			},function (json) {
 				this.saved(json.strDate);
 				this.fileList().read();
 			}.bind(this));
+			return this;
+		}
+		// 名前をつけて保存
+		saveAsFile(filename) {
+			Util.post('/tategaki/FileMaker',{
+				filename: filename,
+				user_id: this.userId(),
+				saved: Date.now()
+			},function (data) {
+				this.filename(data.filename).fileId(data.newFileId);
+				const file = new File(data.newFileId,data.filename);
+				this.fileList().append(file).chainFile();
+				this.saveFile();
+			}.bind(this));
+			return this;
 		}
 		newFile(filename) {
 			if (filename === undefined) filename = 'newfile';
@@ -4039,6 +4240,7 @@ Util.createDirectoryElement = (function () {
 					text:[[[],[]]]
 				}
 			}); // 空段落のデータ
+			return this;
 		}
 
 		// --Display関係
@@ -4047,6 +4249,7 @@ Util.createDirectoryElement = (function () {
 			console.time('display');
 			this.addDisplay(0,0);
 			console.timeEnd('display');
+			return this;
 		}
 		changeDisplay(isForce) {
 			const cursorChar = this.cursorChar();
@@ -4202,19 +4405,19 @@ Util.createDirectoryElement = (function () {
 					break;
 				case 37:
 					// Left
-					this.cursor().moveLeft();
+					this.cursor().moveLeft(e.shiftKey);
 					break;
 				case 38:
 					// Up
-					this.cursor().movePrev();
+					this.cursor().movePrev(e.shiftKey);
 					break;
 				case 39:
 					// Right
-					this.cursor().moveRight();
+					this.cursor().moveRight(e.shiftKey);
 					break;
 				case 40:
 					// Down
-					this.cursor().moveNext();
+					this.cursor().moveNext(e.shiftKey);
 					break;
 				case 58: // firefox developer edition
 				case 186: // chrome
@@ -4237,6 +4440,10 @@ Util.createDirectoryElement = (function () {
 		}
 		runControlKeyDown(e,keycode) {
 			switch (keycode) {
+				case 67:
+					// c
+					this.copySelectText();
+					break;
 				case 18:
 				case 70:
 					// f
@@ -4244,7 +4451,7 @@ Util.createDirectoryElement = (function () {
 					break;
 				case 72:
 					// h
-					this.cursor().moveLeft();
+					this.cursor().moveLeft(e.shiftKey);
 					break;
 				case 73:
 					// i
@@ -4252,15 +4459,15 @@ Util.createDirectoryElement = (function () {
 					break;
 				case 74:
 					// j
-					this.cursor().moveNext();
+					this.cursor().moveNext(e.shiftKey);
 					break;
 				case 75:
 					// k
-					this.cursor().movePrev();
+					this.cursor().movePrev(e.shiftKey);
 					break;
 				case 76:
 					// l
-					this.cursor().moveRight();
+					this.cursor().moveRight(e.shiftKey);
 					break;
 				case 79:
 					// o
@@ -4269,6 +4476,10 @@ Util.createDirectoryElement = (function () {
 				case 83:
 					// s
 					this.saveFile();
+					break;
+				case 86:
+					// v
+					this.pasteText();
 					break;
 				case 188:
 					// ,

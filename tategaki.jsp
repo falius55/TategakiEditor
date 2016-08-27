@@ -68,9 +68,9 @@
 								<button type="button" id="color_btn" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-text-color"></span></button>
 								<button type="button" class="btn btn-default dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span> </button>
 								<ul id="color_dropdown" class="dropdown-menu">
-									<li id="select_color_black"><a href="#">black</a></li>
-									<li id="select_color_red" class="select-red"><a href="#">red</a></li>
-									<li id="select_color_blue" class="select-blue"><a href="#">blue</a></li>
+									<li><a href="#" data-color="black">black</a></li>
+									<li><a href="#" class="select-red" data-color="red">red</a></li>
+									<li><a href="#" class="select-blue" data-color="blue">blue</a></li>
 								</ul>
 							</div>
 						</li>
@@ -80,10 +80,12 @@
 								<div class="input-group">
 									<div class="input-group-btn">
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-text-size"></span><span class="caret"></span></button>
-										<ul class="dropdown-menu" role="menu">
-											<li><a href="#" id="select-font-8">8</a></li>
-											<li><a href="#" id="select-font-14">14</a></li>
-											<li><a href="#" id="select-font-30">30</a></li>
+										<ul id="fontsize_dropdown" class="dropdown-menu" role="menu">
+											<li><a href="#" data-size="18">auto</a></li>
+											<li><a href="#" data-size="8">8</a></li>
+											<li><a href="#" data-size="14">14</a></li>
+											<li><a href="#" data-size="18">18</a></li>
+											<li><a href="#" data-size="30">30</a></li>
 											</ul>
 										</div>
 										<input type="text" id="input_text_size" class="form-control" value="14" aria-label="text size"></input>

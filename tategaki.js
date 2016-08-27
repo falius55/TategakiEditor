@@ -131,68 +131,68 @@ $(function() {
 	// 		return eCollapse;
 	// 	}
 	// })();
-	
-	// ===================================================================
-	// 		ユーザー操作(label:user)
-	// ===================================================================
-
-	// --------------------- key event listener ---------------------------
-
-	// キー操作
-	function getKeyCode(e) {
-		'use strict';
-		let keycode;
-		if (document.all) {
-			// IE
-			keycode = e.keyCode
-		} else {
-			// IE以外
-			keycode = e.which;
-		}
-
-		return keycode;
-	}
-	
-	// 漢字変換候補を選んでいるときならtrue
-	function isConvertMode() {
-		'use strict';
-		return $('.convert-view')[0] ? true : false;
-	}
-	// inputbufferへの入力中ならtrue
-	function isInputMode() {
-		'use strict';
-		return $('#input_buffer').text() !== '' ? true : false;
-	}
-
-	function keydownOnDoc(e) {
-		// 'use strict';
-		// userAlert('');
-		// const keycode = getKeyCode(e);
-		//
-		// if (keycode === 123) { return; } // F12のみブラウザショートカットキー
-		//
-		// const $inputBuffer = $('#input_buffer');
-		// if (isConvertMode()) {
-		// 	// keydownOnConvertView(e,keycode);
-		// } else if (isInputMode()) {
-		// 	// keydownOnInputBuffer(e,keycode);
-		// } else {
-		// 	// 非入力(通常)状態
-		//
-		// 	if (e.ctrlKey) {
-		// 		// ctrlキーを使ったショートカットキー
-		// 		keydownWithCTRL(e,keycode);
-		// 	} else {
-		// 		keydownOnContainer(e,keycode);
-		// 	}
-		//
-		// }
-		//
-		// console.log(keycode);
-		// // デフォルトの動作を無効化する
-		// e.preventDefault();
-	}
-
+	//
+	// // ===================================================================
+	// // 		ユーザー操作(label:user)
+	// // ===================================================================
+	//
+	// // --------------------- key event listener ---------------------------
+	//
+	// // キー操作
+	// function getKeyCode(e) {
+	// 	'use strict';
+	// 	let keycode;
+	// 	if (document.all) {
+	// 		// IE
+	// 		keycode = e.keyCode
+	// 	} else {
+	// 		// IE以外
+	// 		keycode = e.which;
+	// 	}
+	//
+	// 	return keycode;
+	// }
+	//
+	// // 漢字変換候補を選んでいるときならtrue
+	// function isConvertMode() {
+	// 	'use strict';
+	// 	return $('.convert-view')[0] ? true : false;
+	// }
+	// // inputbufferへの入力中ならtrue
+	// function isInputMode() {
+	// 	'use strict';
+	// 	return $('#input_buffer').text() !== '' ? true : false;
+	// }
+	//
+	// function keydownOnDoc(e) {
+	// 	'use strict';
+	// 	userAlert('');
+	// 	const keycode = getKeyCode(e);
+	//	
+	// 	if (keycode === 123) { return; } // F12のみブラウザショートカットキー
+	//	
+	// 	const $inputBuffer = $('#input_buffer');
+	// 	if (isConvertMode()) {
+	// 		// keydownOnConvertView(e,keycode);
+	// 	} else if (isInputMode()) {
+	// 		// keydownOnInputBuffer(e,keycode);
+	// 	} else {
+	// 		// 非入力(通常)状態
+	//	
+	// 		if (e.ctrlKey) {
+	// 			// ctrlキーを使ったショートカットキー
+	// 			keydownWithCTRL(e,keycode);
+	// 		} else {
+	// 			keydownOnContainer(e,keycode);
+	// 		}
+	//	
+	// 	}
+	//	
+	// 	console.log(keycode);
+	// 	// デフォルトの動作を無効化する
+	// 	e.preventDefault();
+	// }
+	//
 	// function keydownOnConvertView(e,keycode) {
 	// 	'use strict';
 	// 	return;
@@ -287,90 +287,90 @@ $(function() {
 	// 			break;
 	// 	}
 	// }
-
-	function keydownWithCTRL(e,keycode) {
-		'use strict';
-
-		switch (keycode) {
-			// case 18:
-			// case 70:
-			// 	// f
-			// 	readyFileModal();
-			// 	$('#file_list_modal').modal();
-			// 	break;
-			// case 66:
-			// 	// b
-			// case 68:
-			// 	// d
-			// 	backSpaceOnContainer();
-			// 	checkText();
-			// 	break;
-			// case 190:
-			// 	// .
-			// 	findPrev();
-			// 	break;
-			// case 79:
-			// 	// o
-			// 	comOpenPrevFile();
-			// 	break;
-			// case 188:
-			// 	// ,
-			// 	findNext();
-			// 	break;
-			// case 73:
-			// 	// i
-			// 	comOpenNextFile();
-			// 	break;
-			// case 72:
-			// 	// h
-			// 	readySelection();
-			// 	gCursor.shiftLeft();
-			// 	extendSelection(e.shiftKey);
-			// 	break;
-			// case 74:
-			// 	// j
-			// 	readySelection();
-			// 	gCursor.next();
-			// 	extendSelection(e.shiftKey);
-			// 	break;
-			// case 75:
-			// 	// k
-			// 	readySelection();
-			// 	gCursor.prev();
-			// 	extendSelection(e.shiftKey);
-			// 	break;
-			// case 76:
-			// 	// l
-			// 	readySelection();
-			// 	gCursor.shiftRight();
-			// 	extendSelection(e.shiftKey);
-			// 	break;
-			// case 78:
-			// 	// n
-			// 	break;
-			// case 83:
-			// 	// s
-			// 	comSaveJsonFile();
-			// 	break;
-			case 67:
-				// c
-				copySelectText();
-				break;
-			case 86:
-				// v
-				pasteFromCursor();
-				break;
-			default:
-				break;
-		}
-	}
-
-	function checkText() {
-		checkKinsoku();
-		// changeDisplayRow(false);
-		addPageBreak();
-		// printDocInfo();
-	}
+	//
+	// function keydownWithCTRL(e,keycode) {
+	// 	'use strict';
+	//
+	// 	switch (keycode) {
+	// 		case 18:
+	// 		case 70:
+	// 			// f
+	// 			readyFileModal();
+	// 			$('#file_list_modal').modal();
+	// 			break;
+	// 		case 66:
+	// 			// b
+	// 		case 68:
+	// 			// d
+	// 			backSpaceOnContainer();
+	// 			checkText();
+	// 			break;
+	// 		case 190:
+	// 			// .
+	// 			findPrev();
+	// 			break;
+	// 		case 79:
+	// 			// o
+	// 			comOpenPrevFile();
+	// 			break;
+	// 		case 188:
+	// 			// ,
+	// 			findNext();
+	// 			break;
+	// 		case 73:
+	// 			// i
+	// 			comOpenNextFile();
+	// 			break;
+	// 		case 72:
+	// 			// h
+	// 			readySelection();
+	// 			gCursor.shiftLeft();
+	// 			extendSelection(e.shiftKey);
+	// 			break;
+	// 		case 74:
+	// 			// j
+	// 			readySelection();
+	// 			gCursor.next();
+	// 			extendSelection(e.shiftKey);
+	// 			break;
+	// 		case 75:
+	// 			// k
+	// 			readySelection();
+	// 			gCursor.prev();
+	// 			extendSelection(e.shiftKey);
+	// 			break;
+	// 		case 76:
+	// 			// l
+	// 			readySelection();
+	// 			gCursor.shiftRight();
+	// 			extendSelection(e.shiftKey);
+	// 			break;
+	// 		case 78:
+	// 			// n
+	// 			break;
+	// 		case 83:
+	// 			// s
+	// 			comSaveJsonFile();
+	// 			break;
+	// 		case 67:
+	// 			// c
+	// 			copySelectText();
+	// 			break;
+	// 		case 86:
+	// 			// v
+	// 			pasteFromCursor();
+	// 			break;
+	// 		default:
+	// 			break;
+	// 	}
+	// }
+	//
+	// function checkText() {
+	// 	checkKinsoku();
+	// 	// changeDisplayRow(false);
+	// 	addPageBreak();
+	// 	// printDocInfo();
+	// }
 	//
 	// function keydownOnContainer(e,keycode) {
 	// 	'use strict';
@@ -681,34 +681,34 @@ $(function() {
 		if (command.length < 2) command = $command.val().split('　');
 
 		switch (command[0]) {
-			case ':w':
-			case ':save':
-			case ':s':
-			case ': ｗ':
-			case ':さヴぇ':
-			case ':ｓ':
-
-					 if (command[1]) {
-						 comSaveAs(command[1]);
-					 } else {
-						 comSaveJsonFile();
-					 }
-
-					 break;
-			case ':e':
-			case ':o':
-			case ':open':
-			case ':え':
-			case ':お':
-			case ':おぺｎ':
-
-					 if (command[1]) {
-						 comOpenFile(command[1]);
-					 } else {
-						 defaultNewFile();
-					 }
-
-					 break;
+			// case ':w':
+			// case ':save':
+			// case ':s':
+			// case ': ｗ':
+			// case ':さヴぇ':
+			// case ':ｓ':
+			//
+			// 		 if (command[1]) {
+			// 			 comSaveAs(command[1]);
+			// 		 } else {
+			// 			 comSaveJsonFile();
+			// 		 }
+			//
+			// 		 break;
+			// case ':e':
+			// case ':o':
+			// case ':open':
+			// case ':え':
+			// case ':お':
+			// case ':おぺｎ':
+			//
+			// 		 if (command[1]) {
+			// 			 comOpenFile(command[1]);
+			// 		 } else {
+			// 			 defaultNewFile();
+			// 		 }
+			//
+			// 		 break;
 			case ':jumpr':
 			case ':jumprow':
 			case ':jr':
@@ -2126,33 +2126,33 @@ $(function() {
 	// 	$bringRow.children('.EOL').before($backChar);
 	// 	backChar($nextRow);
 	// }
-
-	// 禁則処理
-	function checkKinsoku() {
-		'use strict';
-		const $dots = $('#sentence_container .char.vertical-dot').add('#sentence_container .char.vertical-after-bracket');
-
-		if ($dots[0]) {
-			let $self;
-			let $selfRow;
-			let $prevRow;
-			$dots.each(function () {
-				$self = $(this);
-
-				if (!($self.prev()[0])) {
-					// 行頭
-					$selfRow = $self.closest('.row');
-					$prevRow = $selfRow.prev('.row');	
-					if ($prevRow[0]) {
-						// 段落の最初ではない
-						backChar($prevRow);
-					}
-				}
-
-			});
-		}
-	}
-
+	//
+	// // 禁則処理
+	// function checkKinsoku() {
+	// 	'use strict';
+	// 	const $dots = $('#sentence_container .char.vertical-dot').add('#sentence_container .char.vertical-after-bracket');
+	//
+	// 	if ($dots[0]) {
+	// 		let $self;
+	// 		let $selfRow;
+	// 		let $prevRow;
+	// 		$dots.each(function () {
+	// 			$self = $(this);
+	//
+	// 			if (!($self.prev()[0])) {
+	// 				// 行頭
+	// 				$selfRow = $self.closest('.row');
+	// 				$prevRow = $selfRow.prev('.row');	
+	// 				if ($prevRow[0]) {
+	// 					// 段落の最初ではない
+	// 					backChar($prevRow);
+	// 				}
+	// 			}
+	//
+	// 		});
+	// 	}
+	// }
+	//
 	// // --------------------------- text decolation -----------------------------------
 	//
 	// // 選択範囲の文字に文字色を適用する
@@ -2198,64 +2198,64 @@ $(function() {
 	// 	'use strict';
 	// 	$('#sentence_container').children('.paragraph').has('.cursor-row').removeClassByRegExp(/decolation-textalign-\S+/).addClass('decolation-textalign-'+ align);
 	// }
-
-	// テキストボックスに入力できるように
-	document.getElementById('input_text_size').addEventListener('focus',function (e) {
-		document.removeEventListener('keydown',keydownOnDoc);
-	},false);
-	document.getElementById('input_text_size').addEventListener('blur',function (e) {
-		document.addEventListener('keydown',keydownOnDoc);
-	},false);
-
-	// paletteからフォントサイズが変更された
-	addFontSizeEvnet(14);
-	addFontSizeEvnet(30);
-	addFontSizeEvnet(8);
-	function addFontSizeEvnet(fontSize) {
-		const eLink = document.getElementById('select-font-' + fontSize);
-		eLink.addEventListener('click',function (e) {
-			document.getElementById('input_text_size').value = fontSize;
-			changeFontSizeOnSelect(fontSize);
-		},false);
-	};
-
-	function changeFontSizeOnSelect(size) {
-		'use strict';
-		const eSelectChars = findSelectElem(false);
-
-		for (let eChar of eSelectChars) {
-			eChar.dataset.fontSize = size;
-		}
-	}
-
-	// ------------ copy and paste --------------------
-
-	// 選択中のテキストをストレージに保存する
-	function copySelectText() {
-		localStorage.clipBoard = selectText();
-	}
-
-	// 選択している部分のテキストを返す
-	// 複数あればすべて連結する
-	function selectText() {
-		'use strict';
-		const selection = getSelection();
-		let ret = '';
-		for (let i = 0,cnt = selection.rangeCount; i < cnt; i++) {
-			const selRange = selection.getRangeAt(i);
-			ret += selRange.toString();
-		}
-		return ret;
-	}
-
-	// ペースト
-	function pasteFromCursor() {
-		'use strict';
-		insertStringFromCursor(localStorage.clipBoard);
-	}
-
-	// -----------------------   string getter ------------------------
-	// 文章ゲッター(label:strgetter)
+	//
+	// // テキストボックスに入力できるように
+	// document.getElementById('input_text_size').addEventListener('focus',function (e) {
+	// 	document.removeEventListener('keydown',keydownOnDoc);
+	// },false);
+	// document.getElementById('input_text_size').addEventListener('blur',function (e) {
+	// 	document.addEventListener('keydown',keydownOnDoc);
+	// },false);
+	//
+	// // paletteからフォントサイズが変更された
+	// addFontSizeEvnet(14);
+	// addFontSizeEvnet(30);
+	// addFontSizeEvnet(8);
+	// function addFontSizeEvnet(fontSize) {
+	// 	const eLink = document.getElementById('select-font-' + fontSize);
+	// 	eLink.addEventListener('click',function (e) {
+	// 		document.getElementById('input_text_size').value = fontSize;
+	// 		changeFontSizeOnSelect(fontSize);
+	// 	},false);
+	// };
+	//
+	// function changeFontSizeOnSelect(size) {
+	// 	'use strict';
+	// 	const eSelectChars = findSelectElem(false);
+	//
+	// 	for (let eChar of eSelectChars) {
+	// 		eChar.dataset.fontSize = size;
+	// 	}
+	// }
+	//
+	// // ------------ copy and paste --------------------
+	//
+	// // 選択中のテキストをストレージに保存する
+	// function copySelectText() {
+	// 	localStorage.clipBoard = selectText();
+	// }
+	//
+	// // 選択している部分のテキストを返す
+	// // 複数あればすべて連結する
+	// function selectText() {
+	// 	'use strict';
+	// 	const selection = getSelection();
+	// 	let ret = '';
+	// 	for (let i = 0,cnt = selection.rangeCount; i < cnt; i++) {
+	// 		const selRange = selection.getRangeAt(i);
+	// 		ret += selRange.toString();
+	// 	}
+	// 	return ret;
+	// }
+	//
+	// // ペースト
+	// function pasteFromCursor() {
+	// 	'use strict';
+	// 	insertStringFromCursor(localStorage.clipBoard);
+	// }
+	// //
+	// // -----------------------   string getter ------------------------
+	// // 文章ゲッター(label:strgetter)
 
 	// 文書内の行数
 	function getRowLen() {
@@ -2987,31 +2987,31 @@ $(function() {
 	// 		if (rmClass) { eChar.classList.remove(rmClass[0]); }
 	// 	}
 	// }
-
-	// カーソル移動前に、selectionにカーソル位置を覚えさせる
-	function readySelection() {
-		const eCursor = document.querySelector('.cursor');
-		const selection = getSelection();
-
-		if (selection.rangeCount === 0) {
-			selection.selectAllChildren(eCursor);
-		}
-	}
-
-	// 選択範囲を動かす(カーソル移動時)
-	function extendSelection(bShift) {
-		const eCursor = document.querySelector('.cursor');
-		const selection = getSelection();
-
-		if (bShift) {
-			// シフトキーが押されていれば、カーソルのオフセット０までselectionを拡張
-			selection.extend(eCursor,0);
-		} else {
-			// シフトキー無しでカーソルが動いたならselectionを解除する
-			selection.removeAllRanges();
-		}
-	}
-
+	//
+	// // カーソル移動前に、selectionにカーソル位置を覚えさせる
+	// function readySelection() {
+	// 	const eCursor = document.querySelector('.cursor');
+	// 	const selection = getSelection();
+	//
+	// 	if (selection.rangeCount === 0) {
+	// 		selection.selectAllChildren(eCursor);
+	// 	}
+	// }
+	//
+	// // 選択範囲を動かす(カーソル移動時)
+	// function extendSelection(bShift) {
+	// 	const eCursor = document.querySelector('.cursor');
+	// 	const selection = getSelection();
+	//
+	// 	if (bShift) {
+	// 		// シフトキーが押されていれば、カーソルのオフセット０までselectionを拡張
+	// 		selection.extend(eCursor,0);
+	// 	} else {
+	// 		// シフトキー無しでカーソルが動いたならselectionを解除する
+	// 		selection.removeAllRanges();
+	// 	}
+	// }
+	//
 	// // =====================================================================
 	// // 		ファイル操作(label:file)
 	// // =====================================================================
@@ -3430,42 +3430,42 @@ $(function() {
 	// 	gCursor.addCursorRow();
 	// 	printDocInfo();
 	// }
-
-	// 名前をつけて保存
-	function comSaveAs(filename) {
-		'use strict';
-
-		if (filename.indexOf('"') > -1 || filename.indexOf('<')>-1 || filename.indexOf('>')>-1) {
-			userAlert('ファイル名に使用不可能文字が含まれています。');
-			return;
-		}
-
-		userAlert('保存しています');
-
-		const userId = getUserId();
-		const nowDate_ms = Date.now() + '';
-		console.log('userId:'+ userId);
-		console.log('nowDate_ms:'+ nowDate_ms);
-		$.ajax({
-			type : 'POST',
-			url : '/tategaki/FileMaker',
-			data : {
-				filename: filename,
-				user_id: userId,
-				saved: nowDate_ms
-			},
-			context : {
-				userId: userId
-			},
-			dataType : 'json'
-		}).done(function (data) {
-			// 表示データを受け取ってからの処理
-			$('#file_title').val(data.filename).attr('data-file-id',data.newFileId);
-			comSaveJsonFile();
-		}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
-			alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveAs');
-		});
-	}
+	//
+	// // 名前をつけて保存
+	// function comSaveAs(filename) {
+	// 	'use strict';
+	//
+	// 	if (filename.indexOf('"') > -1 || filename.indexOf('<')>-1 || filename.indexOf('>')>-1) {
+	// 		userAlert('ファイル名に使用不可能文字が含まれています。');
+	// 		return;
+	// 	}
+	//
+	// 	userAlert('保存しています');
+	//
+	// 	const userId = getUserId();
+	// 	const nowDate_ms = Date.now() + '';
+	// 	console.log('userId:'+ userId);
+	// 	console.log('nowDate_ms:'+ nowDate_ms);
+	// 	$.ajax({
+	// 		type : 'POST',
+	// 		url : '/tategaki/FileMaker',
+	// 		data : {
+	// 			filename: filename,
+	// 			user_id: userId,
+	// 			saved: nowDate_ms
+	// 		},
+	// 		context : {
+	// 			userId: userId
+	// 		},
+	// 		dataType : 'json'
+	// 	}).done(function (data) {
+	// 		// 表示データを受け取ってからの処理
+	// 		$('#file_title').val(data.filename).attr('data-file-id',data.newFileId);
+	// 		comSaveJsonFile();
+	// 	}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	// 		alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comSaveAs');
+	// 	});
+	// }
 	//
 	// function defaultDeleteFile() {
 	// 	'use strict';
@@ -3564,187 +3564,187 @@ $(function() {
 	// 			comReadJsonFile($file.attr('data-file-id'));
 	//
 	// 			}
-
-				function getFileObjectFromFileName(filename) {
-					'use strict';
-					// 同一名ファイルが複数存在する可能性を忘れずに
-					const $file = $('#file_list .file[data-file-name="'+ filename +'"]');
-					return $file;
-				}
-
-				function getFileNameFromFileId(fileId) {
-					'use strict';
-					return $('#file_list .file[data-file-id="'+ fileId +'"]').attr('data-file-name');
-				}
-
-				function comDeleteFileFromFileName(filename) {
-					'use strict';
-					console.log('comDeleteFileFromFileName()');
-					const $file = getFileObjectFromFileName(filename);
-					if (!$file[0]) { return; }
-
-					let fileId;
-					if ($file.size() === 1) {
-						fileId = $file.attr('data-file-id');
-						comDeleteFile(fileId);
-					} else if ($file.size() > 1) {
-						// 該当ファイルが複数
-
-						if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
-							$file.each(function () {
-								fileId = $(this).attr('data-file-id');
-								comDeleteFile(fileId);
-							});
-
-						} else {
-							console.log('[複数ファイル]削除できませんでした。:' + filename);
-						}
-
-					}
-				}
-
-				function comMoveFile(filename,newParentDirname) {
-					'use strict';
-					const userId = getUserId();
-					// コマンドからの実行の場合、フィルターがかかってfile-list内が一つだけになってしまっているので、
-					// いったん全ファイルを取得してからでないと$fileと$newParentDirが見つからない
-					$.ajax({
-						type : 'POST',
-						url : '/tategaki/FileListMaker',
-						data : {
-							user_id: userId
-						},
-						dataType : 'json'
-					}).done(function (data) {
-						// 表示データを受け取ってからの処理
-						setFileListFromObject(data);
-						const $file = $('.file[data-file-name="'+ filename +'"],.directory[data-directory-name="'+ filename +'"]');
-						const $newParentDir = $('.directory[data-directory-name="'+ newParentDirname +'"]');
-						let fileId;
-						let newParentDirId;
-						if ($file[0] && $newParentDir[0]) {
-							fileId = $file.attr('data-type')==='file' ? $file.attr('data-file-id') : $file.attr('data-directory-id');
-							newParentDirId = $newParentDir.attr('data-directory-id');
-							comMvFileToDirectory(fileId,newParentDirId);
-						}
-					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comFileList');
-					});
-				}
-
-				function comMvFileToDirectory(fileId,newParentDirId) {
-					'use strict';
-					// ディレクトリをディレクトリに入れるのも可
-					console.log('comMvFileToDirectory:file['+ fileId +'],newParentDir['+ newParentDirId +']');
-					const userId = getUserId();
-
-					$.ajax({
-						type : 'POST',
-						url : '/tategaki/MoveFile',
-						data : {
-							user_id: userId,
-							file_id: fileId,
-							directory_id: newParentDirId
-						},
-						dataType : 'json',
-						context: {
-							userId: userId
-						}
-					}).done(function (json) {
-						// 表示データを受け取ってからの処理
-						// comFileList(this.userId);
-						container.fileList().read();
-					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMvFileToDirectory');
-					});
-				}
-
-				function comMakeDirectory(directoryname) {
-					'use strict';
-					console.log('make directory:'+ directoryname);
-					const userId = getUserId();
-					const nowDate_ms = Date.now() + '';
-					console.log('user-id:'+ userId);
-					console.log('nowDate_ms:'+ nowDate_ms);
-
-					$.ajax({
-						type : 'POST',
-						url : '/tategaki/DirectoryMaker',
-						data : {
-							user_id: userId,
-							directoryname: directoryname,
-							saved: nowDate_ms
-						},
-						dataType : 'json',
-						context: {
-							userId: userId
-						}
-					}).done(function (json) {
-						// 表示データを受け取ってからの処理
-						// comFileList(this.userId);
-						container.fileList().read();
-					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMakeDirectory');
-					});
-				}
-
-				function comDeleteDirectory(directoryId,option) {
-					'use strict';
-					// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
-					const userId = getUserId();
-
-					$.ajax({
-						type : 'POST',
-						url : '/tategaki/DeleteDirectory',
-						data : {
-							directory_id: directoryId,
-							option: option
-						},
-						dataType : 'json',
-						context: {
-							userId: userId
-						}
-					}).done(function (json) {
-						// 表示データを受け取ってからの処理
-						// comFileList(this.userId);
-						container.fileList().read();
-						if (json.result === 'within') {
-							userAlert('ディレクトリが空ではないので削除できませんでした。');
-						}
-					}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteDirectory');
-					});
-				}
-
-				function comDeleteDirectoryFromName(directoryname,option) {
-					'use strict';
-					const $dir = $('.directory[data-directory-name="'+ directoryname +'"]');
-					if (!$dir[0]) { return; }
-					let dirId;
-
-					if ($dir.size() === 1) {
-						dirId = $dir.attr('data-directory-id');
-						comDeleteDirectory(dirId,option);
-					} else if ($dir.size() > 1) {
-
-						if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
-							$dir.each(function () {
-								dirId = $(this).attr('data-directory-id');
-								comDeleteFile(dirId,option);
-							});
-						} else {
-							console.log('[複数ディレクトリ]削除できませんでした。:' + directoryname);
-						}
-
-					}
-				}
-
-				function getCurrentFileId() {
-					'use strict';
-					const fileId = $('#file_title').attr('data-file-id');
-					return fileId;
-				}
-
+				//
+				// function getFileObjectFromFileName(filename) {
+				// 	'use strict';
+				// 	// 同一名ファイルが複数存在する可能性を忘れずに
+				// 	const $file = $('#file_list .file[data-file-name="'+ filename +'"]');
+				// 	return $file;
+				// }
+				//
+				// function getFileNameFromFileId(fileId) {
+				// 	'use strict';
+				// 	return $('#file_list .file[data-file-id="'+ fileId +'"]').attr('data-file-name');
+				// }
+				//
+				// function comDeleteFileFromFileName(filename) {
+				// 	'use strict';
+				// 	console.log('comDeleteFileFromFileName()');
+				// 	const $file = getFileObjectFromFileName(filename);
+				// 	if (!$file[0]) { return; }
+				//
+				// 	let fileId;
+				// 	if ($file.size() === 1) {
+				// 		fileId = $file.attr('data-file-id');
+				// 		comDeleteFile(fileId);
+				// 	} else if ($file.size() > 1) {
+				// 		// 該当ファイルが複数
+				//
+				// 		if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
+				// 			$file.each(function () {
+				// 				fileId = $(this).attr('data-file-id');
+				// 				comDeleteFile(fileId);
+				// 			});
+				//
+				// 		} else {
+				// 			console.log('[複数ファイル]削除できませんでした。:' + filename);
+				// 		}
+				//
+				// 	}
+				// }
+				//
+				// function comMoveFile(filename,newParentDirname) {
+				// 	'use strict';
+				// 	const userId = getUserId();
+				// 	// コマンドからの実行の場合、フィルターがかかってfile-list内が一つだけになってしまっているので、
+				// 	// いったん全ファイルを取得してからでないと$fileと$newParentDirが見つからない
+				// 	$.ajax({
+				// 		type : 'POST',
+				// 		url : '/tategaki/FileListMaker',
+				// 		data : {
+				// 			user_id: userId
+				// 		},
+				// 		dataType : 'json'
+				// 	}).done(function (data) {
+				// 		// 表示データを受け取ってからの処理
+				// 		setFileListFromObject(data);
+				// 		const $file = $('.file[data-file-name="'+ filename +'"],.directory[data-directory-name="'+ filename +'"]');
+				// 		const $newParentDir = $('.directory[data-directory-name="'+ newParentDirname +'"]');
+				// 		let fileId;
+				// 		let newParentDirId;
+				// 		if ($file[0] && $newParentDir[0]) {
+				// 			fileId = $file.attr('data-type')==='file' ? $file.attr('data-file-id') : $file.attr('data-directory-id');
+				// 			newParentDirId = $newParentDir.attr('data-directory-id');
+				// 			comMvFileToDirectory(fileId,newParentDirId);
+				// 		}
+				// 	}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				// 		alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + ' in comFileList');
+				// 	});
+				// }
+				//
+				// function comMvFileToDirectory(fileId,newParentDirId) {
+				// 	'use strict';
+				// 	// ディレクトリをディレクトリに入れるのも可
+				// 	console.log('comMvFileToDirectory:file['+ fileId +'],newParentDir['+ newParentDirId +']');
+				// 	const userId = getUserId();
+				//
+				// 	$.ajax({
+				// 		type : 'POST',
+				// 		url : '/tategaki/MoveFile',
+				// 		data : {
+				// 			user_id: userId,
+				// 			file_id: fileId,
+				// 			directory_id: newParentDirId
+				// 		},
+				// 		dataType : 'json',
+				// 		context: {
+				// 			userId: userId
+				// 		}
+				// 	}).done(function (json) {
+				// 		// 表示データを受け取ってからの処理
+				// 		// comFileList(this.userId);
+				// 		container.fileList().read();
+				// 	}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				// 		alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMvFileToDirectory');
+				// 	});
+				// }
+				//
+				// function comMakeDirectory(directoryname) {
+				// 	'use strict';
+				// 	console.log('make directory:'+ directoryname);
+				// 	const userId = getUserId();
+				// 	const nowDate_ms = Date.now() + '';
+				// 	console.log('user-id:'+ userId);
+				// 	console.log('nowDate_ms:'+ nowDate_ms);
+				//
+				// 	$.ajax({
+				// 		type : 'POST',
+				// 		url : '/tategaki/DirectoryMaker',
+				// 		data : {
+				// 			user_id: userId,
+				// 			directoryname: directoryname,
+				// 			saved: nowDate_ms
+				// 		},
+				// 		dataType : 'json',
+				// 		context: {
+				// 			userId: userId
+				// 		}
+				// 	}).done(function (json) {
+				// 		// 表示データを受け取ってからの処理
+				// 		// comFileList(this.userId);
+				// 		container.fileList().read();
+				// 	}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				// 		alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comMakeDirectory');
+				// 	});
+				// }
+				//
+				// function comDeleteDirectory(directoryId,option) {
+				// 	'use strict';
+				// 	// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
+				// 	const userId = getUserId();
+				//
+				// 	$.ajax({
+				// 		type : 'POST',
+				// 		url : '/tategaki/DeleteDirectory',
+				// 		data : {
+				// 			directory_id: directoryId,
+				// 			option: option
+				// 		},
+				// 		dataType : 'json',
+				// 		context: {
+				// 			userId: userId
+				// 		}
+				// 	}).done(function (json) {
+				// 		// 表示データを受け取ってからの処理
+				// 		// comFileList(this.userId);
+				// 		container.fileList().read();
+				// 		if (json.result === 'notEmpty') {
+				// 			userAlert('ディレクトリが空ではないので削除できませんでした。');
+				// 		}
+				// 	}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				// 		alert('Error:'+ textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteDirectory');
+				// 	});
+				// }
+				//
+				// function comDeleteDirectoryFromName(directoryname,option) {
+				// 	'use strict';
+				// 	const $dir = $('.directory[data-directory-name="'+ directoryname +'"]');
+				// 	if (!$dir[0]) { return; }
+				// 	let dirId;
+				//
+				// 	if ($dir.size() === 1) {
+				// 		dirId = $dir.attr('data-directory-id');
+				// 		comDeleteDirectory(dirId,option);
+				// 	} else if ($dir.size() > 1) {
+				//
+				// 		if (window.confirm('同一名のディレクトリが複数存在します。\nすべてのディレクトリを削除しますか。')) {
+				// 			$dir.each(function () {
+				// 				dirId = $(this).attr('data-directory-id');
+				// 				comDeleteFile(dirId,option);
+				// 			});
+				// 		} else {
+				// 			console.log('[複数ディレクトリ]削除できませんでした。:' + directoryname);
+				// 		}
+				//
+				// 	}
+				// }
+				//
+				// function getCurrentFileId() {
+				// 	'use strict';
+				// 	const fileId = $('#file_title').attr('data-file-id');
+				// 	return fileId;
+				// }
+				//
 				// // ====================================================
 				// // 	ユーティリティ(label:utility)
 				// // ====================================================

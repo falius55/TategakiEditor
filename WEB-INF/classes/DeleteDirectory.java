@@ -20,9 +20,9 @@ public class DeleteDirectory extends AbstractServlet  {
 					// 強制的にディレクトリ内ファイルごと削除する
 					// データベース上だけ
 					executeSql("delete from file_table where id = ? or parent_dir = ?").setInt(directoryId).setInt(directoryId).update();
-					rtnJson = "{\"result\":\"success(file in)\"}";
+					rtnJson = "{\"result\":\"success(fileIn)\"}";
 				} else {
-					rtnJson = "{\"result\":\"within\"}";
+					rtnJson = "{\"result\":\"notEmpty\"}";
 				}
 			} else {
 				// ディレクトリ内にファイルが存在しない
