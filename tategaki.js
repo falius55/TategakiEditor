@@ -2256,108 +2256,108 @@ $(function() {
 	// //
 	// // -----------------------   string getter ------------------------
 	// // 文章ゲッター(label:strgetter)
-
-	// 文書内の行数
-	function getRowLen() {
-		'use strict';
-		const $rows = $('#sentence_container > .paragraph > .row');
-		return $rows.length;
-	}
-
-	// 現在ページの行数
-	function getRowLenOnCursorPage() {
-		'use strict';
-		let $row = $('.cursor-row');
-		let cnt = getCurrentRowOnPage(); // 現在行を加える
-
-		// 後ろに数える
-		while ($row[0] && !($row.hasClass('page-last-row'))) {
-			cnt++;
-			$row = $row.nextObj('#sentence_container .row');
-		}
-		return cnt;
-	}
-
-	// 文書内での現在行
-	function getCurrentRowPos() {
-		'use strict';
-		const rowNum = $('.paragraph > .row').index($('.cursor').closest('.row')) +1;
-		return rowNum;
-	}
-
-	// 現在ページ内で何行目にいるか
-	function getCurrentRowOnPage() {
-		'use strict';
-		let $row = $('.cursor-row');
-		let cnt = 1; // page-break行の分
-
-		// 前にさかのぼって数える
-		while ($row[0] && !($row.hasClass('page-break'))) {
-			cnt++;
-			$row = $row.prevObj('#sentence_container .row');
-		}
-		return cnt;
-	}
-
-	// 現在文字位置
-	function getCurrentStringPosOnRow() {
-		'use strict';
-		const $cursor = $('.cursor');
-		const strNum = $('.cursor-row').children('.char').index($cursor);
-		return strNum;
-	}
-
-	// カーソル行の全文字数
-	function getStringLenOfCursorRow() {
-		'use strict';
-		const strLen = $('.cursor-row > .char').length;
-		return strLen - 1; // EOLの分を除く
-	}
-
-	// 現在ページ
-	function getCurrentPagePos() {
-		'use strict';
-		// page-breakを持つ行を探して段落をさかのぼり、その段落に複数のpage-breakがあればcursor行またはその段落の最後の行から行を遡ることでpage-breakを探している
-		let $currentParagraph = $('.cursor-row').closest('.paragraph');
-		let $currentPage;
-
-		while (!($currentPage = $currentParagraph.children('.row.page-break'))[0]) {
-			$currentParagraph = $currentParagraph.prev('.paragraph');
-		}
-		if ($currentPage.length > 1) {
-
-			if (!($currentParagraph.children('.cursor-row'))[0]) {
-				const $row = $('.cursor-row');
-				while (!($row.hasClass('page-break'))) {
-					$row = $row.prev('.row');
-					$currentPage = $row;
-				}
-			} else {
-				$currentPage = $currentParagraph.children('.page-break').last();
-			}
-
-		}
-		return $('.page-break').index($currentPage) + 1;
-	}
-
-	// 文書内の全ページ数
-	function getPageLen() {
-		'use strict';
-		return $('.page-break').length;
-	}
-
-	// 1ページの行数
-	function getRowLenOnPage() {
-		'use strict';
-		return 40;
-	}
-
-	// 1行の文字数
-	function getStringLenOfRow() {
-		'use strict';
-		return 40;
-	}
-
+	//
+	// // 文書内の行数
+	// function getRowLen() {
+	// 	'use strict';
+	// 	const $rows = $('#sentence_container > .paragraph > .row');
+	// 	return $rows.length;
+	// }
+	//
+	// // 現在ページの行数
+	// function getRowLenOnCursorPage() {
+	// 	'use strict';
+	// 	let $row = $('.cursor-row');
+	// 	let cnt = getCurrentRowOnPage(); // 現在行を加える
+	//
+	// 	// 後ろに数える
+	// 	while ($row[0] && !($row.hasClass('page-last-row'))) {
+	// 		cnt++;
+	// 		$row = $row.nextObj('#sentence_container .row');
+	// 	}
+	// 	return cnt;
+	// }
+	//
+	// // 文書内での現在行
+	// function getCurrentRowPos() {
+	// 	'use strict';
+	// 	const rowNum = $('.paragraph > .row').index($('.cursor').closest('.row')) +1;
+	// 	return rowNum;
+	// }
+	//
+	// // 現在ページ内で何行目にいるか
+	// function getCurrentRowOnPage() {
+	// 	'use strict';
+	// 	let $row = $('.cursor-row');
+	// 	let cnt = 1; // page-break行の分
+	//
+	// 	// 前にさかのぼって数える
+	// 	while ($row[0] && !($row.hasClass('page-break'))) {
+	// 		cnt++;
+	// 		$row = $row.prevObj('#sentence_container .row');
+	// 	}
+	// 	return cnt;
+	// }
+	//
+	// // 現在文字位置
+	// function getCurrentStringPosOnRow() {
+	// 	'use strict';
+	// 	const $cursor = $('.cursor');
+	// 	const strNum = $('.cursor-row').children('.char').index($cursor);
+	// 	return strNum;
+	// }
+	//
+	// // カーソル行の全文字数
+	// function getStringLenOfCursorRow() {
+	// 	'use strict';
+	// 	const strLen = $('.cursor-row > .char').length;
+	// 	return strLen - 1; // EOLの分を除く
+	// }
+	//
+	// // 現在ページ
+	// function getCurrentPagePos() {
+	// 	'use strict';
+	// 	// page-breakを持つ行を探して段落をさかのぼり、その段落に複数のpage-breakがあればcursor行またはその段落の最後の行から行を遡ることでpage-breakを探している
+	// 	let $currentParagraph = $('.cursor-row').closest('.paragraph');
+	// 	let $currentPage;
+	//
+	// 	while (!($currentPage = $currentParagraph.children('.row.page-break'))[0]) {
+	// 		$currentParagraph = $currentParagraph.prev('.paragraph');
+	// 	}
+	// 	if ($currentPage.length > 1) {
+	//
+	// 		if (!($currentParagraph.children('.cursor-row'))[0]) {
+	// 			const $row = $('.cursor-row');
+	// 			while (!($row.hasClass('page-break'))) {
+	// 				$row = $row.prev('.row');
+	// 				$currentPage = $row;
+	// 			}
+	// 		} else {
+	// 			$currentPage = $currentParagraph.children('.page-break').last();
+	// 		}
+	//
+	// 	}
+	// 	return $('.page-break').index($currentPage) + 1;
+	// }
+	//
+	// // 文書内の全ページ数
+	// function getPageLen() {
+	// 	'use strict';
+	// 	return $('.page-break').length;
+	// }
+	//
+	// // 1ページの行数
+	// function getRowLenOnPage() {
+	// 	'use strict';
+	// 	return 40;
+	// }
+	//
+	// // 1行の文字数
+	// function getStringLenOfRow() {
+	// 	'use strict';
+	// 	return 40;
+	// }
+	//
 	// // 現在activeになっている文字装飾ボタンを配列にする
 	// function getConfDecoChar() {
 	// 	'use strict';
@@ -3514,18 +3514,18 @@ $(function() {
 	// 				alert('Error:' + textStatus + ':\n' + errorThrown + ':status=' + XMLHttpRequest.status + 'in comDeleteFile ');
 	// 			});
 	// }
-
-	function printDocInfo() {
-		'use strict';
-		console.log('printDocInfo()');
-		$('#doc-info > #str-num').text(getCurrentStringPosOnRow());
-		$('#doc-info > #str-len').text(getStringLenOfCursorRow());
-		$('#doc-info > #row-num').text(getCurrentRowOnPage());
-		$('#doc-info > #row-len').text(getRowLenOnCursorPage());
-		$('#doc-info > #page-num').text(getCurrentPagePos());
-		$('#doc-info > #page-len').text(getPageLen());
-	}
-
+	//
+	// function printDocInfo() {
+	// 	'use strict';
+	// 	console.log('printDocInfo()');
+	// 	$('#doc-info > #str-num').text(getCurrentStringPosOnRow());
+	// 	$('#doc-info > #str-len').text(getStringLenOfCursorRow());
+	// 	$('#doc-info > #row-num').text(getCurrentRowOnPage());
+	// 	$('#doc-info > #row-len').text(getRowLenOnCursorPage());
+	// 	$('#doc-info > #page-num').text(getCurrentPagePos());
+	// 	$('#doc-info > #page-len').text(getPageLen());
+	// }
+	//
 	// function setFileTitle(filename) {
 	// 	'use strict';
 	// 	$('#file_title').val(filename);
@@ -4035,74 +4035,73 @@ $(function() {
 				// 		}
 				// 	});
 				// }
-/*
-				// palette
-				// color
-				document.getElementById('color_btn').addEventListener('click',function (e) {
-					'use strict';
-					// 文字色ボタンをクリックすると選択している文字の色が変わる
-					const eBtn = document.getElementById('color_btn');
-					const colors = eBtn.className.match(/select-(\S+)/);
-					let color;
-
-					if (colors == null) {
-						color = 'black';
-					} else {
-						color = colors[1];
-					}
-
-					setColorOnSelect(color);
-				},false);
-
-				setSelectColorClickEvent('black');
-				setSelectColorClickEvent('red');
-				setSelectColorClickEvent('blue');
-				function setSelectColorClickEvent(color) {
-					// 文字色(ドロップダウンの方)をクリックするとボタンの色が変わるイベントを付加する
-					document.getElementById('select_color_'+color).addEventListener('click',function (e) {
-						const elSel = document.getElementById('color_btn');
-						$(elSel).removeClassByRegExp(/select-\S+/);
-						setColorOnSelect(color);
-						if (color === 'black') return;
-						elSel.classList.add('select-'+color);
-					},false);
-				}
-
-				// bold italic
-				document.getElementById('btn-bold').addEventListener('click',function(e) {
-					'use strict';
-					const eBtn = document.getElementById('btn-bold');
-					const eSelChars = findSelectElem(true);
-
-					eBtn.classList.toggle('active');
-					if (/active/.test(eBtn.className)) {
-						// ボタンをクリックした結果、activeになった
-						for (let eChar of eSelChars) {
-							eChar.classList.add('decolation-font-bold');
-						}
-					} else {
-						// ボタンをクリックした結果、解除された
-						for (let eChar of eSelChars) {
-							eChar.classList.remove('decolation-font-bold');
-						}
-					}
-				},false);
-				document.getElementById('btn-italic').addEventListener('click',function(e) {
-					'use strict';
-					const eBtn = document.getElementById('btn-italic');
-					const eSelChars = findSelectElem(true);
-
-					eBtn.classList.toggle('active');
-					if (/active/.test(eBtn.className)) {
-						for (let eChar of eSelChars) {
-							eChar.classList.add('decolation-font-italic');
-						}
-					} else {
-						for (let eChar of eSelChars) {
-							eChar[i].classList.remove('decolation-font-italic');
-						}
-					}
-				},false);
+				// // palette
+				// // color
+				// document.getElementById('color_btn').addEventListener('click',function (e) {
+				// 	'use strict';
+				// 	// 文字色ボタンをクリックすると選択している文字の色が変わる
+				// 	const eBtn = document.getElementById('color_btn');
+				// 	const colors = eBtn.className.match(/select-(\S+)/);
+				// 	let color;
+				//
+				// 	if (colors == null) {
+				// 		color = 'black';
+				// 	} else {
+				// 		color = colors[1];
+				// 	}
+				//
+				// 	setColorOnSelect(color);
+				// },false);
+				//
+				// setSelectColorClickEvent('black');
+				// setSelectColorClickEvent('red');
+				// setSelectColorClickEvent('blue');
+				// function setSelectColorClickEvent(color) {
+				// 	// 文字色(ドロップダウンの方)をクリックするとボタンの色が変わるイベントを付加する
+				// 	document.getElementById('select_color_'+color).addEventListener('click',function (e) {
+				// 		const elSel = document.getElementById('color_btn');
+				// 		$(elSel).removeClassByRegExp(/select-\S+/);
+				// 		setColorOnSelect(color);
+				// 		if (color === 'black') return;
+				// 		elSel.classList.add('select-'+color);
+				// 	},false);
+				// }
+				//
+				// // bold italic
+				// document.getElementById('btn-bold').addEventListener('click',function(e) {
+				// 	'use strict';
+				// 	const eBtn = document.getElementById('btn-bold');
+				// 	const eSelChars = findSelectElem(true);
+				//
+				// 	eBtn.classList.toggle('active');
+				// 	if (/active/.test(eBtn.className)) {
+				// 		// ボタンをクリックした結果、activeになった
+				// 		for (let eChar of eSelChars) {
+				// 			eChar.classList.add('decolation-font-bold');
+				// 		}
+				// 	} else {
+				// 		// ボタンをクリックした結果、解除された
+				// 		for (let eChar of eSelChars) {
+				// 			eChar.classList.remove('decolation-font-bold');
+				// 		}
+				// 	}
+				// },false);
+				// document.getElementById('btn-italic').addEventListener('click',function(e) {
+				// 	'use strict';
+				// 	const eBtn = document.getElementById('btn-italic');
+				// 	const eSelChars = findSelectElem(true);
+				//
+				// 	eBtn.classList.toggle('active');
+				// 	if (/active/.test(eBtn.className)) {
+				// 		for (let eChar of eSelChars) {
+				// 			eChar.classList.add('decolation-font-italic');
+				// 		}
+				// 	} else {
+				// 		for (let eChar of eSelChars) {
+				// 			eChar[i].classList.remove('decolation-font-italic');
+				// 		}
+				// 	}
+				// },false);
 				// // selection
 				// // 選択範囲に文字装飾が施されていればアクティブに
 				// document.getElementById('sentence_container').addEventListener('mouseup',function(e) {
@@ -4131,16 +4130,15 @@ $(function() {
 				// 		$(eSelChars[eSelChars.length -1]).nextObj('#sentence_container .char').addCursor();
 				// 	}
 				// },false);
-				// align
-				setTextAlignClickEvent('left');
-				setTextAlignClickEvent('center');
-				setTextAlignClickEvent('right');
-				function setTextAlignClickEvent(align) {
-					'use strict';
-					document.getElementById('text-btn-'+ align).addEventListener('click',function(e) {
-						setAlignCursorParagraph(align);
-					},false);
-				}
-				*/
+				// // align
+				// setTextAlignClickEvent('left');
+				// setTextAlignClickEvent('center');
+				// setTextAlignClickEvent('right');
+				// function setTextAlignClickEvent(align) {
+				// 	'use strict';
+				// 	document.getElementById('text-btn-'+ align).addEventListener('click',function(e) {
+				// 		setAlignCursorParagraph(align);
+				// 	},false);
+				// }
 });
 

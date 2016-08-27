@@ -803,6 +803,7 @@ Util.createDirectoryElement = (function () {
 
 			// シフトキーが押されながらなら、選択範囲を広げる
 			this.extendSelection(isShift);
+			this.sentenceContainer().printInfo();
 			return this;
 		}
 
@@ -828,6 +829,39 @@ Util.createDirectoryElement = (function () {
 			eCharPoses[index].classList.add('cursor-pos-memory');
 			return this;
 		}
+		// 現在行のうち何文字目にいるか
+		// 行頭カーソルなら０、EOLカーソルならその直前の文字が何文字目か
+		currentCharPos() {
+			return this.getChar().index(); // 行頭は０なので、+1はしなくてもいい
+		}
+		// 現在行の総文字数
+		strLenOfRow() {
+			return this.getRow().charLen();
+		}
+		// 現在ページで何行目にいるか
+		// isPageBreak()は異常がなければ必ず見つかるため、rowにnullが入ってisPageBreak()がnullpointerになったり、cntにずれが生じる状況は考えなくてもいい
+		currentRowPos() {
+			for (let row = this.getRow(),cnt = 1; row; row = row.prev(),cnt++) {
+				if (row.isPageBreak()) return cnt;
+			}
+			return -1;
+		}
+		// 現在ページの行数(最終ページのみ設定行数と異なるため計算)
+		// isPageLast()は異常がなければ必ず見つかるため、rowにnullが入ってisPageLast()がnullpointerになったり、cntにずれが生じる状況は考えなくてもいい
+		rowLenOnPage() {
+			for (let row = this.getRow(),cnt = this.currentRowPos(); row; row = row.next(),cnt++) {
+				if (row.isPageLast()) return cnt;
+			}
+			return -1;
+		}
+		// 現在ページ
+		currentPage() {
+			let cnt = 0;
+			for (let row = this.getRow(); row; row = row.prev()) {
+				if (row.isPageBreak()) cnt++;
+			}
+			return cnt;
+		}
 
 		// --DOM操作
 
@@ -852,7 +886,7 @@ Util.createDirectoryElement = (function () {
 
 			cursorChar.paragraph().cordinate().checkKinsoku();
 			this.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えず取得しなおし
-			this.sentenceContainer().changeDisplay(true);
+			this.sentenceContainer().changeDisplay(true).breakPage().printInfo();
 			return this;
 		}
 		// カーソル位置でバックスペース
@@ -868,7 +902,7 @@ Util.createDirectoryElement = (function () {
 					moveRow.moveLastBefore();
 				}
 				newParagraph.cordinate().checkKinsoku();
-				this.sentenceContainer().changeDisplay(true).breakPage();
+				this.sentenceContainer().changeDisplay(true).breakPage().printInfo();
 				return this;
 			}
 
@@ -876,7 +910,7 @@ Util.createDirectoryElement = (function () {
 			//  カーソルの前の位置にある文字を削除する(行頭なら行をまたいで前の文字)
 			if (!(cursorChar.isFirst() && cursorChar.row().isFirst())) {
 				cursorChar.prevChar().delete();
-				this.sentenceContainer().changeDisplay(true).breakPage();
+				this.sentenceContainer().changeDisplay(true).breakPage().printInfo();
 				return this;
 			}
 		}
@@ -888,7 +922,7 @@ Util.createDirectoryElement = (function () {
 			// 新しくできた段落の最初の文字にカーソルを移動する
 			const newParagraph = cursorParagraph.next(); // divide()で新しく挿入された段落
 			newParagraph.firstChild().firstChild().addCursor().setPosMemory();
-			this.sentenceContainer().changeDisplay(true).breakPage();
+			this.sentenceContainer().changeDisplay(true).breakPage().printInfo();
 			return this;
 		}
 
@@ -1794,6 +1828,14 @@ Util.createDirectoryElement = (function () {
 				}
 			}
 			return false;
+		}
+		// ページ内で一行目であるか
+		isPageBreak() {
+			return this.hasClass('page-break');
+		}
+		// ページ内で最終行であるか
+		isPageLast() {
+			return this.hasClass('page-last-row');
 		}
 
 		// --参照操作
@@ -3878,7 +3920,7 @@ Util.createDirectoryElement = (function () {
 
 			this.cursor().init();
 			this.resetDisplay();
-			this.breakPage();
+			this.breakPage().printInfo();
 			this.addKeydownEventListener();
 			this.addWheelEventListener();
 			return this;
@@ -3993,6 +4035,7 @@ Util.createDirectoryElement = (function () {
 				return this;
 			}
 		}
+		// 設定上の行内文字数
 		strLenOnRow(newStrLen) {
 			if (newStrLen === undefined) {
 				return this._strLenOnRow;
@@ -4001,6 +4044,7 @@ Util.createDirectoryElement = (function () {
 				return this;
 			}
 		}
+		// 設定上のページ内行数
 		rowLenOnpage(newRowLen) {
 			if (newRowLen === undefined) {
 				return this._rowLenOnPage;
@@ -4008,6 +4052,14 @@ Util.createDirectoryElement = (function () {
 				this._rowLenOnPage = newRowLen;
 				return this;
 			}
+		}
+		// 全文字数
+		countChar() {
+			let cnt = 0;
+			for (let paragraph of this.paragraphs()) {
+				cnt += paragraph.countChar();
+			}
+			return cnt;
 		}
 		// 全行数
 		countRow() {
@@ -4017,11 +4069,11 @@ Util.createDirectoryElement = (function () {
 			}
 			return cnt;
 		}
-		// 全文字数
-		countChar() {
+		// 全ページ数
+		countPage() {
 			let cnt = 0;
-			for (let paragraph of this.paragraphs()) {
-				cnt += paragraph.countChar();
+			for (let row = this.firstRow(); row; row = row.next()) {
+				if (row.isPageBreak()) cnt++;
 			}
 			return cnt;
 		}
@@ -4142,6 +4194,17 @@ Util.createDirectoryElement = (function () {
 			paragraph.firstChild().firstChild().prev(lastChar);
 
 			this.pushParagraph(paragraph);
+			return this;
+		}
+		// 文書情報を表示する
+		// TODO: num -> pos
+		printInfo() {
+			document.getElementById('str_num').textContent = this.cursor().currentCharPos();
+			document.getElementById('str_len').textContent = this.cursor().strLenOfRow();
+			document.getElementById('row_num').textContent = this.cursor().currentRowPos();
+			document.getElementById('row_len').textContent = this.cursor().rowLenOnPage();
+			document.getElementById('page_num').textContent = this.cursor().currentPage();
+			document.getElementById('page_len').textContent = this.countPage();
 			return this;
 		}
 
