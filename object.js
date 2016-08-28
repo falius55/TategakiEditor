@@ -5,7 +5,6 @@
  *	要素の再利用のため、要素作成のみクロージャで行う
  *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
  */
-// TODO: メニュークラス(palette)、コピーアンドペースト、禁則処理
 console.log('object.js');
 const Util = {
 	// baseArrayをcnt個ずつの配列に分割する
@@ -1865,7 +1864,7 @@ Util.createDirectoryElement = (function () {
 		maxFont() {
 			let max = 0; // 空行では０になる
 			for (let char of this.chars()) {
-				max = Math.max(max,char.fontSize());
+				max = Math.max(max,char.fontSize() === 'auto' ? 18 : char.fontSize());
 			}
 			return max;
 		}
@@ -3404,11 +3403,12 @@ Util.createDirectoryElement = (function () {
 			data.user_id = sentenceContainer.userId();
 			data.file_id = this.id();
 			console.time('post()');
+			sentenceContainer.userAlert('読込中');
 			Util.post('/tategaki/ReadJsonFile',data,function (json) {
 				'use strict';
 				console.timeEnd('post()');
 				console.time('SentenceContainer init');
-				sentenceContainer.init(json);
+				sentenceContainer.init(json).userAlert('読み込み完了');
 				console.timeEnd('SentenceContainer init');
 			}.bind(this));
 			return this;
@@ -3418,7 +3418,7 @@ Util.createDirectoryElement = (function () {
 				user_id: this.fileList().sentenceContainer().userId(),
 				file_id: this.id()
 			},function (json) {
-				if (!result) { alert('ファイル削除エラーです(ファイル番号：'+ this.id() + ')'); }
+				if (!result) { console.log('ファイル削除エラーです(ファイル番号：'+ this.id() + ')'); }
 				// 現在開いているファイルを削除したなら、前後どちらかのファイルを開く
 				// 同じディレクトリに他のファイルがなければ新しいファイルを開く
 				// 最後に、ファイルリストを作り直す
@@ -3818,7 +3818,10 @@ Util.createDirectoryElement = (function () {
 		deleteFile(filename) {
 			const files = this.findFile(filename);
 			const fileLength = files.length;
-			if (fileLength === 0) return this;
+			if (fileLength === 0) {
+				this.sentenceContainer().userAlert('存在しないファイルです','red');
+				return this;
+			}
 			if (fileLength === 1) {
 				files[0].delete();
 				return this;
@@ -3892,6 +3895,7 @@ Util.createDirectoryElement = (function () {
 			this._userId = userId;
 			this._titleElem = document.getElementById('file_title');
 			this._searchInputElem = document.getElementById('search');
+			this._userAlertElem = document.getElementById('user_info');
 			this.addFileTitleEvent();
 			this.addSelectEvent();
 			this._cursor = new Cursor(this);
@@ -3970,6 +3974,9 @@ Util.createDirectoryElement = (function () {
 		searchInputElem() {
 			return this._searchInputElem;
 		}
+		userAlertElem() {
+			return this._userAlertElem;
+		}
 		menu() {
 			return this._menu;
 		}
@@ -4014,6 +4021,7 @@ Util.createDirectoryElement = (function () {
 			} else {
 				this._filename = newFilename;
 				this.titleElem().value = newFilename;
+				this.titleElem().dataset.filename = newFilename;
 				return this;
 			}
 		}
@@ -4255,6 +4263,12 @@ Util.createDirectoryElement = (function () {
 			}
 			return this;
 		}
+		userAlert(str,color) {
+			this.userAlertElem().textContent = str;
+			if (color) this.userAlertElem().style.color = color;
+			else this.userAlertElem().style.color = '';
+			return this;
+		}
 
 		// --ファイル操作
 
@@ -4268,6 +4282,7 @@ Util.createDirectoryElement = (function () {
 				this.saveAsFile();
 				return this;
 			}
+			this.userAlert('保存中');
 			Util.post('/tategaki/WriteJsonFile',{
 				user_id: this.userId(),
 				file_id: this.fileId(),
@@ -4275,7 +4290,7 @@ Util.createDirectoryElement = (function () {
 				json: this.data(),
 				saved: Date.now()
 			},function (json) {
-				this.saved(json.strDate);
+				this.saved(json.strDate).userAlert('保存しました');
 				this.fileList().read();
 			}.bind(this));
 			return this;
@@ -4317,7 +4332,7 @@ Util.createDirectoryElement = (function () {
 		changeDisplay(isForce) {
 			const cursorChar = this.cursorChar();
 			if (isForce === undefined && cursorChar.isDisplay() && cursorChar.row().isDisplay()){
-				return;
+				return this;
 			}
 			console.time('change display');
 			const rowPos = this.computeDisplayRowPos();
@@ -4349,7 +4364,7 @@ Util.createDirectoryElement = (function () {
 						const rowWidth = cache[maxFont];
 						sum += rowWidth + 2; // 2はボーダーの幅
 					}
-					row.display((sum < dispWidth),firstChar); // (sum < dispwidth)はbool値を渡している
+					row.display((sum < dispWidth),firstChar);
 					cnt++;
 				}
 			}
@@ -4451,6 +4466,7 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		runKeydown(e,keycode) {
+			this.userAlert('');
 			if (e.ctrlKey) return this.runControlKeyDown(e,keycode);
 
 			switch (keycode) {
@@ -4603,12 +4619,15 @@ Util.createDirectoryElement = (function () {
 
 		// ファイル名input
 		addFileTitleEvent() {
-			const eFileTitle = document.getElementById('file_title');
-			eFileTitle.addEventListener('focusin',function (e) {
+			this.titleElem().addEventListener('focusin',function (e) {
 				if (this.inputBuffer().isDisplay) { this.inputBuffer().empty().hide(); }
 				this.removeKeydownEventListener();
 			}.bind(this),false);
-			eFileTitle.addEventListener('focusout',function (e) {
+			this.titleElem().addEventListener('focusout',function (e) {
+				if (this.titleElem().value === '') {
+					this.userAlert('ファイル名が入力されていません','red');
+					this.titleElem().value = this.titleElem().dataset.filename;
+				}
 				this.addKeydownEventListener();
 			}.bind(this),false);
 		}
