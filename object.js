@@ -567,7 +567,6 @@ Util.createDirectoryElement = (function () {
 			}
 		}
 		start() {
-			console.log(this.sentenceContainer());
 			this.active();
 			this.sentenceContainer().removeKeydownEventListener();
 			this.focus().val(':');
@@ -707,6 +706,22 @@ Util.createDirectoryElement = (function () {
 							 this.sentenceContainer().newFile();
 						 }
 						 break;
+				case ':jumpr':
+				case ':jumprow':
+				case ':jr':
+				case ':じゅｍｐｒ':
+				case ':じゅｍｐろｗ':
+				case ':ｊｒ':
+						 if (command[1]) this.sentenceContainer().cursor().jumpRow(parseInt(command[1]));
+						 break;
+				case ':jumpp':
+				case ':jumppage':
+				case ':jp':
+				case ':じゅｍっｐ':
+				case ':じゅｍっぱげ':
+				case ':ｊｐ':
+						 if (command[1]) this.sentenceContainer().cursor().jumpPage(parseInt(command[1]));
+						 break;
 				case ':new':
 				case ':n':
 				case ':ねｗ':
@@ -738,9 +753,49 @@ Util.createDirectoryElement = (function () {
 						 // 前のファイルを開く
 						 this.fileList().openPrevFile();
 						 break;
+				case ':title':
+				case ':name':
+				case ':t':
+				case ':ちｔぇ':
+				case ':なめ':
+				case ':ｔ':
+						 if (command[1]) {
+							 this.sentenceContainer().filename(command[1]);
+						 }
+						 break;
+				case ':mv':
+				case ':ｍｖ':
+						 this.fileList().moveFile(command[1],command[2]);
+						 break;
+				case ':mkdir':
+				case ':ｍｋぢｒ':
+							 this.fileList().mkdir(command[1]);
+						 break;
+				case ':deldir':
+				case ':でｌぢｒ':
+						 this.fileList().deleteDirectory(command[1],false);
+						 break;
 				case ':noh':
 				case ':のｈ':
 						 this.sentenceContainer().stopSearchMode();
+						 break;
+				case '::':
+						 this.sentenceContainer().cursor().insert(':');
+						 break;
+				case ':;':
+						 this.sentenceContainer().cursor().insert(';');
+						 break;
+				case ':/':
+						  this.sentenceContainer().cursor().insert('/');
+						  break;
+				case ':i':
+						 command[1] && this.sentenceContainer().cursor().insert(command[1]);
+						 break;
+				case ':bold':
+						 this.sentenceContainer().menu().boldButton(!this.sentenceContainer().menu().boldButton());
+						 break;
+				case ':italic':
+						 this.sentenceContainer().menu().italicButton(!this.sentenceContainer().menu().italicButton());
 						 break;
 				default:
 						 break;
@@ -960,6 +1015,24 @@ Util.createDirectoryElement = (function () {
 			if (!row) return this;
 			const char = row.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
 			char.slidePrevCursor().addCursor(isShift);
+			return this;
+		}
+		jumpRow(num) {
+			if (typeof num !== 'number') return this;
+			const row = this.sentenceContainer().row(num);
+			if (row) {
+				row.firstChild().addCursor().setPosMemory();
+				this.sentenceContainer().changeDisplay(false,'center');
+			}
+			return this;
+		}
+		jumpPage(num) {
+			if (typeof num !== 'number') return this;
+			const row = this.sentenceContainer().pageRow(num);
+			if (row) {
+				row.firstChild().addCursor().setPosMemory();
+				this.sentenceContainer().changeDisplay(false,'right');
+			}
 			return this;
 		}
 		// 次の検索語句にカーソルを移動する
@@ -3563,6 +3636,7 @@ Util.createDirectoryElement = (function () {
 		}
 		// ディレクトリ内にファイルがあるとき、強制的に中のファイルごと削除するときのみoptionはtrue
 		delete(bl) {
+			bl = bl || false; // 引数省略の場合でも、明確にfalseを入れる
 			Util.post("/tategaki/DeleteDirectory",{
 				directory_id: this.id(),
 				option: bl
@@ -3837,6 +3911,7 @@ Util.createDirectoryElement = (function () {
 			}
 		}
 		mkdir(dirname) {
+			if (!dirname) return this;
 			Util.post("/tategaki/DirectoryMaker",{
 				user_id: this.sentenceContainer().userId(),
 				directoryname: dirname,
@@ -3845,9 +3920,16 @@ Util.createDirectoryElement = (function () {
 				this.fileList().read();
 			}.bind(this));
 		}
+		deleteDirectory(dirname,isForce) {
+			const dirs = this.findDirectory(dirname);
+			if (dirs.length === 0) return this;
+			dirs[0].delete(isForce);
+			return this;
+		}
 		moveFile(filename,dirname) {
 			const files = this.findFile(filename);
 			const dirs = this.findDirectory(dirname);
+			if (files.length === 0 || dirs.length === 0) return this;
 			files[0].move(dirs[0]);
 			return this;
 		}
@@ -3940,6 +4022,28 @@ Util.createDirectoryElement = (function () {
 		}
 		lastRow() {
 			return this.lastChild().lastChild();
+		}
+		// num行目のRowを取得する
+		row(num) {
+			if (num <= 0) return this.firstRow();
+			let cnt = 0;
+			for (let row = this.firstRow(); row; row = row.next()) {
+				cnt++;
+				if (cnt === num) return row;
+			}
+			return this.lastRow();
+		}
+		// numページ目の第一行目のRowを取得する
+		pageRow(num) {
+			if (num <= 0) return this.firstRow();
+			let cnt = 0;
+			for (let row = this.firstRow(); row; row = row.next()) {
+				if (row.isPageBreak()) {
+					cnt++;
+					if (cnt === num) return row;
+				}
+			}
+			return this.lastRow();
 		}
 		firstChar() {
 			return this.firstRow().firstChild();
@@ -4329,13 +4433,14 @@ Util.createDirectoryElement = (function () {
 			console.timeEnd('display');
 			return this;
 		}
-		changeDisplay(isForce) {
+		// strPos: 'center','right'
+		changeDisplay(isForce,opt_pos) {
 			const cursorChar = this.cursorChar();
-			if (isForce === undefined && cursorChar.isDisplay() && cursorChar.row().isDisplay()){
+			if (!isForce && cursorChar.isDisplay() && cursorChar.row().isDisplay()){
 				return this;
 			}
 			console.time('change display');
-			const rowPos = this.computeDisplayRowPos();
+			const rowPos = this.computeDisplayRowPos(opt_pos);
 			const charPos = cursorChar.row().computeDisplayCharPos();
 			this.addDisplay(rowPos,charPos);
 			console.timeEnd('change display');
@@ -4370,17 +4475,21 @@ Util.createDirectoryElement = (function () {
 			}
 			return this;
 		}
-		computeDisplayRowPos(opt_bool) {
+		// opt_pos: 'center'なら、カーソル位置を中央にする
+		// 'right'なら、カーソル位置を最も右にする
+		computeDisplayRowPos(opt_pos) {
 			const currentFirst = this.firstDisplayRowPos();
 			const cursorIndex = this.cursorRowPos();
 			const currentEnd = this.lastDisplayRowPos();
 
-			// opt_boolがtrueなら、カーソル位置を中央にする
+			// カーソル位置を中央にする
 			// HACK:計算前のdisplayの数を基準にするので、フォントの大きさなどによってずれもありうる
-			if (opt_bool) {
+			if (opt_pos === 'center') {
 				const harfRange = (currentEnd - currentFirst)/2;
 				const ret = cursorIndex - harfRange;
 				return ret >= 0 ? ret : 0;
+			} else if (opt_pos === 'right') {
+				return cursorIndex;
 			}
 
 			if (cursorIndex < currentFirst) {

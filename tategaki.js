@@ -3,7 +3,7 @@ console.log('tategaki.js');
  * 実装目標
  * アンドゥ
  */
-// TODO: userAlert(),runCommand()
+// TODO: runCommand()
 $(function() {
 	// // ===================================================================
 	// // 		クロージャ(label:closer)
@@ -670,154 +670,154 @@ $(function() {
 	// 	$('.row.display').first().removeClass('display');
 	// 	if (!($('.cursor-row').hasClass('display'))) { gCursor.shiftLeft(); }
 	// }
-
-	// ------------------------------- command mode ---------------------------------------
-
-	function runCommand() {
-		'use strict';
-		const $command = $('#command');
-
-		let command = $command.val().split(' ');
-		// 半角スペースで区切られていないようなら、全角スペースの区切りでも可
-		if (command.length < 2) command = $command.val().split('　');
-
-		switch (command[0]) {
-			// case ':w':
-			// case ':save':
-			// case ':s':
-			// case ': ｗ':
-			// case ':さヴぇ':
-			// case ':ｓ':
-			//
-			// 		 if (command[1]) {
-			// 			 comSaveAs(command[1]);
-			// 		 } else {
-			// 			 comSaveJsonFile();
-			// 		 }
-			//
-			// 		 break;
-			// case ':e':
-			// case ':o':
-			// case ':open':
-			// case ':え':
-			// case ':お':
-			// case ':おぺｎ':
-			//
-			// 		 if (command[1]) {
-			// 			 comOpenFile(command[1]);
-			// 		 } else {
-			// 			 defaultNewFile();
-			// 		 }
-			//
-			// 		 break;
-			case ':jumpr':
-			case ':jumprow':
-			case ':jr':
-			case ':じゅｍｐｒ':
-			case ':じゅｍｐろｗ':
-			case ':ｊｒ':
-					 if (command[1]) gCursor.jumpForRow(command[1]);
-					 break;
-			case ':jumpp':
-			case ':jumppage':
-			case ':jp':
-			case ':じゅｍっｐ':
-			case ':じゅｍっぱげ':
-			case ':ｊｐ':
-					 if (command[1]) gCursor.jumpForPage(command[1]);
-					 break;
-			case ':new':
-			case ':n':
-			case ':ねｗ':
-			case ':ｎ':
-
-					 if (command[1]) {
-						 newFile(command[1]);
-					 } else {
-						 defaultNewFile();
-					 }
-
-					 break;
-			case ':delete':
-			case ':del':
-			case ':d':
-			case ':でぇて':
-			case ':でｌ':
-			case ':ｄ':
-
-					 if (command[1]) {
-						 comDeleteFileFromFileName(command[1]);
-					 } else {
-						 defaultDeleteFile();
-					 }
-
-					 break;
-			case ':next':
-			case ':ねｘｔ':
-					 // 次のファイルを開く
-					 comOpenNextFile();
-					 break;
-			case ':prev':
-			case ':ｐれｖ':
-					 // 前のファイルを開く
-					 comOpenPrevFile();
-					 break;
-			case ':title':
-			case ':name':
-			case ':t':
-			case ':ちｔぇ':
-			case ':なめ':
-			case ':ｔ':
-
-					 if (command[1]) {
-						 setFileTitle(command[1]);
-					 }
-
-					 break;
-			case ':mv':
-			case ':ｍｖ':
-					 comMoveFile(command[1],command[2]);
-					 break;
-			case ':mkdir':
-			case ':ｍｋぢｒ':
-					 if (command[1]) {
-						 comMakeDirectory(command[1]);
-					 }
-					 break;
-			case ':deldir':
-			case ':でｌぢｒ':
-					 if (command[1]) {
-						 comDeleteDirectoryFromName(command[1],false);
-					 }
-					 break;
-			case ':noh':
-			case ':のｈ':
-					 endFindMode();
-					 break;
-			case '::':
-					 insertStringFromCursor(':');
-					 break;
-			case ':;':
-					 insertStringFromCursor(';');
-					 break;
-			case ':/':
-					  insertStringFromCursor('/');
-					  break;
-			case ':i':
-					 insertStringFromCursor(command[1]);
-					 break;
-			case ':italic':
-					 toggleFont('italic');
-					 break;
-			case ':bold':
-					 toggleFont('bold');
-					 break;
-			default:
-					 break;
-		}
-
-	}
-
+	//
+	// // ------------------------------- command mode ---------------------------------------
+	//
+	// function runCommand() {
+	// 	'use strict';
+	// 	const $command = $('#command');
+	//
+	// 	let command = $command.val().split(' ');
+	// 	// 半角スペースで区切られていないようなら、全角スペースの区切りでも可
+	// 	if (command.length < 2) command = $command.val().split('　');
+	//
+	// 	switch (command[0]) {
+	// 		case ':w':
+	// 		case ':save':
+	// 		case ':s':
+	// 		case ': ｗ':
+	// 		case ':さヴぇ':
+	// 		case ':ｓ':
+	//		
+	// 				 if (command[1]) {
+	// 					 comSaveAs(command[1]);
+	// 				 } else {
+	// 					 comSaveJsonFile();
+	// 				 }
+	//		
+	// 				 break;
+	// 		case ':e':
+	// 		case ':o':
+	// 		case ':open':
+	// 		case ':え':
+	// 		case ':お':
+	// 		case ':おぺｎ':
+	//		
+	// 				 if (command[1]) {
+	// 					 comOpenFile(command[1]);
+	// 				 } else {
+	// 					 defaultNewFile();
+	// 				 }
+	//		
+	// 				 break;
+	// 		case ':jumpr':
+	// 		case ':jumprow':
+	// 		case ':jr':
+	// 		case ':じゅｍｐｒ':
+	// 		case ':じゅｍｐろｗ':
+	// 		case ':ｊｒ':
+	// 				 if (command[1]) gCursor.jumpForRow(command[1]);
+	// 				 break;
+	// 		case ':jumpp':
+	// 		case ':jumppage':
+	// 		case ':jp':
+	// 		case ':じゅｍっｐ':
+	// 		case ':じゅｍっぱげ':
+	// 		case ':ｊｐ':
+	// 				 if (command[1]) gCursor.jumpForPage(command[1]);
+	// 				 break;
+	// 		case ':new':
+	// 		case ':n':
+	// 		case ':ねｗ':
+	// 		case ':ｎ':
+	//		
+	// 				 if (command[1]) {
+	// 					 newFile(command[1]);
+	// 				 } else {
+	// 					 defaultNewFile();
+	// 				 }
+	//		
+	// 				 break;
+	// 		case ':delete':
+	// 		case ':del':
+	// 		case ':d':
+	// 		case ':でぇて':
+	// 		case ':でｌ':
+	// 		case ':ｄ':
+	//		
+	// 				 if (command[1]) {
+	// 					 comDeleteFileFromFileName(command[1]);
+	// 				 } else {
+	// 					 defaultDeleteFile();
+	// 				 }
+	//		
+	// 				 break;
+	// 		case ':next':
+	// 		case ':ねｘｔ':
+	// 				 // 次のファイルを開く
+	// 				 comOpenNextFile();
+	// 				 break;
+	// 		case ':prev':
+	// 		case ':ｐれｖ':
+	// 				 // 前のファイルを開く
+	// 				 comOpenPrevFile();
+	// 				 break;
+	// 		case ':title':
+	// 		case ':name':
+	// 		case ':t':
+	// 		case ':ちｔぇ':
+	// 		case ':なめ':
+	// 		case ':ｔ':
+	//		
+	// 				 if (command[1]) {
+	// 					 setFileTitle(command[1]);
+	// 				 }
+	//		
+	// 				 break;
+	// 		case ':mv':
+	// 		case ':ｍｖ':
+	// 				 comMoveFile(command[1],command[2]);
+	// 				 break;
+	// 		case ':mkdir':
+	// 		case ':ｍｋぢｒ':
+	// 				 if (command[1]) {
+	// 					 comMakeDirectory(command[1]);
+	// 				 }
+	// 				 break;
+	// 		case ':deldir':
+	// 		case ':でｌぢｒ':
+	// 				 if (command[1]) {
+	// 					 comDeleteDirectoryFromName(command[1],false);
+	// 				 }
+	// 				 break;
+	// 		case ':noh':
+	// 		case ':のｈ':
+	// 				 endFindMode();
+	// 				 break;
+	// 		case '::':
+	// 				 insertStringFromCursor(':');
+	// 				 break;
+	// 		case ':;':
+	// 				 insertStringFromCursor(';');
+	// 				 break;
+	// 		case ':/':
+	// 				  insertStringFromCursor('/');
+	// 				  break;
+	// 		case ':i':
+	// 				 insertStringFromCursor(command[1]);
+	// 				 break;
+	// 		case ':italic':
+	// 				 toggleFont('italic');
+	// 				 break;
+	// 		case ':bold':
+	// 				 toggleFont('bold');
+	// 				 break;
+	// 		default:
+	// 				 break;
+	// 	}
+	//
+	// }
+	//
 	// function startCommandMode() {
 	// 	'use strict';
 	// 	console.log('startCommandMode');
