@@ -7,13 +7,9 @@
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<title>縦書きエディタ</title>
-			<!--
-			<link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css" media="screen">
-		-->
 			<link rel="stylesheet" href="honoka/css/bootstrap.min.css" media="screen">
 			<link rel="stylesheet" href="tategaki.css">
 			<link rel="stylesheet" href="tategaki-character-decolation.css">
-			<link rel="stylesheet" href="verticalprint.css" media="print">
 		</head>
 		<body>
 			<%
