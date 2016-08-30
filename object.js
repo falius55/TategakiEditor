@@ -935,7 +935,7 @@ Util.createDirectoryElement = (function () {
 
 			cursorChar.paragraph().cordinate().checkKinsoku();
 			this.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えず取得しなおし
-			this.sentenceContainer().changeDisplay(true).breakPage().printInfo();
+			this.sentenceContainer().changeDisplay().breakPage().printInfo();
 			return this;
 		}
 		// カーソル位置でバックスペース
@@ -951,7 +951,7 @@ Util.createDirectoryElement = (function () {
 					moveRow.moveLastBefore();
 				}
 				newParagraph.cordinate().checkKinsoku();
-				this.sentenceContainer().changeDisplay(true).breakPage().printInfo();
+				this.sentenceContainer().changeDisplay().breakPage().printInfo();
 				return this;
 			}
 
@@ -959,7 +959,7 @@ Util.createDirectoryElement = (function () {
 			//  カーソルの前の位置にある文字を削除する(行頭なら行をまたいで前の文字)
 			if (!(cursorChar.isFirst() && cursorChar.row().isFirst())) {
 				cursorChar.prevChar().delete();
-				this.sentenceContainer().changeDisplay(true).breakPage().printInfo();
+				this.sentenceContainer().changeDisplay().breakPage().printInfo();
 				return this;
 			}
 		}
@@ -971,7 +971,7 @@ Util.createDirectoryElement = (function () {
 			// 新しくできた段落の最初の文字にカーソルを移動する
 			const newParagraph = cursorParagraph.next(); // divide()で新しく挿入された段落
 			newParagraph.firstChild().firstChild().addCursor().setPosMemory();
-			this.sentenceContainer().changeDisplay(true).breakPage().printInfo();
+			this.sentenceContainer().changeDisplay().breakPage().printInfo();
 			return this;
 		}
 
@@ -1017,7 +1017,7 @@ Util.createDirectoryElement = (function () {
 			const row = this.sentenceContainer().row(num);
 			if (row) {
 				row.firstChild().addCursor().setPosMemory();
-				this.sentenceContainer().changeDisplay(false,'center');
+				this.sentenceContainer().changeDisplay('center');
 			}
 			return this;
 		}
@@ -1026,7 +1026,7 @@ Util.createDirectoryElement = (function () {
 			const row = this.sentenceContainer().pageRow(num);
 			if (row) {
 				row.firstChild().addCursor().setPosMemory();
-				this.sentenceContainer().changeDisplay(false,'right');
+				this.sentenceContainer().changeDisplay('right');
 			}
 			return this;
 		}
@@ -4438,11 +4438,8 @@ Util.createDirectoryElement = (function () {
 			return this;
 		}
 		// strPos: 'center','right'
-		changeDisplay(isForce,opt_pos) {
+		changeDisplay(opt_pos) {
 			const cursorChar = this.cursorChar();
-			// if (!isForce && cursorChar.isDisplay() && cursorChar.row().isDisplay()){
-			// 	return this;
-			// }
 			const rowPos = this.computeDisplayRowPos(opt_pos);
 			const charPos = cursorChar.row().computeDisplayCharPos();
 			this.addDisplay(rowPos,charPos);
