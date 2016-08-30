@@ -51,7 +51,6 @@ const Util = {
 		}
 
 		xhr.addEventListener('load',function (e) {
-			'use strict';
 			if (xhr.response) {
 				callback(xhr.response);
 			} else {
@@ -59,8 +58,7 @@ const Util = {
 			}
 		});
 		xhr.addEventListener('abort',function (e) {
-			'use strict';
-			alert('abort');
+			console.log('abort');
 		});
 		xhr.send(sendData);
 	}
@@ -345,36 +343,33 @@ Util.createDirectoryElement = (function () {
 		}
 		// 選択範囲の文字色を変える
 		addColor(color) {
-			const chars = this.sentenceContainer().selectChars();
+			const chars = this.sentenceContainer().selectChars(true);
 			for (let char of chars) {
 				char.color(color);
 			}
-			getSelection().removeAllRanges(); // 選択を解除する
 			return this;
 		}
 		// trueで付与、falseで解除
 		italic(bl) {
-			const chars = this.sentenceContainer().selectChars();
+			const chars = this.sentenceContainer().selectChars(true);
 			for (let char of chars) {
 				char.italic(bl);
 			}
-			getSelection().removeAllRanges(); // 選択を解除する
 			return this;
 		}
 		bold(bl) {
-			const chars = this.sentenceContainer().selectChars();
+			const chars = this.sentenceContainer().selectChars(true);
 			for (let char of chars) {
 				char.bold(bl);
 			}
-			getSelection().removeAllRanges(); // 選択を解除する
 			return this;
 		}
 		fontSize(size) {
-			const chars = this.sentenceContainer().selectChars();
+			const chars = this.sentenceContainer().selectChars(true);
 			for (let char of chars) {
 				char.fontSize(size);
 			}
-			getSelection().removeAllRanges(); // 選択を解除する
+			this.sentenceContainer().cordinate();
 			return this;
 		}
 		// 'center','left','right'
@@ -688,7 +683,7 @@ Util.createDirectoryElement = (function () {
 				case ':さヴぇ':
 				case ':ｓ':
 						 if (command[1]) {
-							 this.saveAsFile(command[1]);
+							 this.sentenceContainer().saveAsFile(command[1]);
 						 } else {
 							 this.sentenceContainer().saveFile();
 						 }
@@ -886,7 +881,7 @@ Util.createDirectoryElement = (function () {
 		// 現在行のうち何文字目にいるか
 		// 行頭カーソルなら０、EOLカーソルならその直前の文字が何文字目か
 		currentCharPos() {
-			return this.getChar().index(); // 行頭は０なので、+1はしなくてもいい
+			return this.getChar().index() + 1;
 		}
 		// 現在行の総文字数
 		strLenOfRow() {
@@ -1076,8 +1071,8 @@ Util.createDirectoryElement = (function () {
 			if (bShift) {
 				// シフトキーが押されていれば、カーソルのオフセット０までselectionを拡張
 				selection.extend(this.getChar().elem(),0);
-			} else {
-				// シフトキー無しでカーソルが動いたならselectionを解除する
+			} else if (bShift === false) {
+				// シフトキー無しでカーソルが動いたならselectionを解除する(省略でなく、明確にfalseが渡された場合)
 				selection.removeAllRanges();
 			}
 		}
@@ -1712,17 +1707,17 @@ Util.createDirectoryElement = (function () {
 		// 次の行の最初に移動する
 		moveFirstAfter() {
 			if (this.isEOL() || !this.isLast()) return this; // 各行最後の文字でのみ有効
-			if (this.row().isLast()) return this; // 段落はまたがない
 
 			const oldRow = this.row();
-			// 次の行がなければ新しく作る
+			// 次の行がなければ新しく作る(段落はまたがない)
 			if (oldRow.isLast()) {
-				oldRow.after(Row.createEmptyRow());
-				oldRow.container().changeDisplay();
+				const newRow = Row.createEmptyRow();
+				oldRow.after(newRow);
+				oldRow.EOL().hasCursor() && newRow.EOL().addCursor(); // 段落最後のEOLにカーソルがあれば動かないので、移動する
 			}
 
 			this.remove();
-			oldRow.next().prepend(this);
+			oldRow.next().prepend(this.display(true)); // displayしておかなければ、changeDisplay()での計算に狂いが生じる
 
 			this.setPosMemory(); // カーソルが付与されている文字は変わらないが、その文字の位置が変わる可能性があるためposMemoryを付け替える
 			return this;
@@ -2143,17 +2138,28 @@ Util.createDirectoryElement = (function () {
 
 		// 空行の整理
 		// 指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節する
+		// フォントサイズによる調整あり
 		cordinate() {
-			if (this.index > 0 && this.isEmpty()) return this.delete(); // 空段落以外での空行は削除する
+			if (this.index() > 0 && this.isEmpty()) return this.delete(); // 空段落以外での空行は削除する
 
 			const strLen = this.container().strLenOnRow();
 			const len = this.charLen();
-			if (len === strLen) return;
 			if (len < strLen) {
 				this.bringChars(strLen - len);
 			}
-			if (len > strLen) {
-				this.takeChars(len - strLen);
+
+			// 多すぎる文字数は減らす
+			// フォントの異なる文字が混ざっている場合、他の行と高さが異なってしまうため、その行の文字を変える必要がある
+			const maxSize = strLen * 18; // 標準フォント×文字数の数値が基準
+			let sum = 0;
+			for (let array of this.chars().entries()) {
+				const char = array[1];
+				sum += char.fontSize() === 'auto' ? 18 : char.fontSize();
+				if (sum > maxSize) {
+					const index = array[0];
+					this.takeChars(this.charLen() - index);
+					break;
+				}
 			}
 			return this;
 		}
@@ -2217,7 +2223,7 @@ Util.createDirectoryElement = (function () {
 			return -1; // displayがひとつもない(EOLは常にdisplayなので、ここまで来たら異常)
 		}
 		lastDisplayCharPos() {
-			if (!this.hasChar) return -1;
+			if (!this.hasChar) return 0;
 			for (let i = this.charLen()-1,char; char = this.chars(i); i--) {
 				if (char.isDisplay()) return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
 			}
@@ -2241,7 +2247,7 @@ Util.createDirectoryElement = (function () {
 					closestChar = char;
 				}
 			}
-			closestChar.slidePrevCursor().addCursor(e.shiftKey).setPosMemory();
+			closestChar.slidePrevCursor().addCursor().setPosMemory();
 		}
 
 		// --静的メソッド
@@ -3645,7 +3651,7 @@ Util.createDirectoryElement = (function () {
 				if (data.result === 'within') {
 					alert('ディレクトリが空ではないので削除できませんでした。');
 				}
-			},bind(this));
+			}.bind(this));
 		}
 	}
 	class FileList extends Sentence {
@@ -3714,7 +3720,7 @@ Util.createDirectoryElement = (function () {
 			const ret = [];
 			this.each(function (dir) {
 				if (dir.isDirectory && (dir.id() === idOrName || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(dir.name())))) {
-					ret.push(file);
+					ret.push(dir);
 				}
 			});
 			return ret;
@@ -3785,15 +3791,14 @@ Util.createDirectoryElement = (function () {
 			return null;
 		}
 		// すべてのファイルとディレクトリを順に引数にして関数を実行する
-		// fileがファイルなら次に進む
-		// ディレクトリなら子に進む
+		// fileに子があれば子に進み、なければ次に進む(子のあるディレクトリなら最初の子、fileか空ディレクトリなら次に進む)
 		// 次がなければ親の次に進む。それでもなければさらに親の次、と繰り返す
 		// その過程でルートディレクトリが見つかれば探索終了
 		each(func) {
-			for (let file = this.firstChild(),temp = this;; temp = file, file = file.isFile() ?  file.next() : file.firstChild()) {
+			for (let file = this.firstChild(),temp = this;; temp = file, file = file.hasChild() ? file.firstChild() : file.next()) {
 				if (!file) {
 					for (let parentDir = temp.parent(); !(file = parentDir.next()); parentDir = parentDir.parent()) {
-						if (parentDir.isRoot()) return null;
+						if (parentDir.isRoot()) return this;
 					}
 				}
 				func(file);
@@ -3917,7 +3922,8 @@ Util.createDirectoryElement = (function () {
 				directoryname: dirname,
 				saved: Date.now()
 			},function (data) {
-				this.fileList().read();
+				this.sentenceContainer().userAlert('ディレクトリを作成しました:'+ dirname);
+				this.read();
 			}.bind(this));
 		}
 		deleteDirectory(dirname,isForce) {
@@ -3999,13 +4005,12 @@ Util.createDirectoryElement = (function () {
 			this._strLenOnRow = 40; // １行の文字数
 			this._rowLenOnPage = 40; // １ページの行数
 			// DOMの構築
-			// if (window.container) window.container.empty();
 			for (let paraData of data.data.text) {
 				this.append(new Paragraph(paraData));
 			}
 
 			this.cursor().init();
-			this.resetDisplay();
+			this.cordinate().resetDisplay();
 			this.breakPage().printInfo();
 			this.addKeydownEventListener();
 			this.addWheelEventListener();
@@ -4257,7 +4262,6 @@ Util.createDirectoryElement = (function () {
 		}
 		// ペースト
 		pasteText() {
-			console.log('paste:'+ localStorage.clipBoard);
 			this.cursor().insert(localStorage.clipBoard);
 			return this;
 		}
@@ -4436,14 +4440,12 @@ Util.createDirectoryElement = (function () {
 		// strPos: 'center','right'
 		changeDisplay(isForce,opt_pos) {
 			const cursorChar = this.cursorChar();
-			if (!isForce && cursorChar.isDisplay() && cursorChar.row().isDisplay()){
-				return this;
-			}
-			console.time('change display');
+			// if (!isForce && cursorChar.isDisplay() && cursorChar.row().isDisplay()){
+			// 	return this;
+			// }
 			const rowPos = this.computeDisplayRowPos(opt_pos);
 			const charPos = cursorChar.row().computeDisplayCharPos();
 			this.addDisplay(rowPos,charPos);
-			console.timeEnd('change display');
 			return this;
 		}
 		// firstRow行目以降を表示する。文字はfirstChar文字目以降
@@ -4710,7 +4712,7 @@ Util.createDirectoryElement = (function () {
 				return;
 			}
 
-			// $findの中身が空になればfindモードを完全に終了する
+			// 中身が空になればsearchモードを完全に終了する
 			if (this.searchInputElem().value === '') {
 				this.searchInputElem().blur();
 				this.stopSearchMode();
@@ -4756,4 +4758,3 @@ Util.createDirectoryElement = (function () {
 	}
 
 })();
-container = new SentenceContainer(globalUserId); // グローバルオブジェクト

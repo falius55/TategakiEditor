@@ -101,7 +101,7 @@
 					</ul>
 				</nav>
 
-			<div class="modal fade" id="file_list_modal" data-backdrop="static">
+			<div class="modal fade" id="file_list_modal">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -122,7 +122,7 @@
 				</div>
 			</div>
 
-			<div class="modal fade" id="configue-modal" data-backdrop="static">
+			<div class="modal fade" id="configue-modal">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -222,10 +222,9 @@
 			<script src="/tategaki/jquery.mousewheel.js"></script>
 			<script src="/tategaki/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 			<script src="/tategaki/key_table.js"></script>
-			<script>
-			  var globalUserId = <%= userId %>;
-			</script>
 			<script src="/tategaki/object.js"></script>
-			<script src="/tategaki/tategaki.js"></script>
+			<script>
+			  window.container = new SentenceContainer(<%= userId %>); // グローバルオブジェクト
+			</script>
 		</body>
 	</html>
