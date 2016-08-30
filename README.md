@@ -46,7 +46,7 @@ TomcatとMySQLを利用します。
 
      `docBase="tategakiディレクトリを作成したディレクトリのパス/tategaki" />`
 
-3. tategakiディレクトリにソースコードを配置し、WEB-INF/classes/にある各JavaファイルをTomcatのディレクトリ/lib/servlet-api.jarにクラスパスを通してコンパイル ※WriteFile.javaのみgson-master/gson.2.2.2.jarにもクラスパスを通す必要あり
+3. tategakiディレクトリにソースコードを配置し、WEB-INF/classes/にある各JavaファイルをTomcatのディレクトリ/lib/servlet-api.jarにクラスパスを通してコンパイル
 
 4. Tomcatを起動し、webブラウザからURLにhttp://localhost:8080/tategakiを指定してアクセス　※localhost、8080の部分は設定や利用方法により異なる
 

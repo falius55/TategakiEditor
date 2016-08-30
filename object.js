@@ -349,18 +349,44 @@ Util.createDirectoryElement = (function () {
 			}
 			return this;
 		}
-		// trueで付与、falseで解除
-		italic(bl) {
-			const chars = this.sentenceContainer().selectChars(true);
-			for (let char of chars) {
-				char.italic(bl);
+		// 引数省略で、現在の太字ボタンのオンオフをbool値で返す
+		// trueで太字ボタンをオンにする。falseでオフにする
+		boldButton(bl) {
+			const eButton = document.getElementById('btn-bold');
+			if (bl === undefined) {
+				return eButton.classList.contains('active');
+			}
+			if (bl) {
+				eButton.classList.add('active');
+			} else {
+				eButton.classList.remove('active');
 			}
 			return this;
 		}
+		// trueで付与、falseで解除
 		bold(bl) {
 			const chars = this.sentenceContainer().selectChars(true);
 			for (let char of chars) {
 				char.bold(bl);
+			}
+			return this;
+		}
+		italicButton(bl) {
+			const eButton = document.getElementById('btn-italic');
+			if (bl === undefined) {
+				return eButton.classList.contains('active');
+			}
+			if (bl) {
+				eButton.classList.add('active');
+			} else {
+				eButton.classList.remove('active');
+			}
+			return this;
+		}
+		italic(bl) {
+			const chars = this.sentenceContainer().selectChars(true);
+			for (let char of chars) {
+				char.italic(bl);
 			}
 			return this;
 		}
@@ -376,32 +402,6 @@ Util.createDirectoryElement = (function () {
 		align(align) {
 			const cursorParagraph = this.sentenceContainer().cursor().getParagraph();
 			cursorParagraph.align(align);
-		}
-		// 引数省略で、現在の太字ボタンのオンオフをbool値で返す
-		// trueで太字ボタンをオンにする。falseでオフにする
-		boldButton(bl) {
-			const eButton = document.getElementById('btn-bold');
-			if (bl === undefined) {
-				return eButton.classList.contains('active');
-			}
-			if (bl) {
-				eButton.classList.add('active');
-			} else {
-				eButton.classList.remove('active');
-			}
-			return this;
-		}
-		italicButton(bl) {
-			const eButton = document.getElementById('btn-italic');
-			if (bl === undefined) {
-				return eButton.classList.contains('active');
-			}
-			if (bl) {
-				eButton.classList.add('active');
-			} else {
-				eButton.classList.remove('active');
-			}
-			return this;
 		}
 
 		addEventListeners() {
@@ -1226,8 +1226,7 @@ Util.createDirectoryElement = (function () {
 		// 同一の親を持つ兄弟の中での０始まりのインデックス
 		index() {
 			const siblings = this.parent().children();
-			const index = siblings.indexOf(this);
-			return index;
+			return siblings.indexOf(this);
 		}
 		// Rowではchildren()の意味が違うので、混同しないようchildren()をさけて直接プロパティにアクセスする
 		childLength() {
@@ -1236,7 +1235,7 @@ Util.createDirectoryElement = (function () {
 
 		// --Style
 
-		className(className) {
+		className() {
 			return this._elem.className || ''; // クラスがひとつもなければ空文字
 		}
 		addClass(className) {
@@ -1247,6 +1246,7 @@ Util.createDirectoryElement = (function () {
 			this._elem.classList.remove(className);
 			return this;
 		}
+		// すべての子からクラスを除去する
 		removeClassAll(className) {
 			for (let child of this._children) {
 				child.removeClass(className);
@@ -1284,6 +1284,7 @@ Util.createDirectoryElement = (function () {
 			const ownPos = this.computeCenterPoint();
 			return Util.computeDistanceP2P(x,y,ownPos.x,ownPos.y);
 		}
+		// 中心点の座標
 		computeCenterPoint() {
 			return {
 				x: this.x() + this.width()/2,
@@ -1293,6 +1294,7 @@ Util.createDirectoryElement = (function () {
 
 		// --DOM操作関係
 
+		// 内部のエレメントを空にする。childrenとして持っていない要素(EOLなど)は削除されない
 		emptyElem() {
 			const children = this.elem().children;
 			let child;
@@ -1301,6 +1303,7 @@ Util.createDirectoryElement = (function () {
 			}
 			return this;
 		}
+		// 内部のエレメントに加え、内部の参照も空にする
 		empty() {
 			this.emptyElem();
 			this.emptyChild();
