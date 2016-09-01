@@ -295,7 +295,7 @@ Util.createDirectoryElement = (function () {
 /**
  * メニューバーを担当するクラス
  */
-export class Menu {
+class Menu {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナ
 	 */
@@ -566,7 +566,7 @@ export class Menu {
 /**
  * コマンドラインを表すクラス
  */
-export class CommandLine {
+class CommandLine {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナ
 	 */
@@ -743,7 +743,7 @@ export class CommandLine {
 	}
 	/**
 	 * コマンドのkeyupイベントの実行内容
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 */
 	runKeyup(e,keycode) {
@@ -818,7 +818,7 @@ export class CommandLine {
 	}
 	/**
 	 * コマンドラインからフォーカスが外れた際のイベントの実行内容
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 */
 	onFocusout(e) {
 		this.stop();
@@ -955,7 +955,7 @@ export class CommandLine {
 /**
  * カーソルを表すクラス
  */
-export class Cursor {
+class Cursor {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナのインスタンス
 	 */
@@ -1376,7 +1376,7 @@ export class Cursor {
 /**
  * 各クラスの基底クラス
  */
-export class Sentence {
+class Sentence {
 	/**
 	 * @param {Element} elem 自身のDOM要素
 	 */
@@ -1841,7 +1841,7 @@ export class Sentence {
 	/*
 	 * @private
 	 * クリックイベントを実行する
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 */
 	onClick(e) {
 		this.runClick(e);
@@ -1904,7 +1904,7 @@ export class Sentence {
 /**
  * 文字を表すクラス
  */
-export class Char extends Sentence {
+class Char extends Sentence {
 	/**
 	 * @param {object} data 文字を表すオブジェクト<br>
 	 * 例
@@ -1931,7 +1931,7 @@ export class Char extends Sentence {
 	 * @return {Char Row} 自身のインスタンス(引数を渡した場合)あるいは自身の親のインスタンス(引数を省略した場合)
 	 */
 	row(opt_newRow) {
-		return this.parent(newRow);
+		return this.parent(opt_newRow);
 	}
 	/**
 	 * 自身の属する段落のインスタンスを取得する
@@ -2487,7 +2487,7 @@ export class Char extends Sentence {
 /**
  * 行の末端を表すクラス
  */
-export class EOL extends Char {
+class EOL extends Char {
 	// Rowとともに要素を作ってしまうため、要素を引数に取る必要がある。CharとEOLはis-a関係が成り立つと考え、継承を選択
 	/**
 	 * @param {Element} elem 自身のDOM要素
@@ -2533,7 +2533,7 @@ export class EOL extends Char {
 /**
  * 行を表すクラス
  */
-export class Row extends Sentence {
+class Row extends Sentence {
 	/**
 	 * @param {object} data 行を表すオブジェクト<br>
 	 * 例
@@ -3139,7 +3139,7 @@ export class Row extends Sentence {
 
 	/**
 	 * 行のクリックイベントの実行内容。行をクリックすると最も近い文字にカーソルが当たる
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 */
 	runClick(e) {
 		if (this.container().inputBuffer().isDisplay()) return;
@@ -3190,7 +3190,7 @@ export class Row extends Sentence {
 /**
  * 段落を表すクラス
  */
-export class Paragraph extends Sentence {
+class Paragraph extends Sentence {
 	/**
 	 * @param {object} data 段落を表すオブジェクト<br>
 	 * 例
@@ -3613,7 +3613,7 @@ export class Paragraph extends Sentence {
 /**
  * 漢字変換ビューを表すクラス。それぞれ一つの文節を担当し、複数の漢字変換候補を持つ。また、内部には変換候補としてRowクラスのインスタンスを持つ
  */
-export class ConvertView extends Sentence {
+class ConvertView extends Sentence {
 	// 文節番号は、ConvertViewのindex()と同じ
 	/**
 	 * @param {object} data 変換候補を表すオブジェクト<br>
@@ -3886,7 +3886,7 @@ export class ConvertView extends Sentence {
 /**
  * 変換候補一覧を束ねる漢字変換コンテナを表すクラス
  */
-export class ConvertContainer extends Sentence {
+class ConvertContainer extends Sentence {
 	/**
 	 * @param {InputBuffer} inputBuffer 入力元のインスタンス
 	 */
@@ -4223,7 +4223,7 @@ export class ConvertContainer extends Sentence {
 	}
 	/**
 	 * keydownイベントの実行内容
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 */
 	runKeydown(e,keycode) {
@@ -4273,7 +4273,7 @@ export class ConvertContainer extends Sentence {
 /**
  * 入力文字を表すクラス
  */
-export class InputChar extends Char {
+class InputChar extends Char {
 	/**
 	 * @param {object} data 文字を表すオブジェクト<br>
 	 * 例
@@ -4354,7 +4354,7 @@ export class InputChar extends Char {
  * 入力された文字をいったん保持するバッファーを表すクラス。内部の子にInputCharのインスタンス群を持つ。
  *     また、一度も漢字変換がされず文節番号がすべて-1の場合と、漢字変換が行われ文節が分けられている場合と２つの状態がある
  */
-export class InputBuffer extends Row {
+class InputBuffer extends Row {
 	/**
 	 * @param {SentenceContainer} container 自身の属する文章コンテナのインスタンス
 	 */
@@ -4659,7 +4659,7 @@ export class InputBuffer extends Row {
 		if (phrases.length === 0) return this; // 指定された文節番号の文字が見つからなかった
 		const nextChar = phrases[phrases.length -1].next(); // 挿入用の文字。最後にはEOLがあるので、必ず存在する
 		for (let c of str) {
-			nextChar.before(new InputChar(this.getChar().createData(c),-num));
+			nextChar.before(new InputChar(this.cursorChar().createData(c),-num));
 		}
 		this.resize();
 		return this;
@@ -4782,7 +4782,7 @@ export class InputBuffer extends Row {
 	}
 	/**
 	 * 入力時のkeydownイベントの実行内容
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 */
 	runKeydown(e,keycode) {
@@ -4813,7 +4813,7 @@ export class InputBuffer extends Row {
 /**
  * ユーザーのファイル情報のひとつを扱うクラス
  */
-export class File extends Sentence {
+class File extends Sentence {
 	/**
 	 * @param {number} id ファイルのID
 	 * @param {string} filename ファイル名
@@ -5040,7 +5040,7 @@ export class File extends Sentence {
 	}
 	/**
 	 * 自身のリンクへのクリックイベントの内容(クリックするとファイルが読み込まれる)
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 */
 	runClick(e) {
 		this.open();
@@ -5050,7 +5050,7 @@ export class File extends Sentence {
 /**
  * ユーザーのディレクトリ情報のひとつを扱うクラス
  */
-export class Directory extends Sentence {
+class Directory extends Sentence {
 	/**
 	 * @param {number} dirId ディレクトリID
 	 * @param {object} data ディレクトリの情報を持つオブジェクト
@@ -5227,7 +5227,7 @@ export class Directory extends Sentence {
 /**
  * ファイルやディレクトリを一覧にするファイルリストを表すクラス
  */
-export class FileList extends Sentence {
+class FileList extends Sentence {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 自身のファイルを展開する文章コンテナのインスタンス
 	 * @param {object} data ファイルやディレクトリの情報を扱うオブジェクト。省略した場合は、init()にdataを渡して参照やDOMの構築を行う
@@ -5682,7 +5682,7 @@ export class FileList extends Sentence {
 	}
 	/**
 	 * ファイル検索ボックスのkeyupイベントの内容
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 */
 	onKeyupOnInput(e) {
 		let keycode;
@@ -5713,7 +5713,7 @@ export class FileList extends Sentence {
 /**
  * 文章コンテナを表すクラス
  */
-export class SentenceContainer extends Sentence {
+class SentenceContainer extends Sentence {
 	/**
 	 * @param {number} userId ユーザーID
 	 * @param {object} opt_data 文書情報のオブジェクト(Paragraphのdataの配列)
@@ -5985,7 +5985,7 @@ export class SentenceContainer extends Sentence {
 		}
 	}
 	/**
-	 * 現在のファイルを新たなIDを与える、あるいは引数省略で現在のファイルIDを取得する
+	 * 現在のファイルに新たなIDを与える、あるいは引数省略で現在のファイルIDを取得する
 	 * @param {number} opt_newId 新たに設定するID。省略可
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイルID(引数を省略した場合)
 	 */
@@ -6597,7 +6597,7 @@ export class SentenceContainer extends Sentence {
 	}
 	/**
 	 * keydownイベントの実行内容
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -6718,7 +6718,7 @@ export class SentenceContainer extends Sentence {
 	// wheel
 	/**
 	 * ホイールイベントの実行内容(表示を４行分移動する)
-	 * @param {event} e イベントオブジェクト
+	 * @param {Event} e イベントオブジェクト
 	 * @param {boolean} isUp 上方向にホイールが動かされたならtrue、そうでなければfalse
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */

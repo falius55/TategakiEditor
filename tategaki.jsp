@@ -216,11 +216,11 @@
 
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 			<script src="/tategaki/jquery.mousewheel.js"></script>
-			<script src="/tategaki/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+			<script src="/tategaki/honoka/js/bootstrap.min.js"></script>
 			<script src="/tategaki/key_table.js"></script>
 			<script src="/tategaki/object.js"></script>
 			<script>
-			  window.container = new SentenceContainer(<%= userId %>); // グローバルオブジェクト
+			  window.container = new SentenceContainer(<%= userId %>);
 			</script>
 		</body>
 	</html>
