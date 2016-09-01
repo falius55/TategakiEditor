@@ -7,9 +7,9 @@
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<title>縦書きエディタ</title>
-			<link rel="stylesheet" href="honoka/css/bootstrap.min.css" media="screen">
-			<link rel="stylesheet" href="tategaki.css">
-			<link rel="stylesheet" href="tategaki-character-decolation.css">
+			<link rel="stylesheet" href="lib/honoka/css/bootstrap.min.css" media="screen">
+			<link rel="stylesheet" href="css/tategaki.css">
+			<link rel="stylesheet" href="css/tategaki-character-decolation.css">
 		</head>
 		<body>
 			<%
@@ -215,10 +215,10 @@
 				</div>
 
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-			<script src="/tategaki/jquery.mousewheel.js"></script>
-			<script src="/tategaki/honoka/js/bootstrap.min.js"></script>
-			<script src="/tategaki/key_table.js"></script>
-			<script src="/tategaki/object.js"></script>
+			<script src="/tategaki/lib/jquery.mousewheel.js"></script>
+			<script src="/tategaki/lib/honoka/js/bootstrap.min.js"></script>
+			<script src="/tategaki/js/key_table.js"></script>
+			<script src="/tategaki/js/object.js"></script>
 			<script>
 			  window.container = new SentenceContainer(<%= userId %>);
 			</script>

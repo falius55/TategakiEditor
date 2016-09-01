@@ -4,7 +4,8 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<title>ユーザー登録</title>
-		<link rel="stylesheet" href="loginpage.css">
+		<link rel="stylesheet" href="lib/honoka/css/bootstrap.min.css" media="screen">
+		<link rel="stylesheet" href="css/loginpage.css">
 	</head>
 	<body>
 		<h1>縦書きエディタ　ユーザー登録</h1>
@@ -23,43 +24,23 @@
 		%>
 		<form method="POST" action="/tategaki/Register" name="registform">
 			<fieldset>
-				<table>
-					<tr>
-						<td>
-							<label for="username">名前: </label>
-						</td>
-						<td>
-							<input type="text" name="username"></input>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="email">メールアドレス:</label>
-						</td>
-						<td>
-							<input type="text" name="email"></input>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="password">パスワード:</label>
-						</td>
-						<td>
-							<input type="text" name="password"></input>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<button type="submit">登録する</button>
-							</td>
-						<td>
-							<button type="reset">reset</button>
-							</td>
-						</tr>
-				</table>
-				<a href="/tategaki/loginpage.jsp">ログインページヘ</a>
+					<div class="form-group">
+								<label for="username" class="control-label">名前</label>
+								<input type="text" name="username" class="form-control"></input>
+					</div>
+					<div class="form-group">
+								<label for="password" class="control-label">パスワード</label>
+								<input type="password" name="password" class="form-control"></input>
+					</div>
+					<div class="form-group">
+								<button type="submit" class="btn btn-primary">登録</button>
+								<button type="reset" class="btn btn-primary">Reset</button>
+					</div>
+				<a href="/tategaki/loginpage.jsp">ログインページ</a>
 			</fieldset>
 		</form>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<script src="/tategaki/lib/honoka/js/bootstrap.min.js"></script>
 	</body>
 </html>
 

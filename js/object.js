@@ -1017,10 +1017,10 @@ class Cursor {
 	/**
 	 * charにカーソルを与える
 	 * @param {Char} char 新しいカーソル文字
-	 * @param {boolean} isShift シフトキーが押された状態でカーソルが与えられたかどうか。trueなら選択範囲を拡張する
+	 * @param {boolean} bShift シフトキーが押された状態でカーソルが与えられたかどうか。trueなら選択範囲を拡張する
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	addCursor(char,isShift) {
+	addCursor(char,bShift) {
 		if (this.getChar()) {
 			this.memorySelection();
 			this.getChar().removeClass('cursor');
@@ -1036,7 +1036,7 @@ class Cursor {
 		menu.italicButton(prevChar ? prevChar.isItalic() : false);
 
 		// シフトキーが押されながらなら、選択範囲を広げる
-		this.extendSelection(isShift);
+		this.extendSelection(bShift);
 		this.sentenceContainer().printInfo();
 		return this;
 	}
@@ -1199,47 +1199,47 @@ class Cursor {
 	// カーソル移動
 	/**
 	 * カーソルを下方向に一つ動かす。ひとつ下が段落途中のEOLなら、さらにその次に動かす
-	 * @param {boolean} isShift シフトキーが押されていればtrue、そうでなければfalseを指定する
+	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalseを指定する
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	moveNext(isShift) {
+	moveNext(bShift) {
 		const nextChar = this.getChar().next();
 		if (!nextChar) return this;
-		nextChar.slideNextCursor().addCursor(isShift).setPosMemory();
+		nextChar.slideNextCursor().addCursor(bShift).setPosMemory();
 		this.sentenceContainer().changeDisplay();
 		return this;
 	}
 	/**
 	 * カーソルを上方向に一つ動かす。段落途中の行頭なら、前の行の最終文字に動かす
-	 * @param {boolean} isShift シフトキーが押されていればtrue、そうでなければfalseを指定する
+	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalseを指定する
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	movePrev(isShift) {
+	movePrev(bShift) {
 		const prevChar = this.getChar().prev();
 		if (!prevChar) return this;
-		prevChar.slidePrevCursor().addCursor(isShift).setPosMemory();
+		prevChar.slidePrevCursor().addCursor(bShift).setPosMemory();
 		this.sentenceContainer().changeDisplay();
 		return this;
 	}
 	/**
 	 * カーソルを右方向に一つ動かす。一つ右が段落途中のEOLなら、移動先の前の文字にさらに動かす
-	 * @param {boolean} isShift シフトキーが押されていればtrue、そうでなければfalseを指定する
+	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalseを指定する
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	moveRight(isShift) {
+	moveRight(bShift) {
 		const prevRow = this.getChar().row().prev();
-		this.moveRow(prevRow,isShift);
+		this.moveRow(prevRow,bShift);
 		this.sentenceContainer().changeDisplay();
 		return this;
 	}
 	/**
 	 * カーソルを左方向に一つ動かす。一つ左が段落途中のEOLなら、移動先の前の文字にさらに動かす
-	 * @param {boolean} isShift シフトキーが押されていればtrue、そうでなければfalseを指定する
+	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalseを指定する
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	moveLeft(isShift) {
+	moveLeft(bShift) {
 		const nextRow = this.getChar().row().next();
-		this.moveRow(nextRow,isShift);
+		this.moveRow(nextRow,bShift);
 		this.sentenceContainer().changeDisplay();
 		return this;
 	}
@@ -1247,14 +1247,14 @@ class Cursor {
 	/**
 	 * rowにカーソルを移動する。移動先の文字は記憶されたカーソル位置のインデックスの文字で、それがEOLならその前の文字に移動する
 	 * @param {Row} row 移動先の行のインスタンス
-	 * @param {boolean} isShift シフトキーが押されているかどうか。trueなら、選択範囲を拡張する
+	 * @param {boolean} bShift シフトキーが押されているかどうか。trueなら、選択範囲を拡張する
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	moveRow(row,isShift) {
+	moveRow(row,bShift) {
 		const index = this.getPosMemory();
 		if (!row) return this;
 		const char = row.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
-		char.slidePrevCursor().addCursor(isShift);
+		char.slidePrevCursor().addCursor(bShift);
 		return this;
 	}
 	/**
@@ -1827,7 +1827,7 @@ class Sentence {
 		this._clickArg = null;
 		return this;
 	}
-	/*
+	/**
 	 * @private
 	 * クリックイベントを実行する
 	 * @param {Event} e イベントオブジェクト
@@ -2095,7 +2095,7 @@ class Char extends Sentence {
 
 	/**
 	 * この文字の状態を表す規定のオブジェクトを作成する
-	 * @return {object} この文字の状態を表す規定の規定のオブジェクト
+	 * @return {object} この文字の状態を表す規定のオブジェクト
 	 */
 	data() {
 		const data = {};
@@ -2117,11 +2117,11 @@ class Char extends Sentence {
 
 	/**
 	 * この文字にカーソルを当てる
-	 * @param {boolean} opt_isShift シフトキーが押されていればtrue、そうでなければfalse
+	 * @param {boolean} opt_bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {Char} 自身のインスタンス
 	 */
-	addCursor(opt_isShift) {
-		this.cursor().addCursor(this,opt_isShift);
+	addCursor(opt_bShift) {
+		this.cursor().addCursor(this,opt_bShift);
 		return this;
 	}
 
@@ -3996,7 +3996,7 @@ class ConvertContainer extends Sentence {
 		return this;
 	}
 	/**
-	 * 漢字変換を始める
+	 * 漢字変換を始める(非同期通信)
 	 * @param {string} str 変換する文字列
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
@@ -4021,7 +4021,7 @@ class ConvertContainer extends Sentence {
 		return this;
 	}
 	/**
-	 * 文節区切りをひとつ前にずらして変換し直す
+	 * 文節区切りをひとつ前にずらして変換し直す(非同期通信)
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
 	shiftUp() {
@@ -4063,7 +4063,7 @@ class ConvertContainer extends Sentence {
 		}
 	}
 	/**
-	 * 文節区切りをひとつ下にずらして変換し直す
+	 * 文節区切りをひとつ下にずらして変換し直す(非同期通信)
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
 	shiftDown() {
@@ -4107,7 +4107,7 @@ class ConvertContainer extends Sentence {
 		return this;
 	}
 	/**
-	 * 入力元の文字がひらがなにして１文字しかなければ全て破棄して入力を終了する。二文字以上あれば最後の１音のみ削除して選択文節を変換し直す
+	 * 入力元の文字がひらがなにして１文字しかなければ全て破棄して入力を終了する。二文字以上あれば最後の１音のみ削除して選択文節を変換し直す(非同期通信)
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
 	backSpace() {
@@ -4547,11 +4547,11 @@ class InputBuffer extends Row {
 	/**
 	 * keycodeを追加した場合の新たな文字列で入力文字を置き換える
 	 * @param {number} keycode 追加するキーのキーコード
-	 * @param {boolean} isShift シフトキーが押されていればtrue、そうでなければfalse
+	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
-	push(keycode,isShift) {
-		const newInputStr = this.newString(keycode,isShift);
+	push(keycode,bShift) {
+		const newInputStr = this.newString(keycode,bShift);
 
 		if (newInputStr === undefined || newInputStr.indexOf('undefined') !== -1) {
 			// 未定義文字(alt,ctrl,tabなど)はreturn
@@ -4660,12 +4660,12 @@ class InputBuffer extends Row {
 	 * @private
 	 * 現在の文字列にkeycodeを加えて作られる文字列を取得する
 	 * @param {number} keycode 追加するキーのキーコード
-	 * @param {boolean} isShift シフトキーが押されていればtrue、そうでなければfalse
+	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {string} keycodeを追加して作られた文字列
 	 */
-	newString(keycode,isShift) {
+	newString(keycode,bShift) {
 		const inputStr = this.text(); //もともとの文字列
-		if (isShift) {
+		if (bShift) {
 			return inputStr + key_table.shift_key[keycode];
 		} else {
 			return key_table.getString(inputStr,keycode); //keycodeを加えた新しい文字列
@@ -4748,11 +4748,11 @@ class InputBuffer extends Row {
 	/**
 	 * keyeventがSentenceContainerから移動するかどうかを判定して前処理を行う(キーコードをpush()して入力文字ができれば入力モードに移行する)
 	 * @param {number} keycode 押下されたキーのキーコード
-	 * @param {boolean} isShift シフトキーが押されていればtrue、そうでなければfalse
+	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
-	transfer(keycode,isShift) {
-		this.push(keycode,isShift);
+	transfer(keycode,bShift) {
+		this.push(keycode,bShift);
 		if (this.hasChar()) {
 			this.addKeydownEventListener();
 			this.move();
@@ -4954,7 +4954,7 @@ class File extends Sentence {
 		return this;
 	}
 	/**
-	 * 自身の要素及び自身への参照を削除し、自身が表すファイルを非同期で削除する
+	 * 自身の要素及び自身への参照を削除し、自身が表すファイルを削除する(非同期通信)
 	 * @return {File} 自身のインスタンス
 	 */
 	delete() {
@@ -6321,7 +6321,7 @@ class SentenceContainer extends Sentence {
 		return this;
 	}
 	/**
-	 * 現在開いているファイルを上書き保存する(非同期通信)。newFile()されて初めての保存なら名前をつけて保存する
+	 * 現在開いているファイルを上書き保存する。newFile()されて初めての保存なら名前をつけて保存する。(ともに非同期通信)
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	saveFile() {

@@ -23,7 +23,6 @@ TomcatとMySQLを利用します。
      `create table edit_users(
       id int not null auto_increment primary key,
        name varchar(255) unique not null,
-       email varchar(255) unique,
        password varchar(32) not null,
 		 root_file_id int,
        registered datetime
@@ -42,9 +41,8 @@ TomcatとMySQLを利用します。
 
 2. tategakiディレクトリを作成し、Tomcatのディレクトリ/conf/Catalina/localhost/tategaki.xmlに以下を記述
 
-     `<Context path="/tategaki"`
-
-     `docBase="tategakiディレクトリを作成したディレクトリのパス/tategaki" />`
+     `<Context path="/tategaki"  
+     docBase="tategakiディレクトリを作成したディレクトリのパス/tategaki" />`
 
 3. tategakiディレクトリにソースコードを配置し、WEB-INF/classes/にある各JavaファイルをTomcatのディレクトリ/lib/servlet-api.jarにクラスパスを通してコンパイル
 

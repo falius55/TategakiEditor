@@ -16,13 +16,12 @@ public class Register extends AbstractServlet {
 
 		// フォームからの情報受取
 		String user = request.getParameter("username");
-		String email = request.getParameter("email");
 		String pass = request.getParameter("password");
 
 		// 認証のチェック
 		HttpSession session = request.getSession(true);
 
-		boolean check = registerUser(user,email,pass);
+		boolean check = registerUser(user,pass);
 
 		if (check) {
 			// 認証済みにセット
@@ -36,8 +35,8 @@ public class Register extends AbstractServlet {
 		}
 	}
 
-	protected boolean registerUser(String user,String email,String pass) {
-		if (user == null || user.length() == 0 || email == null || email.length() == 0 || pass == null || pass.length() == 0) {
+	protected boolean registerUser(String user,String pass) {
+		if (user == null || user.length() == 0 || pass == null || pass.length() == 0) {
 			return false;
 		}	
 		connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
@@ -46,14 +45,14 @@ public class Register extends AbstractServlet {
 
 			// データベースへのユーザー登録
 			long curMillis = new java.util.Date().getTime();
-			executeSql("insert into edit_users (name,email,password,registered) values (?,?,?,?)")
-				.setString(user).setString(email).setString(pass).setTimeMillis(curMillis).update();
+			executeSql("insert into edit_users (name,password,registered) values (?,?,?)")
+				.setString(user).setString(pass).setTimeMillis(curMillis).update();
 
 			// ユーザー専用ディレクトリの作成
 
 			// ユーザーIdの取得
-			executeSql("select * from edit_users where name = ? and email = ? and password = ? and registered = ?")
-				.setString(user).setString(email).setString(pass).setTimeMillis(curMillis).query();
+			executeSql("select * from edit_users where name = ? and password = ? and registered = ?")
+				.setString(user).setString(pass).setTimeMillis(curMillis).query();
 			int userId;
 			if (next()) {
 				userId = getInt("id");
@@ -78,7 +77,7 @@ public class Register extends AbstractServlet {
 			}
 
 			// edit_usersへのrootディレクトリ情報の登録
-			executeSql("update edit_users set root_file_id = ?").setInt(rootId).update();
+			executeSql("update edit_users set root_file_id = ? where id = ?").setInt(rootId).setInt(userId).update();
 
 			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
 			String path = contextPath(String.format("data/%d",rootId));	// ルートディレクトリ/data/userIdとなる

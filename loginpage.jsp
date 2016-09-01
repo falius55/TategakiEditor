@@ -5,8 +5,8 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>ログイン</title>
-		<link rel="stylesheet" href="loginpage.css">
-		<link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css" media="screen">
+		<link rel="stylesheet" href="lib/honoka/css/bootstrap.min.css" media="screen">
+		<link rel="stylesheet" href="css/loginpage.css">
 	</head>
 	<body>
 		<h1>縦書きエディタ　ログイン</h1>
@@ -39,6 +39,7 @@
 				<a href="/tategaki/register.jsp">新規登録</a>
 			</fieldset>
 		</form>
-		<script src="/tategaki/bootstrap-3.3.6-dist/js/bootstrap.min.js">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<script src="/tategaki/lib/honoka/js/bootstrap.min.js"></script>
 </body>
 </html>
