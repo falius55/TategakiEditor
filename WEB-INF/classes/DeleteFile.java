@@ -5,6 +5,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <p>ユーザーIDとファイルIDを受け取り、指定されたファイルを削除するサーブレット
+ * <pre>
+ * request: {
+ * 	user_id,
+ * 	file_id
+ * 	}
+ * response: {
+ * 	successRecord,
+ * 	result
+ * 	}
+ * </pre>
+ * successRecordは処理した行数、resultは削除に成功するとtrue
+ */
 public class DeleteFile extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {

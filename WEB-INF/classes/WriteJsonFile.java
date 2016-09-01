@@ -5,7 +5,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// file_id.txtという名前のファイルにjsonの中身を書き出し、データベースにファイル名と更新日時を保存します。
+/**
+ * ファイル情報を受けとり、ファイルID.jsonという名前のファイルにJSONの中身を書き出し、データベースにファイル名と更新日時を保存する
+ * <pre>
+ * request: {
+ * 		user_id,
+ * 		file_id,
+ * 		filename,
+ * 		json, // ファイル内容のJSON文字列
+ * 		saved
+ * 	}
+ * response: {
+ * 		result,
+ * 		strDate // 最終更新日時の文字列
+ * 	}
+ *	</pre>
+ */
 public class WriteJsonFile extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {

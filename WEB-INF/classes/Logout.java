@@ -3,6 +3,9 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 
+/**
+ * <p>GET通信のリクエストに対し、セッションを破棄してログアウトするサーブレット
+ */
 public class Logout extends HttpServlet {
 	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException {
 		response.setContentType("text/html; charset=UTF-8");

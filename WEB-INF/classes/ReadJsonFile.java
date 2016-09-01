@@ -5,6 +5,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * ユーザーIDとファイルIDを受け取り、読み込んだファイルの内容を文字列でクライアントに送り返すサーブレット
+ * <pre>
+ * request: {
+ * 		user_id,
+ * 		file_id
+ * 	}
+ * response: {
+ * 		filename,
+ * 		fileId,
+ * 		saved, // 最終更新日時
+ * 		userId,
+ * 		data // ファイル内容のjson文字列
+ * 	}
+ *	</pre>
+ */
 public class ReadJsonFile extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {

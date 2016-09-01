@@ -4,6 +4,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * ディレクトリのIDとオプションの真偽値を受け取り、指定のディレクトリの削除処理を行うサーブレット
+ * ディレクトリ内に別のファイルやディレクトリがあった場合、オプションがtrueなら中身ごと削除する
+ * <pre>
+ * request: {
+ * 	directory_id,
+ * 	option
+ * 	}
+ * response: {
+ * 	result
+ * 	}
+ * </pre>
+ * responseのresultには、
+ *     空のディレクトリを削除した場合には"success"が、
+ *     空ではないディレクトリを中身ごと削除した場合には"success(fileIn)"が、
+ *     空ではないディレクトリを削除しようとしたがオプションがfalseであって削除できなかった場合には"notEmpty"
+ *     になる
+ */
 public class DeleteDirectory extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {

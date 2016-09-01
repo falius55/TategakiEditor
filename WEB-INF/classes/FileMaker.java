@@ -5,6 +5,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <p>ユーザーID、ファイル名、日時を表すミリ秒の値を受け取り、新しい空ファイルを作成するサーブレット
+ * <pre>
+ * request: {
+ * 	user_id,
+ * 	filename,
+ *		saved
+ * 	}
+ * response: {
+ * 	newFileId,
+ * 	filename
+ * 	}
+ * </pre>
+ */
 public class FileMaker extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {

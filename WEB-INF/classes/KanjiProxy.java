@@ -10,6 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+/**
+ * <p>文字列を受け取り、漢字変換の候補を返すサーブレット<br>
+ *	変換にはウェブAPIの'Google CGI API for Japanese Input(Google日本語入力API)'を使用する
+ * <pre>
+ * request: {
+ *	sentence
+ * 	}
+ * // responseの一例
+ * response: [
+ * 	[ひらがな,[漢字１,漢字２,漢字３]],
+ * 	[ひらがな２,[漢字４,漢字５]],
+ * 	[[ひらがな３,[漢字６,漢字７]]]
+ * ]
+ * </pre>
+ */
 public class KanjiProxy extends HttpServlet {
 	String sentence;
 	String rtnString;

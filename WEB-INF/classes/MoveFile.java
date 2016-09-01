@@ -4,6 +4,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <p>ユーザーIDとファイルID、ディレクトリIDを受け取り、ファイルをディレクトリの配下に置くデータベース処理を行うサーブレット<br>
+ * ローカルに保存されているファイルが実際に移動されるわけではない
+ * <pre>
+ * request: {
+ * 	user_id,
+ * 	file_id,
+ *		directory_id
+ * 	}
+ * response: {
+ * 	result
+ * 	}
+ * </pre>
+ * resultには"success"が入る
+ */
 public class MoveFile extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {

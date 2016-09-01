@@ -5,6 +5,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <p>ユーザーID、ディレクトリ名、日時を表すミリ秒を受け取り、新しいディレクトリを作成するサーブレット
+ * <pre>
+ * request: {
+ * 	user_id,
+ * 	directoryname,
+ *		saved
+ * 	}
+ * response: {
+ * 	newDirectoryID,
+ * 	directoryname
+ * 	}
+ * </pre>
+ */
 public class DirectoryMaker extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
@@ -42,7 +56,7 @@ public class DirectoryMaker extends AbstractServlet  {
 			}
 
 			//	ajaxへ送信
-			String rtn = String.format("{\"newDirectoryID\" : \"%d\",\"filename\" : \"%s\"}",directoryId,directoryname);
+			String rtn = String.format("{\"newDirectoryID\" : \"%d\",\"directoryname\" : \"%s\"}",directoryId,directoryname);
 			out(rtn);
 
 			log("DirectoryMaker return is " + rtn);

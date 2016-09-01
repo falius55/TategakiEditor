@@ -7,6 +7,29 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <p>ユーザーIDを受け取り、ファイルのツリー構造を表すJSONを文字列で返すサーブレット
+ * <pre>
+ * request: {
+ * 	user_id
+ * 	}
+ * // responseは一例
+ * response: {
+ * 	"directoryname": "root",
+ * 	"1":"sample",
+ * 	"8":"file",
+ * 	"6": {
+ * 	"directoryname": "dirname",
+ * 	"4":"indirfile",
+ * 	"9":"file",
+ * 	"12": {
+ * 		"directoryname": "seconddir",
+ * 		"17": "file"
+ * 		}
+ * 	}
+ *	}
+ * </pre>
+ */
 public class FileListMaker extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {

@@ -7,7 +7,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * 送られてきたユーザー名とパスワードを確認してログインします。
+ * <p>送られてきたユーザー名とパスワードを確認してログインするサーブレット<br>
+ * <p>認証に失敗したら、ログイン画面に戻す
+ * <pre>
+ * request: {
+ *		username,
+ *		password
+ * 	}
+ * </pre>
  */
 public class Login extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)

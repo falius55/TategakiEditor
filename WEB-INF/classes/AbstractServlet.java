@@ -19,24 +19,23 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *	<p>共通処理、データベース処理、ファイル処理を行うサーブレットの基底クラス
  *
- * <p>データベース問い合わせの流れ<br />
- * ブロックごとに上から、
- * データベースへの接続<br />
- * データベースへの問い合わせ<br />
- * データベースのデータの取得<br />
+ * <p>データベース問い合わせの流れ<br>
  * <pre>
  * <code>
+ * // データベースへの接続
  * String url = "jdbc:mysql://network_adress/database_name";
  * String user = "username";
  * String password = "pass";
  * connectDatabase(url,user,password);
  *
+ * // データベースへの問い合わせ
  * int id = Integer.parseInt(request.getParameter("id"));
  *	long savedMillis = Long.parseLong(request.getParameter("saved"));
  * executeSql("select * from table_name where id = ? and save = ?")
  * 			.setInt(id).setTimeMillis(savedMillis) // ?への値は前から順にセットされる
  * 			.query(); // 実行	データの取得ではなく更新ならupdate()を使う
  *
+ * // データベースのデータの取得
  * int id;
  * long savedMillis;
  * String saved;
@@ -47,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
  * }
  * </code>
  * </pre>
+ * <p>※この使い方は同時並行で使えないため注意(二度問い合わせする場合は、一度目の問い合わせの処理を完全に終えてから二度目の問い合わせを行うこと)
  */
 abstract public class AbstractServlet extends HttpServlet  {
 	private PrintWriter out = null;
@@ -61,10 +61,12 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	common operator
 	 */
 	/**
-	 *	初期設定を行う
-	 *	文字コード:UTF-8
-	 *	返送データのtype: json
-	 *	PrintWriterの取得
+	 *	初期設定を行う<br>
+	 *	文字コード:UTF-8<br>
+	 *	返送データのtype: json<br>
+	 *	PrintWriterの取得<br>
+	 *	@param request doGet()およびdoPost()に渡されたHttpServletRequest
+	 *	@param response doGet()およびdoPost()に渡されたHttpServletResponse
 	 */
 	protected void ready(HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -77,10 +79,10 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	サーブレットインスタンス破棄時の処理
-	 *	PreparedStatementのclose
-	 *	Connectionのclose
-	 *	PrintWriterのclose
+	 *	サーブレットインスタンス破棄時の処理を行う。明示的に呼ぶ必要はない<br>
+	 *	PreparedStatementのclose<br>
+	 *	Connectionのclose<br>
+	 *	PrintWriterのclose<br>
 	 */
 	public void destroy() {
 		try {
@@ -100,6 +102,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 
 	/**
 	 *	レスポンスのストリームに書き込む。書き込みは一度きり
+	 *	@param output ストリームに書き込む文字列
 	 */
 	protected void out(String output) {
 		out.println(output);
@@ -107,7 +110,9 @@ abstract public class AbstractServlet extends HttpServlet  {
 		out = null;
 	}
 	/**
-	 *	レスポンスのストリームに書き込む。書き込みは一度きり。フォーマットを利用
+	 *	レスポンスのストリームにフォーマットを用いて書き込む。書き込みは一度きり
+	 *	@param format 書き込む文字列
+	 *	@param args フォーマットで置き換える各種値
 	 */
 	protected void out(String format, Object... args) {
 		out.printf(format, args);
@@ -141,24 +146,9 @@ abstract public class AbstractServlet extends HttpServlet  {
 		} 
 	}
 
-	/*
-	 * データベース問い合わせの流れ
-	 * connectDatabase(url,user,password);
-	 * executeSql("select * from table where id = ? and save = ?")
-	 * 	.setInt(5).setTimeMillis(savedMillis) // ?への値は前から順にセットされる
-	 * 	.query();
-	 * int id;
-	 * long savedMillis;
-	 * String saved;
-	 * if (next()) {
-	 *		id = getInt("id");
-	 *		savedMillis = getTimeMillis("saved");
-	 *		saved = getDateFormat("saved");
-	 * }
-	 */
 	/**
 	 *	データベースの操作を始める
-	 *	@param	sql	SQL文
+	 *	@param	sql	SQLへの問い合わせ文
 	 *	@return 自らのインスタンス
 	 */
 	protected AbstractServlet executeSql(String sql) {
@@ -175,7 +165,9 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文の?にint値をセットする
+	 *	SQL文のクエスチョンマークにint値をセットする
+	 *	@param x セットする整数
+	 *	@return 自らのインスタンス
 	 */
 	protected AbstractServlet setInt(int x) {
 		try {
@@ -187,6 +179,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return this;
 	}
 
+	/**
+	 *	SQL文のクエスチョンマークに文字列をセットする
+	 *	@param x セットする文字列
+	 *	@return 自らのインスタンス
+	 */
 	protected AbstractServlet setString(String x) {
 		try {
 			indexCounter++;
@@ -197,6 +194,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return this;
 	}
 
+	/**
+	 *	SQL文のクエスチョンマークに真偽値をセットする
+	 *	@param x セットする真偽値
+	 *	@return 自らのインスタンス
+	 */
 	protected AbstractServlet setBoolean(boolean x) {
 		try {
 			indexCounter++;
@@ -208,8 +210,9 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文の?に、ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換してセットする
-	 *	@param	単位がミリ秒の時刻
+	 *	SQL文のクエスチョンマークに、ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換してセットする
+	 *	@param x	セットする、単位がミリ秒の時刻
+	 *	@return 自らのインスタンス
 	 */
 	protected AbstractServlet setTimeMillis(long x) {
 		try {
@@ -223,9 +226,10 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文の?に、java.sql.Date値をセットする
+	 *	SQL文のクエスチョンマークに、java.sql.Date値をセットする
 	 *	時分秒は切り捨て
 	 *	@param	x	java.sql.Date値
+	 *	@return 自らのインスタンス
 	 */
 	protected AbstractServlet setDate(java.sql.Date x) {
 		try {
@@ -237,6 +241,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return this;
 	}
 
+	/**
+	 *	SQL文のクエスチョンマークに、double値をセットする
+	 *	@param	x	セットするdouble値
+	 *	@return 自らのインスタンス
+	 */
 	protected AbstractServlet setDouble(double x) {
 		try {
 			indexCounter++;
@@ -247,6 +256,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return this;
 	}
 
+	/**
+	 *	SQL文のクエスチョンマークにfloat値をセットする
+	 *	@param x セットするfloat値
+	 *	@return 自らのインスタンス
+	 */
 	protected AbstractServlet setFloat(float x) {
 		try {
 			indexCounter++;
@@ -257,6 +271,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return this;
 	}
 
+	/**
+	 *	SQL文のクエスチョンマークにlong値をセットする
+	 *	@param x セットするlong値
+	 *	@return 自らのインスタンス
+	 */
 	protected AbstractServlet setLong(long x) {
 		try {
 			indexCounter++;
@@ -291,6 +310,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return false;
 	}
 
+	/**
+	 * SQL文の指定した問い合わせ結果をint値で取り出す
+	 * @param column 結果を取り出すカラム名
+	 * @return 問い合わせ結果。正常に取り出せなければ最小の値
+	 */
 	protected int getInt(String column) {
 		try {
 			return resultSet.getInt(column);
@@ -300,6 +324,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return Integer.MIN_VALUE;
 	}
 
+	/**
+	 * SQL文の指定した問い合わせ結果を文字列で取り出す
+	 * @param column 結果を取り出すカラム名
+	 * @return 問い合わせ結果。正常に取り出せなければnull
+	 */
 	protected String getString(String column) {
 		try {
 			return resultSet.getString(column);
@@ -309,6 +338,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return null;
 	}
 
+	/**
+	 * SQL文の指定した問い合わせ結果をdouble値で取り出す
+	 * @param column 結果を取り出すカラム名
+	 * @return 問い合わせ結果。正常に取り出せなければNaN
+	 */
 	protected double getDouble(String column) {
 		try {
 			return resultSet.getDouble(column);
@@ -318,6 +352,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return Double.NaN;
 	}
 
+	/**
+	 * SQL文の指定した問い合わせ結果をミリ秒で取り出す
+	 * @param column 結果を取り出すカラム名
+	 * @return 問い合わせ結果。正常に取り出せなければ０
+	 */
 	protected long getTimeMillis(String column) {
 		try {
 			long millis = resultSet.getTimestamp(column).getTime();
@@ -328,6 +367,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return 0L;
 	}
 
+	/**
+	 * SQL文の指定した問い合わせ結果を"yyyy-MM-dd HH:mm:ss"の形式で取り出す
+	 * @param column 結果を取り出すカラム名
+	 * @return 問い合わせ結果
+	 */
 	protected String getDateFormat(String column) {
 		long millis = getTimeMillis(column);
 		String saved = dateFormat(millis);
@@ -336,6 +380,8 @@ abstract public class AbstractServlet extends HttpServlet  {
 
 	/**
 	 *	ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換する
+	 *	@param millis 変換するミリ秒の値
+	 *	@return フォーマットされた文字列
 	 */
 	protected String dateFormat(long millis) {
 		java.util.Date date = new java.util.Date(millis); // java.sql.Date()の場合、時分秒が切り捨てられてしまうので、java.util.Date()を使う必要がある
@@ -363,6 +409,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	/**
 	 *	サーブレットのルートディレクトリ以上も含めた絶対パスを取得する
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
+	 *	@return 絶対パス
 	 */
 	protected String contextPath(String path) {
 		ServletContext context = getServletContext();
@@ -372,6 +419,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	/**
 	 *	サーバーのローカルファイルを文字列で読み込む
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
+	 *	@return 読み込まれた文字列
 	 */
 	protected String readFile(String path) {
 		StringBuffer sb = new StringBuffer();
@@ -422,6 +470,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	/**
 	 *	サーバーのローカルファイルを削除する
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
+	 *	@return 削除に成功した場合にtrue
 	 */
 	protected boolean deleteFile(String path) {
 		File delFile = new File(contextPath(path));

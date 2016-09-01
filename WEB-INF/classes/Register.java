@@ -7,6 +7,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ * <p>ユーザー名、パスワードを受け取り、ユーザー登録を行うサーブレット<br>
+ * 同時に、ユーザー専用のホームディレクトリを作成する<br>
+ * また、認証に失敗したら再度登録画面に戻す
+ * <pre>
+ * request: {
+ * 		username,
+ * 		password
+ * 	}
+ *	</pre>
+ */
 public class Register extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {

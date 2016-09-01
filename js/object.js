@@ -4948,7 +4948,6 @@ class File extends Sentence {
 		data.file_id = this.id();
 		sentenceContainer.userAlert('読込中');
 		Util.post('/tategaki/ReadJsonFile',data,function (json) {
-			'use strict';
 			sentenceContainer.init(json).userAlert('読み込み完了');
 		}.bind(this));
 		return this;
@@ -6349,8 +6348,8 @@ class SentenceContainer extends Sentence {
 	 */
 	saveAsFile(filename) {
 		Util.post('/tategaki/FileMaker',{
-			filename: filename,
 			user_id: this.userId(),
+			filename: filename,
 			saved: Date.now()
 		},function (data) {
 			this.filename(data.filename).fileId(data.newFileId);
