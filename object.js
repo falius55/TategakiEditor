@@ -31,13 +31,11 @@ const Util = {
 	},
 	// ２点間の距離を計算する
 	computeDistanceP2P:function(x1,y1,x2,y2) {
-		'use strict';
 		// ２乗を使っているので、戻り値は必ず正の数になる
 		// √{(b.x - a.x)^2+ (b.y - a.y)^2}
 		return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
 	},
 	post: function (url,data,callback) {
-		'use strict';
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = 'json';
 		xhr.open('POST',url);
@@ -66,7 +64,6 @@ const Util = {
 };
 // closer
 Util.createCharElement = (function () {
-	'use strict';
 	const eCharTemplate = document.createElement('span');
 	eCharTemplate.classList.add('char');
 	eCharTemplate.classList.add('display');
@@ -106,7 +103,6 @@ Util.createCharElement = (function () {
 	}
 })();
 Util.createRowElement = (function () {
-	'use strict';
 	/*
 	 *	[												 // 各文字のオブジェクトが配列で格納される
 	 *		{											 // 文字を表すオブジェクト
@@ -134,7 +130,6 @@ Util.createRowElement = (function () {
 	}
 })();
 Util.createParagraphElement = (function () {
-	'use strict';
 	/*
 	 * 			[
 	 * 				["decolation-textalign-center"],		 // 段落のクラスが文字列の配列で格納される
@@ -163,7 +158,6 @@ Util.createParagraphElement = (function () {
 	}
 })();
 Util.createCharPosElement = (function () {
-	'use strict';
 	const eCharPosTemplate = document.createElement('span');
 	eCharPosTemplate.classList.add('char-pos');
 
@@ -177,7 +171,6 @@ Util.createCharPosElement = (function () {
 	}
 })();
 Util.createConvertViewElement = (function () {
-	'use strict';
 	const eViewTemplate = document.createElement('div');
 	eViewTemplate.classList.add('convert-view');
 
@@ -189,7 +182,6 @@ Util.createConvertViewElement = (function () {
 })();
 // file_listの中に入れるファイル行を作成する
 Util.createFileElement = (function () {
-	'use strict';
 	/*
 	 * 作成例
 	 * <li>
@@ -222,7 +214,6 @@ Util.createFileElement = (function () {
 })();
 // file_listの中に入れるディレクトリ行を作成する
 Util.createDirectoryElement = (function () {
-	'use strict';
 	/*
 	 * 作成例
 	 * <li>
@@ -331,8 +322,6 @@ class Menu {
 	sentenceContainer() {
 		return this._sentenceContainer;
 	}
-
-	// --判定
 
 	// --Style
 
@@ -4954,18 +4943,13 @@ class File extends Sentence {
 	open() {
 		const sentenceContainer = this.fileList().sentenceContainer();
 
-		console.time('readFile');
 		const data = {};
 		data.user_id = sentenceContainer.userId();
 		data.file_id = this.id();
-		console.time('post()');
 		sentenceContainer.userAlert('読込中');
 		Util.post('/tategaki/ReadJsonFile',data,function (json) {
 			'use strict';
-			console.timeEnd('post()');
-			console.time('SentenceContainer init');
 			sentenceContainer.init(json).userAlert('読み込み完了');
-			console.timeEnd('SentenceContainer init');
 		}.bind(this));
 		return this;
 	}
@@ -6246,12 +6230,11 @@ class SentenceContainer extends Sentence {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	printInfo() {
-		// TODO: num -> pos
-		document.getElementById('str_num').textContent = this.cursor().currentCharPos();
+		document.getElementById('str_pos').textContent = this.cursor().currentCharPos();
 		document.getElementById('str_len').textContent = this.cursor().strLenOfRow();
-		document.getElementById('row_num').textContent = this.cursor().currentRowPos();
+		document.getElementById('row_pos').textContent = this.cursor().currentRowPos();
 		document.getElementById('row_len').textContent = this.cursor().rowLenOnPage();
-		document.getElementById('page_num').textContent = this.cursor().currentPage();
+		document.getElementById('page_pos').textContent = this.cursor().currentPage();
 		document.getElementById('page_len').textContent = this.countPage();
 		return this;
 	}
@@ -6401,9 +6384,7 @@ class SentenceContainer extends Sentence {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	resetDisplay() {
-		console.time('display');
 		this.addDisplay(0,0);
-		console.timeEnd('display');
 		return this;
 	}
 	// strPos: 'center','right'
@@ -6638,10 +6619,6 @@ class SentenceContainer extends Sentence {
 			case 186: // chrome
 				// :
 				this.command().start();
-				break;
-			case 188:
-				// ,
-				console.log(this);
 				break;
 			case 191:
 				// /
