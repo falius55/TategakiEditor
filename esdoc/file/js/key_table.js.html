@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">js/key_table.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Char.html">Char</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~CommandLine.html">CommandLine</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~ConvertContainer.html">ConvertContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~ConvertView.html">ConvertView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Cursor.html">Cursor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Directory.html">Directory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~EOL.html">EOL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~File.html">File</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~FileList.html">FileList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~InputChar.html">InputChar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Paragraph.html">Paragraph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">js/key_table.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">console.log(&apos;key_table.js&apos;);
+var key_table = {
+	getString : function (buffer_string,keycode) {
+		if (buffer_string.length === 0) {
+			// buffer&#x306B;&#x6587;&#x5B57;&#x306A;&#x3057;
+			// &#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x306E;&#x6587;&#x5B57;&#x3092;&#x305D;&#x306E;&#x307E;&#x307E;&#x8FD4;&#x3059;
+			return this.key_table_jpn[keycode];
+		} else if(buffer_string.length === 1) {
+			// buffer&#x306B;&#x4E00;&#x6587;&#x5B57;&#x306E;&#x307F;
+			if (this.convertable.indexOf(buffer_string) !== -1) {
+				// buffer&#x306E;&#x6587;&#x5B57;&#x304C;&#x5909;&#x63DB;&#x53EF;&#x80FD;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;
+				// keytable&#x304B;&#x3089;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x53D6;&#x5F97;
+				var s = this.key_table_jpn[buffer_string];
+				// &#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306B;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;&#x4E0E;&#x3048;&#x3066;&#x3001;&#x5909;&#x63DB;&#x6587;&#x5B57;&#x53D6;&#x5F97;
+				var str =  s[keycode];
+				if ( str == null) {
+					// &#x5909;&#x63DB;&#x6587;&#x5B57;&#x304C;&#x53D6;&#x5F97;&#x3067;&#x304D;&#x306A;&#x3044;&#x3068;&#x3044;&#x3046;&#x3053;&#x3068;&#x306F;&#x3001;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x4E8C;&#x6587;&#x5B57;&#x304C;&#x5909;&#x63DB;&#x53EF;&#x80FD;&#x306A;&#x7D44;&#x307F;&#x5408;&#x308F;&#x305B;&#x3067;&#x306F;&#x306A;&#x3044;&#x3068;&#x3044;&#x3046;&#x3053;&#x3068;
+					var typestr = this.key_table_jpn[keycode];
+					if (buffer_string === typestr) {
+						// &#x4F8B;&#x3048;&#x3070;zz&#x3068;&#x6253;&#x3064;&#x306A;&#x3069;&#x540C;&#x3058;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x306E;&#x9023;&#x7D9A;&#x306E;&#x5834;&#x5408;&#x3001;&quot;&#x3063;&#xFF5A;&quot;&#x3068;&#x8FD4;&#x3059;
+						return &quot;&#x3063;&quot; + typestr;
+					} else {
+						// &#x7570;&#x306A;&#x308B;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x306E;&#x5834;&#x5408;&#x3001;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50;
+						return buffer_string + typestr;
+					}
+				} else {
+					// &#x5909;&#x63DB;&#x3067;&#x304D;&#x305F;&#x5834;&#x5408;
+					// buffer&#x6587;&#x5B57;&#x3092;keytable&#x306B;&#x4E0E;&#x3048;&#x3066;&#x8FD4;&#x3063;&#x3066;&#x304D;&#x305F;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306B;keycode&#x3092;&#x4E0E;&#x3048;&#x3066;&#x5F97;&#x305F;&#x6587;&#x5B57;&#x3092;&#x8FD4;&#x3059;
+					return str;
+				}
+			} else {
+				// buffer&#x306E;&#x6587;&#x5B57;&#x304C;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;buffer&#x306E;&#x6587;&#x5B57;&#x3068;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x6587;&#x5B57;&#x3092;&#x9023;&#x7D50;&#x3057;&#x305F;&#x6587;&#x5B57;&#x5217;&#x3092;&#x8FD4;&#x3059;
+				return buffer_string + this.key_table_jpn[keycode];
+			}
+		}
+		// &#x4EE5;&#x4E0B;&#x306F;buffer&#x306E;&#x6587;&#x5B57;&#x5217;&#x304C;&#x4E8C;&#x6587;&#x5B57;&#x4EE5;&#x4E0A;&#x3067;&#x3042;&#x308B;&#x3053;&#x3068;&#x304C;&#x4FDD;&#x8A3C;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;
+		var noEncode = buffer_string.substring(0,buffer_string.length - 2); // &#x5909;&#x63DB;&#x3057;&#x306A;&#x3044;&#x6587;&#x5B57;
+		var first = buffer_string.substring(buffer_string.length - 2,buffer_string.length -1);
+		var second = buffer_string.substring(buffer_string.length -1,buffer_string.length);
+		if (this.convertable.indexOf(first) === -1) {
+			// &#x6700;&#x5F8C;&#x304B;&#x3089;&#x4E8C;&#x6587;&#x5B57;&#x76EE;&#x304C;&#x5909;&#x63DB;&#x53EF;&#x80FD;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x3067;&#x306F;&#x306A;&#x3044;
+			if (this.convertable.indexOf(second) === -1) {
+				// buffer&#x306B;&#x5909;&#x63DB;&#x3059;&#x308B;&#x5909;&#x63DB;&#x53EF;&#x80FD;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x304C;&#x306A;&#x3044;
+				// &#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x6587;&#x5B57;&#x5217;&#x3092;buffer&#x306B;&#x9023;&#x7D50;&#x3057;&#x305F;&#x6587;&#x5B57;&#x5217;&#x3092;&#x8FD4;&#x3059;
+				return buffer_string + this.key_table_jpn[keycode];
+			} else {
+				// buffer&#x306E;&#x6700;&#x7D42;&#x6587;&#x5B57;&#x3060;&#x3051;&#x304C;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;
+				var s = this.key_table_jpn[second];
+				var str =  s[keycode];
+				if ( str == null) {
+					// &#x5909;&#x63DB;&#x6587;&#x5B57;&#x304C;&#x53D6;&#x5F97;&#x3067;&#x304D;&#x306A;&#x3044;&#x3068;&#x3044;&#x3046;&#x3053;&#x3068;&#x306F;&#x3001;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x4E8C;&#x6587;&#x5B57;&#x304C;&#x5909;&#x63DB;&#x53EF;&#x80FD;&#x306A;&#x7D44;&#x307F;&#x5408;&#x308F;&#x305B;&#x3067;&#x306F;&#x306A;&#x3044;&#x3068;&#x3044;&#x3046;&#x3053;&#x3068;
+					var typestr = this.key_table_jpn[keycode];
+					if (second === typestr) {
+						// &#x4F8B;&#x3048;&#x3070;zz&#x3068;&#x6253;&#x3064;&#x306A;&#x3069;&#x540C;&#x3058;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x306E;&#x9023;&#x7D9A;&#x306E;&#x5834;&#x5408;&#x3001;&quot;&#x3063;&#xFF5A;&quot;&#x3068;&#x8FD4;&#x3059;
+						return noEncode + first + &quot;&#x3063;&quot; + typestr;
+					} else {
+						// &#x7570;&#x306A;&#x308B;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x306E;&#x5834;&#x5408;&#x3001;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50;
+						return buffer_string + typestr;
+					}
+				} else {
+					// &#x6700;&#x5F8C;&#x304B;&#x3089;&#x4E8C;&#x6587;&#x5B57;&#x76EE;&#x306F;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x4EE5;&#x5916;&#x3067;&#x3001;&#x6700;&#x7D42;&#x6587;&#x5B57;&#x3060;&#x3051;&#x304C;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;
+					// &#x5909;&#x63DB;&#x6587;&#x5B57;&#x53D6;&#x5F97;&#x6210;&#x529F;
+					// &#x7121;&#x5909;&#x63DB;&#x6587;&#x5B57; + first + buffer&#x6587;&#x5B57;&#x3092;keytable&#x306B;&#x4E0E;&#x3048;&#x3066;&#x8FD4;&#x3063;&#x3066;&#x304D;&#x305F;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306B;keycode&#x3092;&#x4E0E;&#x3048;&#x3066;&#x5F97;&#x305F;&#x6587;&#x5B57;&#x3092;&#x8FD4;&#x3059;
+					return noEncode + first + str;
+				}
+			}
+		} else {
+			// buffer&#x306E;&#x5F8C;&#x308D;&#x304B;&#x3089;&#x4E8C;&#x6587;&#x5B57;&#x76EE;&#x304C;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;
+			// &#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x304C;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x3067;&#x306A;&#x3044;&#x306A;&#x3089;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50; &quot;s&#x305F; + r&quot;&#x306A;&#x3069;&#x306E;&#x5834;&#x5408;
+			if (this.convertable.indexOf(second) === -1) return buffer_string + this.key_table_jpn[keycode];
+			// buffer&#x306E;&#x6700;&#x5F8C;&#x306B;&#x5909;&#x63DB;&#x53EF;&#x80FD;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x4E8C;&#x6587;&#x5B57;
+			// &#x7B2C;&#x4E00;&#x6DFB;&#x5B57;&#x304C;&#x30A2;&#x30EB;&#x30D5;&#x30A1;&#x30D9;&#x30C3;&#x30C8;&#x306A;&#x3089;&#x5FC5;&#x305A;&#x7B2C;&#x4E8C;&#x6DFB;&#x5B57;&#x306E;&#x305F;&#x3081;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306F;&#x8FD4;&#x3063;&#x3066;&#x304F;&#x308B;
+			//
+			var o = this.key_table_jpn[first][second];
+			if (o != null) {
+				var str = o[keycode];
+				// &#x4E09;&#x6587;&#x5B57;&#x3067;&#xFF11;&#x6587;&#x5B57;&#x304C;&#x5B8C;&#x6210;&#x3057;&#x305F;&#x5834;&#x5408;
+				// sy + a &#x2192;  &quot;&#x3057;&#x3083;&quot; &#x306A;&#x3069;
+				if (str != null) return noEncode + str;
+			}
+			// &#x4E09;&#x6587;&#x5B57;&#x3067;&#x4E00;&#x6587;&#x5B57;&#x304C;&#x5B8C;&#x6210;&#x3057;&#x306A;&#x3044;&#x5834;&#x5408;&#x3001;&#x5F8C;&#x308D;&#x4E8C;&#x6587;&#x5B57;&#x3067;&#xFF11;&#x6587;&#x5B57;&#x304C;&#x5B8C;&#x6210;&#x3059;&#x308B;&#x53EF;&#x80FD;&#x6027;&#x304C;&#x3042;&#x308B;&#x306E;&#x3067;&#x518D;&#x5E30;
+			// sta&#x306E;&#x4E09;&#x6587;&#x5B57;&#x3067;&quot;s&#x305F;&quot;&#x3068;&#x306A;&#x308B;&#x5834;&#x5408;&#x304C;&#x3042;&#x308B;
+			// &#x5F8C;&#x308D;&#x4E8C;&#x6587;&#x5B57;&#x3067;&#xFF11;&#x6587;&#x5B57;&#x304C;&#x5B8C;&#x6210;&#x3057;&#x306A;&#x3051;&#x308C;&#x3070;&#x305D;&#x306E;&#x307E;&#x307E;&#x4E8C;&#x6587;&#x5B57;&#x304C;&#x8FD4;&#x3063;&#x3066;&#x304F;&#x308B;&#x306E;&#x3067;&#x3001;&#x3084;&#x306F;&#x308A;first&#x3092;&#x631F;&#x3093;&#x3067;&#x9023;&#x7D50;
+			return noEncode + first + this.getString(second,keycode);
+		}
+	},
+	convertable : [&quot;k&quot;,&quot;s&quot;,&quot;t&quot;,&quot;n&quot;,&quot;h&quot;,&quot;m&quot;,&quot;y&quot;,&quot;r&quot;,&quot;w&quot;,&quot;g&quot;,&quot;z&quot;,&quot;d&quot;,&quot;b&quot;,&quot;p&quot;,&quot;j&quot;,&quot;f&quot;,&quot;l&quot;,&quot;x&quot;,&quot;c&quot;,&quot;v&quot;,&quot;q&quot;],
+	katakana : {
+		&quot;&#x3042;&quot; : &quot;&#x30A2;&quot;,
+		&quot;&#x3044;&quot; : &quot;&#x30A4;&quot;,
+		&quot;&#x3046;&quot; : &quot;&#x30A6;&quot;,
+		&quot;&#x3048;&quot; : &quot;&#x30A8;&quot;,
+		&quot;&#x304A;&quot; : &quot;&#x30AA;&quot;,
+		&quot;&#x304B;&quot; : &quot;&#x30AB;&quot;,
+		&quot;&#x304D;&quot; : &quot;&#x30AD;&quot;,
+		&quot;&#x304F;&quot; : &quot;&#x30AF;&quot;,
+		&quot;&#x3051;&quot; : &quot;&#x30B1;&quot;,
+		&quot;&#x3053;&quot; : &quot;&#x30B3;&quot;,
+		&quot;&#x3055;&quot; : &quot;&#x30B5;&quot;,
+		&quot;&#x3057;&quot; : &quot;&#x30B7;&quot;,
+		&quot;&#x3059;&quot; : &quot;&#x30B9;&quot;,
+		&quot;&#x305B;&quot; : &quot;&#x30BB;&quot;,
+		&quot;&#x305D;&quot; : &quot;&#x30BD;&quot;,
+		&quot;&#x305F;&quot; : &quot;&#x30BF;&quot;,
+		&quot;&#x3061;&quot; : &quot;&#x30C1;&quot;,
+		&quot;&#x3064;&quot; : &quot;&#x30C4;&quot;,
+		&quot;&#x3066;&quot; : &quot;&#x30C6;&quot;,
+		&quot;&#x3068;&quot; : &quot;&#x30C8;&quot;,
+		&quot;&#x306A;&quot; : &quot;&#x30CA;&quot;,
+		&quot;&#x306B;&quot; : &quot;&#x30CB;&quot;,
+		&quot;&#x306C;&quot; : &quot;&#x30CC;&quot;,
+		&quot;&#x306D;&quot; : &quot;&#x30CD;&quot;,
+		&quot;&#x306E;&quot; : &quot;&#x30CE;&quot;,
+		&quot;&#x306F;&quot; : &quot;&#x30CF;&quot;,
+		&quot;&#x3072;&quot; : &quot;&#x30D2;&quot;,
+		&quot;&#x3075;&quot; : &quot;&#x30D5;&quot;,
+		&quot;&#x3078;&quot; : &quot;&#x30D8;&quot;,
+		&quot;&#x307B;&quot; : &quot;&#x30DB;&quot;,
+		&quot;&#x307E;&quot; : &quot;&#x30DE;&quot;,
+		&quot;&#x307F;&quot; : &quot;&#x30DF;&quot;,
+		&quot;&#x3080;&quot; : &quot;&#x30E0;&quot;,
+		&quot;&#x3081;&quot; : &quot;&#x30E1;&quot;,
+		&quot;&#x3082;&quot; : &quot;&#x30E2;&quot;,
+		&quot;&#x3084;&quot; : &quot;&#x30E4;&quot;,
+		&quot;&#x3086;&quot; : &quot;&#x30E6;&quot;,
+		&quot;&#x3088;&quot; : &quot;&#x30E8;&quot;,
+		&quot;&#x3089;&quot; : &quot;&#x30E9;&quot;,
+		&quot;&#x308A;&quot; : &quot;&#x30EA;&quot;,
+		&quot;&#x308B;&quot; : &quot;&#x30EB;&quot;,
+		&quot;&#x308C;&quot; : &quot;&#x30EC;&quot;,
+		&quot;&#x308D;&quot; : &quot;&#x30ED;&quot;,
+		&quot;&#x308F;&quot; : &quot;&#x30EF;&quot;,
+		&quot;&#x3092;&quot; : &quot;&#x30F2;&quot;,
+		&quot;&#x3093;&quot; : &quot;&#x30F3;&quot;,
+		&quot;&#x304C;&quot; : &quot;&#x30AC;&quot;,
+		&quot;&#x304E;&quot; : &quot;&#x30AE;&quot;,
+		&quot;&#x3050;&quot; : &quot;&#x30B0;&quot;,
+		&quot;&#x3052;&quot; : &quot;&#x30B2;&quot;,
+		&quot;&#x3054;&quot; : &quot;&#x30B4;&quot;,
+		&quot;&#x3056;&quot; : &quot;&#x30B6;&quot;,
+		&quot;&#x3058;&quot; : &quot;&#x30B8;&quot;,
+		&quot;&#x305A;&quot; : &quot;&#x30BA;&quot;,
+		&quot;&#x305C;&quot; : &quot;&#x30BC;&quot;,
+		&quot;&#x305E;&quot; : &quot;&#x30BE;&quot;,
+		&quot;&#x3060;&quot; : &quot;&#x30C0;&quot;,
+		&quot;&#x3062;&quot; : &quot;&#x30C2;&quot;,
+		&quot;&#x3065;&quot; : &quot;&#x30C5;&quot;,
+		&quot;&#x3067;&quot; : &quot;&#x30C7;&quot;,
+		&quot;&#x3069;&quot; : &quot;&#x30C9;&quot;,
+		&quot;&#x3070;&quot; : &quot;&#x30D0;&quot;,
+		&quot;&#x3073;&quot; : &quot;&#x30D3;&quot;,
+		&quot;&#x3076;&quot; : &quot;&#x30D6;&quot;,
+		&quot;&#x3079;&quot; : &quot;&#x30D9;&quot;,
+		&quot;&#x307C;&quot; : &quot;&#x30DC;&quot;,
+		&quot;&#x3083;&quot; : &quot;&#x30E3;&quot;,
+		&quot;&#x3085;&quot; : &quot;&#x30E5;&quot;,
+		&quot;&#x3087;&quot; : &quot;&#x30E7;&quot;,
+		&quot;&#x3041;&quot; : &quot;&#x30A1;&quot;,
+		&quot;&#x3043;&quot; : &quot;&#x30A3;&quot;,
+		&quot;&#x3045;&quot; : &quot;&#x30A5;&quot;,
+		&quot;&#x3047;&quot; : &quot;&#x30A7;&quot;,
+		&quot;&#x3049;&quot; : &quot;&#x30A9;&quot;,
+		&quot;&#x3063;&quot; : &quot;&#x30C3;&quot;
+	},
+	shift_key : {
+		&quot;49&quot; : &quot;!&quot;,
+		&quot;50&quot; : &quot;\&#x201D;&quot;,
+		&quot;51&quot; : &quot;&#xFF03;&quot;,
+		&quot;52&quot; : &quot;&#xFF04;&quot;,
+		&quot;53&quot; : &quot;&#xFF05;&quot;,
+		&quot;54&quot; : &quot;&#xFF06;&quot;,
+		&quot;55&quot; : &quot;\&#x2019;&quot;,
+		&quot;56&quot; : &quot;&#xFF08;&quot;,
+		&quot;57&quot; : &quot;&#xFF09;&quot;,
+		&quot;187&quot; : &quot;&#x301C;&quot;,
+		&quot;188&quot; : &quot;&#x3008;&quot;,
+		&quot;190&quot; : &quot;&#x3009;&quot;,
+		&quot;191&quot; : &quot;&#xFF1F;&quot;,
+		&quot;220&quot; : &quot;}&quot;,
+		&quot;221&quot; : &quot;{&quot;,
+		&quot;65&quot;: &quot;A&quot;,
+		&quot;66&quot;: &quot;B&quot;,
+		&quot;67&quot;: &quot;C&quot;,
+		&quot;68&quot;: &quot;D&quot;,
+		&quot;69&quot;: &quot;E&quot;,
+		&quot;70&quot;: &quot;F&quot;,
+		&quot;71&quot;: &quot;G&quot;,
+		&quot;72&quot;: &quot;H&quot;,
+		&quot;73&quot;: &quot;I&quot;,
+		&quot;74&quot;: &quot;J&quot;,
+		&quot;75&quot;: &quot;K&quot;,
+		&quot;76&quot;: &quot;L&quot;,
+		&quot;77&quot;: &quot;M&quot;,
+		&quot;78&quot;: &quot;N&quot;,
+		&quot;79&quot;: &quot;O&quot;,
+		&quot;80&quot;: &quot;P&quot;,
+		&quot;81&quot;: &quot;Q&quot;,
+		&quot;82&quot;: &quot;R&quot;,
+		&quot;83&quot;: &quot;S&quot;,
+		&quot;84&quot;: &quot;T&quot;,
+		&quot;85&quot;: &quot;U&quot;,
+		&quot;86&quot;: &quot;V&quot;,
+		&quot;87&quot;: &quot;W&quot;,
+		&quot;88&quot;: &quot;X&quot;,
+		&quot;89&quot;: &quot;Y&quot;,
+		&quot;90&quot;: &quot;Z&quot;
+	},
+	key_table_jpn : {
+		&quot;48&quot;: &quot;&#xFF10;&quot;,
+		&quot;49&quot;: &quot;&#xFF11;&quot;,
+		&quot;50&quot;: &quot;&#xFF12;&quot;,
+		&quot;51&quot;: &quot;&#xFF13;&quot;,
+		&quot;52&quot;: &quot;&#xFF14;&quot;,
+		&quot;53&quot;: &quot;&#xFF15;&quot;,
+		&quot;54&quot;: &quot;&#xFF16;&quot;,
+		&quot;55&quot;: &quot;&#xFF17;&quot;,
+		&quot;56&quot;: &quot;&#xFF18;&quot;,
+		&quot;57&quot;: &quot;&#xFF19;&quot;,
+		&quot;65&quot;: &quot;&#x3042;&quot;,
+		&quot;73&quot;: &quot;&#x3044;&quot;,
+		&quot;85&quot;: &quot;&#x3046;&quot;,
+		&quot;69&quot;: &quot;&#x3048;&quot;,
+		&quot;79&quot;: &quot;&#x304A;&quot;,
+		&quot;75&quot;: &quot;k&quot;,
+		&quot;83&quot;: &quot;s&quot;,
+		&quot;84&quot;: &quot;t&quot;,
+		&quot;78&quot;: &quot;n&quot;,
+		&quot;72&quot;: &quot;h&quot;,
+		&quot;77&quot;: &quot;m&quot;,
+		&quot;89&quot;: &quot;y&quot;,
+		&quot;82&quot;: &quot;r&quot;,
+		&quot;87&quot;: &quot;w&quot;,
+		&quot;71&quot;: &quot;g&quot;,
+		&quot;90&quot;: &quot;z&quot;,
+		&quot;68&quot;: &quot;d&quot;,
+		&quot;66&quot;: &quot;b&quot;,
+		&quot;80&quot;: &quot;p&quot;,
+		&quot;74&quot;: &quot;j&quot;,
+		&quot;70&quot;: &quot;f&quot;,
+		&quot;76&quot;: &quot;l&quot;,
+		&quot;88&quot;: &quot;x&quot;,
+		&quot;67&quot;: &quot;c&quot;,
+		&quot;86&quot;: &quot;v&quot;,
+		&quot;81&quot;: &quot;q&quot;,
+		&quot;188&quot;: &quot;&#x3001;&quot;,
+		&quot;189&quot;: &quot;&#x30FC;&quot;,
+		&quot;190&quot;: &quot;&#x3002;&quot;,
+		&quot;191&quot;: &quot;&#x30FB;&quot;,
+		&quot;219&quot; : &quot;&#xFF20;&quot;,
+		&quot;220&quot; : &quot;&#x300D;&quot;,
+		&quot;221&quot; : &quot;&#x300C;&quot;,
+		&quot;k&quot;: { &quot;65&quot;: &quot;&#x304B;&quot;, &quot;73&quot;: &quot;&#x304D;&quot;, &quot;85&quot;: &quot;&#x304F;&quot;, &quot;69&quot;: &quot;&#x3051;&quot;, &quot;79&quot;: &quot;&#x3053;&quot;,
+			&quot;y&quot;:{
+				&quot;65&quot;: &quot;&#x304D;&#x3083;&quot;, &quot;73&quot;: &quot;&#x304D;&#x3043;&quot;, &quot;85&quot;: &quot;&#x304D;&#x3085;&quot;, &quot;69&quot;: &quot;&#x304D;&#x3047;&quot;, &quot;79&quot;: &quot;&#x304D;&#x3087;&quot;
+			}
+		},
+		&quot;s&quot;: {
+			&quot;65&quot;: &quot;&#x3055;&quot;, &quot;73&quot;: &quot;&#x3057;&quot;, &quot;85&quot;: &quot;&#x3059;&quot;, &quot;69&quot;: &quot;&#x305B;&quot;, &quot;79&quot;: &quot;&#x305D;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x3057;&#x3083;&quot;, &quot;73&quot;: &quot;&#x3057;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3057;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3057;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3057;&#x3087;&quot;
+			},
+			&quot;h&quot; : {
+				&quot;65&quot;: &quot;&#x3057;&#x3083;&quot;, &quot;73&quot;: &quot;&#x3057;&quot;, &quot;85&quot;: &quot;&#x3057;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3057;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3057;&#x3087;&quot;
+			}
+		} ,
+		&quot;t&quot;: { &quot;65&quot;: &quot;&#x305F;&quot;, &quot;73&quot;: &quot;&#x3061;&quot;, &quot;85&quot;: &quot;&#x3064;&quot;, &quot;69&quot;: &quot;&#x3066;&quot;, &quot;79&quot;: &quot;&#x3068;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x3061;&#x3083;&quot;, &quot;73&quot;: &quot;&#x3061;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3061;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3061;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3061;&#x3087;&quot;
+			}
+		},
+		&quot;n&quot;: { &quot;65&quot;: &quot;&#x306A;&quot;, &quot;73&quot;: &quot;&#x306B;&quot;, &quot;85&quot;: &quot;&#x306C;&quot;, &quot;69&quot;: &quot;&#x306D;&quot;, &quot;79&quot;: &quot;&#x306E;&quot;,&quot;78&quot;: &quot;&#x3093;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x306B;&#x3087;&quot;, &quot;73&quot;: &quot;&#x306B;&#x3043;&quot;, &quot;85&quot;: &quot;&#x306B;&#x3085;&quot;, &quot;69&quot;: &quot;&#x306B;&#x3047;&quot;, &quot;79&quot;: &quot;&#x306B;&#x3087;&quot;
+			}
+		},
+		&quot;h&quot;: { &quot;65&quot;: &quot;&#x306F;&quot;, &quot;73&quot;: &quot;&#x3072;&quot;, &quot;85&quot;: &quot;&#x3075;&quot;, &quot;69&quot;: &quot;&#x3078;&quot;, &quot;79&quot;: &quot;&#x307B;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x3072;&#x3087;&quot;, &quot;73&quot;: &quot;&#x3072;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3072;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3072;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3072;&#x3087;&quot;
+			}
+		},
+		&quot;m&quot;: { &quot;65&quot;: &quot;&#x307E;&quot;, &quot;73&quot;: &quot;&#x307F;&quot;, &quot;85&quot;: &quot;&#x3080;&quot;, &quot;69&quot;: &quot;&#x3081;&quot;, &quot;79&quot;: &quot;&#x3082;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x307F;&#x3087;&quot;, &quot;73&quot;: &quot;&#x307F;&#x3043;&quot;, &quot;85&quot;: &quot;&#x307F;&#x3085;&quot;, &quot;69&quot;: &quot;&#x307F;&#x3047;&quot;, &quot;79&quot;: &quot;&#x307F;&#x3087;&quot;
+			}
+		},
+		&quot;y&quot;: { &quot;65&quot;: &quot;&#x3084;&quot;, &quot;73&quot;: &quot;&#x3044;&quot;, &quot;85&quot;: &quot;&#x3086;&quot;, &quot;69&quot;: &quot;&#x3044;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3088;&quot; },
+		&quot;r&quot;: { &quot;65&quot;: &quot;&#x3089;&quot;, &quot;73&quot;: &quot;&#x308A;&quot;, &quot;85&quot;: &quot;&#x308B;&quot;, &quot;69&quot;: &quot;&#x308C;&quot;, &quot;79&quot;: &quot;&#x308D;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x308A;&#x3087;&quot;, &quot;73&quot;: &quot;&#x308A;&#x3043;&quot;, &quot;85&quot;: &quot;&#x308A;&#x3085;&quot;, &quot;69&quot;: &quot;&#x308A;&#x3047;&quot;, &quot;79&quot;: &quot;&#x308A;&#x3087;&quot;
+			}
+		},
+		&quot;w&quot;: { &quot;65&quot;: &quot;&#x308F;&quot;, &quot;73&quot;: &quot;&#x3046;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3046;&quot;, &quot;69&quot;: &quot;&#x3046;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3092;&quot; },
+		&quot;g&quot;: { &quot;65&quot;: &quot;&#x304C;&quot;, &quot;73&quot;: &quot;&#x304E;&quot;, &quot;85&quot;: &quot;&#x3050;&quot;, &quot;69&quot;: &quot;&#x3052;&quot;, &quot;79&quot;: &quot;&#x3054;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x304E;&#x3083;&quot;, &quot;73&quot;: &quot;&#x304E;&#x3043;&quot;, &quot;85&quot;: &quot;&#x304E;&#x3085;&quot;, &quot;69&quot;: &quot;&#x304E;&#x3047;&quot;, &quot;79&quot;: &quot;&#x304E;&#x3087;&quot;
+			}
+		},
+		&quot;z&quot;: { &quot;65&quot;: &quot;&#x3056;&quot;, &quot;73&quot;: &quot;&#x3058;&quot;, &quot;85&quot;: &quot;&#x305A;&quot;, &quot;69&quot;: &quot;&#x305C;&quot;, &quot;79&quot;: &quot;&#x305E;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x3058;&#x3083;&quot;, &quot;73&quot;: &quot;&#x3058;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3058;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3058;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3058;&#x3087;&quot;
+			}
+		},
+		&quot;d&quot;: { &quot;65&quot;: &quot;&#x3060;&quot;, &quot;73&quot;: &quot;&#x3062;&quot;, &quot;85&quot;: &quot;&#x3065;&quot;, &quot;69&quot;: &quot;&#x3067;&quot;, &quot;79&quot;: &quot;&#x3069;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x3062;&#x3083;&quot;, &quot;73&quot;: &quot;&#x3062;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3062;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3062;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3062;&#x3087;&quot;
+			}
+		},
+		&quot;b&quot;: { &quot;65&quot;: &quot;&#x3070;&quot;, &quot;73&quot;: &quot;&#x3073;&quot;, &quot;85&quot;: &quot;&#x3076;&quot;, &quot;69&quot;: &quot;&#x3079;&quot;, &quot;79&quot;: &quot;&#x307C;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x3073;&#x3083;&quot;, &quot;73&quot;: &quot;&#x3073;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3073;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3073;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3073;&#x3087;&quot;
+			}
+		},
+		&quot;p&quot;: { &quot;65&quot;: &quot;&#x3071;&quot;, &quot;73&quot;: &quot;&#x3074;&quot;, &quot;85&quot;: &quot;&#x3077;&quot;, &quot;69&quot;: &quot;&#x307A;&quot;, &quot;79&quot;: &quot;&#x307D;&quot;,
+			&quot;y&quot; : {
+				&quot;65&quot;: &quot;&#x3074;&#x3083;&quot;, &quot;73&quot;: &quot;&#x3074;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3074;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3074;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3074;&#x3087;&quot;
+			}
+		},
+		&quot;j&quot;: { &quot;65&quot;: &quot;&#x3058;&#x3083;&quot;, &quot;73&quot;: &quot;&#x3058;&quot;, &quot;85&quot;: &quot;&#x3058;&#x3085;&quot;, &quot;69&quot;: &quot;&#x3058;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3058;&#x3087;&quot; },
+		&quot;f&quot;: { &quot;65&quot;: &quot;&#x3075;&#x3041;&quot;, &quot;73&quot;: &quot;&#x3075;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3075;&quot;, &quot;69&quot;: &quot;&#x3075;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3075;&#x3049;&quot; },
+		&quot;l&quot;: { &quot;65&quot;: &quot;&#x3041;&quot;, &quot;73&quot;: &quot;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3045;&quot;, &quot;69&quot;: &quot;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3049;&quot; },
+		&quot;x&quot;: { &quot;65&quot;: &quot;&#x3041;&quot;, &quot;73&quot;: &quot;&#x3043;&quot;, &quot;85&quot;: &quot;&#x3045;&quot;, &quot;69&quot;: &quot;&#x3047;&quot;, &quot;79&quot;: &quot;&#x3049;&quot; },
+		&quot;c&quot;: { &quot;65&quot;: &quot;&#x304B;&quot;, &quot;73&quot;: &quot;&#x3057;&quot;, &quot;85&quot;: &quot;&#x304F;&quot;, &quot;69&quot;: &quot;&#x305B;&quot;, &quot;79&quot;: &quot;&#x3053;&quot; },
+		&quot;v&quot;: { &quot;65&quot;: &quot;&#x30F4;&#x30A1;&quot;, &quot;73&quot;: &quot;&#x30F4;&#x30A3;&quot;, &quot;85&quot;: &quot;&#x30F4;&quot;, &quot;69&quot;: &quot;&#x30F4;&#x30A7;&quot;, &quot;79&quot;: &quot;&#x30F4;&#x30A9;&quot; },
+		&quot;q&quot;: { &quot;65&quot;: &quot;&#x304F;&#x3041;&quot;, &quot;73&quot;: &quot;&#x304F;&#x3043;&quot;, &quot;85&quot;: &quot;&#x304F;&quot;, &quot;69&quot;: &quot;&#x304F;&#x3047;&quot;, &quot;79&quot;: &quot;&#x304F;&#x3049;&quot; }
+	}
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

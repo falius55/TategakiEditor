@@ -1,0 +1,2604 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">Cursor | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~Char.html">Char</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~CommandLine.html">CommandLine</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~ConvertContainer.html">ConvertContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~ConvertView.html">ConvertView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~Directory.html">Directory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~EOL.html">EOL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~File.html">File</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~FileList.html">FileList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~InputBuffer.html">InputBuffer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~InputChar.html">InputChar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~Paragraph.html">Paragraph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~Sentence.html">Sentence</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/tategaki/object.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="header-notice">
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Cursor} from &apos;<span><a href="file/tategaki/object.js.html#lineNumber947">./tategaki/object.js</a></span>&apos;</code></pre></div>
+  <span data-ice="access">public</span>
+  <span data-ice="kind">class</span>
+  
+  
+  
+  <span data-ice="source">| <span><a href="file/tategaki/object.js.html#lineNumber947">source</a></span></span>
+</div>
+
+<div class="self-detail detail">
+  <h1 data-ice="name">Cursor</h1>
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  <div class="description" data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;</p>
+</div>
+
+  
+
+  
+
+  
+
+  
+</div>
+
+
+
+<div data-ice="constructorSummary"><h2>Constructor Summary</h2><table class="summary" data-ice="summary">
+  <thead><tr><td data-ice="title" colspan="3">Public Constructor</td></tr></thead>
+  <tbody>
+  
+  <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(sentenceContainer: <span><a href="class/tategaki/object.js~SentenceContainer.html">SentenceContainer</a></span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<div data-ice="methodSummary"><h2>Method Summary</h2><table class="summary" data-ice="summary">
+  <thead><tr><td data-ice="title" colspan="3">Public Methods</td></tr></thead>
+  <tbody>
+  
+  <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-addCursor">addCursor</a></span></span><span data-ice="signature">(char: <span><a href="class/tategaki/object.js~Char.html">Char</a></span>, bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>char&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0E;&#x3048;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-backSpace">backSpace</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3067;&#x30D0;&#x30C3;&#x30AF;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x3092;&#x62BC;&#x4E0B;&#x3057;&#x305F;&#x6642;&#x306E;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-createCursorLine">createCursorLine</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;DOM&#x8981;&#x7D20;&#x3092;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x6A19;&#x6E96;&#x6587;&#x5B57;&#x6570;&#x306B;&#x5408;&#x308F;&#x305B;&#x3066;&#x69CB;&#x7BC9;&#x3059;&#x308B;&#x3002;&#x4E3B;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x5DE6;&#x53F3;&#x79FB;&#x52D5;&#x306E;&#x969B;&#x306B;&#x3001;&#x305D;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x4F55;&#x6587;&#x5B57;&#x76EE;&#x306E;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3057;&#x3066;&#x304D;&#x305F;&#x306E;&#x304B;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x7528;&#x3044;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-currentCharPos">currentCharPos</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x73FE;&#x5728;&#x884C;&#x306E;&#x3046;&#x3061;&#x4F55;&#x6587;&#x5B57;&#x76EE;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x3042;&#x308B;&#x304B;&#x3092;&#x8FD4;&#x3059;&#x3002;&#x884C;&#x982D;&#x3067;&#xFF11;&#xFF0C;EOL&#x3067;&#x306F;&#x884C;&#x306E;&#x7DCF;&#x6587;&#x5B57;&#x6570;&#xFF0B;&#xFF11;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-currentPage">currentPage</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x73FE;&#x5728;&#x30DA;&#x30FC;&#x30B8;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-currentRowPos">currentRowPos</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x305D;&#x306E;&#x30DA;&#x30FC;&#x30B8;&#x3067;&#x4F55;&#x884C;&#x76EE;&#x304B;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-cursorLineElem">cursorLineElem</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;&#x305F;&#x3081;&#x306E;DOM&#x8981;&#x7D20;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-extendSelection">extendSelection</a></span></span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>bShift&#x304C;true&#x306A;&#x3089;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-getChar">getChar</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Char.html">Char</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x3042;&#x308B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-getParagraph">getParagraph</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Paragraph.html">Paragraph</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x3042;&#x308B;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-getPosMemory">getPosMemory</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;DOM&#x8981;&#x7D20;&#x304B;&#x3089;&#x3001;&#x8A18;&#x61B6;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-getRow">getRow</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Row.html">Row</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-init">init</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x521D;&#x671F;&#x5316;&#x3057;&#x3066;&#x4E00;&#x6587;&#x5B57;&#x76EE;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0E;&#x3048;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-insert">insert</a></span></span><span data-ice="signature">(str: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306B;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3059;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-jumpPage">jumpPage</a></span></span><span data-ice="signature">(num: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>num&#x30DA;&#x30FC;&#x30B8;&#x76EE;&#x306E;&#x4E00;&#x884C;&#x76EE;&#x6700;&#x521D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x305D;&#x306E;&#x884C;&#x304B;&#x3089;&#x59CB;&#x307E;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-jumpRow">jumpRow</a></span></span><span data-ice="signature">(num: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>num&#x884C;&#x76EE;&#x306E;&#x6700;&#x521D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x79FB;&#x52D5;&#x5148;&#x306E;&#x884C;&#x304C;&#x4E2D;&#x592E;&#x3068;&#x306A;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-lineBreak">lineBreak</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3067;&#x6539;&#x884C;&#x3057;&#x305F;&#x6642;&#x306E;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-moveLeft">moveLeft</a></span></span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x5DE6;&#x65B9;&#x5411;&#x306B;&#x4E00;&#x3064;&#x52D5;&#x304B;&#x3059;&#x3002;&#x4E00;&#x3064;&#x5DE6;&#x304C;&#x6BB5;&#x843D;&#x9014;&#x4E2D;&#x306E;EOL&#x306A;&#x3089;&#x3001;&#x79FB;&#x52D5;&#x5148;&#x306E;&#x524D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x3055;&#x3089;&#x306B;&#x52D5;&#x304B;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-moveNext">moveNext</a></span></span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0B;&#x65B9;&#x5411;&#x306B;&#x4E00;&#x3064;&#x52D5;&#x304B;&#x3059;&#x3002;&#x3072;&#x3068;&#x3064;&#x4E0B;&#x304C;&#x6BB5;&#x843D;&#x9014;&#x4E2D;&#x306E;EOL&#x306A;&#x3089;&#x3001;&#x3055;&#x3089;&#x306B;&#x305D;&#x306E;&#x6B21;&#x306B;&#x52D5;&#x304B;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-movePrev">movePrev</a></span></span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0A;&#x65B9;&#x5411;&#x306B;&#x4E00;&#x3064;&#x52D5;&#x304B;&#x3059;&#x3002;&#x6BB5;&#x843D;&#x9014;&#x4E2D;&#x306E;&#x884C;&#x982D;&#x306A;&#x3089;&#x3001;&#x524D;&#x306E;&#x884C;&#x306E;&#x6700;&#x7D42;&#x6587;&#x5B57;&#x306B;&#x52D5;&#x304B;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-moveRight">moveRight</a></span></span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x53F3;&#x65B9;&#x5411;&#x306B;&#x4E00;&#x3064;&#x52D5;&#x304B;&#x3059;&#x3002;&#x4E00;&#x3064;&#x53F3;&#x304C;&#x6BB5;&#x843D;&#x9014;&#x4E2D;&#x306E;EOL&#x306A;&#x3089;&#x3001;&#x79FB;&#x52D5;&#x5148;&#x306E;&#x524D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x3055;&#x3089;&#x306B;&#x52D5;&#x304B;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-moveRow">moveRow</a></span></span><span data-ice="signature">(row: <span><a href="class/tategaki/object.js~Row.html">Row</a></span>, bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>row&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x79FB;&#x52D5;&#x5148;&#x306E;&#x6587;&#x5B57;&#x306F;&#x8A18;&#x61B6;&#x3055;&#x308C;&#x305F;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x6587;&#x5B57;&#x3067;&#x3001;&#x305D;&#x308C;&#x304C;EOL&#x306A;&#x3089;&#x305D;&#x306E;&#x524D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x79FB;&#x52D5;&#x3059;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-nextSearch">nextSearch</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x6B21;&#x306E;&#x691C;&#x7D22;&#x8A9E;&#x53E5;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;&#x4F55;&#x3082;&#x3057;&#x306A;&#x3044;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-prevSearch">prevSearch</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x524D;&#x306E;&#x691C;&#x7D22;&#x8A9E;&#x53E5;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;&#x4F55;&#x3082;&#x3057;&#x306A;&#x3044;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-rowLenOnPage">rowLenOnPage</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x73FE;&#x5728;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x7DCF;&#x884C;&#x6570;&#x3092;&#x8FD4;&#x3059;&#x3002;&#x6700;&#x7D42;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x307F;&#x8A2D;&#x5B9A;&#x884C;&#x6570;&#x3068;&#x7570;&#x306A;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-sentenceContainer">sentenceContainer</a></span></span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~SentenceContainer.html">SentenceContainer</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-setPosMemory">setPosMemory</a></span></span><span data-ice="signature">(index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;DOM&#x8981;&#x7D20;&#x306B;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/tategaki/object.js~Cursor.html#instance-method-strLenOfRow">strLenOfRow</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x73FE;&#x5728;&#x884C;&#x306E;&#x7DCF;&#x6587;&#x5B57;&#x6570;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+
+
+
+
+<div data-ice="constructorDetails"><h2 data-ice="title">Public Constructors</h2>
+
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-constructor-constructor">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">constructor</span><span data-ice="signature">(sentenceContainer: <span><a href="class/tategaki/object.js~SentenceContainer.html">SentenceContainer</a></span>)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber951">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">sentenceContainer</td>
+      <td data-ice="type"><span><a href="class/tategaki/object.js~SentenceContainer.html">SentenceContainer</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+</div>
+
+<div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
+
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-addCursor">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">addCursor</span><span data-ice="signature">(char: <span><a href="class/tategaki/object.js~Char.html">Char</a></span>, bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1023">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>char&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0E;&#x3048;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">char</td>
+      <td data-ice="type"><span><a href="class/tategaki/object.js~Char.html">Char</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x65B0;&#x3057;&#x3044;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">bShift</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x305F;&#x72B6;&#x614B;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x4E0E;&#x3048;&#x3089;&#x308C;&#x305F;&#x304B;&#x3069;&#x3046;&#x304B;&#x3002;true&#x306A;&#x3089;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-backSpace">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">backSpace</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1159">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3067;&#x30D0;&#x30C3;&#x30AF;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x3092;&#x62BC;&#x4E0B;&#x3057;&#x305F;&#x6642;&#x306E;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-createCursorLine">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">createCursorLine</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1128">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;DOM&#x8981;&#x7D20;&#x3092;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x6A19;&#x6E96;&#x6587;&#x5B57;&#x6570;&#x306B;&#x5408;&#x308F;&#x305B;&#x3066;&#x69CB;&#x7BC9;&#x3059;&#x308B;&#x3002;&#x4E3B;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x5DE6;&#x53F3;&#x79FB;&#x52D5;&#x306E;&#x969B;&#x306B;&#x3001;&#x305D;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x4F55;&#x6587;&#x5B57;&#x76EE;&#x306E;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3057;&#x3066;&#x304D;&#x305F;&#x306E;&#x304B;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x7528;&#x3044;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-currentCharPos">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">currentCharPos</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1079">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x73FE;&#x5728;&#x884C;&#x306E;&#x3046;&#x3061;&#x4F55;&#x6587;&#x5B57;&#x76EE;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x3042;&#x308B;&#x304B;&#x3092;&#x8FD4;&#x3059;&#x3002;&#x884C;&#x982D;&#x3067;&#xFF11;&#xFF0C;EOL&#x3067;&#x306F;&#x884C;&#x306E;&#x7DCF;&#x6587;&#x5B57;&#x6570;&#xFF0B;&#xFF11;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x4F4D;&#x7F6E;&#x3002;&#x5165;&#x529B;&#x306E;&#x59CB;&#x307E;&#x308B;&#x4F4D;&#x7F6E;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3068;&#x540C;&#x3058;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-currentPage">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">currentPage</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1114">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x73FE;&#x5728;&#x30DA;&#x30FC;&#x30B8;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x73FE;&#x5728;&#x30DA;&#x30FC;&#x30B8;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-currentRowPos">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">currentRowPos</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1093">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x305D;&#x306E;&#x30DA;&#x30FC;&#x30B8;&#x3067;&#x4F55;&#x884C;&#x76EE;&#x304B;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x30DA;&#x30FC;&#x30B8;&#x5185;&#x3067;&#x4F55;&#x884C;&#x76EE;&#x304B;&#x3002;&#x6539;&#x30DA;&#x30FC;&#x30B8;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;-1</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-cursorLineElem">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">cursorLineElem</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1001">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;&#x305F;&#x3081;&#x306E;DOM&#x8981;&#x7D20;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;&#x305F;&#x3081;&#x306E;&#x8981;&#x7D20;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-extendSelection">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">extendSelection</span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1351">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>bShift&#x304C;true&#x306A;&#x3089;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">bShift</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>true=&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;&#x3001;false=&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getChar">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">getChar</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Char.html">Char</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber980">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x3042;&#x308B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Char.html">Char</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getParagraph">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">getParagraph</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Paragraph.html">Paragraph</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber994">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x3042;&#x308B;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Paragraph.html">Paragraph</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x3042;&#x308B;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getPosMemory">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">getPosMemory</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1050">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;DOM&#x8981;&#x7D20;&#x304B;&#x3089;&#x3001;&#x8A18;&#x61B6;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x8A18;&#x61B6;&#x3055;&#x308C;&#x305F;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x8A18;&#x61B6;&#x3055;&#x308C;&#x305F;&#x4F4D;&#x7F6E;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;-1</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getRow">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">getRow</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Row.html">Row</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber987">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Row.html">Row</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-init">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">init</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber959">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x521D;&#x671F;&#x5316;&#x3057;&#x3066;&#x4E00;&#x6587;&#x5B57;&#x76EE;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0E;&#x3048;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-insert">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">insert</span><span data-ice="signature">(str: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1143">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306B;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3059;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">str</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x633F;&#x5165;&#x3059;&#x308B;&#x6587;&#x5B57;&#x5217;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-jumpPage">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">jumpPage</span><span data-ice="signature">(num: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1279">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>num&#x30DA;&#x30FC;&#x30B8;&#x76EE;&#x306E;&#x4E00;&#x884C;&#x76EE;&#x6700;&#x521D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x305D;&#x306E;&#x884C;&#x304B;&#x3089;&#x59CB;&#x307E;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">num</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x4F55;&#x30DA;&#x30FC;&#x30B8;&#x76EE;&#x306B;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x304B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-jumpRow">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">jumpRow</span><span data-ice="signature">(num: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1265">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>num&#x884C;&#x76EE;&#x306E;&#x6700;&#x521D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x79FB;&#x52D5;&#x5148;&#x306E;&#x884C;&#x304C;&#x4E2D;&#x592E;&#x3068;&#x306A;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">num</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x79FB;&#x52D5;&#x5148;&#x304C;&#x4F55;&#x884C;&#x76EE;&#x304B;&#x3002;&#xFF11;&#x304B;&#x3089;&#x59CB;&#x307E;&#x308B;&#x3002;&#x30DA;&#x30FC;&#x30B8;&#x5185;&#x3067;&#x306F;&#x306A;&#x304F;&#x3001;&#x6587;&#x7AE0;&#x5168;&#x4F53;&#x3067;&#x6570;&#x3048;&#x308B;&#x3002;&#xFF10;&#x4F4D;&#x4E0B;&#x304C;&#x6E21;&#x3055;&#x308C;&#x308B;&#x3068;&#x6700;&#x521D;&#x306E;&#x884C;&#x306B;&#x79FB;&#x52D5;&#x3055;&#x308C;&#x308B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-lineBreak">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">lineBreak</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1187">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3067;&#x6539;&#x884C;&#x3057;&#x305F;&#x6642;&#x306E;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-moveLeft">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">moveLeft</span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1240">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x5DE6;&#x65B9;&#x5411;&#x306B;&#x4E00;&#x3064;&#x52D5;&#x304B;&#x3059;&#x3002;&#x4E00;&#x3064;&#x5DE6;&#x304C;&#x6BB5;&#x843D;&#x9014;&#x4E2D;&#x306E;EOL&#x306A;&#x3089;&#x3001;&#x79FB;&#x52D5;&#x5148;&#x306E;&#x524D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x3055;&#x3089;&#x306B;&#x52D5;&#x304B;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">bShift</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-moveNext">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">moveNext</span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1205">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0B;&#x65B9;&#x5411;&#x306B;&#x4E00;&#x3064;&#x52D5;&#x304B;&#x3059;&#x3002;&#x3072;&#x3068;&#x3064;&#x4E0B;&#x304C;&#x6BB5;&#x843D;&#x9014;&#x4E2D;&#x306E;EOL&#x306A;&#x3089;&#x3001;&#x3055;&#x3089;&#x306B;&#x305D;&#x306E;&#x6B21;&#x306B;&#x52D5;&#x304B;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">bShift</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-movePrev">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">movePrev</span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1217">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0A;&#x65B9;&#x5411;&#x306B;&#x4E00;&#x3064;&#x52D5;&#x304B;&#x3059;&#x3002;&#x6BB5;&#x843D;&#x9014;&#x4E2D;&#x306E;&#x884C;&#x982D;&#x306A;&#x3089;&#x3001;&#x524D;&#x306E;&#x884C;&#x306E;&#x6700;&#x7D42;&#x6587;&#x5B57;&#x306B;&#x52D5;&#x304B;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">bShift</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-moveRight">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">moveRight</span><span data-ice="signature">(bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1229">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x53F3;&#x65B9;&#x5411;&#x306B;&#x4E00;&#x3064;&#x52D5;&#x304B;&#x3059;&#x3002;&#x4E00;&#x3064;&#x53F3;&#x304C;&#x6BB5;&#x843D;&#x9014;&#x4E2D;&#x306E;EOL&#x306A;&#x3089;&#x3001;&#x79FB;&#x52D5;&#x5148;&#x306E;&#x524D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x3055;&#x3089;&#x306B;&#x52D5;&#x304B;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">bShift</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-moveRow">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">moveRow</span><span data-ice="signature">(row: <span><a href="class/tategaki/object.js~Row.html">Row</a></span>, bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1253">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>row&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x79FB;&#x52D5;&#x5148;&#x306E;&#x6587;&#x5B57;&#x306F;&#x8A18;&#x61B6;&#x3055;&#x308C;&#x305F;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x6587;&#x5B57;&#x3067;&#x3001;&#x305D;&#x308C;&#x304C;EOL&#x306A;&#x3089;&#x305D;&#x306E;&#x524D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x79FB;&#x52D5;&#x3059;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">row</td>
+      <td data-ice="type"><span><a href="class/tategaki/object.js~Row.html">Row</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x79FB;&#x52D5;&#x5148;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">bShift</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3002;true&#x306A;&#x3089;&#x3001;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-nextSearch">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">nextSearch</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1292">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x6B21;&#x306E;&#x691C;&#x7D22;&#x8A9E;&#x53E5;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;&#x4F55;&#x3082;&#x3057;&#x306A;&#x3044;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-prevSearch">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">prevSearch</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1314">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x524D;&#x306E;&#x691C;&#x7D22;&#x8A9E;&#x53E5;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x3002;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;&#x4F55;&#x3082;&#x3057;&#x306A;&#x3044;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-rowLenOnPage">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">rowLenOnPage</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1103">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x73FE;&#x5728;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x7DCF;&#x884C;&#x6570;&#x3092;&#x8FD4;&#x3059;&#x3002;&#x6700;&#x7D42;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x307F;&#x8A2D;&#x5B9A;&#x884C;&#x6570;&#x3068;&#x7570;&#x306A;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x73FE;&#x5728;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x7DCF;&#x884C;&#x6570;&#x3002;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x7D42;&#x308F;&#x308A;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;-1</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-sentenceContainer">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">sentenceContainer</span><span data-ice="signature">(): <span><a href="class/tategaki/object.js~SentenceContainer.html">SentenceContainer</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber973">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~SentenceContainer.html">SentenceContainer</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-setPosMemory">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">setPosMemory</span><span data-ice="signature">(index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1063">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;DOM&#x8981;&#x7D20;&#x306B;&#x4F4D;&#x7F6E;&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">index</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x8A18;&#x61B6;&#x3059;&#x308B;&#x4F4D;&#x7F6E;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/tategaki/object.js~Cursor.html">Cursor</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-strLenOfRow">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">strLenOfRow</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/tategaki/object.js.html#lineNumber1086">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x73FE;&#x5728;&#x884C;&#x306E;&#x7DCF;&#x6587;&#x5B57;&#x6570;&#x3092;&#x8FD4;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x73FE;&#x5728;&#x884C;&#x306E;&#x7DCF;&#x6587;&#x5B57;&#x6570;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
