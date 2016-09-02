@@ -292,8 +292,36 @@ class Menu {
 	 */
 	constructor(sentenceContainer) {
 		this._sentenceContainer = sentenceContainer;
+		this._confStrLenElem = document.getElementById('conf-str-len');
+		this._confRowLenElem = document.getElementById('conf-row-len');
 		this.addEventListeners();
 	}
+
+	// --参照取得
+
+	/**
+	 * このMenuが対応する文章コンテナのインスタンスを返す
+	 * @return {SentenceContainer} SentenceContainerのインスタンス
+	 */
+	sentenceContainer() {
+		return this._sentenceContainer;
+	}
+	/**
+	 * 設定モーダルの文字数inputフォームのDOM要素を返す
+	 * @return {Element} 文字数設定inputフォームのDOM要素
+	 */
+	confStrLenElem() {
+		return this._confStrLenElem;
+	}
+	/**
+	 * 設定モーダルの行数inputフォームのDOM要素を返す
+	 * @return {Element} 行数設定inputフォームのDOM要素
+	 */
+	confRowLenElem() {
+		return this._confRowLenElem;
+	}
+
+	// --Status
 
 	/**
 	 * 現在アクティブになっている文字装飾のクラスを配列にする
@@ -312,15 +340,15 @@ class Menu {
 		}
 		return ret;
 	}
-
-	// --参照取得
-
 	/**
-	 * このMenuが対応する文章コンテナのインスタンスを返す
-	 * @return {SentenceContainer} SentenceContainerのインスタンス
+	 * 現在の設定情報を表すオブジェクトを作成する
+	 * @return {object} 現在の設定情報を表すオブジェクト
 	 */
-	sentenceContainer() {
-		return this._sentenceContainer;
+	configueData() {
+		const ret = {};
+		ret["steLen"] = this.confStrLenElem().value;
+		ret["rowLen"] = this.confRowLenElem().value;
+		return ret;
 	}
 
 	// --Style
@@ -450,7 +478,7 @@ class Menu {
 	 */
 	addEventListeners() {
 		// メニューボタン
-		document.getElementById('menu_new').addEventListener('click',function (e) { this.sentenceContainer().newFile(); }.bind(this),false);
+		document.getElementById('menu_new').addEventListener('click',function (e) { console.log('menu_new click event'); this.sentenceContainer().newFile(); }.bind(this),false);
 		document.getElementById('menu_save').addEventListener('click',function (e) { this.sentenceContainer().saveFile(); }.bind(this),false);
 		document.getElementById('menu_delete').addEventListener('click',function (e) { this.sentenceContainer().fileList().currentFile().delete(); }.bind(this),false);
 		document.getElementById('modal_fileopen_link').addEventListener('click',function (e) {
@@ -463,12 +491,14 @@ class Menu {
 
 		// モーダル開閉
 		$('div.modal').on('shown.bs.modal',function (e) {
+			console.log('modal shown event');
 			this.sentenceContainer().removeKeydownEventListener();
 			if (this.sentenceContainer().inputBuffer().isDisplay()) {
 				this.sentenceContainer().inputBuffer().empty().hide();
 			}
 		}.bind(this));
 		$('div.modal').on('hidden.bs.modal',function (e) {
+			console.log('modal hidden event');
 			if (this.sentenceContainer().command().isActive()) { return; }
 			this.sentenceContainer().addKeydownEventListener();
 		}.bind(this));
@@ -498,6 +528,9 @@ class Menu {
 
 		// font size
 		this.addFontSizeEvnet();
+
+		// configue modal
+		this.addConfSaveClickEvent();
 
 		return this;
 	}
@@ -537,6 +570,7 @@ class Menu {
 
 	/**
 	 * フォントサイズのドロップダウンをクリックするとフォントサイズのinputの数値が変更され、選択範囲の文字のフォントサイズが変更されるイベントを付加する
+	 *     querySelectorAll()でドロップダウンの各要素を取得してループでイベントを付加しているため、htmlとcssのみ変更することで扱うフォントサイズを増やすことが可能
 	 * @return {Menu} 自身のインスタンス
 	 */
 	addFontSizeEvnet() {
@@ -549,6 +583,20 @@ class Menu {
 				this.fontSize(size);
 			}.bind(this),false);
 		}
+		return this;
+	}
+	
+	/**
+	 * 設定モーダルのsaveボタンをクリックした際のイベントを付加する
+	 * @return {Menu} 自身のインスタンス
+	 */
+	addConfSaveClickEvent() {
+		document.getElementById('btn-conf-save').addEventListener('click',function (e) {
+			const strLen = parseInt(this.confStrLenElem().value || 18);
+			const rowLen = parseInt(this.confRowLenElem().value || 40);
+			this.sentenceContainer().strLenOnRow(strLen).rowLenOnPage(rowLen);
+			$('#configue-modal').modal('hide');
+		}.bind(this),false);
 		return this;
 	}
 }
@@ -816,6 +864,7 @@ class CommandLine {
 	 * コマンドの実行内容
 	 */
 	runCommand() {
+		console.log('runCommand event');
 		// 半角スペースで区切られていないようなら、全角スペースの区切りでも可
 		const command = this.val().split(' ').length > 1 ? this.val().split(' ') : this.val().split('　');
 		switch (command[0]) {
@@ -1068,7 +1117,7 @@ class Cursor {
 		const eCharPoses = this.cursorLineElem().children;
 		if (eCharPoses[oldPos]) eCharPoses[oldPos].classList.remove('cursor-pos-memory');
 		const maxIndex = eCharPoses.length - 1;
-		if (index > maxIndex) index = maxIndex;
+		if (index > maxIndex) index = maxIndex; // char-posの最大数を超える数値は覚えられない
 		eCharPoses[index].classList.add('cursor-pos-memory');
 		return this;
 	}
@@ -1128,7 +1177,7 @@ class Cursor {
 	createCursorLine() {
 		const eCursorLine = document.getElementById('cursor_line');
 		const eOldCharPoses = eCursorLine.children;
-		for (let i = 0,eOldCharPos; eOldCharPos = eOldCharPoses[0]; i++) {
+		for (let eOldCharPos; eOldCharPos = eOldCharPoses[0];) {
 			eCursorLine.removeChild(eOldCharPos);
 		}
 		eCursorLine.appendChild(Util.createCharPosElement(this.sentenceContainer().strLenOnRow()));
@@ -2533,10 +2582,12 @@ class Row extends Sentence {
 	 *		{	 // 文字を表すオブジェクト
 	 *			"char":"あ",
 	 *			"decolation":["decolation-color-blue"]
+	 *			"fontSize":"auto"
 	 *		},
 	 *		{
 	 *			"char":"い",
 	 *			"decolation":null
+	 *			"fontSize":"18"
 	 *		}
 	 *	]
 	 *	</code>
@@ -3192,10 +3243,12 @@ class Paragraph extends Sentence {
 	 *			{											 // 文字を表すオブジェクト
 	 *				"char":"あ",
 	 *				"decolation":["decolation-color-blue"]
+	 *				"fontSize":"auto"
 	 *			},
 	 *			{
 	 *				"char":"い",
 	 *				"decolation":[]
+	 *				"fontSize":"30"
 	 *			}
 	 *			]
 	 *	]
@@ -4973,6 +5026,7 @@ class File extends Sentence {
 							return;
 						}
 						if (!nextFile) {
+							console.log('file delete');
 							this.sentenceContainer().newFile();
 							this.sentenceContainer().fileList().read();
 							return;
@@ -5699,7 +5753,52 @@ class FileList extends Sentence {
 class SentenceContainer extends Sentence {
 	/**
 	 * @param {number} userId ユーザーID
-	 * @param {object} opt_data 文書情報のオブジェクト(Paragraphのdataの配列)
+	 * @param {object} opt_data 文書情報のオブジェクト
+	 * <pre>
+	 * {
+	 * 	"filename": "sampleFile",
+	 * 	"fileId": "12",
+	 *		"saved": "2016-08-23 02:13:05",
+	 *		"userId": "7",
+	 *		"data": {
+	 *			"conf": { // 文書全体に関する設定情報
+	 *				"strLen": "36",
+	 *				"rowLen": "42"
+	 *			},
+	 *			"text":[ // 各段落の情報が入った配列の配列
+	 *						[ // 段落の情報が入った配列
+	 *							["decolation-textalign-center"],		 // 段落のクラスが文字列の配列で格納される
+	 *							[	 // 各文字のオブジェクトが配列で格納される
+	 *								{	 // 文字を表すオブジェクト
+	 *									"char":"あ",
+	 *									"decolation":["decolation-color-blue"],
+	 *									"fontSize":"auto"
+	 *								},
+	 *								{
+	 *									"char":"い",
+	 *									"decolation":[]
+	 *								}
+	 *							]
+	 *						],
+	 *						[
+	 *							[],
+	 *							[
+	 *								{
+	 *									"char":"い",
+	 *									"decolation":["decolation-color-red"],
+	 *									"fontSize":"30"
+	 *								},
+	 *								{
+	 *									"char":"う",
+	 *									"decolation":["decolation-color-red"],
+	 *									"fontSize":"30"
+	 *								}
+	 *							]
+	 *						]
+	 *			]
+	 *		}
+	 * }
+	 * </pre>
 	 */
 	constructor(userId,opt_data) {
 		super(document.getElementById('sentence_container'));
@@ -5716,23 +5815,23 @@ class SentenceContainer extends Sentence {
 		this._command = new CommandLine(this);
 		this._menu = new Menu(this);
 
-		this.newFile();
+		if (!opt_data) this.newFile();
 	}
 	/**
 	 * 文書をコンテナに展開する
-	 * @param {object} data 文書情報のオブジェクト(Paragraphのデータの配列)
+	 * @param {object} data 文書情報のオブジェクト
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	init(data) {
 		this.empty();
 		// 文書情報
-		this.filename(data.filename);
-		this.fileId(data.fileId);
-		this.saved(data.saved || (new Date(Date.now()).toLocaleDateString() + ' ' + new Date(Date.now()).toLocaleTimeString()).replace(/\//g,'-'));
-		this._strLenOnRow = 40; // １行の文字数
-		this._rowLenOnPage = 40; // １ページの行数
+		this.filename(data["filename"]);
+		this.fileId(data["fileId"]);
+		this.saved(data["saved"] || (new Date(Date.now()).toLocaleDateString() + ' ' + new Date(Date.now()).toLocaleTimeString()).replace(/\//g,'-'));
+		this._strLenOnRow = data["data"]["conf"]["strLen"] || 40; // １行の文字数
+		this._rowLenOnPage = data["data"]["conf"]["rowLen"] || 40; // １ページの行数
 		// DOMの構築
-		for (let paraData of data.data.text) {
+		for (let paraData of data["data"]["text"]) {
 			this.append(new Paragraph(paraData));
 		}
 
@@ -5936,12 +6035,12 @@ class SentenceContainer extends Sentence {
 	 */
 	data() {
 		const data = {};
-		data.conf = {};
+		data["conf"] = this.menu().configueData();
 		const paraArr = [];
 		for (let paragraph of this.paragraphs()) {
 			paraArr.push(paragraph.data());
 		}
-		data.text = paraArr;
+		data["text"] = paraArr;
 
 		return JSON.stringify(data);
 	}
@@ -6008,6 +6107,8 @@ class SentenceContainer extends Sentence {
 		} else {
 			const newStrLen = opt_newStrLen;
 			this._strLenOnRow = newStrLen;
+			this.cordinate().checkKinsoku().changeDisplay().breakPage().printInfo();
+			this.cursor().createCursorLine();
 			return this;
 		}
 	}
@@ -6017,12 +6118,13 @@ class SentenceContainer extends Sentence {
 	 * @param {number} opt_newRowLen 新たに設定するページ内行数
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のページ内行数(引数を省略した場合)
 	 */
-	rowLenOnpage(opt_newRowLen) {
+	rowLenOnPage(opt_newRowLen) {
 		if (opt_newRowLen === undefined) {
 			return this._rowLenOnPage;
 		} else {
 			const newRowLen = opt_newRowLen;
 			this._rowLenOnPage = newRowLen;
+			this.breakPage().printInfo();
 			return this;
 		}
 	}
@@ -6266,7 +6368,7 @@ class SentenceContainer extends Sentence {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	breakPage() {
-		const pageNum = this.rowLenOnpage();
+		const pageNum = this.rowLenOnPage();
 		// page-break
 		let cnt1 = 0;
 		for (let paragraph of this.paragraphs()) {
@@ -6365,11 +6467,13 @@ class SentenceContainer extends Sentence {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	newFile(filename) {
+		console.log('new file');
 		if (filename === undefined) filename = 'newfile';
 		this.init({
 			fileId: -1,
 			filename: filename,
 			data: {
+				conf:{},
 				text:[[[],[]]]
 			}
 		}); // 空段落のデータ
@@ -6582,6 +6686,7 @@ class SentenceContainer extends Sentence {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	runKeydown(e,keycode) {
+		console.log('sentenceContainer keydown event:'+ keycode);
 		this.userAlert('');
 		if (e.ctrlKey) return this.runControlKeyDown(e,keycode);
 
