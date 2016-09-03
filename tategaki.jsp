@@ -31,7 +31,7 @@
 							</ul>
 						</div>
 					</li>
-					<li><button class="btn btn-primary" href="#configue-modal" data-toggle="modal">設定</button></li>
+					<li><button class="btn btn-primary" href="#configue_modal" data-toggle="modal">設定</button></li>
 					<li><button class="btn btn-primary" href="#help_modal" data-toggle="modal">ヘルプ</button></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
@@ -77,21 +77,21 @@
 									<div class="input-group-btn">
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-text-size"></span><span class="caret"></span></button>
 										<ul id="fontsize_dropdown" class="dropdown-menu" role="menu">
-											<li><a href="#" data-size="18">auto</a></li>
+											<li><a href="#" data-size="auto">auto</a></li>
 											<li><a href="#" data-size="8">8</a></li>
 											<li><a href="#" data-size="14">14</a></li>
 											<li><a href="#" data-size="18">18</a></li>
 											<li><a href="#" data-size="30">30</a></li>
 											</ul>
 										</div>
-										<input type="text" id="input_text_size" class="form-control" value="14" aria-label="text size"></input>
+										<input type="text" id="fontsize_input" class="form-control" value="auto" aria-label="text size"></input>
 									</div>
 							</li>
 							<li>
 								<div id="align_btns" class="btn-group">
-									<button type="button" id="text-btn-left" class="btn btn-default"><span class="glyphicon glyphicon-align-left"></button>
-									<button type="button" id="text-btn-center" class="btn btn-default"><span class="glyphicon glyphicon-align-center"></button>
-									<button type="button" id="text-btn-right" class="btn btn-default"><span class="glyphicon glyphicon-align-right"></button>
+									<button type="button" id="text_btn_left" class="btn btn-default"><span class="glyphicon glyphicon-align-left"></button>
+									<button type="button" id="text_btn_center" class="btn btn-default"><span class="glyphicon glyphicon-align-center"></button>
+									<button type="button" id="text_btn_right" class="btn btn-default"><span class="glyphicon glyphicon-align-right"></button>
 								</div>
 							</li>
 					</ul>
@@ -118,7 +118,7 @@
 				</div>
 			</div>
 
-			<div class="modal fade" id="configue-modal">
+			<div class="modal fade" id="configue_modal">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -130,21 +130,15 @@
 								<fieldset>
 									<div class="form-group">
 										<label for="str_len" class="control-label">文字数</label>
-										<input type="text" name="str_len" id="conf-str-len" class="form-control"></input>
+										<input type="text" name="str_len" id="conf_str_len" class="form-control"></input>
 									</div>
 									<div class="form-group">
 										<label for="row_len" class="control-label">行数</label>
-										<input type="text" name="row_len" id="conf-row-len" class="form-control"></input>
+										<input type="text" name="row_len" id="conf_row_len" class="form-control"></input>
 									</div>
 									<div class="form-group">
-										<label for="str_size" class="control-label">文字の大きさ</label>
-										<input type="radio" name="str_size" value="big" id="conf_str_size_big">大</input>
-										<input type="radio" name="str_size" value="middle" id="conf_str_size_middle" checked>中</input>
-										<input type="radio" name="str_size" value="small" id="conf_str_size_small">小</input>
-										</div>
-									<div class="form-group">
-										<button type="button" id="btn-conf-save" class="btn btn-primary">Save</button>
-										<button type="button" id="btn-conf-reset" class="btn btn-primary">Reset</button>
+										<button type="button" id="btn_conf_save" class="btn btn-primary">Save</button>
+										<button type="button" id="btn_conf_reset" class="btn btn-primary">Reset</button>
 									</div>
 								</fieldset>
 							</form>

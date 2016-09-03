@@ -672,12 +672,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/object.js~char.currentfontsize",
-    "class/js/object.js~Char.html#static-method-currentFontSize",
-    "js/object.js~Char.currentFontSize",
-    "method"
-  ],
-  [
     "js/object.js~commandline#active",
     "class/js/object.js~CommandLine.html#instance-method-active",
     "js/object.js~CommandLine#active",
@@ -1866,6 +1860,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "js/object.js~menu#addconfigueevent",
+    "class/js/object.js~Menu.html#instance-method-addConfigueEvent",
+    "js/object.js~Menu#addConfigueEvent",
+    "method"
+  ],
+  [
     "js/object.js~menu#addeventlisteners",
     "class/js/object.js~Menu.html#instance-method-addEventListeners",
     "js/object.js~Menu#addEventListeners",
@@ -1908,6 +1908,24 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "js/object.js~menu#confrowlenelem",
+    "class/js/object.js~Menu.html#instance-method-confRowLenElem",
+    "js/object.js~Menu#confRowLenElem",
+    "method"
+  ],
+  [
+    "js/object.js~menu#confstrlenelem",
+    "class/js/object.js~Menu.html#instance-method-confStrLenElem",
+    "js/object.js~Menu#confStrLenElem",
+    "method"
+  ],
+  [
+    "js/object.js~menu#configuedata",
+    "class/js/object.js~Menu.html#instance-method-configueData",
+    "js/object.js~Menu#configueData",
+    "method"
+  ],
+  [
     "js/object.js~menu#constructor",
     "class/js/object.js~Menu.html#instance-constructor-constructor",
     "js/object.js~Menu#constructor",
@@ -1917,6 +1935,12 @@ window.esdocSearchIndex = [
     "js/object.js~menu#fontsize",
     "class/js/object.js~Menu.html#instance-method-fontSize",
     "js/object.js~Menu#fontSize",
+    "method"
+  ],
+  [
+    "js/object.js~menu#fontsizeinput",
+    "class/js/object.js~Menu.html#instance-method-fontSizeInput",
+    "js/object.js~Menu#fontSizeInput",
     "method"
   ],
   [
@@ -2013,6 +2037,12 @@ window.esdocSearchIndex = [
     "js/object.js~paragraph#deleterow",
     "class/js/object.js~Paragraph.html#instance-method-deleteRow",
     "js/object.js~Paragraph#deleteRow",
+    "method"
+  ],
+  [
+    "js/object.js~paragraph#display",
+    "class/js/object.js~Paragraph.html#instance-method-display",
+    "js/object.js~Paragraph#display",
     "method"
   ],
   [
@@ -2911,8 +2941,8 @@ window.esdocSearchIndex = [
   ],
   [
     "js/object.js~sentencecontainer#rowlenonpage",
-    "class/js/object.js~SentenceContainer.html#instance-method-rowLenOnpage",
-    "js/object.js~SentenceContainer#rowLenOnpage",
+    "class/js/object.js~SentenceContainer.html#instance-method-rowLenOnPage",
+    "js/object.js~SentenceContainer#rowLenOnPage",
     "method"
   ],
   [

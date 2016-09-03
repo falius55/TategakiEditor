@@ -292,8 +292,9 @@ class Menu {
 	 */
 	constructor(sentenceContainer) {
 		this._sentenceContainer = sentenceContainer;
-		this._confStrLenElem = document.getElementById('conf-str-len');
-		this._confRowLenElem = document.getElementById('conf-row-len');
+		this._fontSizeInputElem = document.getElementById('fontsize_input');
+		this._confStrLenElem = document.getElementById('conf_str_len');
+		this._confRowLenElem = document.getElementById('conf_row_len');
 		this.addEventListeners();
 	}
 
@@ -323,6 +324,19 @@ class Menu {
 
 	// --Status
 
+	/**
+	 * フォントサイズinputフォームに値を設定する、あるいは引数省略で現在のinputフォームの値を返す
+	 * @param {number string} opt_newSize inputに設定する値(数値か、文字列の'auto')。省略可
+	 * @return {Menu number string} 自身のインスタンス(引数を渡した場合)、あるいは現在のinputフォームの値(引数を省略した場合。'auto'のみ文字列で返す)
+	 */
+	fontSizeInput(opt_newSize) {
+		if (opt_newSize === undefined) {
+			return this._fontSizeInputElem.value === 'auto' ? 'auto' : parseInt(this._fontSizeInputElem.value);
+		} else {
+			this._fontSizeInputElem.value = opt_newSize;
+			return this;
+		}
+	}
 	/**
 	 * 現在アクティブになっている文字装飾のクラスを配列にする
 	 * @return {string[]} 現在アクティブになっている文字装飾のクラスの配列
@@ -454,7 +468,7 @@ class Menu {
 		for (let char of chars) {
 			char.fontSize(size);
 		}
-		this.sentenceContainer().cordinate();
+		this.sentenceContainer().cordinate().checkKinsoku().changeDisplay().breakPage().printInfo();
 		return this;
 	}
 	// 'center','left','right'
@@ -528,7 +542,7 @@ class Menu {
 		this.addFontSizeEvnet();
 
 		// configue modal
-		this.addConfSaveClickEvent();
+		this.addConfigueEvent();
 
 		return this;
 	}
@@ -557,7 +571,7 @@ class Menu {
 		const eAligns = document.querySelectorAll('#align_btns button');
 		for (let i = 0,eAlign; eAlign = eAligns[i]; i++) {
 			eAlign.addEventListener('click',function (e) {
-				const align = eAlign.id.match(/text-btn-(\S+)/);
+				const align = eAlign.id.match(/text_btn_(\S+)/);
 				this.align(align[1]);
 			}.bind(this),false);
 		}
@@ -573,11 +587,10 @@ class Menu {
 	 */
 	addFontSizeEvnet() {
 		const eFontSizeDropdowns = document.querySelectorAll('#fontsize_dropdown a');
-		const eInput = document.getElementById('input_text_size');
 		for (let i = 0,eFontSize; eFontSize = eFontSizeDropdowns[i]; i++) {
 			eFontSize.addEventListener('click',function (e) {
-				const size = parseInt(e.target.dataset.size);
-				eInput.value = size;
+				const size = parseInt(e.target.dataset.size) || 'auto';
+				this.fontSizeInput(size);
 				this.fontSize(size);
 			}.bind(this),false);
 		}
@@ -585,17 +598,17 @@ class Menu {
 	}
 
 	/**
-	 * 設定モーダルのinputとsaveボタンにイベントを付加する
+	 * 設定モーダルのinputとsaveボタン、resetボタンにイベントを付加する
 	 * @return {Menu} 自身のインスタンス
 	 */
-	addConfSaveClickEvent() {
-		document.getElementById('btn-conf-save').addEventListener('click',function (e) {
+	addConfigueEvent() {
+		document.getElementById('btn_conf_save').addEventListener('click',function (e) {
 			const strLen = parseInt(this.confStrLenElem().value || 18);
 			const rowLen = parseInt(this.confRowLenElem().value || 40);
 			this.sentenceContainer().strLenOnRow(strLen).rowLenOnPage(rowLen);
-			$('#configue-modal').modal('hide');
+			$('#configue_modal').modal('hide');
 		}.bind(this),false);
-		document.getElementById('btn-conf-reset').addEventListener('click',function (e) {
+		document.getElementById('btn_conf_reset').addEventListener('click',function (e) { // html上でtype="reset"にすると、元に戻すというよりinputを空にしてしまう
 			this.confStrLenElem().value = this.sentenceContainer().strLenOnRow();
 			this.confRowLenElem().value = this.sentenceContainer().rowLenOnPage();
 		}.bind(this),false);
@@ -1095,6 +1108,7 @@ class Cursor {
 		menu.colorButton(prevChar ? prevChar.color() : 'black');
 		menu.boldButton(prevChar ? prevChar.isBold() : false);
 		menu.italicButton(prevChar ? prevChar.isItalic() : false);
+		menu.fontSizeInput(prevChar ? prevChar.fontSize() : 'auto');
 
 		// シフトキーが押されながらなら、選択範囲を広げる
 		this.extendSelection(bShift);
@@ -2485,15 +2499,7 @@ class Char extends Sentence {
 		ret["char"] = c;
 		const menu = this.paragraph().container().menu();
 		ret["decolation"] = menu.charDecolations();
-		ret["fontSize"] = Char.currentFontSize();
-		return ret;
-	}
-	/**
-	 * 'auto'を返す
-	 * @return {string} 'auto'
-	 */
-	static currentFontSize() {
-		const ret = 'auto';
+		ret["fontSize"] = menu.fontSizeInput();
 		return ret;
 	}
 	/**
@@ -3421,7 +3427,7 @@ class Paragraph extends Sentence {
 		if (opt_align) {
 			const oldAlign = this.className().match(/decolation-textalign-\S+/);
 			if (oldAlign) this.removeClass(oldAlign[0]);
-			if (opt_align !== 'left') this.addClass('decolation-textalign-'+ align);
+			if (opt_align !== 'left') this.addClass('decolation-textalign-'+ opt_align);
 		} else {
 			const oldAlign = this.className().match(/decolation-textalign-\S+/);
 			if (oldAlign) this.removeClass(oldAlign[0]);
@@ -6576,9 +6582,6 @@ class SentenceContainer extends Sentence {
 		const currentFirst = this.firstDisplayRowPos();
 		const cursorIndex = this.cursorRowPos();
 		const currentEnd = this.lastDisplayRowPos();
-		console.log('currentFirst:'+ currentFirst);
-		console.log('cursorIndex:'+ cursorIndex);
-		console.log('currentEnd:'+ currentEnd);
 
 		// カーソル位置を中央にする
 		// HACK:計算前のdisplayの数を基準にするので、フォントの大きさなどによってずれもありうる
