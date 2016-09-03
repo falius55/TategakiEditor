@@ -1470,6 +1470,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "js/object.js~filelist#emptyelem",
+    "class/js/object.js~FileList.html#instance-method-emptyElem",
+    "js/object.js~FileList#emptyElem",
+    "method"
+  ],
+  [
     "js/object.js~filelist#filter",
     "class/js/object.js~FileList.html#instance-method-filter",
     "js/object.js~FileList#filter",

@@ -1813,11 +1813,6 @@ class Sentence {
 	 * @return {Sentence} 自身のインスタンス
 	 */
 	emptyElem() {
-		// const children = this.elem().children;
-		// let child;
-		// while (child = children[0]) {
-		// 	this.elem().removeChild(child);
-		// }
 		for (let child of this._children) {
 			this.elem().removeChild(child.elem());
 		}
@@ -5591,6 +5586,20 @@ class FileList extends Sentence {
 	 */
 	appendElem(file) {
 		this.elem().appendChild(file.elem());
+		return this;
+	}
+	/**
+	 * 内部のエレメントを空にする
+	 * @return {Sentence} 自身のインスタンス
+	 */
+	emptyElem() {
+		// FileListは内部のエレメントが参照とは独立して変動するため、参照として保持しているエレメントを削除する方式では
+		// 存在しないエレメントを削除しようとすることになりエラーが起こるため、オーバーライドする
+		const children = this.elem().children;
+		let child;
+		while (child = children[0]) {
+			this.elem().removeChild(child);
+		}
 		return this;
 	}
 	/**
