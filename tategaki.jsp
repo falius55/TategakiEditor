@@ -143,8 +143,8 @@
 										<input type="radio" name="str_size" value="small" id="conf_str_size_small">小</input>
 										</div>
 									<div class="form-group">
-										<button id="btn-conf-save" class="btn btn-primary">Save</button>
-										<button type="reset" class="btn btn-primary">Reset</button>
+										<button type="button" id="btn-conf-save" class="btn btn-primary">Save</button>
+										<button type="button" id="btn-conf-reset" class="btn btn-primary">Reset</button>
 									</div>
 								</fieldset>
 							</form>

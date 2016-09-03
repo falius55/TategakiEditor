@@ -346,7 +346,7 @@ class Menu {
 	 */
 	configueData() {
 		const ret = {};
-		ret["steLen"] = this.confStrLenElem().value;
+		ret["strLen"] = this.confStrLenElem().value;
 		ret["rowLen"] = this.confRowLenElem().value;
 		return ret;
 	}
@@ -478,7 +478,7 @@ class Menu {
 	 */
 	addEventListeners() {
 		// メニューボタン
-		document.getElementById('menu_new').addEventListener('click',function (e) { console.log('menu_new click event'); this.sentenceContainer().newFile(); }.bind(this),false);
+		document.getElementById('menu_new').addEventListener('click',function (e) {  this.sentenceContainer().newFile(); }.bind(this),false);
 		document.getElementById('menu_save').addEventListener('click',function (e) { this.sentenceContainer().saveFile(); }.bind(this),false);
 		document.getElementById('menu_delete').addEventListener('click',function (e) { this.sentenceContainer().fileList().currentFile().delete(); }.bind(this),false);
 		document.getElementById('modal_fileopen_link').addEventListener('click',function (e) {
@@ -491,14 +491,12 @@ class Menu {
 
 		// モーダル開閉
 		$('div.modal').on('shown.bs.modal',function (e) {
-			console.log('modal shown event');
 			this.sentenceContainer().removeKeydownEventListener();
 			if (this.sentenceContainer().inputBuffer().isDisplay()) {
 				this.sentenceContainer().inputBuffer().empty().hide();
 			}
 		}.bind(this));
 		$('div.modal').on('hidden.bs.modal',function (e) {
-			console.log('modal hidden event');
 			if (this.sentenceContainer().command().isActive()) { return; }
 			this.sentenceContainer().addKeydownEventListener();
 		}.bind(this));
@@ -585,9 +583,9 @@ class Menu {
 		}
 		return this;
 	}
-	
+
 	/**
-	 * 設定モーダルのsaveボタンをクリックした際のイベントを付加する
+	 * 設定モーダルのinputとsaveボタンにイベントを付加する
 	 * @return {Menu} 自身のインスタンス
 	 */
 	addConfSaveClickEvent() {
@@ -596,6 +594,21 @@ class Menu {
 			const rowLen = parseInt(this.confRowLenElem().value || 40);
 			this.sentenceContainer().strLenOnRow(strLen).rowLenOnPage(rowLen);
 			$('#configue-modal').modal('hide');
+		}.bind(this),false);
+		document.getElementById('btn-conf-reset').addEventListener('click',function (e) {
+			this.confStrLenElem().value = this.sentenceContainer().strLenOnRow();
+			this.confRowLenElem().value = this.sentenceContainer().rowLenOnPage();
+		}.bind(this),false);
+		// inputからフォーカスから外れた際に、不正な文字が入力されていたら元に戻す
+		this.confStrLenElem().addEventListener('focusout',function (e) {
+			if (!/^[0-9]+$/.test(this.confStrLenElem().value)) {
+				this.confStrLenElem().value = this.sentenceContainer().strLenOnRow();
+			}
+		}.bind(this),false);
+		this.confRowLenElem().addEventListener('focusout',function (e) {
+			if (!/^[0-9]+$/.test(this.confRowLenElem().value)) {
+				this.confRowLenElem().value = this.sentenceContainer().rowLenOnPage();
+			}
 		}.bind(this),false);
 		return this;
 	}
@@ -864,7 +877,6 @@ class CommandLine {
 	 * コマンドの実行内容
 	 */
 	runCommand() {
-		console.log('runCommand event');
 		// 半角スペースで区切られていないようなら、全角スペースの区切りでも可
 		const command = this.val().split(' ').length > 1 ? this.val().split(' ') : this.val().split('　');
 		switch (command[0]) {
@@ -1217,6 +1229,7 @@ class Cursor {
 				moveRow.moveLastBefore();
 			}
 			newParagraph.cordinate().checkKinsoku();
+			// HACK: 最終行が表示されている状態でbackSpace()すると、カーソル行が表示されているために表示開始行が変わらず、行数が足りているにも関わらず表示行数が少なくなってしまう
 			this.sentenceContainer().changeDisplay().breakPage().printInfo();
 			return this;
 		}
@@ -1239,7 +1252,9 @@ class Cursor {
 		// 新しくできた段落の最初の文字にカーソルを移動する
 		const newParagraph = cursorParagraph.next(); // divide()で新しく挿入された段落
 		newParagraph.firstChild().firstChild().addCursor().setPosMemory();
-		this.sentenceContainer().changeDisplay().breakPage().printInfo();
+		// HACK:changeDisplay()を二回続けている:新しい段落がdisplayされて表示されるので、最終表示行から改行した場合にカーソル行が表示から外れる(最終表示行とカーソル行が等しいため、表示開始行を変えずに表示)
+		// かといって新しい段落を非表示にしてから挿入すると、表示行が文章コンテナを埋めていない状態の時に改行すると表示開始行が毎回ひとつ後ろにずれる(カーソル行が最終表示行より後ろにあるため)という現象が起こるので、行数が十分にあっても表示行が不足してしまう
+		this.sentenceContainer().changeDisplay().changeDisplay().breakPage().printInfo();
 		return this;
 	}
 
@@ -2213,7 +2228,7 @@ class Char extends Sentence {
 			return this;
 		}
 		if (opt_color === undefined) {
-			const color = this.className().match(/decolation-color-(.+)/);
+			const color = this.className().match(/decolation-color-(\S+)/);
 			return color ? color[1] : 'black';
 		}
 	}
@@ -3640,6 +3655,18 @@ class Paragraph extends Sentence {
 	}
 
 	/**
+	 * 内部にあるすべての行の表示非表示を切り替える
+	 * @param {boolean} bDisplay 表示するならtrue、そうでなければfalseを指定する
+	 * @return {Paragraph} 自身のインスタンス
+	 */
+	display(bDisplay) {
+		for (let row of this.rows()) {
+			row.display(bDisplay);
+		}
+		return this;
+	}
+
+	/**
 	 * 空段落のインスタンスを新たに作成する
 	 * @return {Paragraph} 空段落のインスタンス
 	 */
@@ -5026,7 +5053,6 @@ class File extends Sentence {
 							return;
 						}
 						if (!nextFile) {
-							console.log('file delete');
 							this.sentenceContainer().newFile();
 							this.sentenceContainer().fileList().read();
 							return;
@@ -5830,6 +5856,8 @@ class SentenceContainer extends Sentence {
 		this.saved(data["saved"] || (new Date(Date.now()).toLocaleDateString() + ' ' + new Date(Date.now()).toLocaleTimeString()).replace(/\//g,'-'));
 		this._strLenOnRow = data["data"]["conf"]["strLen"] || 40; // １行の文字数
 		this._rowLenOnPage = data["data"]["conf"]["rowLen"] || 40; // １ページの行数
+		this.menu().confStrLenElem().value = this._strLenOnRow;
+		this.menu().confRowLenElem().value = this._rowLenOnPage;
 		// DOMの構築
 		for (let paraData of data["data"]["text"]) {
 			this.append(new Paragraph(paraData));
@@ -6467,7 +6495,6 @@ class SentenceContainer extends Sentence {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	newFile(filename) {
-		console.log('new file');
 		if (filename === undefined) filename = 'newfile';
 		this.init({
 			fileId: -1,
@@ -6549,6 +6576,9 @@ class SentenceContainer extends Sentence {
 		const currentFirst = this.firstDisplayRowPos();
 		const cursorIndex = this.cursorRowPos();
 		const currentEnd = this.lastDisplayRowPos();
+		console.log('currentFirst:'+ currentFirst);
+		console.log('cursorIndex:'+ cursorIndex);
+		console.log('currentEnd:'+ currentEnd);
 
 		// カーソル位置を中央にする
 		// HACK:計算前のdisplayの数を基準にするので、フォントの大きさなどによってずれもありうる
@@ -6686,7 +6716,6 @@ class SentenceContainer extends Sentence {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	runKeydown(e,keycode) {
-		console.log('sentenceContainer keydown event:'+ keycode);
 		this.userAlert('');
 		if (e.ctrlKey) return this.runControlKeyDown(e,keycode);
 
