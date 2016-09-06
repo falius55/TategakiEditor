@@ -32,7 +32,8 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Char.html">Char</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Char.html">Char</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~CommandLine.html">CommandLine</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~ConvertContainer.html">ConvertContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~ConvertView.html">ConvertView</a></span></span></li>
@@ -46,7 +47,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Menu.html">Menu</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Row.html">Row</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 </ul>
 </div>
@@ -69,7 +69,7 @@
 
   
   
-  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span><a href="class/js/object.js~Sentence.html">Sentence</a></span> &#x2192; <span><a href="class/js/object.js~Row.html">Row</a></span> &#x2192; InputBuffer</div></div>
+  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span> &#x2192; <span><a href="class/js/object.js~Row.html">Row</a></span> &#x2192; InputBuffer</div></div>
   
   
   
@@ -350,6 +350,32 @@
     <td>
       <div>
         <p>
+           <span data-ice="name"><span><a href="class/js/object.js~InputBuffer.html#instance-method-decreace">decreace</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~InputChar.html">InputChar</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>buffer&#x306E;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;&#x3002;&#x5185;&#x90E8;&#x306B;&#x6587;&#x5B57;&#x304C;&#x306A;&#x304F;&#x306A;&#x308C;&#x3070;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
            <span data-ice="name"><span><a href="class/js/object.js~InputBuffer.html#instance-method-empty">empty</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
         </p>
       </div>
@@ -428,13 +454,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~InputBuffer.html#instance-method-input">input</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~InputBuffer.html#instance-method-increace">increace</a></span></span><span data-ice="signature">(keycode: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306B;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3057;&#x3001;&#x5F8C;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3063;&#x3066;&#x5165;&#x529B;&#x72B6;&#x614B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;</p>
+        <div data-ice="description"><p>keycode&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x65B0;&#x305F;&#x306A;&#x6587;&#x5B57;&#x5217;&#x3067;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x308B;</p>
 </div>
       </div>
     </td>
@@ -584,39 +610,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~InputBuffer.html#instance-method-pop">pop</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~InputChar.html">InputChar</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~InputBuffer.html#instance-method-print">print</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>buffer&#x306E;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;&#x3002;&#x5185;&#x90E8;&#x306B;&#x6587;&#x5B57;&#x304C;&#x306A;&#x304F;&#x306A;&#x308C;&#x3070;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/js/object.js~InputBuffer.html#instance-method-push">push</a></span></span><span data-ice="signature">(keycode: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>keycode&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x65B0;&#x305F;&#x306A;&#x6587;&#x5B57;&#x5217;&#x3067;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x308B;</p>
+        <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306B;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3057;&#x3001;&#x5F8C;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3063;&#x3066;&#x5165;&#x529B;&#x72B6;&#x614B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;</p>
 </div>
       </div>
     </td>
@@ -902,7 +902,7 @@
       <div>
         
         
-        <div data-ice="description"><p>keyevent&#x304C;SentenceContainer&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x3066;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;(&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;push()&#x3057;&#x3066;&#x5165;&#x529B;&#x6587;&#x5B57;&#x304C;&#x3067;&#x304D;&#x308C;&#x3070;&#x5165;&#x529B;&#x30E2;&#x30FC;&#x30C9;&#x306B;&#x79FB;&#x884C;&#x3059;&#x308B;)</p>
+        <div data-ice="description"><p>keyevent&#x304C;SentenceContainer&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x3066;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;(&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;increace()&#x3057;&#x3066;&#x5165;&#x529B;&#x6587;&#x5B57;&#x304C;&#x3067;&#x304D;&#x308C;&#x3070;&#x5165;&#x529B;&#x30E2;&#x30FC;&#x30C9;&#x306B;&#x79FB;&#x884C;&#x3059;&#x308B;)</p>
 </div>
       </div>
     </td>
@@ -968,7 +968,7 @@
 </div>
 
 <div class="inherited-summary" data-ice="inheritedSummary"><h2>Inherited Summary</h2><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3"><span class="toggle closed"></span> From class <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></td></tr></thead>
+  <thead><tr><td data-ice="title" colspan="3"><span class="toggle closed"></span> From class <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></td></tr></thead>
   <tbody>
   
   <tr data-ice="target">
@@ -982,7 +982,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-addClass">addClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-addClass">addClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1008,7 +1008,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-addClickEventListener">addClickEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-addClickEventListener">addClickEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1034,7 +1034,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-addKeydownEventListener">addKeydownEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-addKeydownEventListener">addKeydownEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1060,7 +1060,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-addWheelEventListener">addWheelEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-addWheelEventListener">addWheelEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1086,7 +1086,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-childLength">childLength</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-childLength">childLength</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -1112,7 +1112,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-children">children</a></span></span><span data-ice="signature">(opt_index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-children">children</a></span></span><span data-ice="signature">(opt_index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1138,7 +1138,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-className">className</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-className">className</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
         </p>
       </div>
       <div>
@@ -1164,7 +1164,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-computeCenterPoint">computeCenterPoint</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-computeCenterPoint">computeCenterPoint</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></span>
         </p>
       </div>
       <div>
@@ -1190,7 +1190,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-computeDistanceFromPoint">computeDistanceFromPoint</a></span></span><span data-ice="signature">(x: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, y: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-computeDistanceFromPoint">computeDistanceFromPoint</a></span></span><span data-ice="signature">(x: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, y: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -1216,7 +1216,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-deleteChild">deleteChild</a></span></span><span data-ice="signature">(child: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-deleteChild">deleteChild</a></span></span><span data-ice="signature">(child: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1242,7 +1242,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-elem">elem</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-elem">elem</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
         </p>
       </div>
       <div>
@@ -1268,7 +1268,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-empty">empty</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-empty">empty</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1294,7 +1294,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-emptyChild">emptyChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-emptyChild">emptyChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1320,7 +1320,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-emptyElem">emptyElem</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-emptyElem">emptyElem</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1346,7 +1346,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-firstChild">firstChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-firstChild">firstChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1372,7 +1372,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-hasChild">hasChild</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-hasChild">hasChild</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1398,7 +1398,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-hasClass">hasClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-hasClass">hasClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1424,7 +1424,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-hasNextSibling">hasNextSibling</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-hasNextSibling">hasNextSibling</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1450,7 +1450,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-hasPrevSibling">hasPrevSibling</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-hasPrevSibling">hasPrevSibling</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1476,7 +1476,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-height">height</a></span></span><span data-ice="signature">(opt_useCache: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-height">height</a></span></span><span data-ice="signature">(opt_useCache: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -1502,7 +1502,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-index">index</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-index">index</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -1528,7 +1528,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-insertChild">insertChild</a></span></span><span data-ice="signature">(pos: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, child: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-insertChild">insertChild</a></span></span><span data-ice="signature">(pos: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, child: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1554,7 +1554,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-is">is</a></span></span><span data-ice="signature">(obj: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-is">is</a></span></span><span data-ice="signature">(obj: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1580,7 +1580,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-isEmpty">isEmpty</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-isEmpty">isEmpty</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1606,7 +1606,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-isFirst">isFirst</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-isFirst">isFirst</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1632,7 +1632,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-isLast">isLast</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-isLast">isLast</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1658,7 +1658,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-isOnlyChild">isOnlyChild</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-isOnlyChild">isOnlyChild</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1684,7 +1684,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-lastChild">lastChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-lastChild">lastChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1710,7 +1710,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-length">length</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-length">length</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -1736,7 +1736,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-next">next</a></span></span><span data-ice="signature">(opt_newNext: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-next">next</a></span></span><span data-ice="signature">(opt_newNext: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1762,7 +1762,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-parent">parent</a></span></span><span data-ice="signature">(opt_newParent: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-parent">parent</a></span></span><span data-ice="signature">(opt_newParent: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1788,7 +1788,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-prev">prev</a></span></span><span data-ice="signature">(opt_newPrev: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-prev">prev</a></span></span><span data-ice="signature">(opt_newPrev: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1814,7 +1814,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-pushChild">pushChild</a></span></span><span data-ice="signature">(child: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-pushChild">pushChild</a></span></span><span data-ice="signature">(child: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1840,7 +1840,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-removeClass">removeClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-removeClass">removeClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1866,7 +1866,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-removeClassFromAllChild">removeClassFromAllChild</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-removeClassFromAllChild">removeClassFromAllChild</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1892,7 +1892,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-removeClickEventListener">removeClickEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-removeClickEventListener">removeClickEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1918,7 +1918,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-removeKeydownEventListener">removeKeydownEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-removeKeydownEventListener">removeKeydownEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1944,7 +1944,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-removeWheelEventListener">removeWheelEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-removeWheelEventListener">removeWheelEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1970,7 +1970,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-replaceChild">replaceChild</a></span></span><span data-ice="signature">(oldChild: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>, newChild: <span><a href="class/js/object.js~Sentence.html">Sentence</a></span>): <span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-replaceChild">replaceChild</a></span></span><span data-ice="signature">(oldChild: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>, newChild: <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
         </p>
       </div>
       <div>
@@ -1996,7 +1996,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-text">text</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-text">text</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
         </p>
       </div>
       <div>
@@ -2022,7 +2022,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-width">width</a></span></span><span data-ice="signature">(opt_useCache: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-width">width</a></span></span><span data-ice="signature">(opt_useCache: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -2048,7 +2048,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-x">x</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-x">x</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -2074,7 +2074,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/js/object.js~Sentence.html#instance-method-y">y</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+           <span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-y">y</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -3356,7 +3356,7 @@
   <div data-ice="description"><p>&#x5165;&#x529B;&#x6642;&#x306E;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30EA;&#x30B9;&#x30CA;&#x30FC;&#x3092;&#x4ED8;&#x52A0;&#x3059;&#x308B;</p>
 </div>
 
-  <div data-ice="override"><h4>Override:</h4><span><a href="class/js/object.js~Sentence.html#instance-method-addKeydownEventListener">Sentence#addKeydownEventListener</a></span></div>
+  <div data-ice="override"><h4>Override:</h4><span><a href="class/js/object.js~AbstractHierarchy.html#instance-method-addKeydownEventListener">AbstractHierarchy#addKeydownEventListener</a></span></div>
 
   <div data-ice="properties">
 </div>
@@ -3752,6 +3752,58 @@
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-decreace">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">decreace</span><span data-ice="signature">(): <span><a href="class/js/object.js~InputChar.html">InputChar</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/object.js.html#lineNumber4649">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>buffer&#x306E;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;&#x3002;&#x5185;&#x90E8;&#x306B;&#x6587;&#x5B57;&#x304C;&#x306A;&#x304F;&#x306A;&#x308C;&#x3070;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/js/object.js~InputChar.html">InputChar</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>&#x524A;&#x9664;&#x3057;&#x305F;&#x5165;&#x529B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-empty">
     <span class="access" data-ice="access">public</span>
     
@@ -3908,29 +3960,53 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-input">
+  <h3 data-ice="anchor" id="instance-method-increace">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">input</span><span data-ice="signature">(): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
+    <span data-ice="name">increace</span><span data-ice="signature">(keycode: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/js/object.js.html#lineNumber4676">source</a></span></span>
+      <span data-ice="source"><span><a href="file/js/object.js.html#lineNumber4634">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306B;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3057;&#x3001;&#x5F8C;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3063;&#x3066;&#x5165;&#x529B;&#x72B6;&#x614B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;</p>
+  <div data-ice="description"><p>keycode&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x65B0;&#x305F;&#x306A;&#x6587;&#x5B57;&#x5217;&#x3067;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x308B;</p>
 </div>
 
   
 
-  <div data-ice="properties">
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">keycode</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x8FFD;&#x52A0;&#x3059;&#x308B;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">bShift</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
 </div>
 
   <div class="return-params" data-ice="returnParams">
@@ -4285,105 +4361,29 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-pop">
+  <h3 data-ice="anchor" id="instance-method-print">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">pop</span><span data-ice="signature">(): <span><a href="class/js/object.js~InputChar.html">InputChar</a></span></span>
+    <span data-ice="name">print</span><span data-ice="signature">(): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/js/object.js.html#lineNumber4649">source</a></span></span>
+      <span data-ice="source"><span><a href="file/js/object.js.html#lineNumber4676">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>buffer&#x306E;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;&#x3002;&#x5185;&#x90E8;&#x306B;&#x6587;&#x5B57;&#x304C;&#x306A;&#x304F;&#x306A;&#x308C;&#x3070;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;</p>
+  <div data-ice="description"><p>&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306B;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3057;&#x3001;&#x5F8C;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3063;&#x3066;&#x5165;&#x529B;&#x72B6;&#x614B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;</p>
 </div>
 
   
 
   <div data-ice="properties">
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span><a href="class/js/object.js~InputChar.html">InputChar</a></span></td>
-        <td class="return-desc" data-ice="returnDescription"><p>&#x524A;&#x9664;&#x3057;&#x305F;&#x5165;&#x529B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
-</td>
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-push">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">push</span><span data-ice="signature">(keycode: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, bShift: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="class/js/object.js~InputBuffer.html">InputBuffer</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/js/object.js.html#lineNumber4634">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>keycode&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x65B0;&#x305F;&#x306A;&#x6587;&#x5B57;&#x5217;&#x3067;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x308B;</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">keycode</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>&#x8FFD;&#x52A0;&#x3059;&#x308B;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">bShift</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
 </div>
 
   <div class="return-params" data-ice="returnParams">
@@ -4980,7 +4980,7 @@
   
   
   
-  <div data-ice="description"><p>keyevent&#x304C;SentenceContainer&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x3066;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;(&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;push()&#x3057;&#x3066;&#x5165;&#x529B;&#x6587;&#x5B57;&#x304C;&#x3067;&#x304D;&#x308C;&#x3070;&#x5165;&#x529B;&#x30E2;&#x30FC;&#x30C9;&#x306B;&#x79FB;&#x884C;&#x3059;&#x308B;)</p>
+  <div data-ice="description"><p>keyevent&#x304C;SentenceContainer&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x3066;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;(&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;increace()&#x3057;&#x3066;&#x5165;&#x529B;&#x6587;&#x5B57;&#x304C;&#x3067;&#x304D;&#x308C;&#x3070;&#x5165;&#x529B;&#x30E2;&#x30FC;&#x30C9;&#x306B;&#x79FB;&#x884C;&#x3059;&#x308B;)</p>
 </div>
 
   

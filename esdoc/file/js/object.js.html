@@ -32,7 +32,8 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Char.html">Char</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Char.html">Char</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~CommandLine.html">CommandLine</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~ConvertContainer.html">ConvertContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~ConvertView.html">ConvertView</a></span></span></li>
@@ -46,7 +47,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Menu.html">Menu</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Row.html">Row</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~Sentence.html">Sentence</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/object.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 </ul>
 </div>
@@ -542,7 +542,7 @@ export class Menu {
 	 * &#x30E1;&#x30CB;&#x30E5;&#x30FC;&#x306E;&#x5404;&#x30B3;&#x30F3;&#x30DD;&#x30FC;&#x30CD;&#x30F3;&#x30C8;&#x306B;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30EA;&#x30B9;&#x30CA;&#x30FC;&#x3092;&#x4ED8;&#x52A0;&#x3059;&#x308B;
 	 *     new&#x30DC;&#x30BF;&#x30F3;&#x3001;save&#x30DC;&#x30BF;&#x30F3;&#x3001;delete&#x30DC;&#x30BF;&#x30F3;&#x3001;&#x958B;&#x304F;&#x30DC;&#x30BF;&#x30F3;&#x3001;&#x30E2;&#x30FC;&#x30C0;&#x30EB;&#x306E;&#x958B;&#x9589;&#x3001;
 	 *     &#x6587;&#x5B57;&#x8272;&#x30DC;&#x30BF;&#x30F3;&#x3001;&#x6587;&#x5B57;&#x8272;&#x30C9;&#x30ED;&#x30C3;&#x30D7;&#x30C0;&#x30A6;&#x30F3;&#x3001;&#x592A;&#x5B57;&#x30DC;&#x30BF;&#x30F3;&#x3001;&#x659C;&#x4F53;&#x30DC;&#x30BF;&#x30F3;&#x3001;
-	 * 	 text-align&#x30DC;&#x30BF;&#x30F3;&#x3001;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x306E;&#x30C9;&#x30ED;&#x30C3;&#x30D7;&#x30C0;&#x30A6;&#x30F3;
+	 * 	 text-align&#x30DC;&#x30BF;&#x30F3;&#x3001;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x306E;&#x30C9;&#x30ED;&#x30C3;&#x30D7;&#x30C0;&#x30A6;&#x30F3;&#x3001;&#x8A2D;&#x5B9A;&#x30E2;&#x30FC;&#x30C0;&#x30EB;
 	 * @return {Menu} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	addEventListeners() {
@@ -1498,7 +1498,7 @@ export class Cursor {
 /**
  * &#x5404;&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x57FA;&#x5E95;&#x30AF;&#x30E9;&#x30B9;
  */
-export class Sentence {
+export class AbstractHierarchy {
 	/**
 	 * @param {Element} elem &#x81EA;&#x8EAB;&#x306E;DOM&#x8981;&#x7D20;
 	 */
@@ -1523,8 +1523,8 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x3092;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {Sentence} opt_newParent &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x89AA;&#x3002;&#x7701;&#x7565;&#x53EF;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
+	 * @param {AbstractHierarchy} opt_newParent &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x89AA;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	parent(opt_newParent) {
 		if (opt_newParent === undefined) { // null&#x304C;&#x6E21;&#x3055;&#x308C;&#x308B;&#x3053;&#x3068;&#x3082;&#x3042;&#x308B;&#x306E;&#x3067;undefined&#x3068;&#x53B3;&#x5BC6;&#x306B;&#x6BD4;&#x8F03;
@@ -1536,8 +1536,8 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {Sentence} opt_newNext &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
+	 * @param {AbstractHierarchy} opt_newNext &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	next(opt_newNext) {
 		if (opt_newNext === undefined) {
@@ -1549,8 +1549,8 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {Sentence} opt_newPrev &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
+	 * @param {AbstractHierarchy} opt_newPrev &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	prev(opt_newPrev) {
 		if (opt_newPrev === undefined) {
@@ -1563,7 +1563,7 @@ export class Sentence {
 	/**
 	 * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5B50;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x3002;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x3092;&#x914D;&#x5217;&#x3067;&#x53D6;&#x5F97;&#x3059;&#x308B;
 	 * @param {number} opt_index &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x7BC4;&#x56F2;&#x5916;&#x306A;&#x3089;undefined&#x304C;&#x8FD4;&#x3055;&#x308C;&#x308B;&#x3002;&#x7701;&#x7565;&#x53EF;
-	 * @return {Sentence} index&#x3067;&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5B50;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
+	 * @return {AbstractHierarchy} index&#x3067;&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5B50;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	children(opt_index) {
 		if (opt_index === undefined) {
@@ -1574,7 +1574,7 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x521D;&#x306E;&#x5B50;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x521D;&#x306E;&#x5B50;&#x3002;&#x5B50;&#x304C;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;null
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x521D;&#x306E;&#x5B50;&#x3002;&#x5B50;&#x304C;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;null
 	 */
 	firstChild() {
 		if (this.hasChild()) {
@@ -1585,7 +1585,7 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x5B50;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x5B50;&#x3002;&#x5B50;&#x304C;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;null
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x5B50;&#x3002;&#x5B50;&#x304C;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;null
 	 */
 	lastChild() {
 		if (this.hasChild()) {
@@ -1599,7 +1599,7 @@ export class Sentence {
 
 	/**
 	 * obj&#x304C;&#x81EA;&#x8EAB;&#x3068;&#x540C;&#x4E00;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x304B;&#x3069;&#x3046;&#x304B;
-	 * @param {Sentence} obj &#x6BD4;&#x8F03;&#x3059;&#x308B;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+	 * @param {AbstractHierarchy} obj &#x6BD4;&#x8F03;&#x3059;&#x308B;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
 	 * @return {boolean} obj&#x304C;&#x81EA;&#x8EAB;&#x3068;&#x540C;&#x4E00;&#x306A;&#x3089;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
 	 */
 	is(obj) {
@@ -1676,8 +1676,8 @@ export class Sentence {
 
 	/**
 	 * child&#x3092;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x52A0;&#x3048;&#x308B;
-	 * @param {Sentence} child &#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x52A0;&#x3048;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @param {AbstractHierarchy} child &#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x52A0;&#x3048;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	pushChild(child) {
 		this._children.push(child);
@@ -1686,8 +1686,8 @@ export class Sentence {
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;pos&#x756A;&#x76EE;&#x306B;child&#x3092;&#x52A0;&#x3048;&#x308B;
 	 * @param {number} pos child&#x3092;&#x52A0;&#x3048;&#x308B;&#x4F4D;&#x7F6E;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;(&#xFF10;&#x59CB;&#x307E;&#x308A;)
-	 * @param {Sentence} child &#x5B50;&#x306B;&#x52A0;&#x3048;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @param {AbstractHierarchy} child &#x5B50;&#x306B;&#x52A0;&#x3048;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	insertChild(pos,child) {
 		// &#x914D;&#x5217;&#x306E;&#x7BC4;&#x56F2;&#x5916;&#x306E;&#x6570;&#x5024;&#x3092;&#x6E21;&#x3055;&#x308C;&#x305F;&#x3089;push&#x306B;&#x5207;&#x308A;&#x66FF;&#x3048;&#x308B;
@@ -1699,8 +1699,8 @@ export class Sentence {
 	}
 	/**
 	 * child&#x3092;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x304B;&#x3089;&#x524A;&#x9664;&#x3059;&#x308B;
-	 * @param {Sentence} child &#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x304B;&#x3089;&#x524A;&#x9664;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @param {AbstractHierarchy} child &#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x304B;&#x3089;&#x524A;&#x9664;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	deleteChild(child) {
 		const pos = child.index();
@@ -1710,9 +1710,9 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;oldChild&#x3092;&#x5B50;&#x304B;&#x3089;&#x524A;&#x9664;&#x3057;&#x3001;&#x65B0;&#x305F;&#x306B;newChild&#x3092;&#x540C;&#x3058;&#x4F4D;&#x7F6E;&#x306B;&#x52A0;&#x3048;&#x308B;
-	 * @param {Sentence} oldChild &#x5165;&#x66FF;&#x3048;&#x3089;&#x308C;&#x308B;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 * @param {Sentence} newChild &#x5165;&#x308C;&#x66FF;&#x3048;&#x308B;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x3067;&#x306A;&#x304B;&#x3063;&#x305F;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @param {AbstractHierarchy} oldChild &#x5165;&#x66FF;&#x3048;&#x3089;&#x308C;&#x308B;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @param {AbstractHierarchy} newChild &#x5165;&#x308C;&#x66FF;&#x3048;&#x308B;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x3067;&#x306A;&#x304B;&#x3063;&#x305F;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	replaceChild(oldChild,newChild) {
 		const pos = oldChild.index();
@@ -1721,7 +1721,7 @@ export class Sentence {
 	}
 	/**
 	 * &#x3053;&#x306E;&#x53C2;&#x7167;&#x3092;&#x81EA;&#x8EAB;&#x304B;&#x3089;&#x5207;&#x308A;&#x96E2;&#x3057;&#x3066;&#x7A7A;&#x306B;&#x3059;&#x308B;&#x3002;DOM&#x8981;&#x7D20;&#x306B;&#x306F;&#x5F71;&#x97FF;&#x3057;&#x306A;&#x3044;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	emptyChild() {
 		this._children = [];
@@ -1772,7 +1772,7 @@ export class Sentence {
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x306B;className&#x3092;&#x52A0;&#x3048;&#x308B;
 	 * @param {string} className &#x81EA;&#x8EAB;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x306B;&#x52A0;&#x3048;&#x308B;&#x30AF;&#x30E9;&#x30B9;&#x540D;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	addClass(className) {
 		this._elem.classList.add(className);
@@ -1781,7 +1781,7 @@ export class Sentence {
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x304B;&#x3089;className&#x3092;&#x9664;&#x53BB;&#x3059;&#x308B;
 	 * @param {string} className &#x81EA;&#x8EAB;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x304B;&#x3089;&#x9664;&#x53BB;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;&#x540D;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	removeClass(className) {
 		this._elem.classList.remove(className);
@@ -1790,7 +1790,7 @@ export class Sentence {
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x6301;&#x3064;&#x3059;&#x3079;&#x3066;&#x306E;&#x5B50;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x304B;&#x3089;className&#x3092;&#x9664;&#x53BB;&#x3059;&#x308B;
 	 * @param {string} className &#x9664;&#x53BB;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;&#x540D;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	removeClassFromAllChild(className) {
 		for (let child of this._children) {
@@ -1865,7 +1865,7 @@ export class Sentence {
 
 	/**
 	 * &#x5185;&#x90E8;&#x306E;&#x30A8;&#x30EC;&#x30E1;&#x30F3;&#x30C8;&#x3092;&#x7A7A;&#x306B;&#x3059;&#x308B;&#x3002;children&#x3068;&#x3057;&#x3066;&#x6301;&#x3063;&#x3066;&#x3044;&#x306A;&#x3044;&#x8981;&#x7D20;(EOL&#x306A;&#x3069;)&#x306F;&#x524A;&#x9664;&#x3055;&#x308C;&#x306A;&#x3044;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	emptyElem() {
 		for (let child of this._children) {
@@ -1875,7 +1875,7 @@ export class Sentence {
 	}
 	/**
 	 * &#x5185;&#x90E8;&#x306E;&#x30A8;&#x30EC;&#x30E1;&#x30F3;&#x30C8;&#x306B;&#x52A0;&#x3048;&#x3001;&#x5185;&#x90E8;&#x306E;&#x53C2;&#x7167;&#x3082;&#x7A7A;&#x306B;&#x3059;&#x308B;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	empty() {
 		this.emptyElem();
@@ -1887,7 +1887,7 @@ export class Sentence {
 
 	/**
 	 * &#x81EA;&#x8EAB;&#x306B;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30EA;&#x30B9;&#x30CA;&#x30FC;&#x3092;&#x4ED8;&#x52A0;&#x3059;&#x308B;&#x3002;&#x91CD;&#x306D;&#x304C;&#x3051;&#x306F;&#x7121;&#x52B9;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	addKeydownEventListener() {
 		if (this._keydownArg) return this;
@@ -1897,7 +1897,7 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30EA;&#x30B9;&#x30CA;&#x30FC;&#x3092;&#x9664;&#x53BB;&#x3059;&#x308B;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	removeKeydownEventListener() {
 		if (!this._keydownArg) return this;
@@ -1930,14 +1930,14 @@ export class Sentence {
 	 * keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3002;onkeydown()&#x5185;&#x3067;&#x4F7F;&#x7528;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x5B9A;&#x7FA9;&#x3057;&#x3066;&#x304A;&#x304F;&#x304C;&#x3001;&#x5185;&#x5BB9;&#x306F;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x4E0A;&#x66F8;&#x304D;&#x3059;&#x308B;
 	 * @param {object} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
 	 * @param {number} keycode &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	runKeydown(e,keycode) {
 		return this;
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306B;&#x30AF;&#x30EA;&#x30C3;&#x30AF;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4ED8;&#x52A0;&#x3059;&#x308B;&#x3002;&#x91CD;&#x306D;&#x304C;&#x3051;&#x306F;&#x7121;&#x52B9;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	addClickEventListener() {
 		if (this._clickArg) return this;
@@ -1947,7 +1947,7 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x30AF;&#x30EA;&#x30C3;&#x30AF;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x9664;&#x53BB;&#x3059;&#x308B;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	removeClickEventListener() {
 		if (!this._clickArg) return this;
@@ -1967,14 +1967,14 @@ export class Sentence {
 	 * @private
 	 * click&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3002;onClick()&#x5185;&#x3067;&#x4F7F;&#x7528;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x5B9A;&#x7FA9;&#x3057;&#x3066;&#x304A;&#x304F;&#x304C;&#x3001;&#x5185;&#x5BB9;&#x306F;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x4E0A;&#x66F8;&#x304D;&#x3059;&#x308B;
 	 * @param {object} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	runClick(e) {
 		return this;
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306B;&#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4ED8;&#x52A0;&#x3059;&#x308B;&#x3002;&#x91CD;&#x306D;&#x304C;&#x3051;&#x306F;&#x7121;&#x52B9;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	addWheelEventListener() {
 		if (this._wheelArg) return this;
@@ -1985,7 +1985,7 @@ export class Sentence {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x9664;&#x53BB;&#x3059;&#x308B;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	removeWheelEventListener() {
 		if (!this._wheelArg) return this;
@@ -2011,7 +2011,7 @@ export class Sentence {
 	 * &#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3002;onWheel()&#x5185;&#x3067;&#x4F7F;&#x7528;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x5B9A;&#x7FA9;&#x3057;&#x3066;&#x304A;&#x304F;&#x304C;&#x3001;&#x5185;&#x5BB9;&#x306F;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x4E0A;&#x66F8;&#x304D;&#x3059;&#x308B;
 	 * @param {object} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
 	 * @param {boolean} isUp &#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x304C;&#x4E0A;&#x65B9;&#x5411;&#x306B;&#x52D5;&#x3044;&#x305F;&#x306A;&#x3089;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	runWheel(e,isUp) {
 		return this;
@@ -2021,7 +2021,7 @@ export class Sentence {
 /**
  * &#x6587;&#x5B57;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class Char extends Sentence {
+export class Char extends AbstractHierarchy {
 	/**
 	 * @param {object} data &#x6587;&#x5B57;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
 	 * &#x4F8B;
@@ -2642,7 +2642,7 @@ export class EOL extends Char {
 /**
  * &#x884C;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class Row extends Sentence {
+export class Row extends AbstractHierarchy {
 	/**
 	 * @param {object} data &#x884C;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
 	 * &#x4F8B;
@@ -3301,7 +3301,7 @@ export class Row extends Sentence {
 /**
  * &#x6BB5;&#x843D;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class Paragraph extends Sentence {
+export class Paragraph extends AbstractHierarchy {
 	/**
 	 * @param {object} data &#x6BB5;&#x843D;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
 	 * &#x4F8B;
@@ -3386,7 +3386,7 @@ export class Paragraph extends Sentence {
 	}
 	/**
 	 * &#x5F15;&#x6570;&#x3067;&#x6E21;&#x3055;&#x308C;&#x305F;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x304C;&#x6BB5;&#x843D;&#x5185;&#x306B;&#x3042;&#x308B;&#x884C;&#x304B;&#x6587;&#x5B57;&#x306E;&#x3044;&#x305A;&#x308C;&#x304B;&#x306B;&#x4E00;&#x81F4;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3059;
-	 * @param {Sentence} obj &#x5224;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @param {AbstractHierarchy} obj &#x5224;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @return {boolean} &#x5F15;&#x6570;&#x3067;&#x6E21;&#x3055;&#x308C;&#x305F;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x304C;&#x6BB5;&#x843D;&#x5185;&#x306B;&#x3042;&#x308B;&#x884C;&#x304B;&#x6587;&#x5B57;&#x306E;&#x3044;&#x305A;&#x308C;&#x304B;&#x306B;&#x4E00;&#x81F4;&#x3059;&#x308B;&#x3068;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
 	 */
 	contains(obj) {
@@ -3738,7 +3738,7 @@ export class Paragraph extends Sentence {
 /**
  * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30D3;&#x30E5;&#x30FC;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;&#x3002;&#x305D;&#x308C;&#x305E;&#x308C;&#x4E00;&#x3064;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x62C5;&#x5F53;&#x3057;&#x3001;&#x8907;&#x6570;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x6301;&#x3064;&#x3002;&#x307E;&#x305F;&#x3001;&#x5185;&#x90E8;&#x306B;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3068;&#x3057;&#x3066;Row&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x6301;&#x3064;
  */
-export class ConvertView extends Sentence {
+export class ConvertView extends AbstractHierarchy {
 	// &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306F;&#x3001;ConvertView&#x306E;index()&#x3068;&#x540C;&#x3058;
 	/**
 	 * @param {object} data &#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
@@ -4011,7 +4011,7 @@ export class ConvertView extends Sentence {
 /**
  * &#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x675F;&#x306D;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class ConvertContainer extends Sentence {
+export class ConvertContainer extends AbstractHierarchy {
 	/**
 	 * @param {InputBuffer} inputBuffer &#x5165;&#x529B;&#x5143;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
@@ -4109,8 +4109,8 @@ export class ConvertContainer extends Sentence {
 	 * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3057;&#x3066;&#x3001;&#x5185;&#x90E8;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x7834;&#x68C4;&#x3059;&#x308B;
 	 * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
-	input() {
-		this.inputBuffer().input();
+	print() {
+		this.inputBuffer().print();
 		return this;
 	}
 	/**
@@ -4252,7 +4252,7 @@ export class ConvertContainer extends Sentence {
 		// &#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3057;&#x3066;input&#x7D42;&#x4E86;
 		if (activeView.isOnlyChild() &amp;&amp; activeView.kanaLength() === 1) {
 			this.empty();
-			this.inputBuffer().pop();
+			this.inputBuffer().decreace();
 			return this;
 		}
 
@@ -4358,7 +4358,7 @@ export class ConvertContainer extends Sentence {
 				break;
 			case 13:
 				// Enter
-				this.input();
+				this.print();
 				break;
 			case 32:
 			case 37:
@@ -4686,7 +4686,7 @@ export class InputBuffer extends Row {
 	 * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
 	 * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
-	push(keycode,bShift) {
+	increace(keycode,bShift) {
 		const newInputStr = this.newString(keycode,bShift);
 
 		if (newInputStr === undefined || newInputStr.indexOf(&apos;undefined&apos;) !== -1) {
@@ -4701,7 +4701,7 @@ export class InputBuffer extends Row {
 	 * buffer&#x306E;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;&#x3002;&#x5185;&#x90E8;&#x306B;&#x6587;&#x5B57;&#x304C;&#x306A;&#x304F;&#x306A;&#x308C;&#x3070;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;
 	 * @return {InputChar} &#x524A;&#x9664;&#x3057;&#x305F;&#x5165;&#x529B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
-	pop() {
+	decreace() {
 		if (!this.hasChar) return this;
 		const ret = this.lastChar().remove();
 		this.resize();
@@ -4728,7 +4728,7 @@ export class InputBuffer extends Row {
 	 * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306B;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3057;&#x3001;&#x5F8C;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3063;&#x3066;&#x5165;&#x529B;&#x72B6;&#x614B;&#x3092;&#x7D42;&#x4E86;&#x3059;&#x308B;
 	 * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
-	input() {
+	print() {
 		this.cursor().insert(this.text());
 		this.empty().hide();
 		this.container().addKeydownEventListener();
@@ -4882,13 +4882,13 @@ export class InputBuffer extends Row {
 	// --&#x30A4;&#x30D9;&#x30F3;&#x30C8;
 
 	/**
-	 * keyevent&#x304C;SentenceContainer&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x3066;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;(&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;push()&#x3057;&#x3066;&#x5165;&#x529B;&#x6587;&#x5B57;&#x304C;&#x3067;&#x304D;&#x308C;&#x3070;&#x5165;&#x529B;&#x30E2;&#x30FC;&#x30C9;&#x306B;&#x79FB;&#x884C;&#x3059;&#x308B;)
+	 * keyevent&#x304C;SentenceContainer&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x3066;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3046;(&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;increace()&#x3057;&#x3066;&#x5165;&#x529B;&#x6587;&#x5B57;&#x304C;&#x3067;&#x304D;&#x308C;&#x3070;&#x5165;&#x529B;&#x30E2;&#x30FC;&#x30C9;&#x306B;&#x79FB;&#x884C;&#x3059;&#x308B;)
 	 * @param {number} keycode &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
 	 * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
 	 * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	transfer(keycode,bShift) {
-		this.push(keycode,bShift);
+		this.increace(keycode,bShift);
 		if (this.hasChar()) {
 			this.addKeydownEventListener();
 			this.move();
@@ -4914,11 +4914,11 @@ export class InputBuffer extends Row {
 		switch (keycode) {
 			case 8:
 				// backspace
-				this.pop();
+				this.decreace();
 				break;
 			case 13:
 				// enter
-				this.input();
+				this.print();
 				break;
 			case 32:
 				// space
@@ -4929,7 +4929,7 @@ export class InputBuffer extends Row {
 				this.toKatakanaAll();
 				break;
 			default:
-				this.push(keycode,e.shiftKey);
+				this.increace(keycode,e.shiftKey);
 				break;
 		}
 	}
@@ -4938,7 +4938,7 @@ export class InputBuffer extends Row {
 /**
  * &#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x60C5;&#x5831;&#x306E;&#x3072;&#x3068;&#x3064;&#x3092;&#x6271;&#x3046;&#x30AF;&#x30E9;&#x30B9;
  */
-export class File extends Sentence {
+export class File extends AbstractHierarchy {
 	/**
 	 * @param {number} id &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;ID
 	 * @param {string} filename &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;
@@ -5169,7 +5169,7 @@ export class File extends Sentence {
 /**
  * &#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x306E;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x60C5;&#x5831;&#x306E;&#x3072;&#x3068;&#x3064;&#x3092;&#x6271;&#x3046;&#x30AF;&#x30E9;&#x30B9;
  */
-export class Directory extends Sentence {
+export class Directory extends AbstractHierarchy {
 	/**
 	 * @param {number} dirId &#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;ID
 	 * @param {object} data &#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x60C5;&#x5831;&#x3092;&#x6301;&#x3064;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
@@ -5346,7 +5346,7 @@ export class Directory extends Sentence {
 /**
  * &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3084;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3092;&#x4E00;&#x89A7;&#x306B;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class FileList extends Sentence {
+export class FileList extends AbstractHierarchy {
 	/**
 	 * @param {SentenceContainer} sentenceContainer &#x81EA;&#x8EAB;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x5C55;&#x958B;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @param {object} data &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3084;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x60C5;&#x5831;&#x3092;&#x6271;&#x3046;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x3002;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x3001;init()&#x306B;data&#x3092;&#x6E21;&#x3057;&#x3066;&#x53C2;&#x7167;&#x3084;DOM&#x306E;&#x69CB;&#x7BC9;&#x3092;&#x884C;&#x3046;
@@ -5645,7 +5645,7 @@ export class FileList extends Sentence {
 	}
 	/**
 	 * &#x5185;&#x90E8;&#x306E;&#x30A8;&#x30EC;&#x30E1;&#x30F3;&#x30C8;&#x3092;&#x7A7A;&#x306B;&#x3059;&#x308B;
-	 * @return {Sentence} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	emptyElem() {
 		// FileList&#x306F;&#x5185;&#x90E8;&#x306E;&#x30A8;&#x30EC;&#x30E1;&#x30F3;&#x30C8;&#x304C;&#x53C2;&#x7167;&#x3068;&#x306F;&#x72EC;&#x7ACB;&#x3057;&#x3066;&#x5909;&#x52D5;&#x3059;&#x308B;&#x305F;&#x3081;&#x3001;&#x53C2;&#x7167;&#x3068;&#x3057;&#x3066;&#x4FDD;&#x6301;&#x3057;&#x3066;&#x3044;&#x308B;&#x30A8;&#x30EC;&#x30E1;&#x30F3;&#x30C8;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;&#x65B9;&#x5F0F;&#x3067;&#x306F;
@@ -5846,7 +5846,7 @@ export class FileList extends Sentence {
 /**
  * &#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class SentenceContainer extends Sentence {
+export class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * @param {number} userId &#x30E6;&#x30FC;&#x30B6;&#x30FC;ID
 	 * @param {object} opt_data &#x6587;&#x66F8;&#x60C5;&#x5831;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;

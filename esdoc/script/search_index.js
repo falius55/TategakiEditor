@@ -1,5 +1,11 @@
 window.esdocSearchIndex = [
   [
+    "./js/object.js~abstracthierarchy",
+    "class/js/object.js~AbstractHierarchy.html",
+    "<span>AbstractHierarchy</span> <span class=\"search-result-import-path\">./js/object.js</span>",
+    "class"
+  ],
+  [
     "./js/object.js~char",
     "class/js/object.js~Char.html",
     "<span>Char</span> <span class=\"search-result-import-path\">./js/object.js</span>",
@@ -81,12 +87,6 @@ window.esdocSearchIndex = [
     "./js/object.js~row",
     "class/js/object.js~Row.html",
     "<span>Row</span> <span class=\"search-result-import-path\">./js/object.js</span>",
-    "class"
-  ],
-  [
-    "./js/object.js~sentence",
-    "class/js/object.js~Sentence.html",
-    "<span>Sentence</span> <span class=\"search-result-import-path\">./js/object.js</span>",
     "class"
   ],
   [
@@ -436,6 +436,270 @@ window.esdocSearchIndex = [
     "file/js/object.js.html",
     "js/object.js",
     "file"
+  ],
+  [
+    "js/object.js~abstracthierarchy#addclass",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-addClass",
+    "js/object.js~AbstractHierarchy#addClass",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#addclickeventlistener",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-addClickEventListener",
+    "js/object.js~AbstractHierarchy#addClickEventListener",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#addkeydowneventlistener",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-addKeydownEventListener",
+    "js/object.js~AbstractHierarchy#addKeydownEventListener",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#addwheeleventlistener",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-addWheelEventListener",
+    "js/object.js~AbstractHierarchy#addWheelEventListener",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#childlength",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-childLength",
+    "js/object.js~AbstractHierarchy#childLength",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#children",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-children",
+    "js/object.js~AbstractHierarchy#children",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#classname",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-className",
+    "js/object.js~AbstractHierarchy#className",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#computecenterpoint",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-computeCenterPoint",
+    "js/object.js~AbstractHierarchy#computeCenterPoint",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#computedistancefrompoint",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-computeDistanceFromPoint",
+    "js/object.js~AbstractHierarchy#computeDistanceFromPoint",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#constructor",
+    "class/js/object.js~AbstractHierarchy.html#instance-constructor-constructor",
+    "js/object.js~AbstractHierarchy#constructor",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#deletechild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-deleteChild",
+    "js/object.js~AbstractHierarchy#deleteChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#elem",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-elem",
+    "js/object.js~AbstractHierarchy#elem",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#empty",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-empty",
+    "js/object.js~AbstractHierarchy#empty",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#emptychild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-emptyChild",
+    "js/object.js~AbstractHierarchy#emptyChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#emptyelem",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-emptyElem",
+    "js/object.js~AbstractHierarchy#emptyElem",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#firstchild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-firstChild",
+    "js/object.js~AbstractHierarchy#firstChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#haschild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-hasChild",
+    "js/object.js~AbstractHierarchy#hasChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#hasclass",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-hasClass",
+    "js/object.js~AbstractHierarchy#hasClass",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#hasnextsibling",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-hasNextSibling",
+    "js/object.js~AbstractHierarchy#hasNextSibling",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#hasprevsibling",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-hasPrevSibling",
+    "js/object.js~AbstractHierarchy#hasPrevSibling",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#height",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-height",
+    "js/object.js~AbstractHierarchy#height",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#index",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-index",
+    "js/object.js~AbstractHierarchy#index",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#insertchild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-insertChild",
+    "js/object.js~AbstractHierarchy#insertChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#is",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-is",
+    "js/object.js~AbstractHierarchy#is",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#isempty",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-isEmpty",
+    "js/object.js~AbstractHierarchy#isEmpty",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#isfirst",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-isFirst",
+    "js/object.js~AbstractHierarchy#isFirst",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#islast",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-isLast",
+    "js/object.js~AbstractHierarchy#isLast",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#isonlychild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-isOnlyChild",
+    "js/object.js~AbstractHierarchy#isOnlyChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#lastchild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-lastChild",
+    "js/object.js~AbstractHierarchy#lastChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#length",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-length",
+    "js/object.js~AbstractHierarchy#length",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#next",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-next",
+    "js/object.js~AbstractHierarchy#next",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#parent",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-parent",
+    "js/object.js~AbstractHierarchy#parent",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#prev",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-prev",
+    "js/object.js~AbstractHierarchy#prev",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#pushchild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-pushChild",
+    "js/object.js~AbstractHierarchy#pushChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#removeclass",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-removeClass",
+    "js/object.js~AbstractHierarchy#removeClass",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#removeclassfromallchild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-removeClassFromAllChild",
+    "js/object.js~AbstractHierarchy#removeClassFromAllChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#removeclickeventlistener",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-removeClickEventListener",
+    "js/object.js~AbstractHierarchy#removeClickEventListener",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#removekeydowneventlistener",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-removeKeydownEventListener",
+    "js/object.js~AbstractHierarchy#removeKeydownEventListener",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#removewheeleventlistener",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-removeWheelEventListener",
+    "js/object.js~AbstractHierarchy#removeWheelEventListener",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#replacechild",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-replaceChild",
+    "js/object.js~AbstractHierarchy#replaceChild",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#text",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-text",
+    "js/object.js~AbstractHierarchy#text",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#width",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-width",
+    "js/object.js~AbstractHierarchy#width",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#x",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-x",
+    "js/object.js~AbstractHierarchy#x",
+    "method"
+  ],
+  [
+    "js/object.js~abstracthierarchy#y",
+    "class/js/object.js~AbstractHierarchy.html#instance-method-y",
+    "js/object.js~AbstractHierarchy#y",
+    "method"
   ],
   [
     "js/object.js~char#addcursor",
@@ -852,12 +1116,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/object.js~convertcontainer#input",
-    "class/js/object.js~ConvertContainer.html#instance-method-input",
-    "js/object.js~ConvertContainer#input",
-    "method"
-  ],
-  [
     "js/object.js~convertcontainer#inputbuffer",
     "class/js/object.js~ConvertContainer.html#instance-method-inputBuffer",
     "js/object.js~ConvertContainer#inputBuffer",
@@ -867,6 +1125,12 @@ window.esdocSearchIndex = [
     "js/object.js~convertcontainer#isactive",
     "class/js/object.js~ConvertContainer.html#instance-method-isActive",
     "js/object.js~ConvertContainer#isActive",
+    "method"
+  ],
+  [
+    "js/object.js~convertcontainer#print",
+    "class/js/object.js~ConvertContainer.html#instance-method-print",
+    "js/object.js~ConvertContainer#print",
     "method"
   ],
   [
@@ -1668,6 +1932,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "js/object.js~inputbuffer#decreace",
+    "class/js/object.js~InputBuffer.html#instance-method-decreace",
+    "js/object.js~InputBuffer#decreace",
+    "method"
+  ],
+  [
     "js/object.js~inputbuffer#empty",
     "class/js/object.js~InputBuffer.html#instance-method-empty",
     "js/object.js~InputBuffer#empty",
@@ -1686,9 +1956,9 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/object.js~inputbuffer#input",
-    "class/js/object.js~InputBuffer.html#instance-method-input",
-    "js/object.js~InputBuffer#input",
+    "js/object.js~inputbuffer#increace",
+    "class/js/object.js~InputBuffer.html#instance-method-increace",
+    "js/object.js~InputBuffer#increace",
     "method"
   ],
   [
@@ -1722,15 +1992,9 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/object.js~inputbuffer#pop",
-    "class/js/object.js~InputBuffer.html#instance-method-pop",
-    "js/object.js~InputBuffer#pop",
-    "method"
-  ],
-  [
-    "js/object.js~inputbuffer#push",
-    "class/js/object.js~InputBuffer.html#instance-method-push",
-    "js/object.js~InputBuffer#push",
+    "js/object.js~inputbuffer#print",
+    "class/js/object.js~InputBuffer.html#instance-method-print",
+    "js/object.js~InputBuffer#print",
     "method"
   ],
   [
@@ -2391,270 +2655,6 @@ window.esdocSearchIndex = [
     "js/object.js~row.createemptyrow",
     "class/js/object.js~Row.html#static-method-createEmptyRow",
     "js/object.js~Row.createEmptyRow",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#addclass",
-    "class/js/object.js~Sentence.html#instance-method-addClass",
-    "js/object.js~Sentence#addClass",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#addclickeventlistener",
-    "class/js/object.js~Sentence.html#instance-method-addClickEventListener",
-    "js/object.js~Sentence#addClickEventListener",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#addkeydowneventlistener",
-    "class/js/object.js~Sentence.html#instance-method-addKeydownEventListener",
-    "js/object.js~Sentence#addKeydownEventListener",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#addwheeleventlistener",
-    "class/js/object.js~Sentence.html#instance-method-addWheelEventListener",
-    "js/object.js~Sentence#addWheelEventListener",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#childlength",
-    "class/js/object.js~Sentence.html#instance-method-childLength",
-    "js/object.js~Sentence#childLength",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#children",
-    "class/js/object.js~Sentence.html#instance-method-children",
-    "js/object.js~Sentence#children",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#classname",
-    "class/js/object.js~Sentence.html#instance-method-className",
-    "js/object.js~Sentence#className",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#computecenterpoint",
-    "class/js/object.js~Sentence.html#instance-method-computeCenterPoint",
-    "js/object.js~Sentence#computeCenterPoint",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#computedistancefrompoint",
-    "class/js/object.js~Sentence.html#instance-method-computeDistanceFromPoint",
-    "js/object.js~Sentence#computeDistanceFromPoint",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#constructor",
-    "class/js/object.js~Sentence.html#instance-constructor-constructor",
-    "js/object.js~Sentence#constructor",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#deletechild",
-    "class/js/object.js~Sentence.html#instance-method-deleteChild",
-    "js/object.js~Sentence#deleteChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#elem",
-    "class/js/object.js~Sentence.html#instance-method-elem",
-    "js/object.js~Sentence#elem",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#empty",
-    "class/js/object.js~Sentence.html#instance-method-empty",
-    "js/object.js~Sentence#empty",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#emptychild",
-    "class/js/object.js~Sentence.html#instance-method-emptyChild",
-    "js/object.js~Sentence#emptyChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#emptyelem",
-    "class/js/object.js~Sentence.html#instance-method-emptyElem",
-    "js/object.js~Sentence#emptyElem",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#firstchild",
-    "class/js/object.js~Sentence.html#instance-method-firstChild",
-    "js/object.js~Sentence#firstChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#haschild",
-    "class/js/object.js~Sentence.html#instance-method-hasChild",
-    "js/object.js~Sentence#hasChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#hasclass",
-    "class/js/object.js~Sentence.html#instance-method-hasClass",
-    "js/object.js~Sentence#hasClass",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#hasnextsibling",
-    "class/js/object.js~Sentence.html#instance-method-hasNextSibling",
-    "js/object.js~Sentence#hasNextSibling",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#hasprevsibling",
-    "class/js/object.js~Sentence.html#instance-method-hasPrevSibling",
-    "js/object.js~Sentence#hasPrevSibling",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#height",
-    "class/js/object.js~Sentence.html#instance-method-height",
-    "js/object.js~Sentence#height",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#index",
-    "class/js/object.js~Sentence.html#instance-method-index",
-    "js/object.js~Sentence#index",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#insertchild",
-    "class/js/object.js~Sentence.html#instance-method-insertChild",
-    "js/object.js~Sentence#insertChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#is",
-    "class/js/object.js~Sentence.html#instance-method-is",
-    "js/object.js~Sentence#is",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#isempty",
-    "class/js/object.js~Sentence.html#instance-method-isEmpty",
-    "js/object.js~Sentence#isEmpty",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#isfirst",
-    "class/js/object.js~Sentence.html#instance-method-isFirst",
-    "js/object.js~Sentence#isFirst",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#islast",
-    "class/js/object.js~Sentence.html#instance-method-isLast",
-    "js/object.js~Sentence#isLast",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#isonlychild",
-    "class/js/object.js~Sentence.html#instance-method-isOnlyChild",
-    "js/object.js~Sentence#isOnlyChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#lastchild",
-    "class/js/object.js~Sentence.html#instance-method-lastChild",
-    "js/object.js~Sentence#lastChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#length",
-    "class/js/object.js~Sentence.html#instance-method-length",
-    "js/object.js~Sentence#length",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#next",
-    "class/js/object.js~Sentence.html#instance-method-next",
-    "js/object.js~Sentence#next",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#parent",
-    "class/js/object.js~Sentence.html#instance-method-parent",
-    "js/object.js~Sentence#parent",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#prev",
-    "class/js/object.js~Sentence.html#instance-method-prev",
-    "js/object.js~Sentence#prev",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#pushchild",
-    "class/js/object.js~Sentence.html#instance-method-pushChild",
-    "js/object.js~Sentence#pushChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#removeclass",
-    "class/js/object.js~Sentence.html#instance-method-removeClass",
-    "js/object.js~Sentence#removeClass",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#removeclassfromallchild",
-    "class/js/object.js~Sentence.html#instance-method-removeClassFromAllChild",
-    "js/object.js~Sentence#removeClassFromAllChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#removeclickeventlistener",
-    "class/js/object.js~Sentence.html#instance-method-removeClickEventListener",
-    "js/object.js~Sentence#removeClickEventListener",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#removekeydowneventlistener",
-    "class/js/object.js~Sentence.html#instance-method-removeKeydownEventListener",
-    "js/object.js~Sentence#removeKeydownEventListener",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#removewheeleventlistener",
-    "class/js/object.js~Sentence.html#instance-method-removeWheelEventListener",
-    "js/object.js~Sentence#removeWheelEventListener",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#replacechild",
-    "class/js/object.js~Sentence.html#instance-method-replaceChild",
-    "js/object.js~Sentence#replaceChild",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#text",
-    "class/js/object.js~Sentence.html#instance-method-text",
-    "js/object.js~Sentence#text",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#width",
-    "class/js/object.js~Sentence.html#instance-method-width",
-    "js/object.js~Sentence#width",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#x",
-    "class/js/object.js~Sentence.html#instance-method-x",
-    "js/object.js~Sentence#x",
-    "method"
-  ],
-  [
-    "js/object.js~sentence#y",
-    "class/js/object.js~Sentence.html#instance-method-y",
-    "js/object.js~Sentence#y",
     "method"
   ],
   [
