@@ -487,7 +487,7 @@ class Menu {
 	 * メニューの各コンポーネントにイベントリスナーを付加する
 	 *     newボタン、saveボタン、deleteボタン、開くボタン、モーダルの開閉、
 	 *     文字色ボタン、文字色ドロップダウン、太字ボタン、斜体ボタン、
-	 * 	 text-alignボタン、フォントサイズのドロップダウン
+	 * 	 text-alignボタン、フォントサイズのドロップダウン、設定モーダル
 	 * @return {Menu} 自身のインスタンス
 	 */
 	addEventListeners() {
@@ -1443,7 +1443,7 @@ class Cursor {
 /**
  * 各クラスの基底クラス
  */
-class Sentence {
+class AbstractHierarchy {
 	/**
 	 * @param {Element} elem 自身のDOM要素
 	 */
@@ -1468,8 +1468,8 @@ class Sentence {
 	}
 	/**
 	 * 自身の親を設定する。引数を省略すると自身の親を取得する
-	 * @param {Sentence} opt_newParent 新たに設定する親。省略可
-	 * @return {Sentence} 自身のインスタンス(引数を渡した場合)あるいは自身の親のインスタンス(引数を省略した場合)
+	 * @param {AbstractHierarchy} opt_newParent 新たに設定する親。省略可
+	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の親のインスタンス(引数を省略した場合)
 	 */
 	parent(opt_newParent) {
 		if (opt_newParent === undefined) { // nullが渡されることもあるのでundefinedと厳密に比較
@@ -1481,8 +1481,8 @@ class Sentence {
 	}
 	/**
 	 * 自身の次にある同列のインスタンスを新たに設定する。引数を省略すると自身の次にある同列のインスタンスを取得する
-	 * @param {Sentence} opt_newNext 新たに設定するインスタンス。省略可
-	 * @return {Sentence} 自身のインスタンス(引数を渡した場合)あるいは自身の次にある同列のインスタンス(引数を省略した場合)
+	 * @param {AbstractHierarchy} opt_newNext 新たに設定するインスタンス。省略可
+	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の次にある同列のインスタンス(引数を省略した場合)
 	 */
 	next(opt_newNext) {
 		if (opt_newNext === undefined) {
@@ -1494,8 +1494,8 @@ class Sentence {
 	}
 	/**
 	 * 自身の前にある同列のインスタンスを新たに設定する。引数を省略すると自身の前にある同列のインスタンスを取得する
-	 * @param {Sentence} opt_newPrev 新たに設定するインスタンス。省略可
-	 * @return {Sentence} 自身のインスタンス(引数を渡した場合)あるいは自身の前にある同列のインスタンス(引数を省略した場合)
+	 * @param {AbstractHierarchy} opt_newPrev 新たに設定するインスタンス。省略可
+	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の前にある同列のインスタンス(引数を省略した場合)
 	 */
 	prev(opt_newPrev) {
 		if (opt_newPrev === undefined) {
@@ -1508,7 +1508,7 @@ class Sentence {
 	/**
 	 * 指定されたインデックスの子を取得する。引数省略で自身の子を配列で取得する
 	 * @param {number} opt_index 取得する子のインデックス。範囲外ならundefinedが返される。省略可
-	 * @return {Sentence} indexで指定された子(引数を渡した場合)あるいは自身の子の配列(引数を省略した場合)
+	 * @return {AbstractHierarchy} indexで指定された子(引数を渡した場合)あるいは自身の子の配列(引数を省略した場合)
 	 */
 	children(opt_index) {
 		if (opt_index === undefined) {
@@ -1519,7 +1519,7 @@ class Sentence {
 	}
 	/**
 	 * 自身の最初の子を取得する
-	 * @return {Sentence} 自身の最初の子。子がいなければnull
+	 * @return {AbstractHierarchy} 自身の最初の子。子がいなければnull
 	 */
 	firstChild() {
 		if (this.hasChild()) {
@@ -1530,7 +1530,7 @@ class Sentence {
 	}
 	/**
 	 * 自身の最後の子を取得する
-	 * @return {Sentence} 自身の最後の子。子がいなければnull
+	 * @return {AbstractHierarchy} 自身の最後の子。子がいなければnull
 	 */
 	lastChild() {
 		if (this.hasChild()) {
@@ -1544,7 +1544,7 @@ class Sentence {
 
 	/**
 	 * objが自身と同一のオブジェクトかどうか
-	 * @param {Sentence} obj 比較するオブジェクト
+	 * @param {AbstractHierarchy} obj 比較するオブジェクト
 	 * @return {boolean} objが自身と同一ならtrue、そうでなければfalse
 	 */
 	is(obj) {
@@ -1621,8 +1621,8 @@ class Sentence {
 
 	/**
 	 * childを自身の子の最後に加える
-	 * @param {Sentence} child 自身の子の最後に加えるインスタンス
-	 * @return {Sentence} 自身のインスタンス
+	 * @param {AbstractHierarchy} child 自身の子の最後に加えるインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	pushChild(child) {
 		this._children.push(child);
@@ -1631,8 +1631,8 @@ class Sentence {
 	/**
 	 * 自身の子のpos番目にchildを加える
 	 * @param {number} pos childを加える位置のインデックス(０始まり)
-	 * @param {Sentence} child 子に加えるインスタンス
-	 * @return {Sentence} 自身のインスタンス
+	 * @param {AbstractHierarchy} child 子に加えるインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	insertChild(pos,child) {
 		// 配列の範囲外の数値を渡されたらpushに切り替える
@@ -1644,8 +1644,8 @@ class Sentence {
 	}
 	/**
 	 * childを自身の子から削除する
-	 * @param {Sentence} child 自身の子から削除するインスタンス
-	 * @return {Sentence} 自身のインスタンス
+	 * @param {AbstractHierarchy} child 自身の子から削除するインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	deleteChild(child) {
 		const pos = child.index();
@@ -1655,9 +1655,9 @@ class Sentence {
 	}
 	/**
 	 * 自身の子のoldChildを子から削除し、新たにnewChildを同じ位置に加える
-	 * @param {Sentence} oldChild 入替えられる自身の子のインスタンス
-	 * @param {Sentence} newChild 入れ替える自身の子でなかったインスタンス
-	 * @return {Sentence} 自身のインスタンス
+	 * @param {AbstractHierarchy} oldChild 入替えられる自身の子のインスタンス
+	 * @param {AbstractHierarchy} newChild 入れ替える自身の子でなかったインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	replaceChild(oldChild,newChild) {
 		const pos = oldChild.index();
@@ -1666,7 +1666,7 @@ class Sentence {
 	}
 	/**
 	 * この参照を自身から切り離して空にする。DOM要素には影響しない
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	emptyChild() {
 		this._children = [];
@@ -1717,7 +1717,7 @@ class Sentence {
 	/**
 	 * 自身のクラスにclassNameを加える
 	 * @param {string} className 自身のクラスに加えるクラス名
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	addClass(className) {
 		this._elem.classList.add(className);
@@ -1726,7 +1726,7 @@ class Sentence {
 	/**
 	 * 自身のクラスからclassNameを除去する
 	 * @param {string} className 自身のクラスから除去するクラス名
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	removeClass(className) {
 		this._elem.classList.remove(className);
@@ -1735,7 +1735,7 @@ class Sentence {
 	/**
 	 * 自身の持つすべての子のクラスからclassNameを除去する
 	 * @param {string} className 除去するクラス名
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	removeClassFromAllChild(className) {
 		for (let child of this._children) {
@@ -1810,7 +1810,7 @@ class Sentence {
 
 	/**
 	 * 内部のエレメントを空にする。childrenとして持っていない要素(EOLなど)は削除されない
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	emptyElem() {
 		for (let child of this._children) {
@@ -1820,7 +1820,7 @@ class Sentence {
 	}
 	/**
 	 * 内部のエレメントに加え、内部の参照も空にする
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	empty() {
 		this.emptyElem();
@@ -1832,7 +1832,7 @@ class Sentence {
 
 	/**
 	 * 自身にkeydownイベントリスナーを付加する。重ねがけは無効
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	addKeydownEventListener() {
 		if (this._keydownArg) return this;
@@ -1842,7 +1842,7 @@ class Sentence {
 	}
 	/**
 	 * 自身のkeydownイベントリスナーを除去する
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	removeKeydownEventListener() {
 		if (!this._keydownArg) return this;
@@ -1875,14 +1875,14 @@ class Sentence {
 	 * keydownイベントの実行内容。onkeydown()内で使用するために定義しておくが、内容はサブクラスで上書きする
 	 * @param {object} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	runKeydown(e,keycode) {
 		return this;
 	}
 	/**
 	 * 自身にクリックイベントを付加する。重ねがけは無効
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	addClickEventListener() {
 		if (this._clickArg) return this;
@@ -1892,7 +1892,7 @@ class Sentence {
 	}
 	/**
 	 * 自身のクリックイベントを除去する
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	removeClickEventListener() {
 		if (!this._clickArg) return this;
@@ -1912,14 +1912,14 @@ class Sentence {
 	 * @private
 	 * clickイベントの実行内容。onClick()内で使用するために定義しておくが、内容はサブクラスで上書きする
 	 * @param {object} e イベントオブジェクト
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	runClick(e) {
 		return this;
 	}
 	/**
 	 * 自身にホイールイベントを付加する。重ねがけは無効
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	addWheelEventListener() {
 		if (this._wheelArg) return this;
@@ -1930,7 +1930,7 @@ class Sentence {
 	}
 	/**
 	 * 自身のホイールイベントを除去する
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	removeWheelEventListener() {
 		if (!this._wheelArg) return this;
@@ -1956,7 +1956,7 @@ class Sentence {
 	 * ホイールイベントの実行内容。onWheel()内で使用するために定義しておくが、内容はサブクラスで上書きする
 	 * @param {object} e イベントオブジェクト
 	 * @param {boolean} isUp ホイールが上方向に動いたならtrue、そうでなければfalse
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	runWheel(e,isUp) {
 		return this;
@@ -1966,7 +1966,7 @@ class Sentence {
 /**
  * 文字を表すクラス
  */
-class Char extends Sentence {
+class Char extends AbstractHierarchy {
 	/**
 	 * @param {object} data 文字を表すオブジェクト<br>
 	 * 例
@@ -2587,7 +2587,7 @@ class EOL extends Char {
 /**
  * 行を表すクラス
  */
-class Row extends Sentence {
+class Row extends AbstractHierarchy {
 	/**
 	 * @param {object} data 行を表すオブジェクト<br>
 	 * 例
@@ -3246,7 +3246,7 @@ class Row extends Sentence {
 /**
  * 段落を表すクラス
  */
-class Paragraph extends Sentence {
+class Paragraph extends AbstractHierarchy {
 	/**
 	 * @param {object} data 段落を表すオブジェクト<br>
 	 * 例
@@ -3331,7 +3331,7 @@ class Paragraph extends Sentence {
 	}
 	/**
 	 * 引数で渡されたオブジェクトが段落内にある行か文字のいずれかに一致するかどうかを返す
-	 * @param {Sentence} obj 判定するインスタンス
+	 * @param {AbstractHierarchy} obj 判定するインスタンス
 	 * @return {boolean} 引数で渡されたオブジェクトが段落内にある行か文字のいずれかに一致するとtrue、そうでなければfalse
 	 */
 	contains(obj) {
@@ -3683,7 +3683,7 @@ class Paragraph extends Sentence {
 /**
  * 漢字変換ビューを表すクラス。それぞれ一つの文節を担当し、複数の漢字変換候補を持つ。また、内部には変換候補としてRowクラスのインスタンスを持つ
  */
-class ConvertView extends Sentence {
+class ConvertView extends AbstractHierarchy {
 	// 文節番号は、ConvertViewのindex()と同じ
 	/**
 	 * @param {object} data 変換候補を表すオブジェクト<br>
@@ -3956,7 +3956,7 @@ class ConvertView extends Sentence {
 /**
  * 変換候補一覧を束ねる漢字変換コンテナを表すクラス
  */
-class ConvertContainer extends Sentence {
+class ConvertContainer extends AbstractHierarchy {
 	/**
 	 * @param {InputBuffer} inputBuffer 入力元のインスタンス
 	 */
@@ -4054,8 +4054,8 @@ class ConvertContainer extends Sentence {
 	 * カーソル位置から文字を挿入して、内部の変換候補一覧を破棄する
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
-	input() {
-		this.inputBuffer().input();
+	print() {
+		this.inputBuffer().print();
 		return this;
 	}
 	/**
@@ -4197,7 +4197,7 @@ class ConvertContainer extends Sentence {
 		// 文字を削除してinput終了
 		if (activeView.isOnlyChild() && activeView.kanaLength() === 1) {
 			this.empty();
-			this.inputBuffer().pop();
+			this.inputBuffer().decreace();
 			return this;
 		}
 
@@ -4303,7 +4303,7 @@ class ConvertContainer extends Sentence {
 				break;
 			case 13:
 				// Enter
-				this.input();
+				this.print();
 				break;
 			case 32:
 			case 37:
@@ -4631,7 +4631,7 @@ class InputBuffer extends Row {
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
-	push(keycode,bShift) {
+	increace(keycode,bShift) {
 		const newInputStr = this.newString(keycode,bShift);
 
 		if (newInputStr === undefined || newInputStr.indexOf('undefined') !== -1) {
@@ -4646,7 +4646,7 @@ class InputBuffer extends Row {
 	 * bufferの最後の文字を削除する。内部に文字がなくなれば入力を終了する
 	 * @return {InputChar} 削除した入力文字のインスタンス
 	 */
-	pop() {
+	decreace() {
 		if (!this.hasChar) return this;
 		const ret = this.lastChar().remove();
 		this.resize();
@@ -4673,7 +4673,7 @@ class InputBuffer extends Row {
 	 * カーソル位置に文字を挿入し、後処理を行って入力状態を終了する
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
-	input() {
+	print() {
 		this.cursor().insert(this.text());
 		this.empty().hide();
 		this.container().addKeydownEventListener();
@@ -4827,13 +4827,13 @@ class InputBuffer extends Row {
 	// --イベント
 
 	/**
-	 * keyeventがSentenceContainerから移動するかどうかを判定して前処理を行う(キーコードをpush()して入力文字ができれば入力モードに移行する)
+	 * keyeventがSentenceContainerから移動するかどうかを判定して前処理を行う(キーコードをincreace()して入力文字ができれば入力モードに移行する)
 	 * @param {number} keycode 押下されたキーのキーコード
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	transfer(keycode,bShift) {
-		this.push(keycode,bShift);
+		this.increace(keycode,bShift);
 		if (this.hasChar()) {
 			this.addKeydownEventListener();
 			this.move();
@@ -4859,11 +4859,11 @@ class InputBuffer extends Row {
 		switch (keycode) {
 			case 8:
 				// backspace
-				this.pop();
+				this.decreace();
 				break;
 			case 13:
 				// enter
-				this.input();
+				this.print();
 				break;
 			case 32:
 				// space
@@ -4874,7 +4874,7 @@ class InputBuffer extends Row {
 				this.toKatakanaAll();
 				break;
 			default:
-				this.push(keycode,e.shiftKey);
+				this.increace(keycode,e.shiftKey);
 				break;
 		}
 	}
@@ -4883,7 +4883,7 @@ class InputBuffer extends Row {
 /**
  * ユーザーのファイル情報のひとつを扱うクラス
  */
-class File extends Sentence {
+class File extends AbstractHierarchy {
 	/**
 	 * @param {number} id ファイルのID
 	 * @param {string} filename ファイル名
@@ -5114,7 +5114,7 @@ class File extends Sentence {
 /**
  * ユーザーのディレクトリ情報のひとつを扱うクラス
  */
-class Directory extends Sentence {
+class Directory extends AbstractHierarchy {
 	/**
 	 * @param {number} dirId ディレクトリID
 	 * @param {object} data ディレクトリの情報を持つオブジェクト
@@ -5291,7 +5291,7 @@ class Directory extends Sentence {
 /**
  * ファイルやディレクトリを一覧にするファイルリストを表すクラス
  */
-class FileList extends Sentence {
+class FileList extends AbstractHierarchy {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 自身のファイルを展開する文章コンテナのインスタンス
 	 * @param {object} data ファイルやディレクトリの情報を扱うオブジェクト。省略した場合は、init()にdataを渡して参照やDOMの構築を行う
@@ -5590,7 +5590,7 @@ class FileList extends Sentence {
 	}
 	/**
 	 * 内部のエレメントを空にする
-	 * @return {Sentence} 自身のインスタンス
+	 * @return {FileList} 自身のインスタンス
 	 */
 	emptyElem() {
 		// FileListは内部のエレメントが参照とは独立して変動するため、参照として保持しているエレメントを削除する方式では
@@ -5791,7 +5791,7 @@ class FileList extends Sentence {
 /**
  * 文章コンテナを表すクラス
  */
-class SentenceContainer extends Sentence {
+class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * @param {number} userId ユーザーID
 	 * @param {object} opt_data 文書情報のオブジェクト
