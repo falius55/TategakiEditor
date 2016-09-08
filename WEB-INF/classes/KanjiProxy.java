@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * response: [
  * 	[ひらがな,[漢字１,漢字２,漢字３]],
  * 	[ひらがな２,[漢字４,漢字５]],
- * 	[[ひらがな３,[漢字６,漢字７]]]
+ * 	[ひらがな３,[漢字６,漢字７]]
  * ]
  * </pre>
  */
@@ -52,7 +52,12 @@ public class KanjiProxy extends HttpServlet {
 		System.out.println(getData(args[0]));
 	}
 
-	public static String getData(String str){
+	/**
+	 * 漢字変換候補を返す
+	 * @param str 変換する文字列
+	 * @return 通信で得た漢字変換候補のJSON文字列
+	 */
+	public static String getData(String str) {
 		byte[] b = new byte[10000];
 		try{
 			// Google CGI API for Japanese Input(Google日本語入力API)

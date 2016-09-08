@@ -381,8 +381,8 @@ export class Menu {
 
 	/**
 	 * &#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306B;&#x5024;&#x3092;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;&#x5024;&#x3092;&#x8FD4;&#x3059;
-	 * @param {number string} opt_newSize input&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x5024;(&#x6570;&#x5024;&#x304B;&#x3001;&#x6587;&#x5B57;&#x5217;&#x306E;&apos;auto&apos;)&#x3002;&#x7701;&#x7565;&#x53EF;
-	 * @return {Menu number string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;&#x5024;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&apos;auto&apos;&#x306E;&#x307F;&#x6587;&#x5B57;&#x5217;&#x3067;&#x8FD4;&#x3059;)
+	 * @param {number string} [opt_newSize] input&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x5024;(&#x6570;&#x5024;&#x304B;&#x3001;&#x6587;&#x5B57;&#x5217;&#x306E;&apos;auto&apos;)
+	 * @return {Menu number string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;&#x5024;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&apos;auto&apos;&#x306E;&#x5834;&#x5408;&#x306F;&#x6587;&#x5B57;&#x5217;&#x3067;&#x8FD4;&#x3059;)
 	 */
 	fontSizeInput(opt_newSize) {
 		if (opt_newSize === undefined) {
@@ -424,8 +424,8 @@ export class Menu {
 
 	/**
 	 * &#x6587;&#x5B57;&#x8272;&#x30DC;&#x30BF;&#x30F3;&#x306B;&#x8272;&#x3092;&#x4ED8;&#x3051;&#x308B;
-	 * &#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x73FE;&#x5728;&#x306E;&#x8272;&#x3092;&#x53D6;&#x5F97;
-	 * @param {string} opt_color &#x6587;&#x5B57;&#x8272;&#x30DC;&#x30BF;&#x30F3;&#x306B;&#x3064;&#x3051;&#x308B;&#x8272;&#x306E;&#x540D;&#x524D;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 *     &#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x73FE;&#x5728;&#x306E;&#x8272;&#x3092;&#x53D6;&#x5F97;
+	 * @param {string} [opt_color] &#x6587;&#x5B57;&#x8272;&#x30DC;&#x30BF;&#x30F3;&#x306B;&#x3064;&#x3051;&#x308B;&#x8272;&#x306E;&#x540D;&#x524D;
 	 * @return {Menu string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;) &#x73FE;&#x5728;&#x306E;&#x6587;&#x5B57;&#x8272;&#x30DC;&#x30BF;&#x30F3;&#x306B;&#x4ED8;&#x3044;&#x3066;&#x3044;&#x308B;&#x8272;&#x306E;&#x540D;&#x524D;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	colorButton(opt_color) {
@@ -457,7 +457,7 @@ export class Menu {
 	}
 	/**
 	 * &#x592A;&#x5B57;&#x30DC;&#x30BF;&#x30F3;&#x306E;&#x30AA;&#x30F3;&#x30AA;&#x30D5;&#x3092;&#x5207;&#x308A;&#x66FF;&#x3048;&#x308B; &#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x3001;&#x73FE;&#x5728;&#x306E;&#x592A;&#x5B57;&#x30DC;&#x30BF;&#x30F3;&#x306E;&#x30AA;&#x30F3;&#x30AA;&#x30D5;&#x3092;bool&#x5024;&#x3067;&#x8FD4;&#x3059;
-	 * @param {boolean} opt_bl true&#x3067;&#x592A;&#x5B57;&#x30DC;&#x30BF;&#x30F3;&#x3092;&#x30AA;&#x30F3;&#x306B;&#x3059;&#x308B;&#x3002;false&#x3067;&#x30AA;&#x30D5;&#x306B;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {boolean} [opt_bl] true&#x3067;&#x592A;&#x5B57;&#x30DC;&#x30BF;&#x30F3;&#x3092;&#x30AA;&#x30F3;&#x306B;&#x3059;&#x308B;&#x3002;false&#x3067;&#x30AA;&#x30D5;&#x306B;&#x3059;&#x308B;
 	 * @return {Menu boolean} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;) &#x73FE;&#x5728;&#x306E;&#x592A;&#x5B57;&#x30DC;&#x30BF;&#x30F3;&#x306E;&#x72B6;&#x614B;(&#x5F15;&#x6570;&#x7701;&#x7565;&#x306E;&#x5834;&#x5408;)
 	 */
 	boldButton(opt_bl) {
@@ -486,7 +486,7 @@ export class Menu {
 	}
 	/**
 	 * &#x659C;&#x4F53;&#x30DC;&#x30BF;&#x30F3;&#x306E;&#x30AA;&#x30F3;&#x30AA;&#x30D5;&#x3092;&#x5207;&#x308A;&#x66FF;&#x3048;&#x308B; &#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x3001;&#x73FE;&#x5728;&#x306E;&#x659C;&#x4F53;&#x30DC;&#x30BF;&#x30F3;&#x306E;&#x30AA;&#x30F3;&#x30AA;&#x30D5;&#x3092;bool&#x5024;&#x3067;&#x8FD4;&#x3059;
-	 * @param {boolean} opt_bl true&#x3067;&#x592A;&#x5B57;&#x30DC;&#x30BF;&#x30F3;&#x3092;&#x30AA;&#x30F3;&#x306B;&#x3059;&#x308B;&#x3002;false&#x3067;&#x30AA;&#x30D5;&#x306B;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {boolean} [opt_bl] true&#x3067;&#x592A;&#x5B57;&#x30DC;&#x30BF;&#x30F3;&#x3092;&#x30AA;&#x30F3;&#x306B;&#x3059;&#x308B;&#x3002;false&#x3067;&#x30AA;&#x30D5;&#x306B;&#x3059;&#x308B;
 	 * @return {Menu boolean} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;) &#x73FE;&#x5728;&#x306E;&#x659C;&#x4F53;&#x30DC;&#x30BF;&#x30F3;&#x306E;&#x72B6;&#x614B;(&#x5F15;&#x6570;&#x7701;&#x7565;&#x306E;&#x5834;&#x5408;)
 	 */
 	italicButton(opt_bl) {
@@ -1146,7 +1146,7 @@ export class Cursor {
 	/**
 	 * char&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x4E0E;&#x3048;&#x308B;
 	 * @param {Char} char &#x65B0;&#x3057;&#x3044;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;
-	 * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x305F;&#x72B6;&#x614B;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x4E0E;&#x3048;&#x3089;&#x308C;&#x305F;&#x304B;&#x3069;&#x3046;&#x304B;&#x3002;true&#x306A;&#x3089;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;
+	 * @param {boolean} [bShift] &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x305F;&#x72B6;&#x614B;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x4E0E;&#x3048;&#x3089;&#x308C;&#x305F;&#x304B;&#x3069;&#x3046;&#x304B;&#x3002;true&#x306A;&#x3089;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;&#x3002;false&#x306A;&#x3089;&#x89E3;&#x9664;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;(undefined)&#x3059;&#x308B;&#x3068;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306B;&#x306F;&#x5F71;&#x97FF;&#x3057;&#x306A;&#x3044;
 	 * @return {Cursor} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	addCursor(char,bShift) {
@@ -1478,15 +1478,15 @@ export class Cursor {
 	// &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x52D5;&#x304B;&#x3059;(&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x79FB;&#x52D5;&#x6642;)
 	/**
 	 * bShift&#x304C;true&#x306A;&#x3089;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;
-	 * @param {boolean} bShift true=&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;&#x3001;false=&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;
+	 * @param {boolean} [opt_bShift] true=&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;&#x3001;false=&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;&#x3055;&#x308C;&#x308B;&#x3068;&#x4F55;&#x3082;&#x3057;&#x306A;&#x3044;
 	 * @return {Cursor} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
-	extendSelection(bShift) {
+	extendSelection(opt_bShift) {
 		const selection = getSelection();
-		if (bShift) {
+		if (opt_bShift) {
 			// &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x30AA;&#x30D5;&#x30BB;&#x30C3;&#x30C8;&#xFF10;&#x307E;&#x3067;selection&#x3092;&#x62E1;&#x5F35;
 			selection.extend(this.getChar().elem(),0);
-		} else if (bShift === false) {
+		} else if (opt_bShift === false) {
 			// &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x7121;&#x3057;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x52D5;&#x3044;&#x305F;&#x306A;&#x3089;selection&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;(&#x7701;&#x7565;&#x3067;&#x306A;&#x304F;&#x3001;&#x660E;&#x78BA;&#x306B;false&#x304C;&#x6E21;&#x3055;&#x308C;&#x305F;&#x5834;&#x5408;)
 			selection.removeAllRanges();
 		}
@@ -1523,7 +1523,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x3092;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {AbstractHierarchy} opt_newParent &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x89AA;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {AbstractHierarchy} [opt_newParent] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x89AA;
 	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	parent(opt_newParent) {
@@ -1536,7 +1536,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {AbstractHierarchy} opt_newNext &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {AbstractHierarchy} [opt_newNext] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	next(opt_newNext) {
@@ -1549,7 +1549,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {AbstractHierarchy} opt_newPrev &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {AbstractHierarchy} [opt_newPrev] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	prev(opt_newPrev) {
@@ -1562,7 +1562,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5B50;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x3002;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x3092;&#x914D;&#x5217;&#x3067;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_index &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x7BC4;&#x56F2;&#x5916;&#x306A;&#x3089;undefined&#x304C;&#x8FD4;&#x3055;&#x308C;&#x308B;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x7BC4;&#x56F2;&#x5916;&#x306A;&#x3089;undefined&#x304C;&#x8FD4;&#x3055;&#x308C;&#x308B;
 	 * @return {AbstractHierarchy} index&#x3067;&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5B50;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	children(opt_index) {
@@ -1800,14 +1800,13 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {boolean} opt_useCache true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+	 * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
 	 * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;
 	 */
 	height(opt_useCache) {
 		// element&#x304C;&#x4E0D;&#x53EF;&#x8996;&#x72B6;&#x614B;&#x306B;&#x3042;&#x308C;&#x3070;&#x9577;&#x3055;&#x304C;&#xFF10;&#x306B;&#x306A;&#x3063;&#x305F;&#x308A;&#x3001;&#x30D6;&#x30E9;&#x30A6;&#x30B6;&#x3054;&#x3068;&#x306B;&#x53D6;&#x5F97;&#x624B;&#x6BB5;&#x306B;&#x9055;&#x3044;&#x304C;&#x3042;&#x3063;&#x305F;&#x308A;&#x76F4;&#x63A5;&#x6307;&#x5B9A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;style&#x3068;css&#x3067;&#x306E;&#x6307;&#x5B9A;&#x306E;&#x9055;&#x3044;&#x3001;css&#x3067;&#x306E;&#x6307;&#x5B9A;&#x304C;&apos;auto&apos;&#x306B;&#x306A;&#x3063;&#x3066;&#x3044;&#x308B;&#x3068;&#x6587;&#x5B57;&#x5217;&#x304C;&#x8FD4;&#x3063;&#x3066;&#x304D;&#x305F;&#x308A;&#x3068;
 		// javascript&#x3067;&#x306E;css&#x5024;&#x306E;&#x53D6;&#x5F97;&#x306F;&#x8907;&#x96D1;&#x3067;&#x56F0;&#x96E3;&#x3067;&#x3042;&#x308B;&#x3053;&#x3068;&#x304B;&#x3089;&#x3001;jQuery&#x306E;&#x4F7F;&#x7528;&#x304C;&#x9069;&#x3057;&#x3066;&#x3044;&#x308B;&#x3068;&#x5224;&#x65AD;&#x3057;&#x305F;(&#x4E0D;&#x53EF;&#x8996;&#x306E;&#x8981;&#x7D20;&#x306F;&#x4E00;&#x6642;&#x7684;&#x306B;&#x53EF;&#x8996;&#x72B6;&#x614B;&#x306B;&#x3057;&#x3066;&#x304B;&#x3089;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x306E;&#x3067;&#x3001;&#x30EC;&#x30F3;&#x30C0;&#x30EA;&#x30F3;&#x30B0;&#x304C;&#x767A;&#x751F;&#x3059;&#x308B;&#x53EF;&#x80FD;&#x6027;&#x306F;&#x9AD8;&#x3044;)
 		// &#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x6642;&#x306B;&#x306F;&#x6642;&#x9593;&#x304C;&#x304B;&#x304B;&#x308B;&#x304C;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3059;&#x308B;&#x3053;&#x3068;&#x3067;&#x884C;&#x79FB;&#x52D5;&#x306A;&#x3069;&#x3067;&#x306F;&#x6700;&#x4F4E;&#x9650;&#x306E;&#x8A08;&#x7B97;&#x306B;&#x306A;&#x308B;&#x3068;&#x671F;&#x5F85;
-		// useCache: &#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;false&#x3092;&#x6E21;&#x3059;
 		if (opt_useCache == undefined) opt_useCache = true;
 		if (opt_useCache &amp;&amp; this._height) {
 			return this._height;
@@ -1816,7 +1815,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x5E45;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {boolean} opt_useCache true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+	 * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
 	 * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x5E45;
 	 */
 	width(opt_useCache) {
@@ -2044,7 +2043,7 @@ export class Char extends AbstractHierarchy {
 
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x3067;&#x3042;&#x308B;Row&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;newRow&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {Row} opt_newRow &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {Row} [opt_newRow] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @return {Char Row} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	row(opt_newRow) {
@@ -2245,7 +2244,7 @@ export class Char extends AbstractHierarchy {
 
 	/**
 	 * &#x3053;&#x306E;&#x6587;&#x5B57;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x5F53;&#x3066;&#x308B;
-	 * @param {boolean} opt_bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+	 * @param {boolean} [opt_bShift] &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
 	 * @return {Char} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	addCursor(opt_bShift) {
@@ -2255,7 +2254,7 @@ export class Char extends AbstractHierarchy {
 
 	/**
 	 * &#x3053;&#x306E;&#x6587;&#x5B57;&#x306E;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x3092;&#x5909;&#x66F4;&#x3059;&#x308B;&#x3002;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_fontSize &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_fontSize] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;
 	 * @return {Char number string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3002;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x304C;&#x6570;&#x5024;&#x3067;&#x8A2D;&#x5B9A;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;&#x6587;&#x5B57;&#x5217;&#x306E;&apos;auto&apos;
 	 */
 	fontSize(opt_fontSize) {
@@ -2279,7 +2278,7 @@ export class Char extends AbstractHierarchy {
 	}
 	/**
 	 * &#x3053;&#x306E;&#x6587;&#x5B57;&#x306B;&#x6587;&#x5B57;&#x8272;&#x3092;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;&#x6587;&#x5B57;&#x8272;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {string boolean} opt_color &#x6587;&#x5B57;&#x5217;&#x306A;&#x3089;&#x305D;&#x306E;&#x8272;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;false&#x3092;&#x6E21;&#x305B;&#x3070;&#x6587;&#x5B57;&#x8272;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {string boolean} [opt_color] &#x6587;&#x5B57;&#x5217;&#x306A;&#x3089;&#x305D;&#x306E;&#x8272;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;false&#x3092;&#x6E21;&#x305B;&#x3070;&#x6587;&#x5B57;&#x8272;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;
 	 * @return {Char string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x6587;&#x5B57;&#x8272;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&#x6587;&#x5B57;&#x8272;&#x304C;&#x8A2D;&#x5B9A;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;&apos;black&apos;)
 	 */
 	color(opt_color) {
@@ -2702,7 +2701,7 @@ export class Row extends AbstractHierarchy {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x306E;&#x6BB5;&#x843D;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x89AA;&#x6BB5;&#x843D;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {Paragraph} opt_newParagraph &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x89AA;&#x6BB5;&#x843D;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {Paragraph} [opt_newParagraph] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x89AA;&#x6BB5;&#x843D;
 	 * @return {Row Paragraph} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	paragraph(opt_newParagraph) {
@@ -2744,7 +2743,7 @@ export class Row extends AbstractHierarchy {
 	}
 	/**
 	 * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5B50;&#x3067;&#x3042;&#x308B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x3002;EOL&#x306F;&#x542B;&#x307E;&#x308C;&#x306A;&#x3044;
-	 * @param {number} opt_index &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
 	 * @return {Char Char[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&#x7BC4;&#x56F2;&#x5916;&#x306E;&#x6570;&#x5024;&#x306A;&#x3089;undefined)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&#x5B50;&#x304C;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;&#x7A7A;&#x306E;&#x914D;&#x5217;)
 	 */
 	chars(opt_index) { // EOL&#x306F;&#x542B;&#x307E;&#x308C;&#x306A;&#x3044;
@@ -2752,7 +2751,7 @@ export class Row extends AbstractHierarchy {
 	}
 	/**
 	 * EOL&#x3092;&#x542B;&#x3080;&#x3001;&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5B50;&#x3067;&#x3042;&#x308B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_index &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
 	 * @return {Char} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&#x7BC4;&#x56F2;&#x5916;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306A;&#x3089;EOL)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;EOL&#x3092;&#x542B;&#x3080;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&#x5B50;&#x304C;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;&#x8981;&#x7D20;&#x304C;EOL&#x306E;&#x307F;&#x3067;&#x3042;&#x308B;&#x914D;&#x5217;)
 	 */
 	children(opt_index) { // EOL&#x3092;&#x542B;&#x3080;
@@ -2882,7 +2881,7 @@ export class Row extends AbstractHierarchy {
 
 	/**
 	 * &#x3053;&#x306E;&#x884C;&#x306E;&#x6A2A;&#x5E45;&#x3092;&#x8FD4;&#x3059;&#x3002;&#x884C;&#x306F;&#xFF19;&#xFF10;&#x5EA6;&#x56DE;&#x8EE2;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x3001;css&#x4E0A;&#x306F;&#x9AD8;&#x3055;&#x306E;&#x3053;&#x3068;
-	 * @param {boolean} opt_useCache true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+	 * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
 	 * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x5E45;
 	 */
 	width(opt_useCache) {
@@ -2890,7 +2889,7 @@ export class Row extends AbstractHierarchy {
 	}
 	/**
 	 * &#x3053;&#x306E;&#x884C;&#x306E;&#x9AD8;&#x3055;&#x3092;&#x8FD4;&#x3059;&#x3002;&#x884C;&#x306F;&#xFF19;&#xFF10;&#x5EA6;&#x56DE;&#x8EE2;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x3001;css&#x4E0A;&#x306F;&#x5E45;&#x306E;&#x3053;&#x3068;
-	 * @param {boolean} opt_useCache true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+	 * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
 	 * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;
 	 */
 	height(opt_useCache) {
@@ -3343,7 +3342,7 @@ export class Paragraph extends AbstractHierarchy {
 
 	/**
 	 * &#x89AA;&#x306E;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x8A2D;&#x5B9A;&#x3001;&#x307E;&#x305F;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {SentenceContainer} opt_newContainer &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x81EA;&#x8EAB;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+	 * @param {SentenceContainer} [opt_newContainer] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x81EA;&#x8EAB;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @return {Paragraph SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x306E;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	container(opt_newContainer) {
@@ -3351,7 +3350,7 @@ export class Paragraph extends AbstractHierarchy {
 	}
 	/**
 	 * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_index &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+	 * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5B50;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
 	 * @return {Row Row[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5B50;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	rows(opt_index) {
@@ -3466,7 +3465,7 @@ export class Paragraph extends AbstractHierarchy {
 
 	/**
 	 * &#x6BB5;&#x843D;&#x306B;text-align&#x3092;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;text-align&#x306E;&#x72B6;&#x614B;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {string boolean} opt_align &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&apos;left&apos;,&apos;center&apos;,&apos;right&apos;&#x306E;&#x6587;&#x5B57;&#x5217;&#x3002;&apos;left&apos;&#x3042;&#x308B;&#x3044;&#x306F;false&#x306A;&#x3089;align&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {string boolean} [opt_align] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&apos;left&apos;,&apos;center&apos;,&apos;right&apos;&#x306E;&#x6587;&#x5B57;&#x5217;&#x3002;&apos;left&apos;&#x3042;&#x308B;&#x3044;&#x306F;false&#x306A;&#x3089;align&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;
 	 * @return {Paragraph string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;text-align&#x306E;&#x72B6;&#x614B;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	align(opt_align) {
@@ -3765,15 +3764,15 @@ export class ConvertView extends AbstractHierarchy {
 
 	/**
 	 * &#x81EA;&#x5206;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x5C5E;&#x3057;&#x3066;&#x3044;&#x308B;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {ConvertContainer} newContainer &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {ConvertContainer} [opt_newContainer] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @return {ConvertView ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x6240;&#x5C5E;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
-	container(newContainer) {
-		return this.parent(newContainer);
+	container(opt_newContainer) {
+		return this.parent(opt_newContainer);
 	}
 	/**
 	 * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_index &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
 	 * @return {Row Row[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;) 
 	 */
 	rows(opt_index) {
@@ -4031,7 +4030,7 @@ export class ConvertContainer extends AbstractHierarchy {
 	}
 	/**
 	 * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_index &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
 	 * @return {ConvertView ConvertView[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5019;&#x88DC;&#x4E00;&#x89A7;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	views(opt_index) {
@@ -4411,7 +4410,7 @@ export class InputChar extends Char {
 	 *	}
 	 *	&lt;/code&gt;
 	 *	&lt;/pre&gt;
-	 *	@param {number} opt_phraseNum &#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;(&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;-1&#x306B;&#x306A;&#x308B;)
+	 *	@param {number} [opt_phraseNum=-1] &#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
 	 */
 	constructor(data,opt_phraseNum) {
 		super(data);
@@ -4441,7 +4440,7 @@ export class InputChar extends Char {
 
 	/**
 	 * &#x3053;&#x306E;&#x6587;&#x5B57;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;newNum&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_newNum &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x756A;&#x53F7;(&#xFF10;&#x59CB;&#x307E;&#x308A;)
+	 * @param {number} [opt_newNum] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x756A;&#x53F7;(&#xFF10;&#x59CB;&#x307E;&#x308A;)
 	 * @return {InputChar number} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	phraseNum(opt_newNum) {
@@ -4976,7 +4975,7 @@ export class File extends AbstractHierarchy {
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x4F4D;&#x7F6E;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3001;&#x307E;&#x305F;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x3002;
 	 *     &#x901A;&#x5E38;&#x306E;next()&#x306F;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3082;&#x542B;&#x3081;&#x540C;&#x968E;&#x5C64;&#x306E;&#x307F;&#x3092;&#x3064;&#x306A;&#x3050;&#x3002;nextFile()&#x306F;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x307F;&#x3092;&#x3001;&#x305D;&#x308C;&#x3082;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x6A2A;&#x65AD;&#x7684;&#x306B;&#x3001;&#x3055;&#x3089;&#x306B;&#x968E;&#x5C64;&#x3082;&#x307E;&#x305F;&#x3044;&#x3067;&#x3064;&#x306A;&#x3050;
-	 * @param {File} opt_file &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {File} [opt_file] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @return {File} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	nextFile(opt_file) {
@@ -4990,7 +4989,7 @@ export class File extends AbstractHierarchy {
 	/**
 	 * &#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x4F4D;&#x7F6E;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3001;&#x307E;&#x305F;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x3002;
 	 *     &#x901A;&#x5E38;&#x306E;&#x3084;prev()&#x306F;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3082;&#x542B;&#x3081;&#x540C;&#x968E;&#x5C64;&#x306E;&#x307F;&#x3092;&#x3064;&#x306A;&#x3050;&#x3002;prevFile()&#x306F;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x307F;&#x3092;&#x3001;&#x305D;&#x308C;&#x3082;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x6A2A;&#x65AD;&#x7684;&#x306B;&#x3001;&#x3055;&#x3089;&#x306B;&#x968E;&#x5C64;&#x3082;&#x307E;&#x305F;&#x3044;&#x3067;&#x3064;&#x306A;&#x3050;
-	 * @param {File} opt_file &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {File} [opt_file] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 * @return {File} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	prevFile(opt_file) {
@@ -5326,7 +5325,7 @@ export class Directory extends AbstractHierarchy {
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
-	 * @param {boolean} opt_bl &#x81EA;&#x8EAB;&#x306E;&#x5185;&#x90E8;&#x306B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x3042;&#x308B;&#x3068;&#x304D;&#x3001;&#x5F37;&#x5236;&#x7684;&#x306B;&#x4E2D;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3054;&#x3068;&#x524A;&#x9664;&#x3059;&#x308B;&#x306A;&#x3089;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;
+	 * @param {boolean} [opt_bl=false] &#x81EA;&#x8EAB;&#x306E;&#x5185;&#x90E8;&#x306B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x3042;&#x308B;&#x3068;&#x304D;&#x3001;&#x5F37;&#x5236;&#x7684;&#x306B;&#x4E2D;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3054;&#x3068;&#x524A;&#x9664;&#x3059;&#x308B;&#x306A;&#x3089;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;
 	 * @return {Directory} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	delete(opt_bl) {
@@ -5349,7 +5348,7 @@ export class Directory extends AbstractHierarchy {
 export class FileList extends AbstractHierarchy {
 	/**
 	 * @param {SentenceContainer} sentenceContainer &#x81EA;&#x8EAB;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x5C55;&#x958B;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 * @param {object} data &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3084;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x60C5;&#x5831;&#x3092;&#x6271;&#x3046;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x3002;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x3001;init()&#x306B;data&#x3092;&#x6E21;&#x3057;&#x3066;&#x53C2;&#x7167;&#x3084;DOM&#x306E;&#x69CB;&#x7BC9;&#x3092;&#x884C;&#x3046;
+	 * @param {object} [opt_data] &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3084;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x60C5;&#x5831;&#x3092;&#x6271;&#x3046;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x3002;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x3001;init()&#x306B;data&#x3092;&#x6E21;&#x3057;&#x3066;&#x53C2;&#x7167;&#x3084;DOM&#x306E;&#x69CB;&#x7BC9;&#x3092;&#x884C;&#x3046;
 	 * &lt;pre&gt;
 	 * &lt;code&gt;
 	 *  // data&#x306E;&#x4E2D;&#x8EAB;&#x4F8B;
@@ -5849,7 +5848,7 @@ export class FileList extends AbstractHierarchy {
 export class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * @param {number} userId &#x30E6;&#x30FC;&#x30B6;&#x30FC;ID
-	 * @param {object} opt_data &#x6587;&#x66F8;&#x60C5;&#x5831;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+	 * @param {object} [opt_data] &#x6587;&#x66F8;&#x60C5;&#x5831;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
 	 * &lt;pre&gt;
 	 * {
 	 * 	&quot;filename&quot;: &quot;sampleFile&quot;,
@@ -5945,7 +5944,7 @@ export class SentenceContainer extends AbstractHierarchy {
 
 	/**
 	 * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5B50;&#x306E;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_index &#x53D6;&#x5F97;&#x3059;&#x308B;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
 	 * @return {Paragraph Paragraph[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x6BB5;&#x843D;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;(&#x5B50;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x7A7A;&#x306E;&#x914D;&#x5217;)
 	 */
 	paragraphs(opt_index) {
@@ -6151,7 +6150,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * &#x3053;&#x306E;&#x6587;&#x66F8;&#x5185;&#x306B;&#x5C55;&#x958B;&#x3057;&#x3066;&#x3044;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;&#x3092;&#x5909;&#x66F4;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {string} opt_newFilename &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;
+	 * @param {string} [opt_newFilename] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;
 	 * @return {SentenceContainer string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	filename(opt_newFilename) {
@@ -6166,7 +6165,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * &#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306B;&#x65B0;&#x305F;&#x306A;ID&#x3092;&#x4E0E;&#x3048;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;ID&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_newId &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;ID&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_newId] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;ID
 	 * @return {SentenceContainer number} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;ID(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	fileId(opt_newId) {
@@ -6181,7 +6180,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * &#x6700;&#x7D42;&#x66F4;&#x65B0;&#x65E5;&#x6642;&#x3092;&#x8A2D;&#x5B9A;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x6700;&#x7D42;&#x66F4;&#x65B0;&#x65E5;&#x6642;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {string} opt_newSaved &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6700;&#x7D42;&#x66F4;&#x65B0;&#x65E5;&#x6642;&#x306E;&#x6587;&#x5B57;&#x5217;
+	 * @param {string} [opt_newSaved] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6700;&#x7D42;&#x66F4;&#x65B0;&#x65E5;&#x6642;&#x306E;&#x6587;&#x5B57;&#x5217;
 	 * @return {SentenceContainer string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x6700;&#x7D42;&#x66F4;&#x65B0;&#x65E5;&#x6642;&#x306E;&#x6587;&#x5B57;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	saved(opt_newSaved) {
@@ -6196,7 +6195,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * &#x4E00;&#x884C;&#x306E;&#x6587;&#x5B57;&#x6570;&#x3092;&#x5909;&#x66F4;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;&#x8A2D;&#x5B9A;&#x4E0A;&#x306E;&#x4E00;&#x884C;&#x306E;&#x6587;&#x5B57;&#x6570;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_newStrLen &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x884C;&#x5185;&#x6587;&#x5B57;&#x6570;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {number} [opt_newStrLen] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x884C;&#x5185;&#x6587;&#x5B57;&#x6570;
 	 * @return {SentenceContainer number} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8A2D;&#x5B9A;&#x4E0A;&#x306E;&#x884C;&#x5185;&#x6587;&#x5B57;&#x6570;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	strLenOnRow(opt_newStrLen) {
@@ -6213,7 +6212,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// &#x8A2D;&#x5B9A;&#x4E0A;&#x306E;&#x30DA;&#x30FC;&#x30B8;&#x5185;&#x884C;&#x6570;
 	/**
 	 * &#x4E00;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x884C;&#x6570;&#x3092;&#x5909;&#x66F4;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;&#x4E00;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x884C;&#x6570;&#x3092;&#x53D6;&#x5F97;&#x3059;&#x308B;
-	 * @param {number} opt_newRowLen &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30DA;&#x30FC;&#x30B8;&#x5185;&#x884C;&#x6570;
+	 * @param {number} [opt_newRowLen] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x30DA;&#x30FC;&#x30B8;&#x5185;&#x884C;&#x6570;
 	 * @return {SentenceContainer number} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x30DA;&#x30FC;&#x30B8;&#x5185;&#x884C;&#x6570;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
 	 */
 	rowLenOnPage(opt_newRowLen) {
@@ -6265,7 +6264,7 @@ export class SentenceContainer extends AbstractHierarchy {
 
 	/**
 	 * &#x3053;&#x306E;&#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x6A2A;&#x5E45;&#x3092;&#x8FD4;&#x3059;&#x3002;&#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306F;&#xFF19;&#xFF10;&#x5EA6;&#x56DE;&#x8EE2;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x3001;css&#x4E0A;&#x306F;&#x9AD8;&#x3055;&#x306E;&#x3053;&#x3068;
-	 * @param {boolean} opt_useCache true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+	 * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
 	 * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x5E45;
 	 */
 	width(opt_useCache) {
@@ -6273,7 +6272,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * &#x3053;&#x306E;&#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x9AD8;&#x3055;&#x3092;&#x8FD4;&#x3059;&#x3002;&#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306F;&#xFF19;&#xFF10;&#x5EA6;&#x56DE;&#x8EE2;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x3001;css&#x4E0A;&#x306F;&#x6A2A;&#x5E45;&#x306E;&#x3053;&#x3068;
-	 * @param {boolean} opt_useCache true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+	 * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
 	 * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;
 	 */
 	height(opt_useCache) {
@@ -6334,7 +6333,7 @@ export class SentenceContainer extends AbstractHierarchy {
 
 	/**
 	 * &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x914D;&#x5217;&#x3067;&#x8FD4;&#x3059;
-	 * @param {boolean} opt_bl &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;&#x306A;&#x3089;true&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {boolean} [opt_bl] &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;&#x306A;&#x3089;true&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;
 	 * @return {Char[]} &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
 	 */
 	selectChars(opt_bl) {
@@ -6497,7 +6496,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * &#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x3078;&#x306E;&#x60C5;&#x5831;&#x3092;&#x8868;&#x793A;&#x3059;&#x308B;
 	 * @param {string} str &#x8868;&#x793A;&#x3059;&#x308B;&#x60C5;&#x5831;
-	 * @param {string} opt_color &#x9ED2;&#x6587;&#x5B57;&#x4EE5;&#x5916;&#x306E;&#x6587;&#x5B57;&#x8272;&#x3067;&#x8868;&#x793A;&#x3059;&#x308B;&#x5834;&#x5408;&#x306B;&#x8272;&#x540D;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;&#x53EF;
+	 * @param {string} [opt_color=&apos;black&apos;] &#x9ED2;&#x6587;&#x5B57;&#x4EE5;&#x5916;&#x306E;&#x6587;&#x5B57;&#x8272;&#x3067;&#x8868;&#x793A;&#x3059;&#x308B;&#x5834;&#x5408;&#x306B;&#x8272;&#x540D;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;
 	 * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
 	userAlert(str,opt_color) {
@@ -6590,7 +6589,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// strPos: &apos;center&apos;,&apos;right&apos;
 	/**
 	 * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x57FA;&#x6E96;&#x3068;&#x3057;&#x3066;&#x6587;&#x66F8;&#x3092;&#x8868;&#x793A;&#x3057;&#x76F4;&#x3059;
-	 * @param {string} opt_pos &#x8868;&#x793A;&#x5F8C;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&apos;center&apos;&#x3068;&apos;right&apos;&#x306B;&#x5BFE;&#x5FDC;&#x3002;
+	 * @param {string} [opt_pos] &#x8868;&#x793A;&#x5F8C;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&apos;center&apos;&#x3068;&apos;right&apos;&#x306B;&#x5BFE;&#x5FDC;&#x3002;
 	 *     &#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x6700;&#x4F4E;&#x9650;&#x306E;&#x79FB;&#x52D5;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;
 	 * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
 	 */
@@ -6638,7 +6637,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * @private
 	 * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x57FA;&#x6E96;&#x306B;&#x3001;&#x6700;&#x521D;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3079;&#x304D;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3059;
-	 * @param {string} opt_pos &#x8868;&#x793A;&#x5F8C;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&apos;center&apos;&#x306A;&#x3089;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x4E2D;&#x592E;&#x306B;&#x3059;&#x308B;&#x3002;&apos;right&apos;&#x306A;&#x3089;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304C;&#x6700;&#x3082;&#x53F3;&#x306B;&#x306A;&#x308B;&#x3088;&#x3046;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3002;
+	 * @param {string} [opt_pos] &#x8868;&#x793A;&#x5F8C;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&apos;center&apos;&#x306A;&#x3089;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x4E2D;&#x592E;&#x306B;&#x3059;&#x308B;&#x3002;&apos;right&apos;&#x306A;&#x3089;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304C;&#x6700;&#x3082;&#x53F3;&#x306B;&#x306A;&#x308B;&#x3088;&#x3046;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3002;
 	 *     &#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x6700;&#x4F4E;&#x9650;&#x306E;&#x79FB;&#x52D5;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;
 	 * @return {number} &#x8A08;&#x7B97;&#x3055;&#x308C;&#x305F;&#x6700;&#x521D;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3079;&#x304D;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
 	 */

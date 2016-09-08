@@ -326,8 +326,8 @@ class Menu {
 
 	/**
 	 * フォントサイズinputフォームに値を設定する、あるいは引数省略で現在のinputフォームの値を返す
-	 * @param {number string} opt_newSize inputに設定する値(数値か、文字列の'auto')。省略可
-	 * @return {Menu number string} 自身のインスタンス(引数を渡した場合)、あるいは現在のinputフォームの値(引数を省略した場合。'auto'のみ文字列で返す)
+	 * @param {number string} [opt_newSize] inputに設定する値(数値か、文字列の'auto')
+	 * @return {Menu number string} 自身のインスタンス(引数を渡した場合)、あるいは現在のinputフォームの値(引数を省略した場合。'auto'の場合は文字列で返す)
 	 */
 	fontSizeInput(opt_newSize) {
 		if (opt_newSize === undefined) {
@@ -369,8 +369,8 @@ class Menu {
 
 	/**
 	 * 文字色ボタンに色を付ける
-	 * 引数を省略すると現在の色を取得
-	 * @param {string} opt_color 文字色ボタンにつける色の名前。省略可
+	 *     引数を省略すると現在の色を取得
+	 * @param {string} [opt_color] 文字色ボタンにつける色の名前
 	 * @return {Menu string} 自身のインスタンス(引数を渡した場合) 現在の文字色ボタンに付いている色の名前(引数を省略した場合)
 	 */
 	colorButton(opt_color) {
@@ -402,7 +402,7 @@ class Menu {
 	}
 	/**
 	 * 太字ボタンのオンオフを切り替える 引数省略で、現在の太字ボタンのオンオフをbool値で返す
-	 * @param {boolean} opt_bl trueで太字ボタンをオンにする。falseでオフにする。省略可
+	 * @param {boolean} [opt_bl] trueで太字ボタンをオンにする。falseでオフにする
 	 * @return {Menu boolean} 自身のインスタンス(引数を渡した場合) 現在の太字ボタンの状態(引数省略の場合)
 	 */
 	boldButton(opt_bl) {
@@ -431,7 +431,7 @@ class Menu {
 	}
 	/**
 	 * 斜体ボタンのオンオフを切り替える 引数省略で、現在の斜体ボタンのオンオフをbool値で返す
-	 * @param {boolean} opt_bl trueで太字ボタンをオンにする。falseでオフにする。省略可
+	 * @param {boolean} [opt_bl] trueで太字ボタンをオンにする。falseでオフにする
 	 * @return {Menu boolean} 自身のインスタンス(引数を渡した場合) 現在の斜体ボタンの状態(引数省略の場合)
 	 */
 	italicButton(opt_bl) {
@@ -1091,7 +1091,7 @@ class Cursor {
 	/**
 	 * charにカーソルを与える
 	 * @param {Char} char 新しいカーソル文字
-	 * @param {boolean} bShift シフトキーが押された状態でカーソルが与えられたかどうか。trueなら選択範囲を拡張する
+	 * @param {boolean} [bShift] シフトキーが押された状態でカーソルが与えられたかどうか。trueなら選択範囲を拡張する。falseなら解除する。省略(undefined)すると選択範囲には影響しない
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	addCursor(char,bShift) {
@@ -1423,15 +1423,15 @@ class Cursor {
 	// 選択範囲を動かす(カーソル移動時)
 	/**
 	 * bShiftがtrueなら選択範囲を拡張する
-	 * @param {boolean} bShift true=選択範囲を拡張する、false=選択範囲を解除する
+	 * @param {boolean} [opt_bShift] true=選択範囲を拡張する、false=選択範囲を解除する。省略されると何もしない
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	extendSelection(bShift) {
+	extendSelection(opt_bShift) {
 		const selection = getSelection();
-		if (bShift) {
+		if (opt_bShift) {
 			// シフトキーが押されていれば、カーソルのオフセット０までselectionを拡張
 			selection.extend(this.getChar().elem(),0);
-		} else if (bShift === false) {
+		} else if (opt_bShift === false) {
 			// シフトキー無しでカーソルが動いたならselectionを解除する(省略でなく、明確にfalseが渡された場合)
 			selection.removeAllRanges();
 		}
@@ -1468,7 +1468,7 @@ class AbstractHierarchy {
 	}
 	/**
 	 * 自身の親を設定する。引数を省略すると自身の親を取得する
-	 * @param {AbstractHierarchy} opt_newParent 新たに設定する親。省略可
+	 * @param {AbstractHierarchy} [opt_newParent] 新たに設定する親
 	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の親のインスタンス(引数を省略した場合)
 	 */
 	parent(opt_newParent) {
@@ -1481,7 +1481,7 @@ class AbstractHierarchy {
 	}
 	/**
 	 * 自身の次にある同列のインスタンスを新たに設定する。引数を省略すると自身の次にある同列のインスタンスを取得する
-	 * @param {AbstractHierarchy} opt_newNext 新たに設定するインスタンス。省略可
+	 * @param {AbstractHierarchy} [opt_newNext] 新たに設定するインスタンス
 	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の次にある同列のインスタンス(引数を省略した場合)
 	 */
 	next(opt_newNext) {
@@ -1494,7 +1494,7 @@ class AbstractHierarchy {
 	}
 	/**
 	 * 自身の前にある同列のインスタンスを新たに設定する。引数を省略すると自身の前にある同列のインスタンスを取得する
-	 * @param {AbstractHierarchy} opt_newPrev 新たに設定するインスタンス。省略可
+	 * @param {AbstractHierarchy} [opt_newPrev] 新たに設定するインスタンス
 	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の前にある同列のインスタンス(引数を省略した場合)
 	 */
 	prev(opt_newPrev) {
@@ -1507,7 +1507,7 @@ class AbstractHierarchy {
 	}
 	/**
 	 * 指定されたインデックスの子を取得する。引数省略で自身の子を配列で取得する
-	 * @param {number} opt_index 取得する子のインデックス。範囲外ならundefinedが返される。省略可
+	 * @param {number} [opt_index] 取得する子のインデックス。範囲外ならundefinedが返される
 	 * @return {AbstractHierarchy} indexで指定された子(引数を渡した場合)あるいは自身の子の配列(引数を省略した場合)
 	 */
 	children(opt_index) {
@@ -1745,14 +1745,13 @@ class AbstractHierarchy {
 	}
 	/**
 	 * 自身の高さを取得する
-	 * @param {boolean} opt_useCache true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の高さ
 	 */
 	height(opt_useCache) {
 		// elementが不可視状態にあれば長さが０になったり、ブラウザごとに取得手段に違いがあったり直接指定されているstyleとcssでの指定の違い、cssでの指定が'auto'になっていると文字列が返ってきたりと
 		// javascriptでのcss値の取得は複雑で困難であることから、jQueryの使用が適していると判断した(不可視の要素は一時的に可視状態にしてから取得するので、レンダリングが発生する可能性は高い)
 		// 読み込み時には時間がかかるが、キャッシュすることで行移動などでは最低限の計算になると期待
-		// useCache: キャッシュを使わず計算し直す場合にfalseを渡す
 		if (opt_useCache == undefined) opt_useCache = true;
 		if (opt_useCache && this._height) {
 			return this._height;
@@ -1761,7 +1760,7 @@ class AbstractHierarchy {
 	}
 	/**
 	 * 自身の幅を取得する
-	 * @param {boolean} opt_useCache true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の幅
 	 */
 	width(opt_useCache) {
@@ -1989,7 +1988,7 @@ class Char extends AbstractHierarchy {
 
 	/**
 	 * 自身の親であるRowインスタンスをnewRowに設定する、あるいは引数省略で取得する
-	 * @param {Row} opt_newRow 新たに設定する行のインスタンス。省略可
+	 * @param {Row} [opt_newRow] 新たに設定する行のインスタンス
 	 * @return {Char Row} 自身のインスタンス(引数を渡した場合)あるいは自身の親のインスタンス(引数を省略した場合)
 	 */
 	row(opt_newRow) {
@@ -2190,7 +2189,7 @@ class Char extends AbstractHierarchy {
 
 	/**
 	 * この文字にカーソルを当てる
-	 * @param {boolean} opt_bShift シフトキーが押されていればtrue、そうでなければfalse
+	 * @param {boolean} [opt_bShift] シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {Char} 自身のインスタンス
 	 */
 	addCursor(opt_bShift) {
@@ -2200,7 +2199,7 @@ class Char extends AbstractHierarchy {
 
 	/**
 	 * この文字のフォントサイズを変更する。あるいは引数省略で現在のフォントサイズを取得する
-	 * @param {number} opt_fontSize 新たに設定するフォントサイズ。省略可
+	 * @param {number} [opt_fontSize] 新たに設定するフォントサイズ
 	 * @return {Char number string} 自身のインスタンス(引数を渡した場合)。現在のフォントサイズ(引数を省略した場合)、フォントサイズが数値で設定されていなければ文字列の'auto'
 	 */
 	fontSize(opt_fontSize) {
@@ -2224,7 +2223,7 @@ class Char extends AbstractHierarchy {
 	}
 	/**
 	 * この文字に文字色を設定する。あるいは引数省略で現在の文字色を取得する
-	 * @param {string boolean} opt_color 文字列ならその色に設定する、falseを渡せば文字色を解除する。省略可
+	 * @param {string boolean} [opt_color] 文字列ならその色に設定する、falseを渡せば文字色を解除する
 	 * @return {Char string} 自身のインスタンス(引数を渡した場合)、あるいは現在の文字色(引数を省略した場合。文字色が設定されていなければ'black')
 	 */
 	color(opt_color) {
@@ -2647,7 +2646,7 @@ class Row extends AbstractHierarchy {
 	}
 	/**
 	 * 自身の親の段落を新たに設定する、あるいは現在の親段落を取得する
-	 * @param {Paragraph} opt_newParagraph 新たに設定する親段落。省略可
+	 * @param {Paragraph} [opt_newParagraph] 新たに設定する親段落
 	 * @return {Row Paragraph} 自身のインスタンス(引数を渡した場合)あるいは自身の親段落のインスタンス(引数を省略した場合)
 	 */
 	paragraph(opt_newParagraph) {
@@ -2689,7 +2688,7 @@ class Row extends AbstractHierarchy {
 	}
 	/**
 	 * 指定されたインデックスの子である文字のインスタンスを取得、あるいは子のインスタンスの配列を取得する。EOLは含まれない
-	 * @param {number} opt_index 取得する子のインデックス。省略可
+	 * @param {number} [opt_index] 取得する子のインデックス
 	 * @return {Char Char[]} 指定された子のインスタンス(引数を渡した場合。範囲外の数値ならundefined)、あるいは子のインスタンスの配列(引数を省略した場合。子がいなければ空の配列)
 	 */
 	chars(opt_index) { // EOLは含まれない
@@ -2697,7 +2696,7 @@ class Row extends AbstractHierarchy {
 	}
 	/**
 	 * EOLを含む、指定されたインデックスの子である文字のインスタンスを取得、あるいは子のインスタンスの配列を取得する
-	 * @param {number} opt_index 取得する子のインデックス。省略可
+	 * @param {number} [opt_index] 取得する子のインデックス
 	 * @return {Char} 指定された子のインスタンス(引数を渡した場合。範囲外のインデックスならEOL)、あるいはEOLを含む子のインスタンスの配列(引数を省略した場合。子がいなければ要素がEOLのみである配列)
 	 */
 	children(opt_index) { // EOLを含む
@@ -2827,7 +2826,7 @@ class Row extends AbstractHierarchy {
 
 	/**
 	 * この行の横幅を返す。行は９０度回転しているため、css上は高さのこと
-	 * @param {boolean} opt_useCache true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の幅
 	 */
 	width(opt_useCache) {
@@ -2835,7 +2834,7 @@ class Row extends AbstractHierarchy {
 	}
 	/**
 	 * この行の高さを返す。行は９０度回転しているため、css上は幅のこと
-	 * @param {boolean} opt_useCache true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の高さ
 	 */
 	height(opt_useCache) {
@@ -3288,7 +3287,7 @@ class Paragraph extends AbstractHierarchy {
 
 	/**
 	 * 親の文章コンテナを設定、または引数省略で取得する
-	 * @param {SentenceContainer} opt_newContainer 新たに設定する、自身の属する文章コンテナのインスタンス
+	 * @param {SentenceContainer} [opt_newContainer] 新たに設定する、自身の属する文章コンテナのインスタンス
 	 * @return {Paragraph SentenceContainer} 自身のインスタンス(引数を渡した場合)、あるいは自身の親の文章コンテナのインスタンス
 	 */
 	container(opt_newContainer) {
@@ -3296,7 +3295,7 @@ class Paragraph extends AbstractHierarchy {
 	}
 	/**
 	 * 指定された行のインスタンス、あるいは引数省略で子のインスタンスの配列を取得する
-	 * @param {number} opt_index 取得する子のインスタンスのインデックス
+	 * @param {number} [opt_index] 取得する子のインスタンスのインデックス
 	 * @return {Row Row[]} 指定された行のインスタンス(引数を渡した場合)、あるいは子の配列(引数を省略した場合)
 	 */
 	rows(opt_index) {
@@ -3411,7 +3410,7 @@ class Paragraph extends AbstractHierarchy {
 
 	/**
 	 * 段落にtext-alignを設定する、あるいは引数省略で現在のtext-alignの状態を取得する
-	 * @param {string boolean} opt_align 新たに設定する'left','center','right'の文字列。'left'あるいはfalseならalignを解除する。省略可
+	 * @param {string boolean} [opt_align] 新たに設定する'left','center','right'の文字列。'left'あるいはfalseならalignを解除する
 	 * @return {Paragraph string} 自身のインスタンス(引数を渡した場合)、あるいは現在のtext-alignの状態(引数を省略した場合)
 	 */
 	align(opt_align) {
@@ -3710,15 +3709,15 @@ class ConvertView extends AbstractHierarchy {
 
 	/**
 	 * 自分の属する漢字変換コンテナのインスタンスを新たに設定する、あるいは引数省略で現在属しているの漢字変換コンテナを取得する
-	 * @param {ConvertContainer} newContainer 新たに設定する漢字変換コンテナのインスタンス。省略可
+	 * @param {ConvertContainer} [opt_newContainer] 新たに設定する漢字変換コンテナのインスタンス
 	 * @return {ConvertView ConvertContainer} 自身のインスタンス(引数を渡した場合)、あるいは所属する漢字変換コンテナ(引数を省略した場合)
 	 */
-	container(newContainer) {
-		return this.parent(newContainer);
+	container(opt_newContainer) {
+		return this.parent(opt_newContainer);
 	}
 	/**
 	 * 指定されたインデックスの変換候補を表すインスタンス、あるいは引数省略で変換候補インスタンスの配列を取得する
-	 * @param {number} opt_index 取得する変換候補のインデックス。省略可
+	 * @param {number} [opt_index] 取得する変換候補のインデックス
 	 * @return {Row Row[]} 指定されたインデックスの変換候補インスタンス(引数を渡した場合)、あるいは変換候補インスタンスの配列(引数を省略した場合) 
 	 */
 	rows(opt_index) {
@@ -3976,7 +3975,7 @@ class ConvertContainer extends AbstractHierarchy {
 	}
 	/**
 	 * 指定された変換候補一覧、あるいは引数省略で変換候補一覧の配列を取得する
-	 * @param {number} opt_index 取得する候補一覧のインデックス。省略可
+	 * @param {number} [opt_index] 取得する候補一覧のインデックス
 	 * @return {ConvertView ConvertView[]} 指定された候補一覧(引数を渡した場合)、あるいは候補一覧の配列(引数を省略した場合)
 	 */
 	views(opt_index) {
@@ -4356,7 +4355,7 @@ class InputChar extends Char {
 	 *	}
 	 *	</code>
 	 *	</pre>
-	 *	@param {number} opt_phraseNum 文節のインデックス(省略するとデフォルトで-1になる)
+	 *	@param {number} [opt_phraseNum=-1] 文節のインデックス
 	 */
 	constructor(data,opt_phraseNum) {
 		super(data);
@@ -4385,8 +4384,8 @@ class InputChar extends Char {
 	// --Status
 
 	/**
-	 * この文字の文節番号をnewNumに設定する、あるいは引数省略で現在の文節番号を取得する
-	 * @param {number} opt_newNum 新たに設定する文節番号(０始まり)
+	 * この文字の文節番号をopt_newNumに設定する、あるいは引数省略で現在の文節番号を取得する
+	 * @param {number} [opt_newNum] 新たに設定する文節番号(０始まり)
 	 * @return {InputChar number} 自身のインスタンス(引数を渡した場合)、あるいは現在の文節のインデックス(引数を省略した場合)
 	 */
 	phraseNum(opt_newNum) {
@@ -4921,7 +4920,7 @@ class File extends AbstractHierarchy {
 	/**
 	 * 自身の次に位置するファイルのインスタンスを新たに設定、または引数省略で取得する。
 	 *     通常のnext()はディレクトリも含め同階層のみをつなぐ。nextFile()はファイルのみを、それもディレクトリ横断的に、さらに階層もまたいでつなぐ
-	 * @param {File} opt_file 新たに設定するファイルのインスタンス。省略可
+	 * @param {File} [opt_file] 新たに設定するファイルのインスタンス
 	 * @return {File} 自身のインスタンス(引数を渡した場合)、あるいは自身の次のファイルのインスタンス(引数を省略した場合)
 	 */
 	nextFile(opt_file) {
@@ -4935,7 +4934,7 @@ class File extends AbstractHierarchy {
 	/**
 	 * 自身の前に位置するファイルのインスタンスを新たに設定、または引数省略で取得する。
 	 *     通常のやprev()はディレクトリも含め同階層のみをつなぐ。prevFile()はファイルのみを、それもディレクトリ横断的に、さらに階層もまたいでつなぐ
-	 * @param {File} opt_file 新たに設定するファイルのインスタンス。省略可
+	 * @param {File} [opt_file] 新たに設定するファイルのインスタンス
 	 * @return {File} 自身のインスタンス(引数を渡した場合)、あるいは自身の前のファイルのインスタンス(引数を省略した場合)
 	 */
 	prevFile(opt_file) {
@@ -5271,7 +5270,7 @@ class Directory extends AbstractHierarchy {
 	}
 	/**
 	 * 自身を削除する(非同期通信)
-	 * @param {boolean} opt_bl 自身の内部にファイルがあるとき、強制的に中のファイルごと削除するならtrue、そうでなければfalseを指定する
+	 * @param {boolean} [opt_bl=false] 自身の内部にファイルがあるとき、強制的に中のファイルごと削除するならtrue、そうでなければfalseを指定する
 	 * @return {Directory} 自身のインスタンス
 	 */
 	delete(opt_bl) {
@@ -5294,7 +5293,7 @@ class Directory extends AbstractHierarchy {
 class FileList extends AbstractHierarchy {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 自身のファイルを展開する文章コンテナのインスタンス
-	 * @param {object} data ファイルやディレクトリの情報を扱うオブジェクト。省略した場合は、init()にdataを渡して参照やDOMの構築を行う
+	 * @param {object} [opt_data] ファイルやディレクトリの情報を扱うオブジェクト。省略した場合は、init()にdataを渡して参照やDOMの構築を行う
 	 * <pre>
 	 * <code>
 	 *  // dataの中身例
@@ -5794,7 +5793,7 @@ class FileList extends AbstractHierarchy {
 class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * @param {number} userId ユーザーID
-	 * @param {object} opt_data 文書情報のオブジェクト
+	 * @param {object} [opt_data] 文書情報のオブジェクト
 	 * <pre>
 	 * {
 	 * 	"filename": "sampleFile",
@@ -5890,7 +5889,7 @@ class SentenceContainer extends AbstractHierarchy {
 
 	/**
 	 * 指定された段落のインスタンス、あるいは引数省略で子の段落のインスタンスの配列を取得する
-	 * @param {number} opt_index 取得する段落のインデックス。省略可
+	 * @param {number} [opt_index] 取得する段落のインデックス
 	 * @return {Paragraph Paragraph[]} 指定された段落のインスタンス。あるいは引数省略で段落のインスタンスの配列(子がなければ空の配列)
 	 */
 	paragraphs(opt_index) {
@@ -6096,7 +6095,7 @@ class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * この文書内に展開しているファイル名を変更する、あるいは引数省略で現在のファイル名を取得する
-	 * @param {string} opt_newFilename 新たに設定するファイル名
+	 * @param {string} [opt_newFilename] 新たに設定するファイル名
 	 * @return {SentenceContainer string} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイル名(引数を省略した場合)
 	 */
 	filename(opt_newFilename) {
@@ -6111,7 +6110,7 @@ class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * 現在のファイルに新たなIDを与える、あるいは引数省略で現在のファイルIDを取得する
-	 * @param {number} opt_newId 新たに設定するID。省略可
+	 * @param {number} [opt_newId] 新たに設定するID
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイルID(引数を省略した場合)
 	 */
 	fileId(opt_newId) {
@@ -6126,7 +6125,7 @@ class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * 最終更新日時を設定、あるいは引数省略で最終更新日時を取得する
-	 * @param {string} opt_newSaved 新たに設定する最終更新日時の文字列
+	 * @param {string} [opt_newSaved] 新たに設定する最終更新日時の文字列
 	 * @return {SentenceContainer string} 自身のインスタンス(引数を渡した場合)、あるいは現在の最終更新日時の文字列(引数を省略した場合)
 	 */
 	saved(opt_newSaved) {
@@ -6141,7 +6140,7 @@ class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * 一行の文字数を変更する、あるいは引数省略で現在の設定上の一行の文字数を取得する
-	 * @param {number} opt_newStrLen 新たに設定する行内文字数。省略可
+	 * @param {number} [opt_newStrLen] 新たに設定する行内文字数
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在の設定上の行内文字数(引数を省略した場合)
 	 */
 	strLenOnRow(opt_newStrLen) {
@@ -6158,7 +6157,7 @@ class SentenceContainer extends AbstractHierarchy {
 	// 設定上のページ内行数
 	/**
 	 * 一ページの行数を変更する、あるいは引数省略で現在の一ページの行数を取得する
-	 * @param {number} opt_newRowLen 新たに設定するページ内行数
+	 * @param {number} [opt_newRowLen] 新たに設定するページ内行数
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のページ内行数(引数を省略した場合)
 	 */
 	rowLenOnPage(opt_newRowLen) {
@@ -6210,7 +6209,7 @@ class SentenceContainer extends AbstractHierarchy {
 
 	/**
 	 * この文書コンテナの横幅を返す。文書コンテナは９０度回転しているため、css上は高さのこと
-	 * @param {boolean} opt_useCache true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の幅
 	 */
 	width(opt_useCache) {
@@ -6218,7 +6217,7 @@ class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * この文書コンテナの高さを返す。文書コンテナは９０度回転しているため、css上は横幅のこと
-	 * @param {boolean} opt_useCache true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の高さ
 	 */
 	height(opt_useCache) {
@@ -6279,7 +6278,7 @@ class SentenceContainer extends AbstractHierarchy {
 
 	/**
 	 * 選択範囲にある文字インスタンスを配列で返す
-	 * @param {boolean} opt_bl 選択範囲を解除するならtrueを指定する。省略可
+	 * @param {boolean} [opt_bl] 選択範囲を解除するならtrueを指定する
 	 * @return {Char[]} 選択範囲内にある文字インスタンスの配列
 	 */
 	selectChars(opt_bl) {
@@ -6442,7 +6441,7 @@ class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * ユーザーへの情報を表示する
 	 * @param {string} str 表示する情報
-	 * @param {string} opt_color 黒文字以外の文字色で表示する場合に色名を指定する。省略可
+	 * @param {string} [opt_color='black'] 黒文字以外の文字色で表示する場合に色名を指定する
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	userAlert(str,opt_color) {
@@ -6535,7 +6534,7 @@ class SentenceContainer extends AbstractHierarchy {
 	// strPos: 'center','right'
 	/**
 	 * カーソル位置を基準として文書を表示し直す
-	 * @param {string} opt_pos 表示後のカーソル位置を指定する。'center'と'right'に対応。
+	 * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'と'right'に対応。
 	 *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -6583,7 +6582,7 @@ class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * @private
 	 * カーソル位置を基準に、最初に表示されるべき行のインデックスを返す
-	 * @param {string} opt_pos 表示後のカーソル位置を指定する。'center'なら、カーソル位置を中央にする。'right'なら、カーソル位置が最も右になるよう表示される。
+	 * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'なら、カーソル位置を中央にする。'right'なら、カーソル位置が最も右になるよう表示される。
 	 *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される
 	 * @return {number} 計算された最初に表示されるべき行のインデックス
 	 */
