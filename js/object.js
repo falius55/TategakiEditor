@@ -7,8 +7,13 @@
  *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
  */
 console.log('object.js');
-const Util = {
-	// baseArrayをcnt個ずつの配列に分割する
+/**
+ * @namespace
+ */
+export const Util = {
+	/**
+	 * baseArrayをcnt個ずつの配列に分割する
+	 */
 	splitArray:function(baseArray,cnt) {
 		'use strict';
 		const b = baseArray.length;
@@ -63,6 +68,9 @@ const Util = {
 	}
 };
 // closer
+/**
+ * @memberof Util
+ */
 Util.createCharElement = (function () {
 	const eCharTemplate = document.createElement('span');
 	eCharTemplate.classList.add('char');
@@ -286,7 +294,7 @@ Util.createDirectoryElement = (function () {
 /**
  * メニューバーを担当するクラス
  */
-class Menu {
+export class Menu {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナ
 	 */
@@ -629,7 +637,7 @@ class Menu {
 /**
  * コマンドラインを表すクラス
  */
-class CommandLine {
+export class CommandLine {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナ
 	 */
@@ -1018,7 +1026,7 @@ class CommandLine {
 /**
  * カーソルを表すクラス
  */
-class Cursor {
+export class Cursor {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナのインスタンス
 	 */
@@ -1443,7 +1451,7 @@ class Cursor {
 /**
  * 各クラスの基底クラス
  */
-class AbstractHierarchy {
+export class AbstractHierarchy {
 	/**
 	 * @param {Element} elem 自身のDOM要素
 	 */
@@ -1965,7 +1973,7 @@ class AbstractHierarchy {
 /**
  * 文字を表すクラス
  */
-class Char extends AbstractHierarchy {
+export class Char extends AbstractHierarchy {
 	/**
 	 * @param {object} data 文字を表すオブジェクト<br>
 	 * 例
@@ -2540,7 +2548,7 @@ class Char extends AbstractHierarchy {
 /**
  * 行の末端を表すクラス
  */
-class EOL extends Char {
+export class EOL extends Char {
 	// Rowとともに要素を作ってしまうため、要素を引数に取る必要がある。CharとEOLはis-a関係が成り立つと考え、継承を選択
 	/**
 	 * @param {Element} elem 自身のDOM要素
@@ -2586,7 +2594,7 @@ class EOL extends Char {
 /**
  * 行を表すクラス
  */
-class Row extends AbstractHierarchy {
+export class Row extends AbstractHierarchy {
 	/**
 	 * @param {object} data 行を表すオブジェクト<br>
 	 * 例
@@ -3245,7 +3253,7 @@ class Row extends AbstractHierarchy {
 /**
  * 段落を表すクラス
  */
-class Paragraph extends AbstractHierarchy {
+export class Paragraph extends AbstractHierarchy {
 	/**
 	 * @param {object} data 段落を表すオブジェクト<br>
 	 * 例
@@ -3682,7 +3690,7 @@ class Paragraph extends AbstractHierarchy {
 /**
  * 漢字変換ビューを表すクラス。それぞれ一つの文節を担当し、複数の漢字変換候補を持つ。また、内部には変換候補としてRowクラスのインスタンスを持つ
  */
-class ConvertView extends AbstractHierarchy {
+export class ConvertView extends AbstractHierarchy {
 	// 文節番号は、ConvertViewのindex()と同じ
 	/**
 	 * @param {object} data 変換候補を表すオブジェクト<br>
@@ -3955,7 +3963,7 @@ class ConvertView extends AbstractHierarchy {
 /**
  * 変換候補一覧を束ねる漢字変換コンテナを表すクラス
  */
-class ConvertContainer extends AbstractHierarchy {
+export class ConvertContainer extends AbstractHierarchy {
 	/**
 	 * @param {InputBuffer} inputBuffer 入力元のインスタンス
 	 */
@@ -4079,6 +4087,7 @@ class ConvertContainer extends AbstractHierarchy {
 	 * 漢字変換を始める(非同期通信)
 	 * @param {string} str 変換する文字列
 	 * @return {ConvertContainer} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
 	convert(str) {
 		Util.post("/tategaki/KanjiProxy",{
@@ -4103,6 +4112,7 @@ class ConvertContainer extends AbstractHierarchy {
 	/**
 	 * 文節区切りをひとつ前にずらして変換し直す(非同期通信)
 	 * @return {ConvertContainer} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
 	shiftUp() {
 		const activeView = this.activeView();
@@ -4145,6 +4155,7 @@ class ConvertContainer extends AbstractHierarchy {
 	/**
 	 * 文節区切りをひとつ下にずらして変換し直す(非同期通信)
 	 * @return {ConvertContainer} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
 	shiftDown() {
 		const activeView = this.activeView();
@@ -4189,6 +4200,7 @@ class ConvertContainer extends AbstractHierarchy {
 	/**
 	 * 入力元の文字がひらがなにして１文字しかなければ全て破棄して入力を終了する。二文字以上あれば最後の１音のみ削除して選択文節を変換し直す(非同期通信)
 	 * @return {ConvertContainer} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
 	backSpace() {
 		const activeView = this.activeView();
@@ -4342,7 +4354,7 @@ class ConvertContainer extends AbstractHierarchy {
 /**
  * 入力文字を表すクラス
  */
-class InputChar extends Char {
+export class InputChar extends Char {
 	/**
 	 * @param {object} data 文字を表すオブジェクト<br>
 	 * 例
@@ -4423,7 +4435,7 @@ class InputChar extends Char {
  * 入力された文字をいったん保持するバッファーを表すクラス。内部の子にInputCharのインスタンス群を持つ。
  *     また、一度も漢字変換がされず文節番号がすべて-1の場合と、漢字変換が行われ文節が分けられている場合と２つの状態がある
  */
-class InputBuffer extends Row {
+export class InputBuffer extends Row {
 	/**
 	 * @param {SentenceContainer} container 自身の属する文章コンテナのインスタンス
 	 */
@@ -4688,8 +4700,9 @@ class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 入力文字すべてを漢字変換する
+	 * 入力文字すべてを漢字変換する(非同期通信)
 	 * @return {InputBuffer} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
 	convert() {
 		this.convertContainer().convert(this.text());
@@ -4882,7 +4895,7 @@ class InputBuffer extends Row {
 /**
  * ユーザーのファイル情報のひとつを扱うクラス
  */
-class File extends AbstractHierarchy {
+export class File extends AbstractHierarchy {
 	/**
 	 * @param {number} id ファイルのID
 	 * @param {string} filename ファイル名
@@ -5035,6 +5048,7 @@ class File extends AbstractHierarchy {
 	/**
 	 * 自身の要素及び自身への参照を削除し、自身が表すファイルを削除する(非同期通信)
 	 * @return {File} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/DeleteFile.html
 	 */
 	delete() {
 		Util.post('/tategaki/DeleteFile',{
@@ -5066,6 +5080,7 @@ class File extends AbstractHierarchy {
 	 * 自身をnewParentDirの中に移動し、ファイルリストを作り直す(非同期通信)
 	 * @param {Directory} newParentDir 自身の親となるディレクトリのインスタンス
 	 * @return {File} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/MoveFile.html
 	 */
 	move(newParentDir) {
 		const fileList = this.fileList();
@@ -5113,7 +5128,7 @@ class File extends AbstractHierarchy {
 /**
  * ユーザーのディレクトリ情報のひとつを扱うクラス
  */
-class Directory extends AbstractHierarchy {
+export class Directory extends AbstractHierarchy {
 	/**
 	 * @param {number} dirId ディレクトリID
 	 * @param {object} data ディレクトリの情報を持つオブジェクト
@@ -5272,6 +5287,7 @@ class Directory extends AbstractHierarchy {
 	 * 自身を削除する(非同期通信)
 	 * @param {boolean} [opt_bl=false] 自身の内部にファイルがあるとき、強制的に中のファイルごと削除するならtrue、そうでなければfalseを指定する
 	 * @return {Directory} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/DeleteDirectory.html
 	 */
 	delete(opt_bl) {
 		const bl = opt_bl || false; // 引数省略の場合でも、明確にfalseを入れる
@@ -5290,7 +5306,7 @@ class Directory extends AbstractHierarchy {
 /**
  * ファイルやディレクトリを一覧にするファイルリストを表すクラス
  */
-class FileList extends AbstractHierarchy {
+export class FileList extends AbstractHierarchy {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 自身のファイルを展開する文章コンテナのインスタンス
 	 * @param {object} [opt_data] ファイルやディレクトリの情報を扱うオブジェクト。省略した場合は、init()にdataを渡して参照やDOMの構築を行う
@@ -5636,6 +5652,7 @@ class FileList extends AbstractHierarchy {
 	/**
 	 * ファイルリストをサーバーから読み込み、各インスタンスを構築し直す(非同期通信)
 	 * @return {FileList} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/FileListMaker.html
 	 */
 	read() {
 		const userId = this.sentenceContainer().userId();
@@ -5678,6 +5695,7 @@ class FileList extends AbstractHierarchy {
 	 * 名前で指定されたファイルを削除する(非同期通信)。同名のファイルが複数見つかった場合は確認する
 	 * @param {string} filename 削除するファイルの名前
 	 * @return {FileList} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/DeleteFile.html
 	 */
 	deleteFile(filename) {
 		const files = this.findFile(filename);
@@ -5705,6 +5723,7 @@ class FileList extends AbstractHierarchy {
 	 * 指定された名前でディレクトリを作成する(非同期通信)
 	 * @param {string} dirname 新しく作成されるディレクトリの名前
 	 * @return {FileList} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/DirectoryMaker.html
 	 */
 	mkdir(dirname) {
 		if (!dirname) return this;
@@ -5723,6 +5742,7 @@ class FileList extends AbstractHierarchy {
 	 * @param {string} dirname 削除するディレクトリの名前
 	 * @param {boolean} isForce ディレクトリ内にファイル等があっても強制的に中身ごと削除するならtrue、そうでなければfalse
 	 * @return {FileList} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/DeleteDirectory.html
 	 */
 	deleteDirectory(dirname,isForce) {
 		const dirs = this.findDirectory(dirname);
@@ -5735,6 +5755,7 @@ class FileList extends AbstractHierarchy {
 	 * @param {string} filename 移動するファイル名。同名のファイルが見つかった場合は、最初に見つかったファイルが選択される
 	 * @param {string} dirname 移動先のディレクトリ名。同名のディレクトリが見つかった場合は、最初に見つかったディレクトリが選択される
 	 * @return {FileList} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/MoveFile.html
 	 */
 	moveFile(filename,dirname) {
 		const files = this.findFile(filename);
@@ -5790,7 +5811,7 @@ class FileList extends AbstractHierarchy {
 /**
  * 文章コンテナを表すクラス
  */
-class SentenceContainer extends AbstractHierarchy {
+export class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * @param {number} userId ユーザーID
 	 * @param {object} [opt_data] 文書情報のオブジェクト
@@ -6457,6 +6478,7 @@ class SentenceContainer extends AbstractHierarchy {
 	 * 指定されたファイルを開く(非同期通信)
 	 * @param {number} fileId 開くファイルのID
 	 * @return {SentenceContainer} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/ReadJsonFile.html
 	 */
 	readFile(fileId) {
 		const file = this.fileList().findFile(fileId)[0];
@@ -6466,6 +6488,7 @@ class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * 現在開いているファイルを上書き保存する。newFile()されて初めての保存なら名前をつけて保存する。(ともに非同期通信)
 	 * @return {SentenceContainer} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/WriteJsonFile.html
 	 */
 	saveFile() {
 		if (this.fileId() === -1) {
@@ -6489,6 +6512,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 * 現在開いているファイルを名前をつけて保存する(非同期通信)
 	 * @param {string} filename 新しいファイルの名前
 	 * @return {SentenceContainer} 自身のインスタンス
+	 * @see ../WEB-INF/classes/doc/FileMaker.html
+	 * @see ../WEB-INF/classes/doc/WriteJsonFile.html
 	 */
 	saveAsFile(filename) {
 		Util.post('/tategaki/FileMaker',{

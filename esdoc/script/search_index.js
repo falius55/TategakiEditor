@@ -96,6 +96,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "./js/object.js~util",
+    "variable/index.html#static-variable-Util",
+    "<span>Util</span> <span class=\"search-result-import-path\">./js/object.js</span>",
+    "variable"
+  ],
+  [
     "builtinexternal/ecmascriptexternal.js~array",
     "external/index.html",
     "BuiltinExternal/ECMAScriptExternal.js~Array",
