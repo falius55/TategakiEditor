@@ -10,7 +10,7 @@ console.log('object.js');
 /**
  * @namespace
  */
-export const Util = {
+const Util = {
 	/**
 	 * baseArrayをcnt個ずつの配列に分割する
 	 */
@@ -294,7 +294,7 @@ Util.createDirectoryElement = (function () {
 /**
  * メニューバーを担当するクラス
  */
-export class Menu {
+class Menu {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナ
 	 */
@@ -309,21 +309,21 @@ export class Menu {
 	// --参照取得
 
 	/**
-	 * このMenuが対応する文章コンテナのインスタンスを返す
+	 * このMenuが対応する文章コンテナのインスタンスを返します
 	 * @return {SentenceContainer} SentenceContainerのインスタンス
 	 */
 	sentenceContainer() {
 		return this._sentenceContainer;
 	}
 	/**
-	 * 設定モーダルの文字数inputフォームのDOM要素を返す
+	 * 設定モーダルの文字数inputフォームのDOM要素を返します
 	 * @return {Element} 文字数設定inputフォームのDOM要素
 	 */
 	confStrLenElem() {
 		return this._confStrLenElem;
 	}
 	/**
-	 * 設定モーダルの行数inputフォームのDOM要素を返す
+	 * 設定モーダルの行数inputフォームのDOM要素を返します
 	 * @return {Element} 行数設定inputフォームのDOM要素
 	 */
 	confRowLenElem() {
@@ -333,7 +333,7 @@ export class Menu {
 	// --Status
 
 	/**
-	 * フォントサイズinputフォームに値を設定する、あるいは引数省略で現在のinputフォームの値を返す
+	 * フォントサイズinputフォームに値を設定する、あるいは引数省略で現在のinputフォームの値を返します
 	 * @param {number string} [opt_newSize] inputに設定する値(数値か、文字列の'auto')
 	 * @return {Menu number string} 自身のインスタンス(引数を渡した場合)、あるいは現在のinputフォームの値(引数を省略した場合。'auto'の場合は文字列で返す)
 	 */
@@ -346,7 +346,7 @@ export class Menu {
 		}
 	}
 	/**
-	 * 現在アクティブになっている文字装飾のクラスを配列にする
+	 * 現在アクティブになっている文字装飾のクラスを配列にします
 	 * @return {string[]} 現在アクティブになっている文字装飾のクラスの配列
 	 */
 	charDecolations() {
@@ -363,7 +363,13 @@ export class Menu {
 		return ret;
 	}
 	/**
-	 * 現在の設定情報を表すオブジェクトを作成する
+	 * 現在の設定情報を表すオブジェクトを作成します
+	 * <pre>
+	 * {
+	 * 	"strLen": "%d",
+	 * 	"rowLen" : "%d"
+	 * }
+	 * </pre>
 	 * @return {object} 現在の設定情報を表すオブジェクト
 	 */
 	configueData() {
@@ -376,8 +382,8 @@ export class Menu {
 	// --Style
 
 	/**
-	 * 文字色ボタンに色を付ける
-	 *     引数を省略すると現在の色を取得
+	 * 文字色ボタンに色を付けます
+	 *     引数を省略すると現在の色を取得します
 	 * @param {string} [opt_color] 文字色ボタンにつける色の名前
 	 * @return {Menu string} 自身のインスタンス(引数を渡した場合) 現在の文字色ボタンに付いている色の名前(引数を省略した場合)
 	 */
@@ -397,7 +403,7 @@ export class Menu {
 		}
 	}
 	/**
-	 * 選択範囲の文字色を変える
+	 * 選択範囲の文字色を変えます
 	 * @param {string} color 新しい文字色
 	 * @return {Menu} 自身のインスタンス
 	 */
@@ -409,7 +415,7 @@ export class Menu {
 		return this;
 	}
 	/**
-	 * 太字ボタンのオンオフを切り替える 引数省略で、現在の太字ボタンのオンオフをbool値で返す
+	 * 太字ボタンのオンオフを切り替えます 引数省略で、現在の太字ボタンのオンオフをbool値で返します
 	 * @param {boolean} [opt_bl] trueで太字ボタンをオンにする。falseでオフにする
 	 * @return {Menu boolean} 自身のインスタンス(引数を渡した場合) 現在の太字ボタンの状態(引数省略の場合)
 	 */
@@ -426,7 +432,7 @@ export class Menu {
 		return this;
 	}
 	/**
-	 * 選択範囲を太字にする。または太字を外す
+	 * 選択範囲を太字にします。または太字を外します
 	 * @param {boolean} bl trueで太字にする。falseで外す
 	 * @return {Menu} 自身のインスタンス
 	 */
@@ -438,7 +444,7 @@ export class Menu {
 		return this;
 	}
 	/**
-	 * 斜体ボタンのオンオフを切り替える 引数省略で、現在の斜体ボタンのオンオフをbool値で返す
+	 * 斜体ボタンのオンオフを切り替えます 引数省略で、現在の斜体ボタンのオンオフをbool値で返します
 	 * @param {boolean} [opt_bl] trueで太字ボタンをオンにする。falseでオフにする
 	 * @return {Menu boolean} 自身のインスタンス(引数を渡した場合) 現在の斜体ボタンの状態(引数省略の場合)
 	 */
@@ -455,7 +461,7 @@ export class Menu {
 		return this;
 	}
 	/**
-	 * 選択範囲を斜体にする。または太字を外す
+	 * 選択範囲を斜体にします。または太字を外します
 	 * @param {boolean} bl trueで斜体にする。falseで外す
 	 * @return {Menu} 自身のインスタンス
 	 */
@@ -467,7 +473,7 @@ export class Menu {
 		return this;
 	}
 	/**
-	 * 選択範囲のフォントサイズを変更する
+	 * 選択範囲のフォントサイズを変更します
 	 * @param {number} size 新しいフォントサイズ
 	 * @return {Menu} 自身のインスタンス
 	 */
@@ -481,7 +487,7 @@ export class Menu {
 	}
 	// 'center','left','right'
 	/**
-	 * カーソルのある段落のtext-alignを変更する
+	 * カーソルのある段落のtext-alignを変更します
 	 * @param {string} align 'center','left','right'のいずれか
 	 * @return {Menu} 自身のインスタンス
 	 */
@@ -492,7 +498,7 @@ export class Menu {
 	}
 
 	/**
-	 * メニューの各コンポーネントにイベントリスナーを付加する
+	 * メニューの各コンポーネントにイベントリスナーを付加します
 	 *     newボタン、saveボタン、deleteボタン、開くボタン、モーダルの開閉、
 	 *     文字色ボタン、文字色ドロップダウン、太字ボタン、斜体ボタン、
 	 * 	 text-alignボタン、フォントサイズのドロップダウン、設定モーダル
@@ -556,7 +562,7 @@ export class Menu {
 	}
 
 	/**
-	 * 文字色(ドロップダウンの方)をクリックするとボタンの色と選択範囲の文字色が変わるイベントを付加する
+	 * 文字色(ドロップダウンの方)をクリックするとボタンの色と選択範囲の文字色が変わるイベントを付加します
 	 *     querySelectorAll()でドロップダウンの各要素を取得してループでイベントを付加しているため、htmlとcssのみ変更することで扱う色を増やすことが可能
 	 * @return {Menu} 自身のインスタンス
 	 */
@@ -572,7 +578,7 @@ export class Menu {
 		return this;
 	}
 	/**
-	 * text-alignボタンをクリックするとカーソルのある段落のtext-alignが変更されるイベントを付加する
+	 * text-alignボタンをクリックするとカーソルのある段落のtext-alignが変更されるイベントを付加します
 	 * @return {Menu} 自身のインスタンス
 	 */
 	addAlignClickEvent() {
@@ -589,8 +595,8 @@ export class Menu {
 	// font size
 
 	/**
-	 * フォントサイズのドロップダウンをクリックするとフォントサイズのinputの数値が変更され、選択範囲の文字のフォントサイズが変更されるイベントを付加する
-	 *     querySelectorAll()でドロップダウンの各要素を取得してループでイベントを付加しているため、htmlとcssのみ変更することで扱うフォントサイズを増やすことが可能
+	 * フォントサイズのドロップダウンをクリックするとフォントサイズのinputの数値が変更され、選択範囲の文字のフォントサイズが変更されるイベントを付加します
+	 *     querySelectorAll()でドロップダウンの各要素を取得してループでイベントを付加しているため、htmlとcssのみ変更することで扱うフォントサイズを増やすことが可能になります
 	 * @return {Menu} 自身のインスタンス
 	 */
 	addFontSizeEvnet() {
@@ -606,7 +612,7 @@ export class Menu {
 	}
 
 	/**
-	 * 設定モーダルのinputとsaveボタン、resetボタンにイベントを付加する
+	 * 設定モーダルのinputフォームとsaveボタン、resetボタンにイベントを付加します
 	 * @return {Menu} 自身のインスタンス
 	 */
 	addConfigueEvent() {
@@ -637,7 +643,7 @@ export class Menu {
 /**
  * コマンドラインを表すクラス
  */
-export class CommandLine {
+class CommandLine {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナ
 	 */
@@ -649,21 +655,21 @@ export class CommandLine {
 	// --参照取得
 
 	/**
-	 * 自身のHTML要素を返す
+	 * 自身のHTML要素を返します
 	 * @return {Element} 自身のHTML要素
 	 */
 	elem() {
 		return this._elem;
 	}
 	/**
-	 * 対応する文章コンテナの参照を返す
+	 * 対応する文章コンテナの参照を返します
 	 * @return {SentenceContainer} 対応する文章コンテナ
 	 */
 	sentenceContainer() {
 		return this._sentenceContainer;
 	}
 	/**
-	 * 操作するファイルリストの参照を返す
+	 * 操作するファイルリストの参照を返します
 	 * @return {FileList} ファイルリストのインスタンス
 	 */
 	fileList() {
@@ -673,7 +679,7 @@ export class CommandLine {
 	// --判定
 
 	/**
-	 * コマンドラインがアクティブかどうかを返す
+	 * コマンドラインがアクティブかどうかを返します
 	 * @return {boolean} true=アクティブ、false=アクティブではない
 	 */
 	isActive() {
@@ -683,7 +689,7 @@ export class CommandLine {
 	// --Style
 
 	/**
-	 * コマンドラインをアクティブにする
+	 * コマンドラインをアクティブにします
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	active() {
@@ -691,7 +697,7 @@ export class CommandLine {
 		return this;
 	}
 	/**
-	 * コマンドラインを非アクティブにする
+	 * コマンドラインを非アクティブにしまる
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	unActive() {
@@ -699,7 +705,7 @@ export class CommandLine {
 		return this;
 	}
 	/**
-	 * コマンドラインにフォーカスを与える
+	 * コマンドラインにフォーカスを与えます
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	focus() {
@@ -707,7 +713,7 @@ export class CommandLine {
 		return this;
 	}
 	/**
-	 * ファイルリストのモーダルをコマンドライン用に開く
+	 * ファイルリストのモーダルをコマンドライン用に開きます
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	displayFileModal() {
@@ -716,7 +722,7 @@ export class CommandLine {
 		return this;
 	}
 	/**
-	 * コマンドライン用に開いたモーダルを閉じる。ファイル検索がされていてもリセットする
+	 * コマンドライン用に開いたモーダルを閉じます
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	hideFileModal() {
@@ -736,7 +742,7 @@ export class CommandLine {
 	// --DOM
 
 	/**
-	 * コマンドラインに値を設定する
+	 * コマンドラインに値を設定します
 	 * @param {string} text コマンドラインに設定する値
 	 * @return {CommandLine} 自身のインスタンス
 	 */
@@ -749,7 +755,7 @@ export class CommandLine {
 		}
 	}
 	/**
-	 * コマンドモードを始める
+	 * コマンドモードを始めます
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	start() {
@@ -760,7 +766,7 @@ export class CommandLine {
 		return this;
 	}
 	/**
-	 * コマンドモードを終了する
+	 * コマンドモードを終了します
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	stop() {
@@ -774,7 +780,7 @@ export class CommandLine {
 	// --イベント
 
 	/**
-	 * コマンドのinputにkeyupイベントを付加する。重ねがけは無効
+	 * コマンドのinputフォームにkeyupイベントを付加します。重ねがけは無効となります
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	addKeyupEventListener() {
@@ -784,7 +790,7 @@ export class CommandLine {
 		return this;
 	}
 	/**
-	 * コマンドのinputへのkeyupイベントを除去する
+	 * コマンドのinputフォームへのkeyupイベントを除去します
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	removeKeyupEventListener() {
@@ -795,7 +801,7 @@ export class CommandLine {
 	}
 	/**
 	 * @private
-	 * keyupイベントの前処理を行い、イベントを実行する
+	 * keyupイベントの前処理を行い、イベントを実行します
 	 */
 	onKeyup(e) {
 		'use strict';
@@ -813,7 +819,7 @@ export class CommandLine {
 		e.preventDefault();
 	}
 	/**
-	 * コマンドのkeyupイベントの実行内容
+	 * コマンドのkeyupイベントの実行内容です
 	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 */
@@ -868,7 +874,7 @@ export class CommandLine {
 		e.preventDefault();
 	}
 	/**
-	 * コマンドラインからフォーカスが外れた際のイベントを付加する
+	 * コマンドラインからフォーカスが外れた際のイベントを付加します
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	addFocusoutEventListener() {
@@ -878,7 +884,7 @@ export class CommandLine {
 		return this;
 	}
 	/**
-	 * コマンドラインからフォーカスが外れた際のイベントを除去する
+	 * コマンドラインからフォーカスが外れた際のイベントを除去します
 	 * @return {CommandLine} 自身のインスタンス
 	 */
 	removeFocusoutEventListener() {
@@ -888,14 +894,14 @@ export class CommandLine {
 		return this;
 	}
 	/**
-	 * コマンドラインからフォーカスが外れた際のイベントの実行内容
+	 * コマンドラインからフォーカスが外れた際のイベントの実行内容です
 	 * @param {Event} e イベントオブジェクト
 	 */
 	onFocusout(e) {
 		this.stop();
 	}
 	/**
-	 * コマンドの実行内容
+	 * コマンドの実行内容です
 	 */
 	runCommand() {
 		// 半角スペースで区切られていないようなら、全角スペースの区切りでも可
@@ -1026,7 +1032,7 @@ export class CommandLine {
 /**
  * カーソルを表すクラス
  */
-export class Cursor {
+class Cursor {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 対応する文章コンテナのインスタンス
 	 */
@@ -1035,7 +1041,7 @@ export class Cursor {
 		this._cursorLineElem = document.getElementById('cursor_line');
 	}
 	/**
-	 * カーソルを初期化して一文字目にカーソルを与える
+	 * カーソルを初期化して一文字目にカーソルを与えます
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	init() {
@@ -1049,35 +1055,35 @@ export class Cursor {
 	// --参照取得
 
 	/**
-	 * 対応する文章コンテナのインスタンスを返す
+	 * 対応する文章コンテナのインスタンスを返します
 	 * @return {SentenceContainer} 対応する文章コンテナのインスタンス
 	 */
 	sentenceContainer() {
 		return this._sentenceContainer;
 	}
 	/**
-	 * カーソルのある文字のインスタンスを返す
+	 * カーソルのある文字のインスタンスを返します
 	 * @return {Char} カーソル文字のインスタンス
 	 */
 	getChar() {
 		return this._char;
 	}
 	/**
-	 * カーソル行のインスタンスを返す
+	 * カーソル行のインスタンスを返します
 	 * @return {Row} カーソル行のインスタンス
 	 */
 	getRow() {
 		return this.getChar().row();
 	}
 	/**
-	 * カーソルのある段落のインスタンスを返す
+	 * カーソルのある段落のインスタンスを返します
 	 * @return {Paragraph} カーソルのある段落のインスタンス
 	 */
 	getParagraph() {
 		return this.getRow().paragraph();
 	}
 	/**
-	 * カーソル位置を記憶するためのDOM要素を返す
+	 * カーソル位置を記憶するためのDOM要素を返します
 	 * @return {Element} カーソル位置を記憶するための要素
 	 */
 	cursorLineElem() {
@@ -1088,7 +1094,7 @@ export class Cursor {
 
 	/**
 	 * @private
-	 * カーソル文字への参照を変更する
+	 * カーソル文字への参照を変更します
 	 * @param {Char} newChar 新しいカーソル文字
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1097,7 +1103,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * charにカーソルを与える
+	 * charにカーソルを与えます
 	 * @param {Char} char 新しいカーソル文字
 	 * @param {boolean} [bShift] シフトキーが押された状態でカーソルが与えられたかどうか。trueなら選択範囲を拡張する。falseなら解除する。省略(undefined)すると選択範囲には影響しない
 	 * @return {Cursor} 自身のインスタンス
@@ -1127,7 +1133,7 @@ export class Cursor {
 	// --Status
 
 	/**
-	 * カーソル位置を記憶するDOM要素から、記憶されたインデックスを返す
+	 * カーソル位置を記憶するDOM要素から、記憶されたインデックスを返します
 	 * @return {number} 記憶されたカーソル位置のインデックス。記憶された位置が見つからなければ-1
 	 */
 	getPosMemory() {
@@ -1139,7 +1145,7 @@ export class Cursor {
 		return -1;
 	}
 	/**
-	 * カーソル位置を記憶するDOM要素に位置を記憶する
+	 * カーソル位置を記憶するDOM要素に位置を記憶します
 	 * @param {number} index 記憶する位置のインデックス
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1156,7 +1162,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * 現在行のうち何文字目にカーソルがあるかを返す。行頭で１，EOLでは行の総文字数＋１
+	 * 現在行のうち何文字目にカーソルがあるかを返します。行頭では１，EOLでは行の総文字数＋１が返ります
 	 * @return {number} カーソルの位置。入力の始まる位置のインデックスと同じ
 	 */
 	currentCharPos() {
@@ -1170,7 +1176,7 @@ export class Cursor {
 		return this.getRow().charLen();
 	}
 	/**
-	 * カーソル行がそのページで何行目かを返す
+	 * カーソル行がそのページで何行目かを返します
 	 * @return {number} カーソル行がページ内で何行目か。改ページが見つからなければ-1
 	 */
 	currentRowPos() {
@@ -1180,7 +1186,7 @@ export class Cursor {
 		return -1;
 	}
 	/**
-	 * 現在ページの総行数を返す。最終ページのみ設定行数と異なる
+	 * 現在ページの総行数を返します。最終ページのみ設定行数と異なるため、正確に総行数を数えるために利用されます
 	 * @return {number} 現在ページの総行数。ページの終わりが見つからなければ-1
 	 */
 	rowLenOnPage() {
@@ -1189,9 +1195,8 @@ export class Cursor {
 		}
 		return -1;
 	}
-	// 現在ページ
 	/**
-	 * 現在ページを返す
+	 * 現在ページを返します
 	 * @return {number} 現在ページ
 	 */
 	currentPage() {
@@ -1205,7 +1210,7 @@ export class Cursor {
 	// --DOM操作
 
 	/**
-	 * カーソル位置を記憶するDOM要素を文章コンテナの標準文字数に合わせて構築する。主にカーソルの左右移動の際に、そのカーソルが何文字目の位置から移動してきたのかを記憶するために用いる
+	 * カーソル位置を記憶するDOM要素を文章コンテナの標準文字数に合わせて構築します。主にカーソルの左右移動の際に、そのカーソルが何文字目の位置から移動してきたのかを記憶するために用いるものです
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	createCursorLine() {
@@ -1219,7 +1224,7 @@ export class Cursor {
 	}
 
 	/**
-	 * カーソル位置に文字を挿入する
+	 * カーソル位置に文字を挿入します
 	 * @param {string} str 挿入する文字列
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1236,7 +1241,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * カーソル位置でバックスペースを押下した時の処理を行う
+	 * カーソル位置でバックスペースを押下した時の処理を行います
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	backSpace() {
@@ -1265,7 +1270,7 @@ export class Cursor {
 		}
 	}
 	/**
-	 * カーソル位置で改行した時の処理を行う
+	 * カーソル位置で改行した時の処理を行います
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	lineBreak() {
@@ -1284,7 +1289,7 @@ export class Cursor {
 
 	// カーソル移動
 	/**
-	 * カーソルを下方向に一つ動かす。ひとつ下が段落途中のEOLなら、さらにその次に動かす
+	 * カーソルを下方向に一つ動かします。ひとつ下が段落途中のEOLなら、さらにその次に動かします
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalseを指定する
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1296,7 +1301,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * カーソルを上方向に一つ動かす。段落途中の行頭なら、前の行の最終文字に動かす
+	 * カーソルを上方向に一つ動かします。段落途中の行頭なら、前の行の最終文字に動かします
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalseを指定する
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1308,7 +1313,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * カーソルを右方向に一つ動かす。一つ右が段落途中のEOLなら、移動先の前の文字にさらに動かす
+	 * カーソルを右方向に一つ動かします。一つ右が段落途中のEOLなら、移動先の前の文字にさらに動かします
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalseを指定する
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1319,7 +1324,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * カーソルを左方向に一つ動かす。一つ左が段落途中のEOLなら、移動先の前の文字にさらに動かす
+	 * カーソルを左方向に一つ動かします。一つ左が段落途中のEOLなら、移動先の前の文字にさらに動かします
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalseを指定する
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1329,9 +1334,8 @@ export class Cursor {
 		this.sentenceContainer().changeDisplay();
 		return this;
 	}
-	// 引数で指定された行にカーソルを移動する
 	/**
-	 * rowにカーソルを移動する。移動先の文字は記憶されたカーソル位置のインデックスの文字で、それがEOLならその前の文字に移動する
+	 * rowにカーソルを移動します。移動先の文字は記憶されたカーソル位置と同じインデックスの文字となりますが、それがEOLならその前の文字に移動します
 	 * @param {Row} row 移動先の行のインスタンス
 	 * @param {boolean} bShift シフトキーが押されているかどうか。trueなら、選択範囲を拡張する
 	 * @return {Cursor} 自身のインスタンス
@@ -1344,7 +1348,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * num行目の最初の文字にカーソルを移動する。移動先の行が中央となるように表示される
+	 * num行目の最初の文字にカーソルを移動します。移動先の行が中央となるように表示されます
 	 * @param {number} num 移動先が何行目か。１から始まる。ページ内ではなく、文章全体で数える。０位下が渡されると最初の行に移動される
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1358,7 +1362,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * numページ目の一行目最初の文字にカーソルが移動する。その行から始まるように表示される
+	 * numページ目の一行目最初の文字にカーソルが移動します。その行が最初の行となるように表示されます
 	 * @param {number} num 何ページ目に移動するか
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1372,7 +1376,7 @@ export class Cursor {
 		return this;
 	}
 	/**
-	 * 次の検索語句にカーソルを移動する。見つからなければ何もしない
+	 * 次の検索語句にカーソルを移動します。検索されていない、あるいは検索語句が見つからなければ何もしません
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	nextSearch() {
@@ -1384,7 +1388,7 @@ export class Cursor {
 	}
 	/**
 	 * @private
-	 * 次の検索語句を返す
+	 * 次の検索語句を返します
 	 * @return {Char} 次の検索語句の１文字目のインスタンス。見つからなければnull
 	 */
 	nextSearchChar() {
@@ -1394,7 +1398,7 @@ export class Cursor {
 		return null;
 	}
 	/**
-	 * 前の検索語句にカーソルを移動する。見つからなければ何もしない
+	 * 前の検索語句にカーソルを移動します。検索されていない、あるいは検索語句が見つからなければ何もしません
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	prevSearch() {
@@ -1406,7 +1410,7 @@ export class Cursor {
 	}
 	/**
 	 * @private
-	 * 前の検索語句を返す
+	 * 前の検索語句を返します
 	 * @return {Char} 前の検索語句の１文字目のインスタンス。見つからなければnull
 	 */
 	prevSearchChar() {
@@ -1430,7 +1434,7 @@ export class Cursor {
 	}
 	// 選択範囲を動かす(カーソル移動時)
 	/**
-	 * bShiftがtrueなら選択範囲を拡張する
+	 * bShiftがtrueなら選択範囲を拡張します
 	 * @param {boolean} [opt_bShift] true=選択範囲を拡張する、false=選択範囲を解除する。省略されると何もしない
 	 * @return {Cursor} 自身のインスタンス
 	 */
@@ -1447,11 +1451,11 @@ export class Cursor {
 	}
 }
 
-// 文書を構成する各クラスの基底クラス
 /**
- * 各クラスの基底クラス
+ * ヒエラルキー構造を持つ各クラスの基底クラス
+ * 木構造とは異なり、枝分かれしていても同列のオブジェクト間でポインタを持ち合います
  */
-export class AbstractHierarchy {
+class AbstractHierarchy {
 	/**
 	 * @param {Element} elem 自身のDOM要素
 	 */
@@ -1468,14 +1472,14 @@ export class AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 自身のDOM要素を返す
+	 * 自身のDOM要素を返します
 	 * @return {Element} 自身のDOM要素
 	 */
 	elem() {
 		return this._elem;
 	}
 	/**
-	 * 自身の親を設定する。引数を省略すると自身の親を取得する
+	 * 自身の親を設定します。また、引数を省略すると自身の親を取得します
 	 * @param {AbstractHierarchy} [opt_newParent] 新たに設定する親
 	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の親のインスタンス(引数を省略した場合)
 	 */
@@ -1488,7 +1492,7 @@ export class AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身の次にある同列のインスタンスを新たに設定する。引数を省略すると自身の次にある同列のインスタンスを取得する
+	 * 自身の次にある同列のインスタンスを新たに設定します。また、引数を省略すると自身の次にある同列のインスタンスを取得します
 	 * @param {AbstractHierarchy} [opt_newNext] 新たに設定するインスタンス
 	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の次にある同列のインスタンス(引数を省略した場合)
 	 */
@@ -1501,7 +1505,7 @@ export class AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身の前にある同列のインスタンスを新たに設定する。引数を省略すると自身の前にある同列のインスタンスを取得する
+	 * 自身の前にある同列のインスタンスを新たに設定します。また、引数を省略すると自身の前にある同列のインスタンスを取得します
 	 * @param {AbstractHierarchy} [opt_newPrev] 新たに設定するインスタンス
 	 * @return {AbstractHierarchy} 自身のインスタンス(引数を渡した場合)あるいは自身の前にある同列のインスタンス(引数を省略した場合)
 	 */
@@ -1514,7 +1518,7 @@ export class AbstractHierarchy {
 		}
 	}
 	/**
-	 * 指定されたインデックスの子を取得する。引数省略で自身の子を配列で取得する
+	 * 指定されたインデックスの子を取得します。また、引数省略で自身の子を配列で取得します
 	 * @param {number} [opt_index] 取得する子のインデックス。範囲外ならundefinedが返される
 	 * @return {AbstractHierarchy} indexで指定された子(引数を渡した場合)あるいは自身の子の配列(引数を省略した場合)
 	 */
@@ -1526,7 +1530,7 @@ export class AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身の最初の子を取得する
+	 * 自身の最初の子を取得します
 	 * @return {AbstractHierarchy} 自身の最初の子。子がいなければnull
 	 */
 	firstChild() {
@@ -1537,7 +1541,7 @@ export class AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身の最後の子を取得する
+	 * 自身の最後の子を取得します
 	 * @return {AbstractHierarchy} 自身の最後の子。子がいなければnull
 	 */
 	lastChild() {
@@ -1551,7 +1555,7 @@ export class AbstractHierarchy {
 	// --判定
 
 	/**
-	 * objが自身と同一のオブジェクトかどうか
+	 * objが自身と同一のオブジェクトかどうかを返します
 	 * @param {AbstractHierarchy} obj 比較するオブジェクト
 	 * @return {boolean} objが自身と同一ならtrue、そうでなければfalse
 	 */
@@ -1559,7 +1563,7 @@ export class AbstractHierarchy {
 		return obj === this;
 	}
 	/**
-	 * 自身がクラスにclassNameを持っているかどうかを返す
+	 * 自身がクラスにclassNameを持っているかどうかを返します
 	 * @param {string} className 判定するクラス名
 	 * @return {boolean} 自身がclassNameを付与されていればtrue、そうでなければfalse
 	 */
@@ -1567,14 +1571,14 @@ export class AbstractHierarchy {
 		return this._elem.classList.contains(className);
 	}
 	/**
-	 * 自身が子を持っているかどうかを返す
+	 * 自身が子を持っているかどうかを返します
 	 * @return {boolean} 自身が子を持っていればtrue、そうでなければfalse
 	 */
 	hasChild() {
 		return this._children.length > 0;
 	}
 	/**
-	 * 自身が親にとって唯一の子であるかどうかを返す
+	 * 自身が親にとって唯一の子であるかどうかを返します
 	 * @return {boolean} 自身が親にとって唯一の子であればtrue、そうでなければfalse
 	 */
 	isOnlyChild() {
@@ -1582,14 +1586,14 @@ export class AbstractHierarchy {
 			&& this.parent().children(0) === this;
 	}
 	/**
-	 * 自身が空であるかどうかを返す
+	 * 自身の子が空であるかどうかを返します
 	 * @return {boolean} 自身が子を持っていなければtrue、そうでなければfalse
 	 */
 	isEmpty() {
 		return this._children.length === 0;
 	}
 	/**
-	 * 同一の親を持つ次の兄弟が存在するかどうかを返す
+	 * 同一の親を持つ次の兄弟が存在するかどうかを返します
 	 * @return {boolean} 自身の次のインスタンスの親が自身の親と同一ならtrue、そうでなければfalse
 	 */
 	hasNextSibling() {
@@ -1600,7 +1604,7 @@ export class AbstractHierarchy {
 		}
 	}
 	/**
-	 * 同一の親を持つ前の兄弟が存在するかどうかを返す
+	 * 同一の親を持つ前の兄弟が存在するかどうかを返します
 	 * @return {boolean} 自身の前のインスタンスの親が自身の親と同一ならtrue、そうでなければfalse
 	 */
 	hasPrevSibling() {
@@ -1611,14 +1615,14 @@ export class AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身が親の第一の子であるかどうかを返す
+	 * 自身が親の第一の子であるかどうかを返します
 	 * @return {boolean} 自身の前のインスタンスの親が自身の親と同一でなければtrue、そうでなければfalse
 	 */
 	isFirst() {
 		return !this.hasPrevSibling();
 	}
 	/**
-	 * 自身が親の最後の子であるかどうかを返す。Charの場合は、EOLの前の文字とEOLの２つでtrueを返す
+	 * 自身が親の最後の子であるかどうかを返します。Charの場合は、EOLの前の文字とEOLの２つでtrueを返します
 	 * @return {boolean} 自身の次のインスタンスの親が自身の親と同一でなければtrue、そうでなければfalse
 	 */
 	isLast() {
@@ -1628,7 +1632,7 @@ export class AbstractHierarchy {
 	// --参照操作
 
 	/**
-	 * childを自身の子の最後に加える
+	 * childを自身の子の最後に加えます
 	 * @param {AbstractHierarchy} child 自身の子の最後に加えるインスタンス
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
@@ -1637,7 +1641,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の子のpos番目にchildを加える
+	 * 自身の子のpos番目にchildを加えます
 	 * @param {number} pos childを加える位置のインデックス(０始まり)
 	 * @param {AbstractHierarchy} child 子に加えるインスタンス
 	 * @return {AbstractHierarchy} 自身のインスタンス
@@ -1651,7 +1655,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * childを自身の子から削除する
+	 * childを自身の子から削除します
 	 * @param {AbstractHierarchy} child 自身の子から削除するインスタンス
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
@@ -1662,7 +1666,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の子のoldChildを子から削除し、新たにnewChildを同じ位置に加える
+	 * 自身の子のoldChildを子から削除し、新たにnewChildを同じ位置に加えます
 	 * @param {AbstractHierarchy} oldChild 入替えられる自身の子のインスタンス
 	 * @param {AbstractHierarchy} newChild 入れ替える自身の子でなかったインスタンス
 	 * @return {AbstractHierarchy} 自身のインスタンス
@@ -1673,7 +1677,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * この参照を自身から切り離して空にする。DOM要素には影響しない
+	 * 子の参照を自身から切り離して空にします。DOM要素には影響しません
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	emptyChild() {
@@ -1684,21 +1688,21 @@ export class AbstractHierarchy {
 	// --Status
 
 	/**
-	 * 自身が表す文字列を返す
+	 * 自身が表す文字列を返します
 	 * @return {string} 自身の内部にある文字列
 	 */
 	text() {
 		return this.elem().textContent;
 	}
 	/**
-	 * 自身が表す文字列の文字数を返す
+	 * 自身が表す文字列の文字数を返します
 	 * @return {number} 自身の内部にある文字列の文字数
 	 */
 	length() {
 		return this.text().length;
 	}
 	/**
-	 * 同一の親を持つ兄弟の中でのインデックスを返す
+	 * 同一の親を持つ兄弟の中でのインデックスを返します
 	 * @return {number} 同一の親を持つ兄弟の中での０始まりのインデックス
 	 */
 	index() {
@@ -1706,7 +1710,7 @@ export class AbstractHierarchy {
 		return siblings.indexOf(this);
 	}
 	/**
-	 * 自身の子の数を返す
+	 * 自身の子の数を返します
 	 * @return {number} 自身の子の数
 	 */
 	childLength() {
@@ -1716,14 +1720,14 @@ export class AbstractHierarchy {
 	// --Style
 
 	/**
-	 * 自身の持つクラスすべてをひとつの文字列で返す
+	 * 自身の持つクラスすべてをひとつの文字列で返します
 	 * @return {string} 自身の持つすべてのクラス名
 	 */
 	className() {
 		return this._elem.className || ''; // クラスがひとつもなければ空文字
 	}
 	/**
-	 * 自身のクラスにclassNameを加える
+	 * 自身のクラスにclassNameを加えます
 	 * @param {string} className 自身のクラスに加えるクラス名
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
@@ -1732,7 +1736,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身のクラスからclassNameを除去する
+	 * 自身のクラスからclassNameを除去します
 	 * @param {string} className 自身のクラスから除去するクラス名
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
@@ -1741,7 +1745,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の持つすべての子のクラスからclassNameを除去する
+	 * 自身の持つすべての子のクラスからclassNameを除去します
 	 * @param {string} className 除去するクラス名
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
@@ -1752,7 +1756,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の高さを取得する
+	 * 自身の高さを取得します
 	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の高さ
 	 */
@@ -1767,7 +1771,7 @@ export class AbstractHierarchy {
 		return this._height = parseInt($(this.elem()).css('height'));
 	}
 	/**
-	 * 自身の幅を取得する
+	 * 自身の幅を取得します
 	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の幅
 	 */
@@ -1779,21 +1783,21 @@ export class AbstractHierarchy {
 		return this._width = parseInt($(this.elem()).css('width'));
 	}
 	/**
-	 * 要素左上のX座標を返す
+	 * 要素左上のX座標を返します
 	 * @return {number} 要素左上のX座標
 	 */
 	x() {
 		return this.elem().getBoundingClientRect().left + window.pageXOffset;
 	}
 	/**
-	 * 要素左上のY座標を返す
+	 * 要素左上のY座標を返します
 	 * @return {number} 要素左上のY座標
 	 */
 	y() {
 		return this.elem().getBoundingClientRect().top + window.pageYOffset;
 	}
 	/**
-	 * ある点からオブジェクトの中心点までの距離を計算する
+	 * ある点からオブジェクトの中心点までの距離を計算します
 	 * @param {number} x 基準点のX座標
 	 * @param {number} y 基準点のY座標
 	 * @return {number} 計算された距離のピクセル数
@@ -1803,7 +1807,7 @@ export class AbstractHierarchy {
 		return Util.computeDistanceP2P(x,y,ownPos.x,ownPos.y);
 	}
 	/**
-	 * 中心点の座標を返す
+	 * 中心点の座標を返します
 	 * @return {object} プロバティxにX座標、プロパティyにY座標の入ったオブジェクト
 	 */
 	computeCenterPoint() {
@@ -1816,7 +1820,7 @@ export class AbstractHierarchy {
 	// --DOM操作関係
 
 	/**
-	 * 内部のエレメントを空にする。childrenとして持っていない要素(EOLなど)は削除されない
+	 * 内部のエレメントを空にします。childrenとして持っていない要素(EOLなど)は削除されません
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	emptyElem() {
@@ -1826,7 +1830,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 内部のエレメントに加え、内部の参照も空にする
+	 * 内部のエレメントに加え、内部の参照も空にします
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	empty() {
@@ -1838,7 +1842,7 @@ export class AbstractHierarchy {
 	// --イベント
 
 	/**
-	 * 自身にkeydownイベントリスナーを付加する。重ねがけは無効
+	 * 自身にkeydownイベントリスナーを付加します。重ねがけは無効となります
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	addKeydownEventListener() {
@@ -1848,7 +1852,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身のkeydownイベントリスナーを除去する
+	 * 自身のkeydownイベントリスナーを除去します
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	removeKeydownEventListener() {
@@ -1859,7 +1863,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * keydownイベントの前処理を行い、イベントを実行する
+	 * keydownイベントの前処理を行い、イベントを実行します
 	 * @param {object} e イベントオブジェクト
 	 */
 	onKeydown(e) {
@@ -1879,7 +1883,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * keydownイベントの実行内容。onkeydown()内で使用するために定義しておくが、内容はサブクラスで上書きする
+	 * keydownイベントの実行内容。onkeydown()内で使用するために定義しておくが、内容はサブクラスで上書きします
 	 * @param {object} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 * @return {AbstractHierarchy} 自身のインスタンス
@@ -1888,7 +1892,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身にクリックイベントを付加する。重ねがけは無効
+	 * 自身にクリックイベントを付加します。重ねがけは無効となります
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	addClickEventListener() {
@@ -1898,7 +1902,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身のクリックイベントを除去する
+	 * 自身のクリックイベントを除去します
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	removeClickEventListener() {
@@ -1909,7 +1913,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * クリックイベントを実行する
+	 * クリックイベントを実行します
 	 * @param {Event} e イベントオブジェクト
 	 */
 	onClick(e) {
@@ -1917,7 +1921,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * clickイベントの実行内容。onClick()内で使用するために定義しておくが、内容はサブクラスで上書きする
+	 * clickイベントの実行内容です。onClick()内で使用するために定義しておきますが、内容はサブクラスで上書きする必要があります
 	 * @param {object} e イベントオブジェクト
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
@@ -1925,7 +1929,7 @@ export class AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身にホイールイベントを付加する。重ねがけは無効
+	 * 自身にホイールイベントを付加します。重ねがけは無効となります
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	addWheelEventListener() {
@@ -1936,7 +1940,7 @@ export class AbstractHierarchy {
 			return this;
 	}
 	/**
-	 * 自身のホイールイベントを除去する
+	 * 自身のホイールイベントを除去します
 	 * @return {AbstractHierarchy} 自身のインスタンス
 	 */
 	removeWheelEventListener() {
@@ -1948,7 +1952,7 @@ export class AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * keydownイベントの前処理を行い、イベントを実行する
+	 * keydownイベントの前処理を行い、イベントを実行します
 	 * @param {object} e イベントオブジェクト
 	 * @param {number} delta ホイールの移動量
 	 * @param {number} deltaX
@@ -1957,10 +1961,9 @@ export class AbstractHierarchy {
 	onWheel(e,delta,deltaX,deltaY) {
 		this.runWheel(e,delta > 0);
 	}
-	// onWheel()内で使用するために定義しておくが、内容はサブクラスで上書きする
 	/**
 	 * @private
-	 * ホイールイベントの実行内容。onWheel()内で使用するために定義しておくが、内容はサブクラスで上書きする
+	 * ホイールイベントの実行内容です。onWheel()内で使用するために定義しておきますが、内容はサブクラスで上書きする必要があります
 	 * @param {object} e イベントオブジェクト
 	 * @param {boolean} isUp ホイールが上方向に動いたならtrue、そうでなければfalse
 	 * @return {AbstractHierarchy} 自身のインスタンス
@@ -1973,12 +1976,12 @@ export class AbstractHierarchy {
 /**
  * 文字を表すクラス
  */
-export class Char extends AbstractHierarchy {
+class Char extends AbstractHierarchy {
 	/**
 	 * @param {object} data 文字を表すオブジェクト<br>
-	 * 例
 	 * <pre>
 	 * <code>
+	 *  // 例
 	 *		{
 	 *			"char":"あ",
 	 *			"decolation":["decolation-color-blue"]
@@ -1995,7 +1998,7 @@ export class Char extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 自身の親であるRowインスタンスをnewRowに設定する、あるいは引数省略で取得する
+	 * 自身の親であるRowインスタンスをnewRowに設定します、あるいは引数省略で取得します
 	 * @param {Row} [opt_newRow] 新たに設定する行のインスタンス
 	 * @return {Char Row} 自身のインスタンス(引数を渡した場合)あるいは自身の親のインスタンス(引数を省略した場合)
 	 */
@@ -2003,21 +2006,21 @@ export class Char extends AbstractHierarchy {
 		return this.parent(opt_newRow);
 	}
 	/**
-	 * 自身の属する段落のインスタンスを取得する
+	 * 自身の属する段落のインスタンスを取得します
 	 * @return {Paragraph} 自身の属する段落のインスタンス
 	 */
 	paragraph() {
 		return this.row().paragraph();
 	}
 	/**
-	 * 自身の属する文章コンテナのインスタンスを取得する
+	 * 自身の属する文章コンテナのインスタンスを取得します
 	 * @return {SentenceContainer} 自身の属する文章コンテナのインスタンス
 	 */
 	sentenceContainer() {
 		return this.paragraph().container();
 	}
 	/**
-	 * カーソルのインスタンスを取得する
+	 * カーソルのインスタンスを取得します
 	 * @return {Cursor} 自身の属する文章コンテナの持つカーソルのインスタンス
 	 */
 	cursor() {
@@ -2025,7 +2028,7 @@ export class Char extends AbstractHierarchy {
 	}
 	// Cursor用
 	/**
-	 * カーソル文字として自身が不適なら自身の次のCharを返す。自身が段落途中のEOLならその次の文字となる
+	 * カーソル文字として自身が不適なら自身の次のCharを返します。具体的には、自身が段落途中のEOLならその次の文字となります
 	 * @return {Char} 自身も含めた自身以降でカーソル文字として適したインスタンス
 	 */
 	slideNextCursor() {
@@ -2038,7 +2041,7 @@ export class Char extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * カーソル文字として自身が不適なら自身の前のCharを返す。自身が段落途中のEOLならその前の文字となる
+	 * カーソル文字として自身が不適なら自身の前のCharを返します。具体的には、自身が段落途中のEOLならその前の文字となります
 	 * @return {Char} 自身も含めた自身以前でカーソル文字として適したインスタンス
 	 */
 	slidePrevCursor() {
@@ -2051,7 +2054,7 @@ export class Char extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身の次の文字を表すCharインスタンスを返す。段落途中か段落の最後かに関わらず、EOLは完全排除して文字のみを返す
+	 * 自身の次の文字を表すCharインスタンスを返します。段落途中か段落の最後かに関わらず、EOLは完全排除して文字のみを返します
 	 * @return {Char} 自身の次のCharインスタンス。見つからなければnull
 	 */
 	nextChar() {
@@ -2062,7 +2065,7 @@ export class Char extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身の前の文字を表すCharインスタンスを返す。段落途中か段落の最後かに関わらず、EOLは完全排除して文字のみを返す
+	 * 自身の前の文字を表すCharインスタンスを返します。段落途中か段落の最後かに関わらず、EOLは完全排除して文字のみを返します
 	 * @return {Char} 自身の前のCharインスタンス。見つからなければnull
 	 */
 	prevChar() {
@@ -2073,7 +2076,7 @@ export class Char extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 同一段落内での次の文字を返す。EOLは含まない
+	 * 同一段落内での次の文字を返します。EOLは含みません
 	 * @return {Char} 同一段落内での次の文字のインスタンス。なければnull
 	 */
 	nextCharOnParagraph() {
@@ -2083,7 +2086,7 @@ export class Char extends AbstractHierarchy {
 		return null;
 	}
 	/**
-	 * 同一段落内での前の文字を返す。EOLは含まない
+	 * 同一段落内での前の文字を返します。EOLは含みません
 	 * @return {Char} 同一段落内での前の文字のインスタンス。なければnull
 	 */
 	prevCharOnParagraph() {
@@ -2096,49 +2099,49 @@ export class Char extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * 自身がEOLであるかどうかを返す
+	 * 自身がEOLであるかどうかを返します
 	 * @return {boolean} オーバーライドされない限り常にfalse
 	 */
 	isEOL() {
 		return false;
 	}
 	/**
-	 * 自身にカーソルがあたっているかどうかを返す
+	 * 自身にカーソルがあたっているかどうかを返します
 	 * @return {boolean} 自身にカーソルがあればtrue、そうでなければfalse
 	 */
 	hasCursor() {
 		return this.hasClass('cursor');
 	}
 	/**
-	 * 自身が可視化されているかどうかを返す
+	 * 自身が可視化されているかどうかを返します
 	 * @return {boolean} 自身が可視化されていればtrue、そうでなければfalse
 	 */
 	isDisplay() {
 		return this.hasClass('display');
 	}
 	/**
-	 * 自身が同一行内で最終文字であるかどうかを返す。EOLは含まない(次の文字がEOLならfalse,自身がEOLの場合もfalse)
+	 * 自身が同一行内で最終文字であるかどうかを返します。EOLは含みません(次の文字がEOLならfalse,自身がEOLの場合もfalse)
 	 * @return {boolean} 同一行内で最終文字でなければtrue、最終文字ならfalse。
 	 */
 	hasNextSibling() {
 		return !(this._isEOL || this.next().isEOL());
 	}
 	/**
-	 * 同一段落内で次のCharがあるかどうかを返す
+	 * 同一段落内で次のCharがあるかどうかを返します
 	 * @return {boolean} 同一段落内で次のCharがあればtrue、そうでなければfalse
 	 */
 	hasNextCharOnParagraph() {
 		return this.nextChar() && this.nextChar().paragraph() === this.paragraph();
 	}
 	/**
-	 * 同一段落内で前のCharがあるかどうかを返す
+	 * 同一段落内で前のCharがあるかどうかを返します
 	 * @return {boolean} 同一段落内で前のCharがあればtrue、そうでなければfalse
 	 */
 	hasPrevCharOnParagraph() {
 		return this.prevChar() && this.prevChar().paragraph() === this.paragraph();
 	}
 	/**
-	 * この要素がrangeの中にあるかどうかを返す
+	 * この要素がrangeの中にあるかどうかを返します
 	 * @param {Range} range 判定の基準となる範囲を表すRange
 	 * @return {boolean} この要素がrangeの中にあればtrue、そうでなければfalse
 	 */
@@ -2157,14 +2160,14 @@ export class Char extends AbstractHierarchy {
 		return false;
 	}
 	/**
-	 * この文字が太字になっているかどうかを返す
+	 * この文字が太字になっているかどうかを返します
 	 * @return {boolean} 太字になっていればtrue、そうでなければfalse
 	 */
 	isBold() {
 		return this.hasClass('decolation-font-bold');
 	}
 	/**
-	 * この文字が斜体になっているかどうかを返す
+	 * この文字が斜体になっているかどうかを返します
 	 * @return {boolean} 斜体になっていればtrue、そうでなければfalse
 	 */
 	isItalic() {
@@ -2174,7 +2177,7 @@ export class Char extends AbstractHierarchy {
 	// --Status
 
 	/**
-	 * この文字の状態を表す規定のオブジェクトを作成する
+	 * この文字の状態を表す規定のオブジェクトを作成します
 	 * @return {object} この文字の状態を表す規定のオブジェクト
 	 */
 	data() {
@@ -2186,7 +2189,7 @@ export class Char extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * この文字にかかっている装飾のクラスを配列にして返す
+	 * この文字にかかっている装飾のクラスを配列にして返します
 	 * @return {string[]} この文字にかかっている装飾のクラスの配列。文字装飾がかかっていなければ空の配列
 	 */
 	classArray() {
@@ -2196,7 +2199,7 @@ export class Char extends AbstractHierarchy {
 	// --Style
 
 	/**
-	 * この文字にカーソルを当てる
+	 * この文字にカーソルを当てます
 	 * @param {boolean} [opt_bShift] シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2206,7 +2209,7 @@ export class Char extends AbstractHierarchy {
 	}
 
 	/**
-	 * この文字のフォントサイズを変更する。あるいは引数省略で現在のフォントサイズを取得する
+	 * この文字のフォントサイズを変更します。あるいは引数省略で現在のフォントサイズを取得します
 	 * @param {number} [opt_fontSize] 新たに設定するフォントサイズ
 	 * @return {Char number string} 自身のインスタンス(引数を渡した場合)。現在のフォントサイズ(引数を省略した場合)、フォントサイズが数値で設定されていなければ文字列の'auto'
 	 */
@@ -2230,7 +2233,7 @@ export class Char extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * この文字に文字色を設定する。あるいは引数省略で現在の文字色を取得する
+	 * この文字に文字色を設定します。あるいは引数省略で現在の文字色を取得します
 	 * @param {string boolean} [opt_color] 文字列ならその色に設定する、falseを渡せば文字色を解除する
 	 * @return {Char string} 自身のインスタンス(引数を渡した場合)、あるいは現在の文字色(引数を省略した場合。文字色が設定されていなければ'black')
 	 */
@@ -2249,7 +2252,7 @@ export class Char extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * この文字の太字を設定、解除する
+	 * この文字の太字を設定、解除します
 	 * @param {boolean} bl trueなら太字にする、falseなら太字を解除する
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2262,7 +2265,7 @@ export class Char extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * この文字の斜体を設定、解除する
+	 * この文字の斜体を設定、解除します
 	 * @param {boolean} bl trueなら斜体にする、falseなら斜体を解除する
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2276,7 +2279,7 @@ export class Char extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * 文字色を設定する
+	 * 文字色を設定します
 	 * @param {string} color 設定する文字色
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2289,7 +2292,7 @@ export class Char extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * 文字色を解除する
+	 * 文字色を解除します
 	 * @return {Char} 自身のインスタンス
 	 */
 	removeColor() {
@@ -2299,7 +2302,7 @@ export class Char extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * この文字から始まる文字列がstrと合致するなら、その文字列のCharにクラスを付与する
+	 * この文字から始まる文字列がstrと合致するなら、その文字列のCharにクラスを付与します
 	 * @param {string} str 判定する文字列
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2324,7 +2327,7 @@ export class Char extends AbstractHierarchy {
 	// --DOM操作関係
 
 	/**
-	 * charを自身の直前に挿入する
+	 * charを自身の直前に挿入します
 	 * @param {Char} char 挿入するインスタンス
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2349,7 +2352,7 @@ export class Char extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * charを自身の直後に挿入する
+	 * charを自身の直後に挿入します
 	 * @param {Char} char 挿入するインスタンス
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2378,7 +2381,7 @@ export class Char extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身を削除する。文書整形は行われない
+	 * 自身を削除します。文書整形は行いません
 	 * @return {Char} 自身のインスタンス
 	 */
 	remove() {
@@ -2395,9 +2398,8 @@ export class Char extends AbstractHierarchy {
 		row.deleteChar(this);
 		return this;
 	}
-	// 文書整形も含む削除
 	/**
-	 * 自身を削除し、文書整形を行う(空行ができたらその行も削除し、文字数調整や禁則処理を行う)
+	 * 自身を削除し、文書整形を行います(空行ができたらその行も削除し、文字数調整や禁則処理を行います)
 	 * @return {Char} 自身のインスタンス
 	 */
 	delete() {
@@ -2415,7 +2417,7 @@ export class Char extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自分自身をnewCharと入れ替える
+	 * 自分自身をnewCharと入れ替えます
 	 * @param {Char} newChar 自身と入れ替える文字のインスタンス
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2431,8 +2433,8 @@ export class Char extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 前の行の最後に移動する。その結果空行ができたら削除し、カーソルがその行にあれば自身の次のEOLに移動する。
-	 *     段落はまたがず、移動前の自身が段落最初の文字であれば何もしない
+	 * 前の行の最後に移動します。その結果空行ができたら削除し、カーソルがその行にあれば自身の次のEOLに移動します
+	 *     段落はまたがず、移動前の自身が段落最初の文字であれば何もしません
 	 * @return {Char} 自身のインスタンス
 	 */
 	moveLastBefore() {
@@ -2452,7 +2454,7 @@ export class Char extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 次の行の最初に移動する。次の行が同じ段落になければ新しく行を作り、カーソルは自身の次のEOLに移動する
+	 * 次の行の最初に移動します。次の行が同じ段落になければ新しく行を作り、カーソルは自身の次のEOLに移動します
 	 * @return {Char} 自身のインスタンス
 	 */
 	moveFirstAfter() {
@@ -2475,7 +2477,7 @@ export class Char extends AbstractHierarchy {
 
 	// --Display関係
 	/**
-	 * 自身の表示非表示を切り替える
+	 * 自身の表示非表示を切り替えます
 	 * @param {boolean} bDisplay trueなら表示、falseなら非表示
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2491,7 +2493,7 @@ export class Char extends AbstractHierarchy {
 	// Utility
 
 	/**
-	 * 現在のメニューバーの状態に即してcを内容に持つ規定のオブジェクトを作成する。メソッドを持つ既存のCharインスタンスには影響しない
+	 * 現在のメニューバーの状態に即してcを内容に持つ規定のオブジェクトを作成します。メソッドを持つ既存のCharインスタンスには影響しません
 	 * @param {string} c 作成するオブジェクトが表す文字(１文字)
 	 * @return {object} 文字データを表す規定のオブジェクト
 	 */
@@ -2505,7 +2507,7 @@ export class Char extends AbstractHierarchy {
 		return ret;
 	}
 	/**
-	 * 文字装飾のない文字の文字データを返す
+	 * 文字装飾のない文字の文字データを返します
 	 * @param {string} c 作成するオブジェクトが表す文字(１文字)
 	 * @return {object} 文字データを表す規定のオブジェクト
 	 */
@@ -2520,7 +2522,7 @@ export class Char extends AbstractHierarchy {
 	// -- other
 
 	/**
-	 * この文字のインデックスをカーソル位置として記憶する
+	 * この文字のインデックスをカーソル位置として記憶します
 	 * @return {Char} 自身のインスタンス
 	 */
 	setPosMemory() {
@@ -2530,7 +2532,7 @@ export class Char extends AbstractHierarchy {
 	}
 
 	/**
-	 * 自分を含めて、自分以降で同じ段落内のChar全てに処理を行う(EOLは含まない)
+	 * 自分を含めて、自分以降で同じ段落内のChar全てに処理を行います(EOLは含まない)
 	 * @param {function} func 処理内容が定義された関数オブジェクト
 	 * @return {Char} 自身のインスタンス
 	 */
@@ -2548,8 +2550,8 @@ export class Char extends AbstractHierarchy {
 /**
  * 行の末端を表すクラス
  */
-export class EOL extends Char {
-	// Rowとともに要素を作ってしまうため、要素を引数に取る必要がある。CharとEOLはis-a関係が成り立つと考え、継承を選択
+class EOL extends Char {
+	// Rowとともに要素を作ってしまうため、要素を引数に取る必要がある
 	/**
 	 * @param {Element} elem 自身のDOM要素
 	 */
@@ -2558,7 +2560,7 @@ export class EOL extends Char {
 	}
 
 	/**
-	 * 自身がEOLであるかどうかを返す
+	 * 自身がEOLであるかどうかを返します
 	 * @return {boolean} 常にtrue
 	 */
 	isEOL() {
@@ -2568,7 +2570,7 @@ export class EOL extends Char {
 	// -- Status
 
 	/**
-	 * 自身のインデックスを返す
+	 * 自身のインデックスを返します
 	 * @return {number} 自身は親の配列に入っていないので、親の配列の長さと同じ数値を返す
 	 */
 	index() {
@@ -2578,7 +2580,7 @@ export class EOL extends Char {
 	// --DOM操作
 
 	/**
-	 * rowを親として紐付ける
+	 * rowを親として紐付けます
 	 * @param {Row} row 親となる行のインスタンス
 	 * @return {EOL} 自身のインスタンス
 	 */
@@ -2594,7 +2596,7 @@ export class EOL extends Char {
 /**
  * 行を表すクラス
  */
-export class Row extends AbstractHierarchy {
+class Row extends AbstractHierarchy {
 	/**
 	 * @param {object} data 行を表すオブジェクト<br>
 	 * 例
@@ -2639,21 +2641,21 @@ export class Row extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 自身のEOLのインスタンスを返す
+	 * 自身のEOLのインスタンスを返します
 	 * @return {EOL} 自身のEOLのインスタンス
 	 */
 	EOL() {
 		return this._EOL;
 	}
 	/**
-	 * 自身の属する文章コンテナのインスタンスを返す
+	 * 自身の属する文章コンテナのインスタンスを返します
 	 * @return {SentenceContainer} 自身の属する文章コンテナのインスタンス
 	 */
 	container() {
 		return this.paragraph().container();
 	}
 	/**
-	 * 自身の親の段落を新たに設定する、あるいは現在の親段落を取得する
+	 * 自身の親の段落を新たに設定する、あるいは現在の親段落を取得します
 	 * @param {Paragraph} [opt_newParagraph] 新たに設定する親段落
 	 * @return {Row Paragraph} 自身のインスタンス(引数を渡した場合)あるいは自身の親段落のインスタンス(引数を省略した場合)
 	 */
@@ -2661,14 +2663,14 @@ export class Row extends AbstractHierarchy {
 		return this.parent(opt_newParagraph);
 	}
 	/**
-	 * カーソルを持つ文字のインスタンスを取得する
+	 * カーソルを持つ文字のインスタンスを取得します
 	 * @return {Char} カーソルを持つ文字のインスタンス
 	 */
 	cursorChar() {
 		return this.paragraph().container().cursor().getChar();
 	}
 	/**
-	 * 自身の内部にある最初のインスタンスを返す
+	 * 自身の内部にある最初のインスタンスを返します
 	 * @return {Char} 自身の第一文字のインスタンス。それがなければ自身のEOLのインスタンス
 	 */
 	firstChild() {
@@ -2681,21 +2683,21 @@ export class Row extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身の内部にある最後のインスタンスであるEOLのインスタンスを返す
+	 * 自身の内部にある最後のインスタンスであるEOLのインスタンスを返します
 	 * @return {Char} 自身のEOLのインスタンス
 	 */
 	lastChild() {
 		return this.EOL();
 	}
 	/**
-	 * 自身の最終文字のインスタンスを返す
+	 * 自身の最終文字のインスタンスを返します
 	 * @return {Char} 自身の最終文字のインスタンス。空行であればnull
 	 */
 	lastChar() {
 		return super.lastChild();
 	}
 	/**
-	 * 指定されたインデックスの子である文字のインスタンスを取得、あるいは子のインスタンスの配列を取得する。EOLは含まれない
+	 * 指定されたインデックスの子である文字のインスタンスを取得、あるいは子のインスタンスの配列を取得します。EOLは含まれません
 	 * @param {number} [opt_index] 取得する子のインデックス
 	 * @return {Char Char[]} 指定された子のインスタンス(引数を渡した場合。範囲外の数値ならundefined)、あるいは子のインスタンスの配列(引数を省略した場合。子がいなければ空の配列)
 	 */
@@ -2703,7 +2705,7 @@ export class Row extends AbstractHierarchy {
 		return super.children(opt_index);
 	}
 	/**
-	 * EOLを含む、指定されたインデックスの子である文字のインスタンスを取得、あるいは子のインスタンスの配列を取得する
+	 * EOLを含む、指定されたインデックスの子である文字のインスタンスを取得、あるいは子のインスタンスの配列を取得します
 	 * @param {number} [opt_index] 取得する子のインデックス
 	 * @return {Char} 指定された子のインスタンス(引数を渡した場合。範囲外のインデックスならEOL)、あるいはEOLを含む子のインスタンスの配列(引数を省略した場合。子がいなければ要素がEOLのみである配列)
 	 */
@@ -2720,14 +2722,14 @@ export class Row extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * 内部に文字があるかどうかを返す
+	 * 内部に文字があるかどうかを返します
 	 * @return {boolean} 内部に文字があればtrue、EOLのみの空行ならfalse
 	 */
 	hasChar() {
 		return super.hasChild();
 	}
 	/**
-	 * 行内にカーソルがあるかどうかを返す
+	 * 行内にカーソルがあるかどうかを返します
 	 * @return {boolean} 行内にカーソルが含まれていればtrue、そうでなければfalse
 	 */
 	hasCursor() {
@@ -2737,14 +2739,14 @@ export class Row extends AbstractHierarchy {
 		return false;
 	}
 	/**
-	 * この要素が可視化されているかどうかを返す
+	 * この要素が可視化されているかどうかを返します
 	 * @return {boolean} 可視化されていたらtrue、そうでなければfalse
 	 */
 	isDisplay() {
 		return this.hasClass('display');
 	}
 	/**
-	 * objが行内に含まれているかどうかを返す
+	 * objが行内に含まれているかどうかを返します
 	 * @param {Char} obj 判定するインスタンス
 	 * @return {Char} objが行内にあるCharおよびEOLのいずれかに一致するとtrue、そうでなければfalse
 	 */
@@ -2756,14 +2758,14 @@ export class Row extends AbstractHierarchy {
 		return false;
 	}
 	/**
-	 * ページ内で最初の行であるかどうかを返す
+	 * ページ内で最初の行であるかどうかを返します
 	 * @return {boolean} ページ内で最初の行であればtrue、そうでなければfalse
 	 */
 	isPageBreak() {
 		return this.hasClass('page-break');
 	}
 	/**
-	 * ページ内で最終行であるかどうかを返す
+	 * ページ内で最終行であるかどうかを返します
 	 * @return {boolean} ページ内で最終行ならtrue、そうでなければfalse
 	 */
 	isPageLast() {
@@ -2773,7 +2775,7 @@ export class Row extends AbstractHierarchy {
 	// --参照操作
 
 	/**
-	 * charを自身の子の最後に加える
+	 * charを自身の子の最後に加えます
 	 * @param {Char} char 子に加える文字のインスタンス
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -2781,7 +2783,7 @@ export class Row extends AbstractHierarchy {
 		return this.pushChild(char);
 	}
 	/**
-	 * charを自身の子の指定された位置に加える
+	 * charを自身の子の指定された位置に加えます
 	 * @param {number} pos 加える位置のインデックス
 	 * @param {Char} char 加える子のインスタンス
 	 * @return {Row} 自身のインスタンス
@@ -2790,7 +2792,7 @@ export class Row extends AbstractHierarchy {
 		return this.insertChild(pos,char);
 	}
 	/**
-	 * charを自身の子から削除する
+	 * charを自身の子から削除します
 	 * @param {Char} char 削除する子のインスタンス
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -2801,7 +2803,7 @@ export class Row extends AbstractHierarchy {
 	// --Status
 
 	/**
-	 * この行の状態を表す規定のオブジェクトを作成する
+	 * この行の状態を表す規定のオブジェクトを作成します
 	 * @return {object[]} この行の状態を表す規定のオブジェクト
 	 */
 	data() {
@@ -2812,14 +2814,14 @@ export class Row extends AbstractHierarchy {
 		return data;
 	}
 	/**
-	 * この行の文字数を返す。EOLは含まない
+	 * この行の文字数を返します。EOLは含みません
 	 * @return {number} この行の文字数。空行なら０
 	 */
 	charLen() {
 		return super.childLength();
 	}
 	/**
-	 * この行の内部にある文字のうち、最も大きいフォントサイズを返す。'auto'は18として計算する
+	 * この行の内部にある文字のうち、最も大きいフォントサイズを返します。'auto'は18として計算します
 	 * @return {number} 最大のフォント数
 	 */
 	maxFont() {
@@ -2833,7 +2835,7 @@ export class Row extends AbstractHierarchy {
 	// --Style
 
 	/**
-	 * この行の横幅を返す。行は９０度回転しているため、css上は高さのこと
+	 * この行の横幅を返します。行は９０度回転しているため、ここでいう幅はcss上の高さを表します
 	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の幅
 	 */
@@ -2841,7 +2843,7 @@ export class Row extends AbstractHierarchy {
 		return super.height(opt_useCache);
 	}
 	/**
-	 * この行の高さを返す。行は９０度回転しているため、css上は幅のこと
+	 * この行の高さを返します。行は９０度回転しているため、ここでいう高さはcss上の幅を表します
 	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の高さ
 	 */
@@ -2852,7 +2854,7 @@ export class Row extends AbstractHierarchy {
 	// --DOM操作関係
 
 	/**
-	 * 子を空にして参照を整える
+	 * 子を空にして参照を整えます
 	 * @return {Row} 自身のインスタンス
 	 */
 	empty() {
@@ -2869,7 +2871,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の最初にcharを挿入する
+	 * 自身の最初にcharを挿入します
 	 * @param {Char} char 挿入する文字のインスタンス
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -2878,7 +2880,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の最後(EOLの直前)にcharを挿入する
+	 * 自身の最後(EOLの直前)にcharを挿入します
 	 * @param {Char} char 挿入する文字のインスタンス
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -2887,7 +2889,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の直前にrowを挿入する
+	 * 自身の直前にrowを挿入します
 	 * @param {Row} row 挿入する行のインスタンス
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -2916,7 +2918,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の直後にrowを挿入する
+	 * 自身の直後にrowを挿入します
 	 * @param {Row} row 挿入する行のインスタンス
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -2949,7 +2951,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身を削除する。文書整形は行われない
+	 * 自身を削除します。文書整形は行われません
 	 * @return {Row} 自身のインスタンス
 	 */
 	remove() {
@@ -2980,14 +2982,12 @@ export class Row extends AbstractHierarchy {
 		this.lastChild().next(null);
 		return this;
 	}
-	// 文章整形を含む削除
-	// カーソルが含まれていれば前の行に平行移動する
-	// カーソルを動かしたくなければremove()を使う
 	/**
-	 * 自身を削除し、文書整形を行う(カーソルが含まれていれば前の行、前の行がなければ次の行にカーソルを移動する)
+	 * 自身を削除し、文書整形を行います(カーソルが含まれていれば前の行、前の行がなければ次の行にカーソルを移動します)
 	 * @return {Row} 自身のインスタンス
 	 */
 	delete() {
+		// カーソルを動かしたくなければremove()を使う
 		const oldPrevRow = this.prev();
 		const oldNextRow = this.next();
 
@@ -3004,7 +3004,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 前の段落の最終行として移動する。各段落最初の行でのみ有効。自身が空行であれば削除される
+	 * 前の段落の最終行として移動します。各段落最初の行でのみ有効です。自身が空行であれば削除されます
 	 * @return {Row} 自身のインスタンス
 	 */
 	moveLastBefore() {
@@ -3030,7 +3030,7 @@ export class Row extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 隣のRowの第一文字を、自らの最後に移動する。段落内でのみ有効
+	 * 次のRowの第一文字を、自らの最後に移動します。段落内でのみ有効となります
 	 * @return {Row} 自身のインスタンス
 	 */
 	bringChar() {
@@ -3039,7 +3039,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 隣のRowの最初のnum文字を、自らの最後に移動する。段落内でのみ有効。文字同士の順番は崩さない
+	 * 次のRowの最初のnum文字を、自らの最後に移動します。段落内でのみ有効となります。また、文字同士の順番に変化はありません
 	 * @param {number} num 移動する文字数
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -3050,7 +3050,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自分の最後の文字を、次の行の最初に移動する。次の行がなければ新しく作成される
+	 * 自分の最後の文字を、次の行の最初に移動します。次の行がなければ新しく作成されます
 	 * @return {Row} 自身のインスタンス
 	 */
 	takeChar() {
@@ -3059,7 +3059,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自分の最後のnum文字を、次の行の最初に移動する。次の行がなければ新しく作成される
+	 * 自分の最後のnum文字を、次の行の最初に移動します。次の行がなければ新しく作成されます
 	 * @param {number} num 移動する文字数
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -3070,7 +3070,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 引数の文字列から作成された装飾のない文字のインスタンスを自らの最後に追加する
+	 * 引数の文字列から作成された装飾のない文字のインスタンスを自らの最後に追加します
 	 * @return {Row} 自身のインスタンス
 	 */
 	createPlainContent(str) {
@@ -3083,7 +3083,9 @@ export class Row extends AbstractHierarchy {
 	// --文章整理
 
 	/**
-	 * 指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節する。標準以外のフォントサイズの文字があれば文字数は調整される。また、自身が空段落以外での空行であれば削除する
+	 * 指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節します。
+	 *     標準以外のフォントサイズの文字があれば文字数はフォントサイズに合わせて調整されます。
+	 *     また、自身が空段落以外での空行であれば削除します
 	 * @return {Row} 自身のインスタンス
 	 */
 	cordinate() {
@@ -3111,7 +3113,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 行内の禁則処理を行う
+	 * 行内の禁則処理を行います
 	 * @return {Row} 自身のインスタンス
 	 */
 	checkKinsoku() {
@@ -3130,7 +3132,7 @@ export class Row extends AbstractHierarchy {
 	// --Display関係
 
 	/**
-	 * 自身と子のCharを表示、あるいは非表示にする。内部の文字はfirst文字以降で自身に収まる文字を表示し、それ以外の文字は非表示にする
+	 * 自身と子のCharを表示、あるいは非表示にします。内部の文字はfirst文字以降で自身に収まる文字を表示し、それ以外の文字は非表示にします
 	 * @param {boolean} bDisplay trueであれば自身を表示し、falseで非表示にする
 	 * @param {number} first 自身内部のCharを何文字目から表示するかのインデックス(０始まり)
 	 * @return {Row} 自身のインスタンス
@@ -3159,7 +3161,7 @@ export class Row extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * カーソル行を基準に、文字を何文字目から表示すべきかの計算結果を返す
+	 * カーソル位置を基準にして、文字を何文字目から表示すべきかの計算結果を返します
 	 * @return {number} 文字の表示開始位置のインデックス
 	 */
 	computeDisplayCharPos() {
@@ -3177,7 +3179,7 @@ export class Row extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * この行が何文字目から表示されているかのインデックスを返す
+	 * この行が何文字目から表示されているかのインデックスを返します
 	 * @return {number} EOL含め最初に表示された文字のインデックス。文字が全て非表示になっていれば-1
 	 */
 	firstDisplayCharPos() {
@@ -3187,7 +3189,7 @@ export class Row extends AbstractHierarchy {
 		return -1; // displayがひとつもない(EOLは常にdisplayなので、ここまで来たら異常)
 	}
 	/**
-	 * この行が何文字目まで表示されているかのインデックスを返す
+	 * この行が何文字目まで表示されているかのインデックスを返します
 	 * @return {number} EOL含め最後に表示された文字のインデックス。文字が全て非表示になっていれば-1
 	 */
 	lastDisplayCharPos() {
@@ -3201,7 +3203,7 @@ export class Row extends AbstractHierarchy {
 	// --イベント
 
 	/**
-	 * 行のクリックイベントの実行内容。行をクリックすると最も近い文字にカーソルが当たる
+	 * 行のクリックイベントの実行内容です。行をクリックすると最も近い文字にカーソルが当たります
 	 * @param {Event} e イベントオブジェクト
 	 */
 	runClick(e) {
@@ -3224,7 +3226,7 @@ export class Row extends AbstractHierarchy {
 	// --静的メソッド
 
 	/**
-	 * 空行のRowインスタンスを新たに作成する
+	 * 空行のRowインスタンスを新たに作成します
 	 * @return {Row} 作成されたインスタンス
 	 */
 	static createEmptyRow() {
@@ -3234,7 +3236,8 @@ export class Row extends AbstractHierarchy {
 	// -- other
 
 	/**
-	 * 同一段落で自分以降の行に処理を行う。 処理中に同一段落の行でなくなったなどしても影響せず処理される
+	 * 同一段落で自分以降の行に処理を行います。
+	 *     処理中に同一段落の行でなくなったなどしても影響せず、実行時時点で処理対象であった行すべてが処理されますので注意してください
 	 * @param {function} func 処理が定義された関数オブジェクト
 	 * @return {Row} 自身のインスタンス
 	 */
@@ -3253,7 +3256,7 @@ export class Row extends AbstractHierarchy {
 /**
  * 段落を表すクラス
  */
-export class Paragraph extends AbstractHierarchy {
+class Paragraph extends AbstractHierarchy {
 	/**
 	 * @param {object} data 段落を表すオブジェクト<br>
 	 * 例
@@ -3294,7 +3297,7 @@ export class Paragraph extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 親の文章コンテナを設定、または引数省略で取得する
+	 * 親の文章コンテナを設定、または引数省略で取得します
 	 * @param {SentenceContainer} [opt_newContainer] 新たに設定する、自身の属する文章コンテナのインスタンス
 	 * @return {Paragraph SentenceContainer} 自身のインスタンス(引数を渡した場合)、あるいは自身の親の文章コンテナのインスタンス
 	 */
@@ -3302,7 +3305,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this.parent(opt_newContainer);
 	}
 	/**
-	 * 指定された行のインスタンス、あるいは引数省略で子のインスタンスの配列を取得する
+	 * 指定された行のインスタンス、あるいは引数省略で子のインスタンスの配列を取得します
 	 * @param {number} [opt_index] 取得する子のインスタンスのインデックス
 	 * @return {Row Row[]} 指定された行のインスタンス(引数を渡した場合)、あるいは子の配列(引数を省略した場合)
 	 */
@@ -3313,21 +3316,22 @@ export class Paragraph extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * 自身が内部に行を持っているかどうかを返す
+	 * 自身が内部に行を持っているかどうかを返します
 	 * @return {boolean} 自身が子を持っていればtrue、そうでなければfalse
 	 */
 	hasRow() {
 		return this.hasChild();
 	}
 	/**
-	 * 自身が空段落であるかどうかを返す。空行がひとつだけあってもtrue(空行は空段落にしか存在しないのが正常であるため)
+	 * 自身が空段落であるかどうかを返します。
+	 *     空行がひとつだけあってもtrueを返します(空行は空段落にしか存在しないのが正常であるため)
 	 * @return {boolean} 内部に行が存在しないか、空行が一つだけならtrue
 	 */
 	isEmpty() {
 		return !this.hasChild() || this.firstChild().isEmpty();
 	}
 	/**
-	 * 段落内にカーソルが含まれているかどうかを返す
+	 * 段落内にカーソルが含まれているかどうかを返します
 	 * @return {boolean} 段落内にカーソルが含まれていればtrue、そうでなければfalse
 	 */
 	hasCursor() {
@@ -3337,7 +3341,7 @@ export class Paragraph extends AbstractHierarchy {
 		return false;
 	}
 	/**
-	 * 引数で渡されたオブジェクトが段落内にある行か文字のいずれかに一致するかどうかを返す
+	 * 引数で渡されたオブジェクトが段落内にある行か文字のいずれかに一致するかどうかを返します
 	 * @param {AbstractHierarchy} obj 判定するインスタンス
 	 * @return {boolean} 引数で渡されたオブジェクトが段落内にある行か文字のいずれかに一致するとtrue、そうでなければfalse
 	 */
@@ -3352,7 +3356,7 @@ export class Paragraph extends AbstractHierarchy {
 	// --参照操作
 
 	/**
-	 * 自身の子の最後にrowを加える
+	 * 自身の子の最後にrowを加えます
 	 * @param {Row} row 自身の子の最後に加えるインスタンス
 	 * @return {Paragraph} 自身のインスタンス
 	 */
@@ -3360,7 +3364,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this.pushChild(row);
 	}
 	/**
-	 * 自身の子の指定された位置にrowを挿入する
+	 * 自身の子の指定された位置にrowを挿入します
 	 * @param {number} pos rowを挿入する位置のインデックス
 	 * @param {Row} row 挿入するインスタンス
 	 * @return {Paragraph} 自身のインスタンス
@@ -3369,7 +3373,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this.insertChild(pos,row);
 	}
 	/**
-	 * 自身の子からrowを削除する
+	 * 自身の子からrowを削除します
 	 * @param {Row} row 削除する子のインスタンス
 	 * @return {Paragraph} 自身のインスタンス
 	 */
@@ -3380,7 +3384,7 @@ export class Paragraph extends AbstractHierarchy {
 	// --Status
 
 	/**
-	 * この段落の状態を表す規定のオブジェクトを作成する
+	 * この段落の状態を表す規定のオブジェクトを作成します
 	 * @return {object[]} この段落の状態を表す規定のオブジェクト
 	 */
 	data() {
@@ -3396,14 +3400,14 @@ export class Paragraph extends AbstractHierarchy {
 		return data;
 	}
 	/**
-	 * この段落の装飾のクラスを文字列の配列にする
+	 * この段落の装飾のクラスを文字列の配列にします
 	 * @return {string[]} 装飾関係のクラスの配列。なければ空の配列
 	 */
 	classArray() {
 		return this.elem().className.match(/decolation-\S+/g) || [];
 	}
 	/**
-	 * 段落内の文字数を数える
+	 * 段落内の文字数を数えます
 	 * @return {number} 段落内の文字数
 	 */
 	countChar() {
@@ -3417,7 +3421,7 @@ export class Paragraph extends AbstractHierarchy {
 	// --Style
 
 	/**
-	 * 段落にtext-alignを設定する、あるいは引数省略で現在のtext-alignの状態を取得する
+	 * 段落にtext-alignを設定する、あるいは引数省略で現在のtext-alignの状態を取得します
 	 * @param {string boolean} [opt_align] 新たに設定する'left','center','right'の文字列。'left'あるいはfalseならalignを解除する
 	 * @return {Paragraph string} 自身のインスタンス(引数を渡した場合)、あるいは現在のtext-alignの状態(引数を省略した場合)
 	 */
@@ -3437,7 +3441,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身内部にあるすべてのCharから指定クラスを除去する
+	 * 自身内部にあるすべてのCharから指定クラスを除去します
 	 * @return {Paragraph} 自身のインスタンス
 	 */
 	removeClassFromAllChar(className) {
@@ -3447,7 +3451,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身内部にある文字にstrと合致する文字列があればクラスを付与する
+	 * 自身内部にある文字にstrと合致する文字列があればsearch-labelクラスとsearch-wordクラスを付与します
 	 * @param {string} str 判定する文字列
 	 * @return {Paragraph} 自身のインスタンス
 	 */
@@ -3465,7 +3469,7 @@ export class Paragraph extends AbstractHierarchy {
 	// --DOM操作関係
 
 	/**
-	 * 自身の最後にrowを追加する
+	 * 自身の最後にrowを追加します
 	 * @param {Row} row 追加するインスタンス
 	 * @return {Paragraph} 自身のインスタンス
 	 */
@@ -3501,7 +3505,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の直後にparagraphを挿入する
+	 * 自身の直後にparagraphを挿入します
 	 * @param {Paragraph} paragraph 挿入するインスタンス
 	 * @return {Paragraph} 自身のインスタンス
 	 */
@@ -3539,7 +3543,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身を削除する。文書整形は行われない
+	 * 自身を削除します。文書整形は行われません
 	 * @return {Paragraph} 自身のインスタンス
 	 */
 	remove() {
@@ -3575,7 +3579,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身を削除し、文書を整形する(内部にカーソルがあれば直前の行に平行移動する。直前の行がなければ直後の行)
+	 * 自身を削除し、文書を整形します(内部にカーソルがあれば直前の行に平行移動します。直前の行がなければ直後の行に移動します)
 	 * @return {Paragraph} 自身のインスタンス
 	 */
 	delete() {
@@ -3594,11 +3598,12 @@ export class Paragraph extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 渡された文字以降を新しい段落に移動して、段落を２つに分ける
+	 * 渡された文字以降を新しい段落に移動して、段落を２つに分けます
 	 * @param {Char} char 段落分割の基準文字のインスタンス
 	 * @return {Paragraph} 自身のインスタンス
 	 */
 	divide(char) {
+		// 新しい段落を作成し、基準文字以降を新しい段落に移動する。基準文字の属していた行以降の同段落の行を新しい段落に移動する。新しい段落を基準文字のあった段落の直後に挿入する。cordinate()で文字の調整を行う
 		// 段落先頭から:一行目の文字が丸々新しい行に移って次の段落の一行目となる。二行目以降は行ごと次の段落へ →　基準文字のあった行は空行となりもともとの段落の唯一の行となるため、あたかも空段落が基準行の前に挿入されたようになる
 		// 行頭から:基準行の文字がまるまる新しい行に移って次の段落の一行目になる。基準行以降の行は行ごと新しい段落に移る。　→　基準行以降が新しい段落に移り、それ以前の行はもともとの段落に残るため、段落が２つに別れる。この時点では、もともとの段落の最後に空行が残っている状態なので、cordinate()で対応する
 		// 行の途中から:基準文字以降の同じ行の文字が新しい行に移って次の段落の一行目になる。それ以降は行ごと次の段落に移る。　→　基準文字以降が新しい段落になる。この時点では一行目の文字数がおかしいので、cordinate()で調整する
@@ -3634,7 +3639,9 @@ export class Paragraph extends AbstractHierarchy {
 	// --文章整理
 
 	/**
-	 * 内部行が指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節する。標準以外のフォントサイズの文字があれば文字数は調整される。また、自身が空段落ではなく内部に空行があれば削除する
+	 * 内部行が指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節します。
+	 *     標準以外のフォントサイズの文字があれば文字数はそのサイズに合わせて調整されます。
+	 *     また、自身が空段落ではなく内部に空行があれば削除します
 	 * @return {Paragraph} 自身のインスタンス
 	 */
 	cordinate() {
@@ -3651,7 +3658,7 @@ export class Paragraph extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 段落内に禁則処理を施す
+	 * 段落内に禁則処理を施します
 	 * @return {Paragraph} 自身のインスタンス
 	 */
 	checkKinsoku() {
@@ -3663,7 +3670,7 @@ export class Paragraph extends AbstractHierarchy {
 	}
 
 	/**
-	 * 内部にあるすべての行の表示非表示を切り替える
+	 * 内部にあるすべての行の表示非表示を切り替えます
 	 * @param {boolean} bDisplay 表示するならtrue、そうでなければfalseを指定する
 	 * @return {Paragraph} 自身のインスタンス
 	 */
@@ -3675,7 +3682,7 @@ export class Paragraph extends AbstractHierarchy {
 	}
 
 	/**
-	 * 空段落のインスタンスを新たに作成する
+	 * 空段落のインスタンスを新たに作成します
 	 * @return {Paragraph} 空段落のインスタンス
 	 */
 	static createEmptyParagraph() {
@@ -3688,9 +3695,11 @@ export class Paragraph extends AbstractHierarchy {
 
 // classは巻き上げが起こらないため、Char・Rowの下に作る必要がある。ただし、SentenceContainer内で利用するのでSentenceContainerよりは上になければならない
 /**
- * 漢字変換ビューを表すクラス。それぞれ一つの文節を担当し、複数の漢字変換候補を持つ。また、内部には変換候補としてRowクラスのインスタンスを持つ
+ * 漢字変換ビューを表すクラス。
+ *     それぞれ一つの文節を担当し、複数の漢字変換候補を持ちます。
+ *     また、内部には変換候補としてRowクラスのインスタンスを持ちます
  */
-export class ConvertView extends AbstractHierarchy {
+class ConvertView extends AbstractHierarchy {
 	// 文節番号は、ConvertViewのindex()と同じ
 	/**
 	 * @param {object} data 変換候補を表すオブジェクト<br>
@@ -3716,7 +3725,7 @@ export class ConvertView extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 自分の属する漢字変換コンテナのインスタンスを新たに設定する、あるいは引数省略で現在属しているの漢字変換コンテナを取得する
+	 * 自分の属する漢字変換コンテナのインスタンスを新たに設定する、あるいは引数省略で現在属しているの漢字変換コンテナを取得します
 	 * @param {ConvertContainer} [opt_newContainer] 新たに設定する漢字変換コンテナのインスタンス
 	 * @return {ConvertView ConvertContainer} 自身のインスタンス(引数を渡した場合)、あるいは所属する漢字変換コンテナ(引数を省略した場合)
 	 */
@@ -3724,7 +3733,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this.parent(opt_newContainer);
 	}
 	/**
-	 * 指定されたインデックスの変換候補を表すインスタンス、あるいは引数省略で変換候補インスタンスの配列を取得する
+	 * 指定されたインデックスの変換候補を表すインスタンス、あるいは引数省略で変換候補インスタンスの配列を取得します
 	 * @param {number} [opt_index] 取得する変換候補のインデックス
 	 * @return {Row Row[]} 指定されたインデックスの変換候補インスタンス(引数を渡した場合)、あるいは変換候補インスタンスの配列(引数を省略した場合) 
 	 */
@@ -3732,7 +3741,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this.children(opt_index);
 	}
 	/**
-	 * 現在選択中の行を取得する
+	 * 現在選択中の行を取得します
 	 * @return {Row} 現在選択中の行のインスタンス。選択行がなければ候補最後のひらがな行のインスタンス
 	 */
 	getSelect() {
@@ -3745,7 +3754,7 @@ export class ConvertView extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * この候補一覧が可視化されているかどうか
+	 * この候補一覧が可視化されているかどうかを返します
 	 * @return {boolean} 可視化されていればtrue、そうでなければfalse
 	 */
 	isActive() {
@@ -3755,7 +3764,7 @@ export class ConvertView extends AbstractHierarchy {
 	// --Status
 
 	/**
-	 * この候補一覧が担当する文節のひらがなを文字列で返す
+	 * この候補一覧が担当する文節のひらがなを文字列で返します
 	 * @return {string} 担当文節のひらがな
 	 */
 	hiragana() {
@@ -3763,14 +3772,14 @@ export class ConvertView extends AbstractHierarchy {
 	}
 
 	/**
-	 * ひらがなでの文字数を返す
+	 * ひらがなでの文字数を返します
 	 * @return {number} ひらがなでの文字数
 	 */
 	kanaLength() {
 		return this.hiragana().length;
 	}
 	/**
-	 * 担当する文節のインデックスを返す
+	 * 担当する文節のインデックスを返します
 	 * @return {number} 担当文節のインデックス(０始まり)
 	 */
 	phraseNum() {
@@ -3780,7 +3789,7 @@ export class ConvertView extends AbstractHierarchy {
 	// --Style
 
 	/**
-	 * この漢字変換候補一覧を可視化する
+	 * この漢字変換候補一覧を可視化します
 	 * @return {ConvertView} 自身のインスタンス
 	 */
 	active() {
@@ -3791,7 +3800,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 変換候補の選択をひとつ左に移動する
+	 * 変換候補の選択をひとつ左に移動します
 	 * @return {ConvertView} 自身のインスタンス
 	 */
 	selectLeft() {
@@ -3800,7 +3809,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 変換候補の選択をひとつ右に移動する
+	 * 変換候補の選択をひとつ右に移動します
 	 * @return {ConvertView} 自身のインスタンス
 	 */
 	selectRight() {
@@ -3812,7 +3821,7 @@ export class ConvertView extends AbstractHierarchy {
 	// --DOM操作
 
 	/**
-	 * 指定されたインデックスの変換候補を選択する
+	 * 指定されたインデックスの変換候補を選択します
 	 * @param {number} index 選択する候補のインデックス
 	 * @return {ConvertView} 自身のインスタンス
 	 */
@@ -3829,7 +3838,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の最後に変換候補を追加する
+	 * 自身の最後に変換候補を追加します
 	 * @param {Row} row 追加する変換候補
 	 * @return {ConvertView} 自身のインスタンス
 	 */
@@ -3848,7 +3857,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の直前に変換候補一覧を挿入する
+	 * 自身の直前に変換候補一覧を挿入します
 	 * @param {ConvertView} view 挿入する変換候補一覧
 	 * @return {ConvertView} 自身のインスタンス
 	 */
@@ -3872,7 +3881,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の直後に変換候補一覧を挿入する
+	 * 自身の直後に変換候補一覧を挿入します
 	 * @param {ConvertView} view 挿入する変換候補一覧
 	 * @return {ConvertView} 自身のインスタンス
 	 */
@@ -3900,7 +3909,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身を削除する
+	 * 自身を削除します
 	 * @return {ConvertView} 自身のインスタンス
 	 */
 	remove() {
@@ -3923,7 +3932,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身をviewと入れ替える
+	 * 自身をviewと入れ替えます
 	 * @param {ConvertView} view 入れ替える変換候補一覧
 	 * @return {ConvertView} 自身のインスタンス
 	 */
@@ -3933,7 +3942,7 @@ export class ConvertView extends AbstractHierarchy {
 		return this.remove();
 	}
 	/**
-	 * 自身が担当する文節をカタカナに変換する
+	 * 自身が担当する文節をカタカナに変換します
 	 * @return {ConvertView} 自身のインスタンス
 	 */
 	toKatakana() {
@@ -3942,7 +3951,7 @@ export class ConvertView extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * 自身が担当する文節のカタカナを文字列で取得する
+	 * 自身が担当する文節のカタカナを文字列で取得します
 	 * @return {string} カタカナに変換した場合の文字列
 	 */
 	getKatakana() {
@@ -3963,7 +3972,7 @@ export class ConvertView extends AbstractHierarchy {
 /**
  * 変換候補一覧を束ねる漢字変換コンテナを表すクラス
  */
-export class ConvertContainer extends AbstractHierarchy {
+class ConvertContainer extends AbstractHierarchy {
 	/**
 	 * @param {InputBuffer} inputBuffer 入力元のインスタンス
 	 */
@@ -3975,14 +3984,14 @@ export class ConvertContainer extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 入力元のインスタンスを取得する
+	 * 入力元のインスタンスを取得します
 	 * @return {InputBuffer} 入力元のインスタンス
 	 */
 	inputBuffer() {
 		return this._inputBuffer;
 	}
 	/**
-	 * 指定された変換候補一覧、あるいは引数省略で変換候補一覧の配列を取得する
+	 * 指定された変換候補一覧、あるいは引数省略で変換候補一覧の配列を取得します
 	 * @param {number} [opt_index] 取得する候補一覧のインデックス
 	 * @return {ConvertView ConvertView[]} 指定された候補一覧(引数を渡した場合)、あるいは候補一覧の配列(引数を省略した場合)
 	 */
@@ -3990,7 +3999,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		return super.children(opt_index);
 	}
 	/**
-	 * 現在アクティブになっている変換候補一覧のインスタンスを取得する
+	 * 現在アクティブになっている変換候補一覧のインスタンスを取得します
 	 * @return {ConvertView} 現在アクティブな変換候補一覧のインスタンス。なければnull
 	 */
 	activeView() {
@@ -4003,7 +4012,7 @@ export class ConvertContainer extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * 漢字変換が行われているところかどうかを返す
+	 * 漢字変換が行われているところかどうかを返します
 	 * @return {boolean} 候補一覧がひとつでも内部にあればtrue、そうでなければfalse
 	 */
 	isActive() {
@@ -4013,7 +4022,7 @@ export class ConvertContainer extends AbstractHierarchy {
 	// --Style
 
 	/**
-	 * 表示位置をカーソル横に移動する
+	 * 表示位置をカーソル横に移動します
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
 	reposition() {
@@ -4024,21 +4033,21 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * カーソル位置のX座標を返す
+	 * カーソル位置のX座標を返します
 	 * @return {number} カーソル位置のX座標
 	 */
 	cursorX() {
 		return this.inputBuffer().cursorX();
 	}
 	/**
-	 * カーソル位置のY座標を返す
+	 * カーソル位置のY座標を返します
 	 * @return {number} カーソル位置のY座標
 	 */
 	cursorY() {
 		return this.inputBuffer().cursorY();
 	}
 	/**
-	 * 自身を表示する
+	 * 自身を表示します
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
 	show() {
@@ -4046,7 +4055,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身を非表示にする
+	 * 自身を非表示にします
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
 	hide() {
@@ -4058,7 +4067,7 @@ export class ConvertContainer extends AbstractHierarchy {
 	// --DOM操作
 
 	/**
-	 * カーソル位置から文字を挿入して、内部の変換候補一覧を破棄する
+	 * カーソル位置から文字を挿入して、内部の変換候補一覧を破棄します
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
 	print() {
@@ -4066,7 +4075,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 内部に変換候補一覧のインスタンス群を構築する
+	 * 内部に変換候補一覧のインスタンス群を構築します
 	 * @param {object} data 文節分け及び変換候補を示すオブジェクト<br>
 	 * <pre>
 	 * <code>
@@ -4084,7 +4093,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 漢字変換を始める(非同期通信)
+	 * 漢字変換を始めます(非同期通信)
 	 * @param {string} str 変換する文字列
 	 * @return {ConvertContainer} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
@@ -4110,7 +4119,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 文節区切りをひとつ前にずらして変換し直す(非同期通信)
+	 * 文節区切りをひとつ前にずらして変換し直します(非同期通信)
 	 * @return {ConvertContainer} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
@@ -4153,7 +4162,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 文節区切りをひとつ下にずらして変換し直す(非同期通信)
+	 * 文節区切りをひとつ下にずらして変換し直します(非同期通信)
 	 * @return {ConvertContainer} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
@@ -4198,7 +4207,8 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 入力元の文字がひらがなにして１文字しかなければ全て破棄して入力を終了する。二文字以上あれば最後の１音のみ削除して選択文節を変換し直す(非同期通信)
+	 * 入力中の文字が二文字以上あれば最後の１音のみ削除して選択文節を変換し直します(非同期通信)。
+	 *     入力中の文字がひらがなにして１文字しかなければ全て破棄して入力を終了します
 	 * @return {ConvertContainer} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
@@ -4236,7 +4246,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * インデックスがnumの文節の変換候補一覧を、新たなdataで入れ替える
+	 * インデックスがnumの文節の変換候補一覧を、新たなdataで入れ替えます
 	 * @param {number} num 入れ替える文節のインデックス
 	 * @param {object} data 変換候補を表すオブジェクト<br>
 	 * 例
@@ -4275,7 +4285,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の最後に変換候補一覧を追加する
+	 * 自身の最後に変換候補一覧を追加します
 	 * @param {ConvertContainer} view 追加する変換候補一覧のインスタンス
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
@@ -4293,7 +4303,7 @@ export class ConvertContainer extends AbstractHierarchy {
 	// --イベント
 
 	/**
-	 * 漢字変換中のkeydownイベントリスナーを付加する。重ねがけは無効
+	 * 漢字変換中のkeydownイベントリスナーを付加します。重ねがけは無効となります
 	 * @return {ConvertContainer} 自身のインスタンス
 	 */
 	addKeydownEventListener() {
@@ -4303,7 +4313,7 @@ export class ConvertContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * keydownイベントの実行内容
+	 * keydownイベントの実行内容です
 	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 */
@@ -4354,7 +4364,7 @@ export class ConvertContainer extends AbstractHierarchy {
 /**
  * 入力文字を表すクラス
  */
-export class InputChar extends Char {
+class InputChar extends Char {
 	/**
 	 * @param {object} data 文字を表すオブジェクト<br>
 	 * 例
@@ -4378,7 +4388,7 @@ export class InputChar extends Char {
 	// --判定
 
 	/**
-	 * 自身の文節番号がnumであるかどうか
+	 * 自身の文節番号がnumであるかどうかを返します
 	 * @param {number} num 判定するインデックス
 	 * @return {boolean} 自身の文節番号がnumであればtrue、そうでなければfalse
 	 */
@@ -4386,7 +4396,7 @@ export class InputChar extends Char {
 		return num === this.phraseNum();
 	}
 	/**
-	 * 自身が選択されているかどうかを表す
+	 * 自身が選択されているかどうかを表します
 	 * @return {boolean} 自身が選択されていればtrue、そうでなければfalse。漢字変換が一度もされていなければfalse
 	 */
 	isSelect() {
@@ -4396,7 +4406,7 @@ export class InputChar extends Char {
 	// --Status
 
 	/**
-	 * この文字の文節番号をopt_newNumに設定する、あるいは引数省略で現在の文節番号を取得する
+	 * この文字の文節番号をopt_newNumに設定する、あるいは引数省略で現在の文節番号を取得します
 	 * @param {number} [opt_newNum] 新たに設定する文節番号(０始まり)
 	 * @return {InputChar number} 自身のインスタンス(引数を渡した場合)、あるいは現在の文節のインデックス(引数を省略した場合)
 	 */
@@ -4413,7 +4423,7 @@ export class InputChar extends Char {
 	// --Style
 
 	/**
-	 * この文字を選択状態にする
+	 * この文字を選択状態にします
 	 * @return {InputChar} 自身のインスタンス
 	 */
 	select() {
@@ -4421,7 +4431,7 @@ export class InputChar extends Char {
 		return this;
 	}
 	/**
-	 * この文字を非選択状態にする
+	 * この文字を非選択状態にします
 	 * @return {InputChar} 自身のインスタンス
 	 */
 	removeSelect() {
@@ -4432,10 +4442,11 @@ export class InputChar extends Char {
 }
 
 /**
- * 入力された文字をいったん保持するバッファーを表すクラス。内部の子にInputCharのインスタンス群を持つ。
+ * 入力された文字をいったん保持するバッファーを表すクラス。
+ *     内部の子にInputCharのインスタンス群を持ちます。
  *     また、一度も漢字変換がされず文節番号がすべて-1の場合と、漢字変換が行われ文節が分けられている場合と２つの状態がある
  */
-export class InputBuffer extends Row {
+class InputBuffer extends Row {
 	/**
 	 * @param {SentenceContainer} container 自身の属する文章コンテナのインスタンス
 	 */
@@ -4448,35 +4459,35 @@ export class InputBuffer extends Row {
 	// --参照取得
 
 	/**
-	 * 自身の属する文章コンテナのインスタンスを取得する
+	 * 自身の属する文章コンテナのインスタンスを取得します
 	 * @return {SentenceContainer} 自身の属する文章コンテナ
 	 */
 	container() {
 		return this._container;
 	}
 	/**
-	 * カーソルのインスタンスを取得する
+	 * カーソルのインスタンスを取得します
 	 * @return {Cursor} カーソルのインスタンス
 	 */
 	cursor() {
 		return this.container().cursor();
 	}
 	/**
-	 * カーソルのある文字のインスタンスを取得する
+	 * カーソルのある文字のインスタンスを取得します
 	 * @return {Char} カーソル文字のインスタンス
 	 */
 	cursorChar() {
 		return this.cursor().getChar();
 	}
 	/**
-	 * 漢字変換コンテナのインスタンスを取得する
+	 * 漢字変換コンテナのインスタンスを取得します
 	 * @return {ConvertContainer} 漢字変換コンテナのインスタンス
 	 */
 	convertContainer() {
 		return this._convertContainer;
 	}
 	/**
-	 * 指定された文節番号の入力文字インスタンスを配列にして返す
+	 * 指定された文節番号の入力文字インスタンスを配列にして返します
 	 * @param {number} num 集める入力文字の文節番号
 	 * @return {InputChar[]} 指定された文節番号の入力文字インスタンスの配列
 	 */
@@ -4488,7 +4499,7 @@ export class InputBuffer extends Row {
 		return ret;
 	}
 	/**
-	 * 選択中の文節の入力文字インスタンスを返す
+	 * 選択中の文節の入力文字インスタンスを返します
 	 * @return {InputChar[]} 選択中の入力文字インスタンスの配列。選択されていなければ空の配列
 	 */
 	selectPhrases() {
@@ -4502,7 +4513,7 @@ export class InputBuffer extends Row {
 	// --判定
 
 	/**
-	 * 自身が可視化されている(文字入力中)かどうかを返す
+	 * 自身が可視化されている(文字入力中)かどうかを返します
 	 * @return {boolean} 自身が可視化されていればtrue、そうでなければfalse
 	 */
 	isDisplay() {
@@ -4512,7 +4523,7 @@ export class InputBuffer extends Row {
 	// --Status
 
 	/**
-	 * 変換候補一覧群を作成した後に、各入力文字に文節番号をふる
+	 * 変換候補一覧群を作成した後に、各入力文字に文節番号をふります
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	setPhraseNum() {
@@ -4527,7 +4538,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 選択されている文節のインデックスを返す
+	 * 選択されている文節のインデックスを返します
 	 * @return {number} 選択文節のインデックス。選択されていなければ-1
 	 */
 	selectIndex() {
@@ -4540,21 +4551,21 @@ export class InputBuffer extends Row {
 	// --Style
 
 	/**
-	 * 自身の幅を取得する。文章内のRowと異なり回転されていないため、css上の幅と一致する
+	 * 自身の幅を取得します。文章内のRowと異なり回転されていないため、css上の幅と一致します
 	 * @return {number} 自身の幅
 	 */
 	width() {
 		return super.super.width();
 	}
 	/**
-	 * 自身の高さを取得する。文章内のRowと異なり回転されていないため、css上の高さと一致する
+	 * 自身の高さを取得します。文章内のRowと異なり回転されていないため、css上の高さと一致します
 	 * @return {number} 自身の高さ
 	 */
 	height() {
 		return super.super.height();
 	}
 	/**
-	 * 自身の高さや幅を内部の各入力文字に合わせて調整する
+	 * 自身の高さや幅を内部の各入力文字に合わせて調整します
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	resize() {
@@ -4564,7 +4575,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 自身の表示位置をカーソルに合わせる
+	 * 自身の表示位置をカーソルに合わせます
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	move() {
@@ -4573,7 +4584,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 自身を表示する
+	 * 自身を表示します
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	show() {
@@ -4581,7 +4592,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 自身を非表示にする
+	 * 自身を非表示にします
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	hide() {
@@ -4590,21 +4601,21 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 選択文節を次の文節に変更する。最後の文節から実行されれば、最初の文節が選択される
+	 * 選択文節を次の文節に変更します。最後の文節から実行されれば、最初の文節が選択されます
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	selectNext() {
 		return this.select(this.selectIndex() + 1);
 	}
 	/**
-	 * 選択文節を前の文節に変更する。最初の文節から実行されれば、最後の文節が選択される
+	 * 選択文節を前の文節に変更します。最初の文節から実行されれば、最後の文節が選択されます
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	selectPrev() {
 		return this.select(this.selectIndex() - 1);
 	}
 	/**
-	 * 文節番号がindexの文字を選択する。引数が負になれば最後の文節を、最大の文節番号を越えれば最初の文節を選択する
+	 * 文節番号がindexの文字を選択します。引数が負になれば最後の文節を、最大の文節番号を越えれば最初の文節を選択します
 	 * @param {number} index 選択する文節のインデックス。負の数なら最後の文節、範囲より大きな数なら最初の文節が選択される
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
@@ -4626,7 +4637,7 @@ export class InputBuffer extends Row {
 	// --DOM操作
 
 	/**
-	 * 自身を空にして、文字入力を終了する
+	 * 自身を空にして、文字入力を終了します
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	empty() {
@@ -4637,7 +4648,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * keycodeを追加した場合の新たな文字列で入力文字を置き換える
+	 * keycodeを追加した場合の新たな文字列で入力文字を置き換えます
 	 * @param {number} keycode 追加するキーのキーコード
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {InputBuffer} 自身のインスタンス
@@ -4654,7 +4665,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * bufferの最後の文字を削除する。内部に文字がなくなれば入力を終了する
+	 * bufferの最後の文字を削除します。内部に文字がなくなれば入力を終了します
 	 * @return {InputChar} 削除した入力文字のインスタンス
 	 */
 	decreace() {
@@ -4668,7 +4679,7 @@ export class InputBuffer extends Row {
 		return ret;
 	}
 	/**
-	 * 内部の入力文字をstrで置き換える
+	 * 内部の入力文字をstrで置き換えます
 	 * @param {string} str 置き換える文字列
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
@@ -4681,7 +4692,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * カーソル位置に文字を挿入し、後処理を行って入力状態を終了する
+	 * カーソル位置に文字を挿入し、後処理を行って入力状態を終了します
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	print() {
@@ -4692,7 +4703,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 入力文字をすべてカタカナに置き換える
+	 * 入力文字をすべてカタカナに置き換えます
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	toKatakanaAll() {
@@ -4700,7 +4711,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 入力文字すべてを漢字変換する(非同期通信)
+	 * 入力文字すべてを漢字変換します(非同期通信)
 	 * @return {InputBuffer} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/KanjiProxy.html
 	 */
@@ -4709,7 +4720,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * インデックスがnumである文節の入力文字をstrで入れ替える
+	 * インデックスがnumである文節の入力文字をstrで入れ替えます
 	 * @param {number} num 入れ替える文節のインデックス
 	 * @param {string} str 入れ替える文字列
 	 * @return {InputBuffer} 自身のインスタンス
@@ -4731,7 +4742,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * インデックスがnumである文節の後ろにstrを追加する。追加した文字の文節番号は負の値になる
+	 * インデックスがnumである文節の後ろにstrを追加します。追加した文字の文節番号は負の値になります
 	 * @param {number} num 挿入位置の指定
 	 * @param {string} str 挿入する文字列
 	 * @return {InputBuffer} 自身のインスタンス
@@ -4751,7 +4762,8 @@ export class InputBuffer extends Row {
 
 	/**
 	 * @private
-	 * 現在の文字列にkeycodeを加えて作られる文字列を取得する
+	 * 現在の文字列にkeycodeを加えて作られる文字列を取得します。
+	 *     未定義のkeycodeの場合はundefinedが文字列内に含まれますので注意してください
 	 * @param {number} keycode 追加するキーのキーコード
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {string} keycodeを追加して作られた文字列
@@ -4766,7 +4778,8 @@ export class InputBuffer extends Row {
 	}
 	/**
 	 * @private
-	 * 現在の入力文字をカタカナに変換した場合の文字列。変換できない文字があれば変換せずに元の文字をそのまま連結する
+	 * 現在の入力文字をカタカナに変換した場合の文字列を返します。
+	 *     変換できない文字があれば変換せずに元の文字をそのまま連結します
 	 * @return {string} カタカナに置き換えた文字列
 	 */
 	getKatakana() {
@@ -4785,7 +4798,7 @@ export class InputBuffer extends Row {
 	}
 	/**
 	 * @private
-	 * 内部の入力文字を元に、適切な幅を計算する
+	 * 内部の入力文字を元に、適切な幅を計算します
 	 * @return {number} 計算された幅のピクセル数
 	 */
 	newWidth() {
@@ -4804,7 +4817,7 @@ export class InputBuffer extends Row {
 	}
 	/**
 	 * @private
-	 * 内部の入力文字を元に、適切な高さを計算する
+	 * 内部の入力文字を元に、適切な高さを計算します
 	 * @return {number} 計算された高さのピクセル数
 	 */
 	newHeight() {
@@ -4822,14 +4835,14 @@ export class InputBuffer extends Row {
 		return height + 5; // 5px余裕をもたせる
 	}
 	/**
-	 * カーソル位置のX座標を返す
+	 * カーソル位置のX座標を返します
 	 * @return {number} カーソル位置のX座標
 	 */
 	cursorX() {
 		return this.cursorChar().x();
 	}
 	/**
-	 * カーソル位置のY座標を返す
+	 * カーソル位置のY座標を返します
 	 * @return {number} カーソル位置のY座標
 	 */
 	cursorY() {
@@ -4839,12 +4852,12 @@ export class InputBuffer extends Row {
 	// --イベント
 
 	/**
-	 * keyeventがSentenceContainerから移動するかどうかを判定して前処理を行う(キーコードをincreace()して入力文字ができれば入力モードに移行する)
+	 * keyeventがSentenceContainerから移動するかどうかを判定して前処理を行います(キーコードをincreace()して入力文字ができれば入力モードに移行します)
 	 * @param {number} keycode 押下されたキーのキーコード
 	 * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
-	transfer(keycode,bShift) {
+	tryTransfer(keycode,bShift) {
 		this.increace(keycode,bShift);
 		if (this.hasChar()) {
 			this.addKeydownEventListener();
@@ -4853,7 +4866,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 入力時のkeydownイベントリスナーを付加する
+	 * 入力時のkeydownイベントリスナーを付加します
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	addKeydownEventListener() {
@@ -4863,7 +4876,7 @@ export class InputBuffer extends Row {
 		return this;
 	}
 	/**
-	 * 入力時のkeydownイベントの実行内容
+	 * 入力時のkeydownイベントの実行内容です
 	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 */
@@ -4895,7 +4908,7 @@ export class InputBuffer extends Row {
 /**
  * ユーザーのファイル情報のひとつを扱うクラス
  */
-export class File extends AbstractHierarchy {
+class File extends AbstractHierarchy {
 	/**
 	 * @param {number} id ファイルのID
 	 * @param {string} filename ファイル名
@@ -4913,7 +4926,7 @@ export class File extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 自身の属するファイルリストの参照を探して取得する
+	 * 自身の属するファイルリストの参照を探して取得します
 	 * @return {FileList} 自身の属するファイルリストのインスタンス。見つからなければnull
 	 */
 	fileList() {
@@ -4924,15 +4937,15 @@ export class File extends AbstractHierarchy {
 	}
 
 	/**
-	 * 内部のaタグのDOM要素を取得する
+	 * 内部のaタグのDOM要素を取得します
 	 * @return {Element} 自身の持つaタグのDOM要素
 	 */
 	link() {
 		return this._link;
 	}
 	/**
-	 * 自身の次に位置するファイルのインスタンスを新たに設定、または引数省略で取得する。
-	 *     通常のnext()はディレクトリも含め同階層のみをつなぐ。nextFile()はファイルのみを、それもディレクトリ横断的に、さらに階層もまたいでつなぐ
+	 * 自身の次に位置するファイルのインスタンスを新たに設定、または引数省略で取得します。
+	 *     通常のnext()はディレクトリも含め同階層のみをつなぎますが、nextFile()はファイルのみを、それもディレクトリ横断的に、さらに階層もまたいでつなぎます
 	 * @param {File} [opt_file] 新たに設定するファイルのインスタンス
 	 * @return {File} 自身のインスタンス(引数を渡した場合)、あるいは自身の次のファイルのインスタンス(引数を省略した場合)
 	 */
@@ -4945,8 +4958,8 @@ export class File extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 自身の前に位置するファイルのインスタンスを新たに設定、または引数省略で取得する。
-	 *     通常のやprev()はディレクトリも含め同階層のみをつなぐ。prevFile()はファイルのみを、それもディレクトリ横断的に、さらに階層もまたいでつなぐ
+	 * 自身の前に位置するファイルのインスタンスを新たに設定、または引数省略で取得します。
+	 *     通常のやprev()はディレクトリも含め同階層のみをつなぎますが、prevFile()はファイルのみを、それもディレクトリ横断的に、さらに階層もまたいでつなぎます
 	 * @param {File} [opt_file] 新たに設定するファイルのインスタンス
 	 * @return {File} 自身のインスタンス(引数を渡した場合)、あるいは自身の前のファイルのインスタンス(引数を省略した場合)
 	 */
@@ -4962,49 +4975,49 @@ export class File extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * 自身がFileListのインスタンスであるかどうかを返す
+	 * 自身がFileListのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にfalse
 	 */
 	isRoot() {
 		return false;
 	}
 	/**
-	 * 自身がディレクトリのインスタンスであるかどうかを返す
+	 * 自身がディレクトリのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にfalse
 	 */
 	isDirectory() {
 		return false;
 	}
 	/**
-	 * 自身がファイルのインスタンスであるかどうかを返す
+	 * 自身がファイルのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にtrue
 	 */
 	isFile() {
 		return true;
 	}
 	/**
-	 * 自身が最初のファイルであるかどうかを返す(ディレクトリ単位ではなく、ファイルリスト全体の中で最初のファイルであるかどうか)
+	 * 自身が最初のファイルであるかどうかを返します(ディレクトリ単位ではなく、ファイルリスト全体の中で最初のファイルであるかどうか)
 	 * @return {boolean} 自身がファイルリストの中で最初のファイルならtrue、そうでなければfalse
 	 */
 	isFirstFile() {
 		return this.prevFile() === null;
 	}
 	/**
-	 * 自身が最後のファイルであるかどうかを返す(ディレクトリ単位ではなく、ファイルリスト全体の中で最後のファイルであるかどうか)
+	 * 自身が最後のファイルであるかどうかを返します(ディレクトリ単位ではなく、ファイルリスト全体の中で最後のファイルであるかどうか)
 	 * @return {boolean} 自身がファイルリストの中で最後のファイルならtrue、そうでなければfalse
 	 */
 	isLastFile() {
 		return this.nextFile() === null;
 	}
 	/**
-	 * 自身が表すファイルが文章コンテナに読み込まれているかどうかを返す
+	 * 自身が表すファイルが文章コンテナに読み込まれているかどうかを返します
 	 * @return {boolean} 自身が現在読み込まれていればtrue、そうでなければfalse
 	 */
 	isOpen() {
 		return this.fileList().sentenceContainer().fileId() === this.id();
 	}
 	/**
-	 * 自身が表すファイルが文章コンテナに読み込まれていないかどうかを返す
+	 * 自身が表すファイルが文章コンテナに読み込まれていないかどうかを返します
 	 * @return {boolean} 自身が現在読み込まれていなければtrue、そうでなければfalse
 	 */
 	isClose() {
@@ -5013,14 +5026,14 @@ export class File extends AbstractHierarchy {
 
 	// --Status
 	/**
-	 * 自身のファイルIDを返す
+	 * 自身のファイルIDを返します
 	 * @return {number} 自身のファイルID
 	 */
 	id() {
 		return this._id;
 	}
 	/**
-	 * 自身のファイル名を返す
+	 * 自身のファイル名を返します
 	 * @return {string} 自身のファイル名
 	 */
 	name() {
@@ -5030,7 +5043,7 @@ export class File extends AbstractHierarchy {
 	// --DOM操作
 
 	/**
-	 * 文章コンテナに自身のファイルを非同期で読み込む
+	 * 文章コンテナに自身のファイルを非同期で読み込みます
 	 * @return {File} 自身のインスタンス
 	 */
 	open() {
@@ -5046,7 +5059,7 @@ export class File extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の要素及び自身への参照を削除し、自身が表すファイルを削除する(非同期通信)
+	 * 自身の要素及び自身への参照を削除し、自身が表すファイルを削除します(非同期通信)
 	 * @return {File} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/DeleteFile.html
 	 */
@@ -5077,7 +5090,7 @@ export class File extends AbstractHierarchy {
 			return this;
 	}
 	/**
-	 * 自身をnewParentDirの中に移動し、ファイルリストを作り直す(非同期通信)
+	 * 自身をnewParentDirの中に移動し、ファイルリストを作り直します(非同期通信)
 	 * @param {Directory} newParentDir 自身の親となるディレクトリのインスタンス
 	 * @return {File} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/MoveFile.html
@@ -5098,7 +5111,7 @@ export class File extends AbstractHierarchy {
 
 	// liタグの要素ではなくaタグ要素にクリックイベントを設定するためオーバーライド
 	/**
-	 * 自身のリンクにクリックイベントを付加する
+	 * 自身のリンクにクリックイベントを付加します
 	 * @return {File} 自身のインスタンス
 	 */
 	addClickEventListener() {
@@ -5107,7 +5120,7 @@ export class File extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身のリンクへのクリックイベントを除去する
+	 * 自身のリンクへのクリックイベントを除去します
 	 * @return {File} 自身のインスタンス
 	 */
 	removeClickEventListener() {
@@ -5117,7 +5130,7 @@ export class File extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身のリンクへのクリックイベントの内容(クリックするとファイルが読み込まれる)
+	 * 自身のリンクへのクリックイベントの内容です(クリックするとファイルが読み込まれる)
 	 * @param {Event} e イベントオブジェクト
 	 */
 	runClick(e) {
@@ -5128,7 +5141,7 @@ export class File extends AbstractHierarchy {
 /**
  * ユーザーのディレクトリ情報のひとつを扱うクラス
  */
-export class Directory extends AbstractHierarchy {
+class Directory extends AbstractHierarchy {
 	/**
 	 * @param {number} dirId ディレクトリID
 	 * @param {object} data ディレクトリの情報を持つオブジェクト
@@ -5185,21 +5198,21 @@ export class Directory extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 内部のaタグのDOM要素を取得する
+	 * 内部のaタグのDOM要素を取得します
 	 * @return {Element} 自身の持つaタグのDOM要素
 	 */
 	link() {
 		return this._link;
 	}
 	/**
-	 * 自身の内部の要素の構築先であるDOM要素(コラプスの内容の格納先)を返す
+	 * 自身の内部の要素の構築先であるDOM要素(コラプスの内容の格納先)を返します
 	 * @return {Element} 自身の内部リストのDOM要素
 	 */
 	innerList() {
 		return this._innerList;
 	}
 	/**
-	 * 自身の属するファイルリストの参照を探して取得する
+	 * 自身の属するファイルリストの参照を探して取得します
 	 * @return {FileList} 自身の属するファイルリストのインスタンス。見つからなければnull
 	 */
 	fileList() {
@@ -5212,21 +5225,21 @@ export class Directory extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * 自身がFileListのインスタンスであるかどうかを返す
+	 * 自身がFileListのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にfalse
 	 */
 	isRoot() {
 		return false;
 	}
 	/**
-	 * 自身がDirectoryのインスタンスであるかどうかを返す
+	 * 自身がDirectoryのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にtrue
 	 */
 	isDirectory() {
 		return true;
 	}
 	/**
-	 * 自身がFileのインスタンスであるかどうかを返す
+	 * 自身がFileのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にfalse
 	 */
 	isFile() {
@@ -5238,14 +5251,14 @@ export class Directory extends AbstractHierarchy {
 	// --Status
 
 	/**
-	 * 自身のIDを返す
+	 * 自身のIDを返します
 	 * @return {number} 自身のID
 	 */
 	id() {
 		return this._id;
 	}
 	/**
-	 * 自身のディレクトリ名を返す
+	 * 自身のディレクトリ名を返します
 	 * @return {string} 自身のディレクトリ名
 	 */
 	name() {
@@ -5255,7 +5268,7 @@ export class Directory extends AbstractHierarchy {
 	// --DOM操作
 
 	/**
-	 * 自身の内部の最後にfileを追加する
+	 * 自身の内部の最後にfileを追加します
 	 * @param {File Directory} file 追加するファイル、あるいはディレクトリのインスタンス
 	 * @return {Directory} 自身のインスタンス
 	 */
@@ -5275,7 +5288,7 @@ export class Directory extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身の内部リストの内部の最後にfileのDOM要素を追加する
+	 * 自身の内部リストの内部の最後にfileのDOM要素を追加します
 	 * @param {File Directory} file 追加するファイル、あるいはディレクトリのインスタンス
 	 * @return {Directory} 自身のインスタンス
 	 */
@@ -5284,7 +5297,7 @@ export class Directory extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身を削除する(非同期通信)
+	 * 自身を削除します(非同期通信)
 	 * @param {boolean} [opt_bl=false] 自身の内部にファイルがあるとき、強制的に中のファイルごと削除するならtrue、そうでなければfalseを指定する
 	 * @return {Directory} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/DeleteDirectory.html
@@ -5306,7 +5319,7 @@ export class Directory extends AbstractHierarchy {
 /**
  * ファイルやディレクトリを一覧にするファイルリストを表すクラス
  */
-export class FileList extends AbstractHierarchy {
+class FileList extends AbstractHierarchy {
 	/**
 	 * @param {SentenceContainer} sentenceContainer 自身のファイルを展開する文章コンテナのインスタンス
 	 * @param {object} [opt_data] ファイルやディレクトリの情報を扱うオブジェクト。省略した場合は、init()にdataを渡して参照やDOMの構築を行う
@@ -5343,7 +5356,7 @@ export class FileList extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 参照やDOMの構築を行う
+	 * 参照やDOMの構築を行います
 	 * @param {object} data ファイルやディレクトリの情報を扱うオブジェクト。詳細はconstructorの説明へ
 	 * @return {FileList} 自身のインスタンス
 	 */
@@ -5363,21 +5376,21 @@ export class FileList extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 文章コンテナのインスタンスを返す
+	 * 文章コンテナのインスタンスを返します
 	 * @return {SentenceContainer} 自身のファイルを展開する文章コンテナのインスタンス
 	 */
 	sentenceContainer() {
 		return this._sentenceContainer;
 	}
 	/**
-	 * 自身の子のうち、最初のファイルのインスタンスを取得する
+	 * 自身の子のうち、最初のファイルのインスタンスを取得します
 	 * @return {File} 最初のファイルのインスタンス
 	 */
 	firstFile() {
 		return this.findNextFile(this);
 	}
 	/**
-	 * 自身の子のうち、最後のファイルのインスタンスを取得する
+	 * 自身の子のうち、最後のファイルのインスタンスを取得します
 	 * @return {File} 最後のファイルのインスタンス
 	 */
 	lastFile() {
@@ -5387,7 +5400,7 @@ export class FileList extends AbstractHierarchy {
 		return null;
 	}
 	/**
-	 * 現在文章コンテナに展開されているファイルのインスタンスを返す
+	 * 現在文章コンテナに展開されているファイルのインスタンスを返します
 	 * @return {File} 現在開かれているファイルのインスタンス
 	 */
 	currentFile() {
@@ -5397,21 +5410,22 @@ export class FileList extends AbstractHierarchy {
 		return null;
 	}
 	/**
-	 * ファイルリストのモーダルのjQueryオブジェクトを返す
+	 * ファイルリストのモーダルのjQueryオブジェクトを返します
 	 * @return {jQuery} ファイルリストモーダルのjQueryオブジェクト
 	 */
 	$modal() {
 		return this._$modal;
 	}
 	/**
-	 * ファイルリストモーダル下部にある検索ボックスのDOM要素を返す
+	 * ファイルリストモーダル下部にある検索ボックスのDOM要素を返します
 	 * @return {Element} 検索用InputのDOM要素
 	 */
 	filterInputElem() {
 		return this._filterInputElem;
 	}
 	/**
-	 * 指定されたファイルのインスタンスを探索して返す。同じ名前を持つファイルが複数見つかる場合もあるので、結果は配列にして返す
+	 * 指定されたファイルのインスタンスを探索して返します。
+	 *     同じ名前を持つファイルが複数見つかる場合もあるので、結果は配列にして返します
 	 * @param {number string} idOrName 対象ファイルのID、もしくはファイル名
 	 * @return {File[]} 見つかったファイルインスタンスの配列
 	 */
@@ -5425,7 +5439,8 @@ export class FileList extends AbstractHierarchy {
 		return ret;
 	}
 	/**
-	 * 指定されたディレクトリのインスタンスを探索して返す。同じ名前を持つディレクトリが複数見つかる場合もあるので、結果は配列にして返す
+	 * 指定されたディレクトリのインスタンスを探索して返します。
+	 *     同じ名前を持つディレクトリが複数見つかる場合もあるので、結果は配列にして返します
 	 * @param {number string} idOrName 対象ディレクトリのID、もしくはディレクトリ名
 	 * @return {Directory[]} 見つかったディレクトリインスタンスの配列
 	 */
@@ -5442,35 +5457,35 @@ export class FileList extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * 自身がFileListのインスタンスであるかどうかを返す
+	 * 自身がFileListのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にtrue
 	 */
 	isRoot() {
 		return true;
 	}
 	/**
-	 * 自身がDirectoryのインスタンスであるかどうかを返す
+	 * 自身がDirectoryのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にfalse
 	 */
 	isFile() {
 		return false;
 	}
 	/**
-	 * 自身がFileのインスタンスであるかどうかを返す
+	 * 自身がFileのインスタンスであるかどうかを返します
 	 * @return {boolean} 常にfalse
 	 */
 	isDirectory() {
 		return false;
 	}
 	/**
-	 * ファイルリストのモーダルが開いているかどうかを返す
+	 * ファイルリストのモーダルが開いているかどうかを返します
 	 * @return {boolean} ファイルリストのモーダルが開いていればtrue、そうでなければfalse
 	 */
 	isOpen() {
 		return this.$modal().hasClass('in');
 	}
 	/**
-	 * 自身の内部にファイルがあるかどうかを返す
+	 * 自身の内部にファイルがあるかどうかを返します
 	 * @return {boolean} ファイルがあればtrue、そうでなければfalse
 	 */
 	hasFile() {
@@ -5480,7 +5495,7 @@ export class FileList extends AbstractHierarchy {
 	// --参照操作
 
 	/**
-	 * 内部のFile同士をポインタでつなぐ
+	 * 内部のFile同士をポインタでつなぎます
 	 * @return {FileList} 自身のインスタンス
 	 */
 	chainFile() {
@@ -5494,7 +5509,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * リストで上からファイルだけを数えた場合の、引数の次のファイルを返す
+	 * リストで上からファイルだけを数えた場合の、引数の次のファイルを返します
 	 * @param {FileList File Directory} file 基準とするインスタンス
 	 * @return {File} 見つかったファイルのインスタンス。引数の次のファイルが見つからなければnull
 	 */
@@ -5518,9 +5533,8 @@ export class FileList extends AbstractHierarchy {
 			check = file.firstChild() || file.next();
 		}
 		if (!check) {
-			for (let parentDir = file.parent(); !(check = parentDir.next()); parentDir = parentDir.parent()) {
+			for (let parentDir = file.parent(); !(check = parentDir.next()); parentDir = parentDir.parent())
 				if (parentDir.isRoot()) return null;
-			}
 		}
 		if (check.isDirectory()) {
 			return this.findNextFile(check);
@@ -5531,7 +5545,7 @@ export class FileList extends AbstractHierarchy {
 		return null;
 	}
 	/**
-	 * すべてのファイルとディレクトリを順に引数にして関数を実行する
+	 * すべてのファイルとディレクトリを順に引数にして関数を実行します
 	 * @param {function} func 実行する関数オブジェクト
 	 * @return {FileList} 自身のインスタンス
 	 */
@@ -5541,9 +5555,8 @@ export class FileList extends AbstractHierarchy {
 		// その過程でルートディレクトリが見つかれば探索終了
 		for (let file = this.firstChild(),temp = this;; temp = file, file = file.hasChild() ? file.firstChild() : file.next()) {
 			if (!file) {
-				for (let parentDir = temp.parent(); !(file = parentDir.next()); parentDir = parentDir.parent()) {
+				for (let parentDir = temp.parent(); !(file = parentDir.next()); parentDir = parentDir.parent())
 					if (parentDir.isRoot()) return this;
-				}
 			}
 			func(file);
 		}
@@ -5553,7 +5566,7 @@ export class FileList extends AbstractHierarchy {
 	// --Style
 
 	/**
-	 * ファイルリストのモーダルを開く。その際、ファイル検索ボックスに自動的にフォーカスを当てる
+	 * ファイルリストのモーダルを開きます。その際、ファイル検索ボックスに自動的にフォーカスを当てます
 	 * @return {FileList} 自身のインスタンス
 	 */
 	showModal() {
@@ -5564,7 +5577,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * ファイルリストのモーダルを閉じる
+	 * ファイルリストのモーダルを閉じます
 	 * @return {FileList} 自身のインスタンス
 	 */
 	hideModal() {
@@ -5575,7 +5588,7 @@ export class FileList extends AbstractHierarchy {
 	// --DOM操作
 
 	/**
-	 * ファイルリストの末端にファイル、またはディレクトリを追加する
+	 * ファイルリストの末端にファイル、またはディレクトリを追加します
 	 * @param {File Directory} file 追加するファイル、またはディレクトリ
 	 * @return {FileList} 自身のインスタンス
 	 */
@@ -5595,7 +5608,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 自身のDOM要素の内部の最後にfileのDOM要素を追加する
+	 * 自身のDOM要素の内部の最後にfileのDOM要素を追加します
 	 * @param {File Directory} file 追加するファイル、またはディレクトリのインスタンス
 	 * @return {FileList} 自身のインスタンス
 	 */
@@ -5604,7 +5617,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 内部のエレメントを空にする
+	 * 内部のエレメントを空にします
 	 * @return {FileList} 自身のインスタンス
 	 */
 	emptyElem() {
@@ -5618,7 +5631,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 各インスタンスの参照はそのままで、DOM要素のみを構築し直す
+	 * 各インスタンスの参照はそのままで、DOM要素のみを構築し直します
 	 * @return {FileList} 自身のインスタンス
 	 */
 	resetList() {
@@ -5629,7 +5642,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * ファイルリストの内容をstrから始まる名前を持つファイル・ディレクトリのみに置き換える(各インスタンスの参照はそのままで、DOM要素のみを変更する)
+	 * ファイルリストの内容をstrから始まる名前を持つファイル・ディレクトリのみに置き換えます(各インスタンスの参照はそのままで、DOM要素のみを変更します)
 	 * @param {string} str この文字列から始まる名前を持つファイル、ディレクトリだけがファイルリスト内に表示される
 	 * @return {FileList} 自身のインスタンス
 	 */
@@ -5650,7 +5663,7 @@ export class FileList extends AbstractHierarchy {
 	}
 
 	/**
-	 * ファイルリストをサーバーから読み込み、各インスタンスを構築し直す(非同期通信)
+	 * ファイルリストをサーバーから読み込み、各インスタンスを構築し直します(非同期通信)
 	 * @return {FileList} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/FileListMaker.html
 	 */
@@ -5664,7 +5677,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 現在開いているファイルの次のファイルを読み込み、文章コンテナに展開する
+	 * 現在開いているファイルの次のファイルを読み込み、文章コンテナに展開します
 	 * @return {FileList} 自身のインスタンス
 	 */
 	openNextFile() {
@@ -5678,7 +5691,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 現在開いているファイルの前のファイルを読み込み、文章コンテナに展開する
+	 * 現在開いているファイルの前のファイルを読み込み、文章コンテナに展開します
 	 * @return {FileList} 自身のインスタンス
 	 */
 	openPrevFile() {
@@ -5692,7 +5705,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 名前で指定されたファイルを削除する(非同期通信)。同名のファイルが複数見つかった場合は確認する
+	 * 名前で指定されたファイルを削除します(非同期通信)。同名のファイルが複数見つかった場合は確認します
 	 * @param {string} filename 削除するファイルの名前
 	 * @return {FileList} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/DeleteFile.html
@@ -5704,23 +5717,24 @@ export class FileList extends AbstractHierarchy {
 			this.sentenceContainer().userAlert('存在しないファイルです','red');
 			return this;
 		}
+
 		if (fileLength === 1) {
 			files[0].delete();
 			return this;
 		}
+
 		if (fileLength > 0) {
-			if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
+			if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。'))
 				for (let i = 0,file; file = files[i]; i++) {
 					file.delete();
 				}
-			} else {
+			else 
 				console.log('[複数ファイル]削除できませんでした。:' + filename);
-			}
 		}
 		return this;
 	}
 	/**
-	 * 指定された名前でディレクトリを作成する(非同期通信)
+	 * 指定された名前でディレクトリを作成します(非同期通信)
 	 * @param {string} dirname 新しく作成されるディレクトリの名前
 	 * @return {FileList} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/DirectoryMaker.html
@@ -5738,7 +5752,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 指定された名前のディレクトリを削除する(非同期通信)
+	 * 指定された名前のディレクトリを削除します(非同期通信)
 	 * @param {string} dirname 削除するディレクトリの名前
 	 * @param {boolean} isForce ディレクトリ内にファイル等があっても強制的に中身ごと削除するならtrue、そうでなければfalse
 	 * @return {FileList} 自身のインスタンス
@@ -5751,7 +5765,7 @@ export class FileList extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 指定されたファイルを指定されたディレクトリ内に移動する(非同期通信)
+	 * 指定されたファイルを指定されたディレクトリ内に移動します(非同期通信)
 	 * @param {string} filename 移動するファイル名。同名のファイルが見つかった場合は、最初に見つかったファイルが選択される
 	 * @param {string} dirname 移動先のディレクトリ名。同名のディレクトリが見つかった場合は、最初に見つかったディレクトリが選択される
 	 * @return {FileList} 自身のインスタンス
@@ -5768,7 +5782,7 @@ export class FileList extends AbstractHierarchy {
 	// --イベント
 
 	/**
-	 * ファイルリストのモーダル内にあるファイル検索ボックス関係のイベントを付加する
+	 * ファイルリストのモーダル内にあるファイル検索ボックス関係のイベントを付加します
 	 */
 	addEventListenerOnInput() {
 		// モーダルが開くと、検索欄にフォーカスが移動する
@@ -5779,7 +5793,7 @@ export class FileList extends AbstractHierarchy {
 		this.filterInputElem().addEventListener('keyup',this.onKeyupOnInput.bind(this));
 	}
 	/**
-	 * ファイル検索ボックスのkeyupイベントの内容
+	 * ファイル検索ボックスのkeyupイベントの内容です
 	 * @param {Event} e イベントオブジェクト
 	 */
 	onKeyupOnInput(e) {
@@ -5811,7 +5825,7 @@ export class FileList extends AbstractHierarchy {
 /**
  * 文章コンテナを表すクラス
  */
-export class SentenceContainer extends AbstractHierarchy {
+class SentenceContainer extends AbstractHierarchy {
 	/**
 	 * @param {number} userId ユーザーID
 	 * @param {object} [opt_data] 文書情報のオブジェクト
@@ -5879,7 +5893,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		if (!opt_data) this.newFile();
 	}
 	/**
-	 * 文書をコンテナに展開する
+	 * 文書をコンテナに展開します
 	 * @param {object} data 文書情報のオブジェクト
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -5909,7 +5923,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --参照取得
 
 	/**
-	 * 指定された段落のインスタンス、あるいは引数省略で子の段落のインスタンスの配列を取得する
+	 * 指定された段落のインスタンス、あるいは引数省略で子の段落のインスタンスの配列を取得します
 	 * @param {number} [opt_index] 取得する段落のインデックス
 	 * @return {Paragraph Paragraph[]} 指定された段落のインスタンス。あるいは引数省略で段落のインスタンスの配列(子がなければ空の配列)
 	 */
@@ -5917,21 +5931,22 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this.children(opt_index);
 	}
 	/**
-	 * 文章内の最初の行のインスタンスを返す
+	 * 文章内の最初の行のインスタンスを返します
 	 * @return {Row} 最初の行のインスタンス
 	 */
 	firstRow() {
 		return this.firstChild().firstChild();
 	}
 	/**
-	 * 文章内の最終行のインスタンスを返す
+	 * 文章内の最終行のインスタンスを返します
 	 * @return {Row} 最終行のインスタンス
 	 */
 	lastRow() {
 		return this.lastChild().lastChild();
 	}
 	/**
-	 * num行目のRowを取得する。numが負の数なら最初の行、numが行数以上の数値であれば最終行のインスタンスが取得される
+	 * num行目のRowを取得します。
+	 *     numが負の数なら最初の行、numが行数以上の数値であれば最終行のインスタンスが取得されます
 	 * @param {number} num 取得する行のインデックス
 	 * @return {Row} 見つかった行のインスタンス
 	 */
@@ -5945,7 +5960,8 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this.lastRow();
 	}
 	/**
-	 * numページ目の第一行目のRowを取得する。numが負の数なら最初の行、numがページ数以上の数値であれば最終行のインスタンスが取得される
+	 * numページ目の第一行目のRowを取得します。
+	 *     numが負の数なら最初の行、numがページ数以上の数値であれば最終行のインスタンスが取得されます
 	 * @param {number} num 何ページ目か
 	 * @return {Row} 見つかった行のインスタンス
 	 */
@@ -5961,91 +5977,91 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this.lastRow();
 	}
 	/**
-	 * 文書内で最初の文字(あるいはEOL)のインスタンスを返す
+	 * 文書内で最初の文字(あるいはEOL)のインスタンスを返します
 	 * @return {Char EOL} 見つかった文字のインスタンス
 	 */
 	firstChar() {
 		return this.firstRow().firstChild();
 	}
 	/**
-	 * 文書内で最終文字(EOLは除く)のインスタンスを返す
+	 * 文書内で最終文字(EOLは除く)のインスタンスを返します
 	 * @return {Char} 見つかった文字のインスタンス
 	 */
 	lastChar() {
 		return this.lastEOL().prevChar();
 	}
 	/**
-	 * 文書内で最終行のEOLを返す
+	 * 文書内で最終行のEOLを返します
 	 * @return {EOL} 最後のEOL
 	 */
 	lastEOL() {
 		return this.lastRow().lastChild();
 	}
 	/**
-	 * カーソルのインスタンスを返す
+	 * カーソルのインスタンスを返します
 	 * @return {Cursor} 文書内のカーソルのインスタンス
 	 */
 	cursor() {
 		return this._cursor;
 	}
 	/**
-	 * この文書内でカーソルのあたっている文字のインスタンスを返す
+	 * この文書内でカーソルのあたっている文字のインスタンスを返します
 	 * @return {Char} カーソル文字のインスタンス
 	 */
 	cursorChar() {
 		return this.cursor().getChar();
 	}
 	/**
-	 * この文書内でカーソルのある行のインスタンスを返す
+	 * この文書内でカーソルのある行のインスタンスを返します
 	 * @return {Row} カーソル行のインスタンス
 	 */
 	cursorRow() {
 		return this.cursorChar().row();
 	}
 	/**
-	 * この文書に入力する際に使用する入力バッファーのインスタンスを返す
+	 * この文書に入力する際に使用する入力バッファーのインスタンスを返します
 	 * @return {InputBuffer} 入力バッファーのインスタンス
 	 */
 	inputBuffer() {
 		return this._inputBuffer;
 	}
 	/**
-	 * この文書コンテナを使用するファイルリストのインスタンスを返す
+	 * この文書コンテナを使用するファイルリストのインスタンスを返します
 	 * @return {FileList} ファイルリストのインスタンス
 	 */
 	fileList() {
 		return this._fileList;
 	}
 	/**
-	 * コマンドラインのインスタンスを返す
+	 * コマンドラインのインスタンスを返します
 	 * @return {CommandLine} コマンドラインのインスタンス
 	 */
 	command() {
 		return this._command;
 	}
 	/**
-	 * ファイル名InputフォームのDOM要素を返す
+	 * ファイル名InputフォームのDOM要素を返します
 	 * @return {Element} ファイル名inputフォームのDOM要素
 	 */
 	titleElem() {
 		return this._titleElem;
 	}
 	/**
-	 * 文書内語句検索で使用するinputフォームのDOM要素を返す
+	 * 文書内語句検索で使用するinputフォームのDOM要素を返します
 	 * @return {Element} 語句検索inputフォームのDOM要素
 	 */
 	searchInputElem() {
 		return this._searchInputElem;
 	}
 	/**
-	 * ユーザーへの情報を表示するinputフォームのDOM要素を返す
+	 * ユーザーへの情報を表示するinputフォームのDOM要素を返します
 	 * @return {Element} 情報表示inputフォームのDOM要素
 	 */
 	userAlertElem() {
 		return this._userAlertElem;
 	}
 	/**
-	 * この文書を操作するMenuクラスのインスタンスを返す
+	 * この文書を操作するMenuクラスのインスタンスを返します
 	 * @return {Menu} メニューバーのインスタンス
 	 */
 	menu() {
@@ -6055,7 +6071,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --判定
 
 	/**
-	 * この文書内に段落が存在するかどうかを返す
+	 * この文書内に段落が存在するかどうかを返します
 	 * @return {boolean} 段落が存在するならtrue、そうでなければfalse
 	 */
 	hasParagraph() {
@@ -6065,7 +6081,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --参照操作
 
 	/**
-	 * 子の最後にparagraphを追加する
+	 * 子の最後にparagraphを追加します
 	 * @param {Paragraph} paragraph 追加する段落のインスタンス
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -6073,7 +6089,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this.pushChild(paragraph);
 	}
 	/**
-	 * 子の指定された位置にparagraphを挿入する
+	 * 子の指定された位置にparagraphを挿入します
 	 * @param {number} pos 挿入する位置のインデックス
 	 * @param {Paragraph} paragraph 挿入するインスタンス
 	 * @return {SentenceContainer} 自身のインスタンス
@@ -6082,7 +6098,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this.insertChild(pos,paragraph);
 	}
 	/**
-	 * 子からparagraphを削除する
+	 * 子からparagraphを削除します
 	 * @param {Paragraph} paragraph 削除する段落のインスタンス
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -6093,7 +6109,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --Status
 
 	/**
-	 * 文書の内容を表したオブジェクトを作成する
+	 * 文書の内容を表したオブジェクトを作成します
 	 * @return {object} 文書内容を表すオブジェクト
 	 */
 	data() {
@@ -6108,14 +6124,14 @@ export class SentenceContainer extends AbstractHierarchy {
 		return JSON.stringify(data);
 	}
 	/**
-	 * ユーザーIDを返す
+	 * ユーザーIDを返します
 	 * @return {number} ユーザーID
 	 */
 	userId() {
 		return this._userId;
 	}
 	/**
-	 * この文書内に展開しているファイル名を変更する、あるいは引数省略で現在のファイル名を取得する
+	 * この文書内に展開しているファイル名を変更する、あるいは引数省略で現在のファイル名を取得します
 	 * @param {string} [opt_newFilename] 新たに設定するファイル名
 	 * @return {SentenceContainer string} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイル名(引数を省略した場合)
 	 */
@@ -6130,7 +6146,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 現在のファイルに新たなIDを与える、あるいは引数省略で現在のファイルIDを取得する
+	 * 現在のファイルに新たなIDを与える、あるいは引数省略で現在のファイルIDを取得します
 	 * @param {number} [opt_newId] 新たに設定するID
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイルID(引数を省略した場合)
 	 */
@@ -6145,7 +6161,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 最終更新日時を設定、あるいは引数省略で最終更新日時を取得する
+	 * 最終更新日時を設定、あるいは引数省略で最終更新日時を取得します
 	 * @param {string} [opt_newSaved] 新たに設定する最終更新日時の文字列
 	 * @return {SentenceContainer string} 自身のインスタンス(引数を渡した場合)、あるいは現在の最終更新日時の文字列(引数を省略した場合)
 	 */
@@ -6160,7 +6176,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 一行の文字数を変更する、あるいは引数省略で現在の設定上の一行の文字数を取得する
+	 * 一行の文字数を変更する、あるいは引数省略で現在の設定上の一行の文字数を取得します
 	 * @param {number} [opt_newStrLen] 新たに設定する行内文字数
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在の設定上の行内文字数(引数を省略した場合)
 	 */
@@ -6177,7 +6193,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	// 設定上のページ内行数
 	/**
-	 * 一ページの行数を変更する、あるいは引数省略で現在の一ページの行数を取得する
+	 * 一ページの行数を変更する、あるいは引数省略で現在の一ページの行数を取得します
 	 * @param {number} [opt_newRowLen] 新たに設定するページ内行数
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のページ内行数(引数を省略した場合)
 	 */
@@ -6192,7 +6208,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		}
 	}
 	/**
-	 * 文書内文字数を数える
+	 * 文書内文字数を数えます
 	 * @return {number} 文書内の総文字数
 	 */
 	countChar() {
@@ -6204,7 +6220,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	// 全行数
 	/**
-	 * 文書内行数を数える
+	 * 文書内行数を数えます
 	 * @return {number} 文書内の総行数
 	 */
 	countRow() {
@@ -6215,7 +6231,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return cnt;
 	}
 	/**
-	 * 文書内のページ数を数える
+	 * 文書内のページ数を数えます
 	 * @return {number} 文書内の総ページ数
 	 */
 	countPage() {
@@ -6229,7 +6245,8 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --Style
 
 	/**
-	 * この文書コンテナの横幅を返す。文書コンテナは９０度回転しているため、css上は高さのこと
+	 * この文書コンテナの横幅を返えます。
+	 *     文書コンテナは９０度回転しているため、css上は高さと同様です
 	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の幅
 	 */
@@ -6237,7 +6254,8 @@ export class SentenceContainer extends AbstractHierarchy {
 		return super.height(opt_useCache);
 	}
 	/**
-	 * この文書コンテナの高さを返す。文書コンテナは９０度回転しているため、css上は横幅のこと
+	 * この文書コンテナの高さを返します。
+	 *     文書コンテナは９０度回転しているため、css上は横幅と同様です
 	 * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
 	 * @return {number} 自身の高さ
 	 */
@@ -6245,7 +6263,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return super.width(opt_useCache);
 	}
 	/**
-	 * 文書内すべての文字から、指定されたクラスを除去する
+	 * 文書内すべての文字から、指定されたクラスを除去します
 	 * @param {string} className 除去するクラス名
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -6256,7 +6274,8 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 渡された文字列を本文内から探し、見つかった文字列にsearch-wordクラスを付与する。さらに、見つかった文字列の先頭文字にsearch-labelクラスを付与する
+	 * 渡された文字列を本文内から探し、見つかった文字列にsearch-wordクラスを付与します。
+	 *     さらに、見つかった文字列の先頭文字にsearch-labelクラスを付与します
 	 *  @param {string} str 検索文字列
 	 *  @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -6267,7 +6286,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 文書内語句検索を始める。
+	 * 文書内語句検索を始めます
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	startSearchMode() {
@@ -6284,7 +6303,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 文書内語句検索を完全に終了する
+	 * 文書内語句検索を完全に終了します
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	stopSearchMode() {
@@ -6298,7 +6317,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// selection
 
 	/**
-	 * 選択範囲にある文字インスタンスを配列で返す
+	 * 選択範囲にある文字インスタンスを配列で返します
 	 * @param {boolean} [opt_bl] 選択範囲を解除するならtrueを指定する
 	 * @return {Char[]} 選択範囲内にある文字インスタンスの配列
 	 */
@@ -6315,7 +6334,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return ret;
 	}
 	/**
-	 * 選択範囲内にある文字列をローカルストレージに保存する
+	 * 選択範囲内にある文字列をローカルストレージに保存します
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	copySelectText() {
@@ -6324,7 +6343,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	// ペースト
 	/**
-	 * ローカルストレージに保存した文字列をカーソル位置から挿入する
+	 * ローカルストレージに保存した文字列をカーソル位置から挿入します
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	pasteText() {
@@ -6332,7 +6351,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 選択範囲内にある文字列を返す
+	 * 選択範囲内にある文字列を返します
 	 * @return {string} 選択範囲内の文字列
 	 */
 	selectText() {
@@ -6348,7 +6367,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --DOM操作関係
 
 	/**
-	 * 子を空にし、入力モード、語句検索モードは終了する
+	 * 子を空にし、入力モード、語句検索モードは終了します
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	empty() {
@@ -6363,7 +6382,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * この文章コンテナの末尾にparagraphを追加する
+	 * この文章コンテナの末尾にparagraphを追加します
 	 * @param {Paragraph} paragraph 追加する段落のインスタンス
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -6390,7 +6409,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 文書情報を表示する
+	 * 文書情報を表示します
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	printInfo() {
@@ -6406,7 +6425,9 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --文章整理
 
 	/**
-	 * 各行が指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節する。標準以外のフォントサイズの文字があれば文字数は調整される。また、空段落以外に空行があれば削除する
+	 * 各行が指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節します。
+	 *     標準以外のフォントサイズの文字があればフォントサイズに合わせて文字数は調整されます。
+	 *     また、空段落以外に空行があれば削除します
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	cordinate() {
@@ -6416,7 +6437,8 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 禁則処理を行う。各行の文字数への変化が伴うため、必ずcordinate()の後に行うこと
+	 * 禁則処理を行います。
+	 *     各行の文字数への変化が伴うため、cordinate()の後に実行してください
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	checkKinsoku() {
@@ -6427,7 +6449,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	// 改ページ
 	/**
-	 * ページの最初の行と最終行に目印となるクラスを与える
+	 * ページの最初の行と最終行に目印となるクラスを与えます
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	breakPage() {
@@ -6460,7 +6482,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * ユーザーへの情報を表示する
+	 * ユーザーへの情報を表示します
 	 * @param {string} str 表示する情報
 	 * @param {string} [opt_color='black'] 黒文字以外の文字色で表示する場合に色名を指定する
 	 * @return {SentenceContainer} 自身のインスタンス
@@ -6475,7 +6497,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --ファイル操作
 
 	/**
-	 * 指定されたファイルを開く(非同期通信)
+	 * 指定されたファイルを開きます(非同期通信)
 	 * @param {number} fileId 開くファイルのID
 	 * @return {SentenceContainer} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/ReadJsonFile.html
@@ -6486,7 +6508,8 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 現在開いているファイルを上書き保存する。newFile()されて初めての保存なら名前をつけて保存する。(ともに非同期通信)
+	 * 現在開いているファイルを上書き保存します。
+	 *     newFile()されて初めての保存なら名前をつけて保存します。(ともに非同期通信)
 	 * @return {SentenceContainer} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/WriteJsonFile.html
 	 */
@@ -6509,7 +6532,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 現在開いているファイルを名前をつけて保存する(非同期通信)
+	 * 現在開いているファイルを名前をつけて保存します(非同期通信)
 	 * @param {string} filename 新しいファイルの名前
 	 * @return {SentenceContainer} 自身のインスタンス
 	 * @see ../WEB-INF/classes/doc/FileMaker.html
@@ -6529,7 +6552,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 新しいファイルを開く
+	 * 新しいファイルを開きます
 	 * @param {string} filename 新しいファイル名
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
@@ -6549,7 +6572,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	// --Display関係
 
 	/**
-	 * 文書を１行目の１文字目から表示する
+	 * 文書を１行目の１文字目から表示します
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	resetDisplay() {
@@ -6558,7 +6581,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	// strPos: 'center','right'
 	/**
-	 * カーソル位置を基準として文書を表示し直す
+	 * カーソル位置を基準として文書を表示し直します
 	 * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'と'right'に対応。
 	 *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される
 	 * @return {SentenceContainer} 自身のインスタンス
@@ -6571,7 +6594,8 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * firstRow行目以降を表示する。文字はfirstChar文字目以降が表示される
+	 * firstRow行目以降を表示します。
+	 *     文字はfirstChar文字目以降が表示されます
 	 * @param {number} firstRow 表示される最初の行のインデックス
 	 * @param {number} firstChar 表示される最初の文字のインデックス
 	 * @return {SentenceContainer} 自身のインスタンス
@@ -6606,7 +6630,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * カーソル位置を基準に、最初に表示されるべき行のインデックスを返す
+	 * カーソル位置を基準に、最初に表示されるべき行のインデックスを返します
 	 * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'なら、カーソル位置を中央にする。'right'なら、カーソル位置が最も右になるよう表示される。
 	 *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される
 	 * @return {number} 計算された最初に表示されるべき行のインデックス
@@ -6640,7 +6664,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * 現在表示されている行の最初の行のインデックスを返す
+	 * 現在表示されている行の最初の行のインデックスを返します
 	 * @return {number} 現在表示されている行の最初の行のインデックス。表示行がなければ-1
 	 */
 	firstDisplayRowPos() {
@@ -6656,7 +6680,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * 現在表示されている行の最後の行のインデックスを返す
+	 * 現在表示されている行の最後の行のインデックスを返します
 	 * @return {number} 現在表示されている行の最後の行のインデックス。表示行がなければ-1
 	 */
 	lastDisplayRowPos() {
@@ -6667,7 +6691,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * カーソル行の文書全体で何行目かを返す
+	 * カーソル行の文書全体で何行目かを返します
 	 * @return {number} カーソル行の文書全体でのインデックス。文書内に段落がない、あるいはカーソル行がなければ-1
 	 */
 	cursorRowPos() {
@@ -6684,7 +6708,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * 表示されている行のうち最初の行のインスタンスを返す
+	 * 表示されている行のうち最初の行のインスタンスを返します
 	 * @return {Row} 最初の表示行のインスタンス。表示行がなければnull
 	 */
 	firstDisplayRow() {
@@ -6697,7 +6721,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * @private
-	 * 表示されている行のうち最後の行のインスタンスを返す
+	 * 表示されている行のうち最後の行のインスタンスを返します
 	 * @return {Row} 最後の表示行のインスタンス。表示行がなければnull
 	 */
 	lastDisplayRow() {
@@ -6708,7 +6732,7 @@ export class SentenceContainer extends AbstractHierarchy {
 	}
 
 	/**
-	 * 表示を一行分右に動かす
+	 * 表示を一行分右に動かします
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	shiftRightDisplay() {
@@ -6720,7 +6744,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * 表示を一行分左に動かす
+	 * 表示を一行分左に動かします
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	shiftLeftDisplay() {
@@ -6736,7 +6760,7 @@ export class SentenceContainer extends AbstractHierarchy {
 
 	// keydown
 	/**
-	 * この文書コンテナにkeydownイベントリスナーを付加する
+	 * この文書コンテナにkeydownイベントリスナーを付加します
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	addKeydownEventListener() {
@@ -6746,7 +6770,7 @@ export class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 	/**
-	 * keydownイベントの実行内容
+	 * keydownイベントの実行内容です
 	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 * @return {SentenceContainer} 自身のインスタンス
@@ -6794,14 +6818,14 @@ export class SentenceContainer extends AbstractHierarchy {
 				this.startSearchMode();
 				break;
 			default:
-				this.inputBuffer().transfer(keycode,e.shiftKey);
+				this.inputBuffer().tryTransfer(keycode,e.shiftKey);
 				break;
 		}
 		return this;
 	}
 	/**
 	 * @private
-	 * コントロールキーを押されていた場合のkeydownイベントの実行内容
+	 * コントロールキーを押されていた場合のkeydownイベントの実行内容です
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	runControlKeyDown(e,keycode) {
@@ -6863,7 +6887,7 @@ export class SentenceContainer extends AbstractHierarchy {
 
 	// wheel
 	/**
-	 * ホイールイベントの実行内容(表示を４行分移動する)
+	 * ホイールイベントの実行内容です(表示を４行分移動する)
 	 * @param {Event} e イベントオブジェクト
 	 * @param {boolean} isUp 上方向にホイールが動かされたならtrue、そうでなければfalse
 	 * @return {SentenceContainer} 自身のインスタンス
@@ -6880,7 +6904,7 @@ export class SentenceContainer extends AbstractHierarchy {
 
 	// 語句検索
 	/**
-	 * 語句検索inputフォームのkeyupイベント
+	 * 語句検索inputフォームのkeyupイベントです
 	 * @param {Event} e イベントオブジェクト
 	 */
 	onKeyupOnSearchMode(e) {
@@ -6908,13 +6932,15 @@ export class SentenceContainer extends AbstractHierarchy {
 		this.search(this.searchInputElem().value.slice(1));
 	}
 	/**
-	 * 語句検索inputフォームからフォーカスが外れた際のイベント実行内容。文書コンテナ本体にkeydownイベントを戻す
+	 * 語句検索inputフォームからフォーカスが外れた際のイベント実行内容です。
+	 *     文書コンテナ本体にkeydownイベントを戻します
 	 */
 	onFocusoutOnSearchMode() {
 		this.addKeydownEventListener();
 	}
 	/**
-	 * 語句検索inputフォームにフォーカスがあたった際のイベント実行内容。文書コンテナ本体のkeydownイベントを外す
+	 * 語句検索inputフォームにフォーカスがあたった際のイベント実行内容です。
+	 *     文書コンテナ本体のkeydownイベントを外します
 	 */
 	onFocusinOnSearchMode() {
 		this.removeKeydownEventListener();
@@ -6922,9 +6948,10 @@ export class SentenceContainer extends AbstractHierarchy {
 
 	// ファイル名input
 	/**
-	 * ファイル名inputフォームにイベントを付加する(主に、フォーカスがあたった際と外れた際のイベント)。与えっぱなし。実行内容もここで定義
+	 * ファイル名inputフォームにイベントを付加します(主に、フォーカスがあたった際と外れた際のイベント)。
 	 */
 	addFileTitleEvent() {
+		// 与えっぱなし。実行内容もここで定義
 		this.titleElem().addEventListener('focusin',function (e) {
 			if (this.inputBuffer().isDisplay) { this.inputBuffer().empty().hide(); }
 			this.removeKeydownEventListener();
@@ -6940,7 +6967,7 @@ export class SentenceContainer extends AbstractHierarchy {
 
 	// selection
 	/**
-	 * マウスで選択範囲を変更した際のイベントを与える。選択範囲最後の文字の次の文字にカーソルを当てる
+	 * マウスで選択範囲を変更した際のイベントを与えます。選択範囲最後の文字の次の文字にカーソルを当てます
 	 */
 	addSelectEvent() {
 		this.elem().addEventListener('mouseup',function (e) {

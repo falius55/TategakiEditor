@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>文字列を受け取り、漢字変換の候補を返すサーブレット<br>
- *	変換にはウェブAPIの'Google CGI API for Japanese Input(Google日本語入力API)'を使用する
+ *	変換にはウェブAPIの'Google CGI API for Japanese Input(Google日本語入力API)'を使用します
  * <pre>
  * request: {
  *	sentence
@@ -53,7 +53,7 @@ public class KanjiProxy extends HttpServlet {
 	}
 
 	/**
-	 * 漢字変換候補を返す
+	 * 漢字変換候補を返します
 	 * @param str 変換する文字列
 	 * @return 通信で得た漢字変換候補のJSON文字列
 	 */

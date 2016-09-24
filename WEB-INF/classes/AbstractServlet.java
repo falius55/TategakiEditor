@@ -61,7 +61,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	common operator
 	 */
 	/**
-	 *	初期設定を行う<br>
+	 *	初期設定を行います<br>
 	 *	文字コード:UTF-8<br>
 	 *	返送データのtype: json<br>
 	 *	PrintWriterの取得<br>
@@ -79,7 +79,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	サーブレットインスタンス破棄時の処理を行う。明示的に呼ぶ必要はない<br>
+	 *	サーブレットインスタンス破棄時の処理を行います。明示的に呼ぶ必要はありません<br>
 	 *	PreparedStatementのclose<br>
 	 *	Connectionのclose<br>
 	 *	PrintWriterのclose<br>
@@ -101,7 +101,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	レスポンスのストリームに書き込む。書き込みは一度きり
+	 *	レスポンスのストリームに書き込みます。書き込みは一度きりです
 	 *	@param output ストリームに書き込む文字列
 	 */
 	protected void out(String output) {
@@ -110,7 +110,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 		out = null;
 	}
 	/**
-	 *	レスポンスのストリームにフォーマットを用いて書き込む。書き込みは一度きり
+	 *	レスポンスのストリームにフォーマットを用いて書き込みます。書き込みは一度きりです
 	 *	@param format 書き込む文字列
 	 *	@param args フォーマットで置き換える各種値
 	 */
@@ -124,7 +124,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 * DataBase
 	 */
 	/**
-	 *	データベースに接続する
+	 *	データベースに接続します
 	 *	@param	url	データベースのurl("jdbc:mysql://network_adress/database_name")
 	 *	@param	user	データベースのユーザー名
 	 *	@param	password	データベースのパスワード
@@ -147,7 +147,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	データベースの操作を始める
+	 *	データベースの操作を始めます
 	 *	@param	sql	SQLへの問い合わせ文
 	 *	@return 自らのインスタンス
 	 */
@@ -165,7 +165,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文のクエスチョンマークにint値をセットする
+	 *	SQL文のクエスチョンマークにint値をセットします
 	 *	@param x セットする整数
 	 *	@return 自らのインスタンス
 	 */
@@ -180,7 +180,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文のクエスチョンマークに文字列をセットする
+	 *	SQL文のクエスチョンマークに文字列をセットします
 	 *	@param x セットする文字列
 	 *	@return 自らのインスタンス
 	 */
@@ -195,7 +195,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文のクエスチョンマークに真偽値をセットする
+	 *	SQL文のクエスチョンマークに真偽値をセットします
 	 *	@param x セットする真偽値
 	 *	@return 自らのインスタンス
 	 */
@@ -210,7 +210,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文のクエスチョンマークに、ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換してセットする
+	 *	SQL文のクエスチョンマークに、ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換してセットします
 	 *	@param x	セットする、単位がミリ秒の時刻
 	 *	@return 自らのインスタンス
 	 */
@@ -226,7 +226,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文のクエスチョンマークに、java.sql.Date値をセットする
+	 *	SQL文のクエスチョンマークに、java.sql.Date値をセットします
 	 *	時分秒は切り捨て
 	 *	@param	x	java.sql.Date値
 	 *	@return 自らのインスタンス
@@ -242,7 +242,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文のクエスチョンマークに、double値をセットする
+	 *	SQL文のクエスチョンマークに、double値をセットします
 	 *	@param	x	セットするdouble値
 	 *	@return 自らのインスタンス
 	 */
@@ -257,7 +257,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文のクエスチョンマークにfloat値をセットする
+	 *	SQL文のクエスチョンマークにfloat値をセットします
 	 *	@param x セットするfloat値
 	 *	@return 自らのインスタンス
 	 */
@@ -272,7 +272,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文のクエスチョンマークにlong値をセットする
+	 *	SQL文のクエスチョンマークにlong値をセットします
 	 *	@param x セットするlong値
 	 *	@return 自らのインスタンス
 	 */
@@ -287,7 +287,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文の問い合わせを実行する
+	 *	SQL文の問い合わせを実行します
 	 */
 	protected void query() {
 		try {
@@ -298,7 +298,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	SQL文の問い合わせ結果を一行次に進める
+	 *	SQL文の問い合わせ結果を一行次に進めます
 	 *	@return	次の行が存在し、正常にカーソルが進めばtrue
 	 */
 	protected boolean next() {
@@ -311,7 +311,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 * SQL文の指定した問い合わせ結果をint値で取り出す
+	 * SQL文の指定した問い合わせ結果をint値で取り出します
 	 * @param column 結果を取り出すカラム名
 	 * @return 問い合わせ結果。正常に取り出せなければ最小の値
 	 */
@@ -325,7 +325,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 * SQL文の指定した問い合わせ結果を文字列で取り出す
+	 * SQL文の指定した問い合わせ結果を文字列で取り出します
 	 * @param column 結果を取り出すカラム名
 	 * @return 問い合わせ結果。正常に取り出せなければnull
 	 */
@@ -339,7 +339,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 * SQL文の指定した問い合わせ結果をdouble値で取り出す
+	 * SQL文の指定した問い合わせ結果をdouble値で取り出します
 	 * @param column 結果を取り出すカラム名
 	 * @return 問い合わせ結果。正常に取り出せなければNaN
 	 */
@@ -353,7 +353,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 * SQL文の指定した問い合わせ結果をミリ秒で取り出す
+	 * SQL文の指定した問い合わせ結果をミリ秒で取り出します
 	 * @param column 結果を取り出すカラム名
 	 * @return 問い合わせ結果。正常に取り出せなければ０
 	 */
@@ -368,7 +368,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 * SQL文の指定した問い合わせ結果を"yyyy-MM-dd HH:mm:ss"の形式で取り出す
+	 * SQL文の指定した問い合わせ結果を"yyyy-MM-dd HH:mm:ss"の形式で取り出します
 	 * @param column 結果を取り出すカラム名
 	 * @return 問い合わせ結果
 	 */
@@ -379,7 +379,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換する
+	 *	ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換します
 	 *	@param millis 変換するミリ秒の値
 	 *	@return フォーマットされた文字列
 	 */
@@ -390,7 +390,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	データベースへの更新を実行する
+	 *	データベースへの更新を実行します
 	 *	@return	正常に処理が終了した行数
 	 */
 	protected int update() {
@@ -407,7 +407,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	File
 	 */
 	/**
-	 *	サーブレットのルートディレクトリ以上も含めた絶対パスを取得する
+	 *	サーブレットのルートディレクトリ以上も含めた絶対パスを取得します
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
 	 *	@return 絶対パス
 	 */
@@ -417,7 +417,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	サーバーのローカルファイルを文字列で読み込む
+	 *	サーバーのローカルファイルを文字列で読み込みます
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
 	 *	@return 読み込まれた文字列
 	 */
@@ -439,7 +439,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	サーバーのローカルファイルに文字列で書き込む(上書き保存)
+	 *	サーバーのローカルファイルに文字列で書き込みます(上書き保存)
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
 	 *	@param	str	書き込む内容
 	 */
@@ -455,7 +455,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	サーバーのローカルファイルを新しく作成する
+	 *	サーバーのローカルファイルを新しく作成します
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
 	 */
 	protected void createFile(String path) {
@@ -468,7 +468,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 
 	/**
-	 *	サーバーのローカルファイルを削除する
+	 *	サーバーのローカルファイルを削除します
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
 	 *	@return 削除に成功した場合にtrue
 	 */

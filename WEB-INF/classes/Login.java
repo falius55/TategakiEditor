@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * <p>送られてきたユーザー名とパスワードを確認してログインするサーブレット<br>
- * <p>認証に失敗したら、ログイン画面に戻す
+ * <p>認証に失敗したら、ログイン画面に戻します
  * <pre>
  * request: {
  *		username,

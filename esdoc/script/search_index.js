@@ -2064,9 +2064,9 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/object.js~inputbuffer#transfer",
-    "class/js/object.js~InputBuffer.html#instance-method-transfer",
-    "js/object.js~InputBuffer#transfer",
+    "js/object.js~inputbuffer#trytransfer",
+    "class/js/object.js~InputBuffer.html#instance-method-tryTransfer",
+    "js/object.js~InputBuffer#tryTransfer",
     "method"
   ],
   [
