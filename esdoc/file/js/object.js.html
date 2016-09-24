@@ -97,6 +97,7 @@ export const Util = {
 		return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
 	},
 	post: function (url,data,callback) {
+		console.log(&apos;post send:&apos;, data);
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = &apos;json&apos;;
 		xhr.open(&apos;POST&apos;,url);
@@ -901,6 +902,7 @@ export class CommandLine {
 				case &apos;:delete&apos;:
 				case &apos;:del&apos;:
 				case &apos;:d&apos;:
+				case &apos;:deldir&apos;:
 				case &apos;:&#x3048;&apos;:
 				case &apos;:&#x304A;&apos;:
 				case &apos;:&#x304A;&#x307A;&#xFF4E;&apos;:
@@ -982,7 +984,7 @@ export class CommandLine {
 			case &apos;:&#x304A;&apos;:
 			case &apos;:&#x304A;&#x307A;&#xFF4E;&apos;:
 					 if (command[1]) {
-						 const files = this.fileList().findFile(commnad[1]);
+						 const files = this.fileList().findFile(command[1]);
 						 files.length &gt; 0 &amp;&amp; files[0].open();
 					 } else {
 						 this.sentenceContainer().newFile();
@@ -1055,7 +1057,7 @@ export class CommandLine {
 					 break;
 			case &apos;:deldir&apos;:
 			case &apos;:&#x3067;&#xFF4C;&#x3062;&#xFF52;&apos;:
-					 this.fileList().deleteDirectory(command[1],false);
+					 this.fileList().deleteDirectory(command[1],true);
 					 break;
 			case &apos;:noh&apos;:
 			case &apos;:&#x306E;&#xFF48;&apos;:
@@ -5109,9 +5111,7 @@ export class File extends AbstractHierarchy {
 		data.user_id = sentenceContainer.userId();
 		data.file_id = this.id();
 		sentenceContainer.userAlert(&apos;&#x8AAD;&#x8FBC;&#x4E2D;&apos;);
-		Util.post(&apos;/tategaki/ReadJsonFile&apos;,data,function (json) {
-			sentenceContainer.init(json).userAlert(&apos;&#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x5B8C;&#x4E86;&apos;);
-		}.bind(this));
+		Util.post(&apos;/tategaki/ReadJsonFile&apos;, data, json =&gt; sentenceContainer.init(json).userAlert(&apos;&#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x5B8C;&#x4E86;&apos;));
 		return this;
 	}
 	/**
@@ -5124,26 +5124,33 @@ export class File extends AbstractHierarchy {
 			user_id: this.fileList().sentenceContainer().userId(),
 			file_id: this.id()
 		},function (json) {
-			if (!result) { console.log(&apos;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x524A;&#x9664;&#x30A8;&#x30E9;&#x30FC;&#x3067;&#x3059;(&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x756A;&#x53F7;&#xFF1A;&apos;+ this.id() + &apos;)&apos;); }
-					// &#x73FE;&#x5728;&#x958B;&#x3044;&#x3066;&#x3044;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x524A;&#x9664;&#x3057;&#x305F;&#x306A;&#x3089;&#x3001;&#x524D;&#x5F8C;&#x3069;&#x3061;&#x3089;&#x304B;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x958B;&#x304F;
-					// &#x540C;&#x3058;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306B;&#x4ED6;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x65B0;&#x3057;&#x3044;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x958B;&#x304F;
-					// &#x6700;&#x5F8C;&#x306B;&#x3001;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x3092;&#x4F5C;&#x308A;&#x76F4;&#x3059;
-					if (this.sentenceContainer().fileList().currentFile() === this) {
-						const nextFile = this.next() || this.prev();
-						if (nextFile) {
-							nextFile.open();
-							this.sentenceContainer().fileList().read();
-							return;
+			if (json.result == &apos;false&apos;) {
+				console.log(&apos;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x524A;&#x9664;&#x30A8;&#x30E9;&#x30FC;&#x3067;&#x3059;(&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x756A;&#x53F7;&#xFF1A;&apos;+ this.id() + &apos;)&apos;);
+						console.log(&apos;json.result&apos;, json.result);
+						return;
 						}
-						if (!nextFile) {
-							this.sentenceContainer().newFile();
-							this.sentenceContainer().fileList().read();
-							return;
+
+						const fileList = this.fileList();
+						const sentenceContainer = fileList.sentenceContainer();
+						// &#x73FE;&#x5728;&#x958B;&#x3044;&#x3066;&#x3044;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x524A;&#x9664;&#x3057;&#x305F;&#x306A;&#x3089;&#x3001;&#x524D;&#x5F8C;&#x3069;&#x3061;&#x3089;&#x304B;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x958B;&#x304F;
+						// &#x540C;&#x3058;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306B;&#x4ED6;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x65B0;&#x3057;&#x3044;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x958B;&#x304F;
+						// &#x6700;&#x5F8C;&#x306B;&#x3001;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x3092;&#x4F5C;&#x308A;&#x76F4;&#x3059;
+						if (fileList.currentFile() === this) {
+							const nextFile = this.nextFile() || this.prevFile();
+							if (nextFile) {
+								nextFile.open();
+								fileList.read();
+								return;
+							}
+							if (!nextFile) {
+								sentenceContainer.newFile();
+								fileList.read();
+								return;
+							}
 						}
-					}
-					this.sentenceContainer().fileList().read();
-					}.bind(this));
-			return this;
+						fileList.read();
+		}.bind(this));
+		return this;
 	}
 	/**
 	 * &#x81EA;&#x8EAB;&#x3092;newParentDir&#x306E;&#x4E2D;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x3001;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x3092;&#x4F5C;&#x308A;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
@@ -5157,9 +5164,7 @@ export class File extends AbstractHierarchy {
 			user_id: fileList.sentenceContainer().userId(),
 			file_id: this.id(),
 			directory_id: newParentDir.id()
-		},function (data) {
-			fileList.read();
-		});
+		}, data =&gt; fileList.read());
 		return this;
 	}
 
@@ -5277,6 +5282,15 @@ export class Directory extends AbstractHierarchy {
 		}
 		return null;
 	}
+	/**
+	 * &#x81EA;&#x5206;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;(&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3001;&#x5185;&#x90E8;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x9664;&#x304F;)&#x3092;&#x63A2;&#x3059;
+	 * @return {File} &#x81EA;&#x5206;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;(&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3001;&#x5185;&#x90E8;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x9664;&#x304F;)&#x3002;&#x81EA;&#x5206;&#x306E;&#x5F8C;&#x65B9;&#x306B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;null
+	 */
+	findNextFile() {
+		for (let fileList = this.fileList(), nextFile = fileList.findNextFile(this); nextFile; nextFile = fileList.findNextFile(nextFile))
+			if (!this.contains(nextFile)) return nextFile;
+		return null;
+	}
 
 	// --&#x5224;&#x5B9A;
 
@@ -5299,6 +5313,16 @@ export class Directory extends AbstractHierarchy {
 	 * @return {boolean} &#x5E38;&#x306B;false
 	 */
 	isFile() {
+		return false;
+	}
+	/**
+	 * fileOrDirectory&#x304C;&#x3053;&#x306E;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x5185;&#x306B;&#x3042;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x307E;&#x3059;
+	 * @param {File Directory} fileOrDirectory &#x5224;&#x5B9A;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3001;&#x307E;&#x305F;&#x306F;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;
+	 * @return {boolean} &#x5F15;&#x6570;&#x304C;&#x3053;&#x306E;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x4E2D;&#x306B;&#x3042;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+	 */
+	contains(fileOrDirectory) {
+		for (let fileList = this.fileList(), parents = fileOrDirectory.parent(); parents !== fileList; parents = parents.parent())
+			if (parents === this) return true;
 		return false;
 	}
 
@@ -5360,14 +5384,25 @@ export class Directory extends AbstractHierarchy {
 	 */
 	delete(opt_bl) {
 		const bl = opt_bl || false; // &#x5F15;&#x6570;&#x7701;&#x7565;&#x306E;&#x5834;&#x5408;&#x3067;&#x3082;&#x3001;&#x660E;&#x78BA;&#x306B;false&#x3092;&#x5165;&#x308C;&#x308B;
+		console.log(&quot;delete option:&quot;, bl);
 		Util.post(&quot;/tategaki/DeleteDirectory&quot;,{
 			directory_id: this.id(),
 			option: bl
 		},function (data) {
-			this.fileList().read();
+			const fileList = this.fileList();
+			fileList.read();
 			if (data.result === &apos;within&apos;) {
 				alert(&apos;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x304C;&#x7A7A;&#x3067;&#x306F;&#x306A;&#x3044;&#x306E;&#x3067;&#x524A;&#x9664;&#x3067;&#x304D;&#x307E;&#x305B;&#x3093;&#x3067;&#x3057;&#x305F;&#x3002;&apos;);
+				return;
 			}
+
+			// &#x73FE;&#x5728;&#x958B;&#x3044;&#x3066;&#x3044;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x81EA;&#x5206;&#x306E;&#x4E2D;&#x306B;&#x3042;&#x308B;&#x5834;&#x5408;&#x3001;&#x81EA;&#x5206;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x958B;&#x304F;
+			// &#x81EA;&#x5206;&#x4EE5;&#x964D;&#x306B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x6700;&#x521D;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3001;&#x305D;&#x308C;&#x3082;&#x306A;&#x3051;&#x308C;&#x3070;&#x65B0;&#x3057;&#x3044;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x958B;&#x304F;
+			if (this.contains(fileList.currentFile())) {
+				const nextFile = this.findNextFile() || fileList.firstFile();
+				nextFile ? nextFile.open() : fileList.sentenceContainer().newFile();
+			}
+
 		}.bind(this));
 		return this;
 	}

@@ -1,11 +1,11 @@
 {
   "coverage": "100%",
-  "expectCount": 455,
-  "actualCount": 455,
+  "expectCount": 457,
+  "actualCount": 457,
   "files": {
     "js/object.js": {
-      "expectCount": 455,
-      "actualCount": 455,
+      "expectCount": 457,
+      "actualCount": 457,
       "undocumentLines": []
     }
   }

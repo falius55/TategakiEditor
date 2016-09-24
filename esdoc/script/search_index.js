@@ -1482,6 +1482,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "js/object.js~directory#contains",
+    "class/js/object.js~Directory.html#instance-method-contains",
+    "js/object.js~Directory#contains",
+    "method"
+  ],
+  [
     "js/object.js~directory#delete",
     "class/js/object.js~Directory.html#instance-method-delete",
     "js/object.js~Directory#delete",
@@ -1491,6 +1497,12 @@ window.esdocSearchIndex = [
     "js/object.js~directory#filelist",
     "class/js/object.js~Directory.html#instance-method-fileList",
     "js/object.js~Directory#fileList",
+    "method"
+  ],
+  [
+    "js/object.js~directory#findnextfile",
+    "class/js/object.js~Directory.html#instance-method-findNextFile",
+    "js/object.js~Directory#findNextFile",
     "method"
   ],
   [
