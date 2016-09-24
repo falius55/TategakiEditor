@@ -2222,16 +2222,14 @@ class Char extends AbstractHierarchy {
 			// フォントサイズが変更されると行の幅が変わる可能性があるため、計算し直しておく
 			this.row().width(false);
 			return this;
-		} else {
-			if (this._fontSize) {
-				if (this._fontSize === 'auto') {
-					return this._fontSize;
-				} else {
-					return parseInt(this._fontSize);
-				}
-			} else {
+		}
+
+		if (opt_fontSize === undefined) {
+			if (this._fontSize === undefined)
 				return 'auto';
-			}
+			if (this._fontSize === 'auto')
+				return this._fontSize;
+			return parseInt(this._fontSize);
 		}
 	}
 	/**
@@ -2391,6 +2389,7 @@ class Char extends AbstractHierarchy {
 		if (this.isEOL()) return this; // EOLは削除不可
 		const row = this.row();
 		row.elem().removeChild(this.elem());
+
 		// oldPrev - this - oldNext →　oldPrev - oldNext
 		const oldPrev = this.prev();
 		const oldNext = this.next();
@@ -2716,9 +2715,8 @@ class Row extends AbstractHierarchy {
 			const ret = super.children(); // push()の戻り値はlenghtプロパティの値なので、一旦変数に入れる必要あり
 			ret.push(this.EOL());
 			return ret;
-		} else {
-			return super.children(opt_index) || this.EOL();
 		}
+		return super.children(opt_index) || this.EOL();
 	}
 
 	// --判定
@@ -2735,9 +2733,8 @@ class Row extends AbstractHierarchy {
 	 * @return {boolean} 行内にカーソルが含まれていればtrue、そうでなければfalse
 	 */
 	hasCursor() {
-		for (let char of this.children()) {
+		for (let char of this.children())
 			if (char.hasCursor()) return true;
-		}
 		return false;
 	}
 	/**
@@ -2754,9 +2751,8 @@ class Row extends AbstractHierarchy {
 	 */
 	contains(obj) {
 		if (!obj instanceof Char) return false;
-		for (let char of this.children()) {
+		for (let char of this.children())
 			if (char.is(obj)) return true;
-		}
 		return false;
 	}
 	/**
@@ -2810,9 +2806,8 @@ class Row extends AbstractHierarchy {
 	 */
 	data() {
 		const data = [];
-		for (let char of this.chars()) {
+		for (let char of this.chars())
 			data.push(char.data());
-		}
 		return data;
 	}
 	/**
@@ -2828,9 +2823,8 @@ class Row extends AbstractHierarchy {
 	 */
 	maxFont() {
 		let max = 0; // 空行では０になる
-		for (let char of this.chars()) {
-			max = Math.max(max,char.fontSize() === 'auto' ? 18 : char.fontSize());
-		}
+		for (let char of this.chars())
+			max = Math.max(max, char.fontSize() === 'auto' ? 18 : char.fontSize());
 		return max;
 	}
 
@@ -3024,12 +3018,9 @@ class Row extends AbstractHierarchy {
 			return this;
 		}
 
-		// 空行ではない
-		if (!this.isEmpty()) {
-			this.remove(); // カーソルはいじる必要なし
-			prevParagraph.append(this);
-			return this;
-		}
+		this.remove(); // カーソルはいじる必要なし
+		prevParagraph.append(this);
+		return this;
 	}
 	/**
 	 * 次のRowの第一文字を、自らの最後に移動します。段落内でのみ有効となります
@@ -3046,9 +3037,8 @@ class Row extends AbstractHierarchy {
 	 * @return {Row} 自身のインスタンス
 	 */
 	bringChars(num) {
-		for (let i = 0; i < num; i++) {
+		for (let i = 0; i < num; i++)
 			this.bringChar();
-		}
 		return this;
 	}
 	/**
@@ -3066,9 +3056,8 @@ class Row extends AbstractHierarchy {
 	 * @return {Row} 自身のインスタンス
 	 */
 	takeChars(num) {
-		for (let i = 0; i < num; i++) {
+		for (let i = 0; i < num; i++)
 			this.takeChar();
-		}
 		return this;
 	}
 	/**
@@ -3076,9 +3065,8 @@ class Row extends AbstractHierarchy {
 	 * @return {Row} 自身のインスタンス
 	 */
 	createPlainContent(str) {
-		for (let c of str) {
+		for (let c of str)
 			this.append(new Char(Char.createPlainCharData(c)));
-		}
 		return this;
 	}
 
@@ -3093,15 +3081,14 @@ class Row extends AbstractHierarchy {
 	cordinate() {
 		if (this.index() > 0 && this.isEmpty()) return this.delete(); // 空段落以外での空行は削除する
 
-		const strLen = this.container().strLenOnRow();
+		const confLen = this.container().strLenOnRow();
 		const len = this.charLen();
-		if (len < strLen) {
-			this.bringChars(strLen - len);
-		}
+		if (len < confLen)
+			this.bringChars(confLen - len);
 
 		// 多すぎる文字数は減らす
 		// フォントの異なる文字が混ざっている場合、他の行と高さが異なってしまうため、その行の文字を変える必要がある
-		const maxSize = strLen * 18; // 標準フォント×文字数の数値が基準
+		const maxSize = confLen * 18; // 標準フォント×文字数の数値が基準
 		let sum = 0;
 		for (let array of this.chars().entries()) {
 			const char = array[1];
@@ -3109,7 +3096,7 @@ class Row extends AbstractHierarchy {
 			if (sum > maxSize) {
 				const index = array[0];
 				this.takeChars(this.charLen() - index);
-				break;
+				return this;
 			}
 		}
 		return this;
@@ -3170,24 +3157,21 @@ class Row extends AbstractHierarchy {
 		const cursorIndex = this.cursorChar().index();
 		const currentFirst = this.firstDisplayCharPos();
 		const currentEnd = this.lastDisplayCharPos();
-		if (cursorIndex <= currentFirst) {
-			// カーソルが前にある
+		// カーソルが前にある
+		if (cursorIndex <= currentFirst)
 			return cursorIndex;
-		} else if ( cursorIndex > currentEnd) {
-			// カーソルが後ろにある
+		// カーソルが後ろにある
+		if ( cursorIndex > currentEnd) 
 			return currentFirst + (cursorIndex - currentEnd);
-		} else {
-			return currentFirst;
-		}
+		return currentFirst;
 	}
 	/**
 	 * この行が何文字目から表示されているかのインデックスを返します
 	 * @return {number} EOL含め最初に表示された文字のインデックス。文字が全て非表示になっていれば-1
 	 */
 	firstDisplayCharPos() {
-		for (let char of this.children()) {
+		for (let char of this.children())
 			if (char.isDisplay()) return char.index();
-		}
 		return -1; // displayがひとつもない(EOLは常にdisplayなので、ここまで来たら異常)
 	}
 	/**
@@ -3196,9 +3180,9 @@ class Row extends AbstractHierarchy {
 	 */
 	lastDisplayCharPos() {
 		if (!this.hasChar) return 0;
-		for (let i = this.charLen()-1,char; char = this.chars(i); i--) {
-			if (char.isDisplay()) return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
-		}
+		for (let i = this.charLen()-1,char; char = this.chars(i); i--)
+			if (char.isDisplay())
+				return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
 		return -1;
 	}
 
@@ -3337,9 +3321,8 @@ class Paragraph extends AbstractHierarchy {
 	 * @return {boolean} 段落内にカーソルが含まれていればtrue、そうでなければfalse
 	 */
 	hasCursor() {
-		for (let row of this.rows()) {
+		for (let row of this.rows())
 			if (row.hasCursor()) return true;
-		}
 		return false;
 	}
 	/**
@@ -3432,14 +3415,12 @@ class Paragraph extends AbstractHierarchy {
 			const align = this.className().match(/decolation-textalign-(\S+)/);
 			return align ? align[1] : 'left';
 		}
-		if (opt_align) {
-			const oldAlign = this.className().match(/decolation-textalign-\S+/);
-			if (oldAlign) this.removeClass(oldAlign[0]);
-			if (opt_align !== 'left') this.addClass('decolation-textalign-'+ opt_align);
-		} else {
-			const oldAlign = this.className().match(/decolation-textalign-\S+/);
-			if (oldAlign) this.removeClass(oldAlign[0]);
-		}
+
+		const oldAlign = this.className().match(/decolation-textalign-\S+/);
+		if (oldAlign) this.removeClass(oldAlign[0]);
+
+		if (opt_align && opt_align !== 'left')
+			this.addClass('decolation-textalign-'+ opt_align);
 		return this;
 	}
 	/**
@@ -3447,9 +3428,8 @@ class Paragraph extends AbstractHierarchy {
 	 * @return {Paragraph} 自身のインスタンス
 	 */
 	removeClassFromAllChar(className) {
-		for (let row of this.rows()) {
+		for (let row of this.rows())
 			row.removeClassFromAllChild(className);
-		}
 		return this;
 	}
 	/**
@@ -3460,11 +3440,9 @@ class Paragraph extends AbstractHierarchy {
 	search(str) {
 		this.removeClassFromAllChar('search-label');
 		this.removeClassFromAllChar('search-word');
-		for (let row of this.rows()) {
-			for (let char of row.chars()) {
+		for (let row of this.rows())
+			for (let char of row.chars())
 				char.markSearchPhrase(str);
-			}
-		}
 		return this;
 	}
 
@@ -3489,6 +3467,7 @@ class Paragraph extends AbstractHierarchy {
 			nextRow.firstChild().prev(row.lastChild());
 			row.lastChild().next(nextRow.firstChild());
 		}
+
 		// rowの前側接続
 		const oldLastRow = this.hasRow() ? this.lastChild() : (this.prev() ? this.prev().lastChild() : null); // 自段落の最終行　→　前の段落の最終行　→　null
 
@@ -3677,9 +3656,8 @@ class Paragraph extends AbstractHierarchy {
 	 * @return {Paragraph} 自身のインスタンス
 	 */
 	display(bDisplay) {
-		for (let row of this.rows()) {
+		for (let row of this.rows())
 			row.display(bDisplay);
-		}
 		return this;
 	}
 
@@ -3747,9 +3725,8 @@ class ConvertView extends AbstractHierarchy {
 	 * @return {Row} 現在選択中の行のインスタンス。選択行がなければ候補最後のひらがな行のインスタンス
 	 */
 	getSelect() {
-		for (let row of this.rows()) {
+		for (let row of this.rows())
 			if (row.hasClass('select')) return row;
-		}
 		return this.lastChild(); // 選択行がなければひらがな行
 	}
 
@@ -3795,9 +3772,9 @@ class ConvertView extends AbstractHierarchy {
 	 * @return {ConvertView} 自身のインスタンス
 	 */
 	active() {
-		for (let view of this.container().views()) {
-			if (view.hasClass('active')) { view.removeClass('active'); }
-		}
+		for (let view of this.container().views())
+			if (view.hasClass('active'))
+				view.removeClass('active');
 		this.addClass('active');
 		return this;
 	}
@@ -3831,9 +3808,10 @@ class ConvertView extends AbstractHierarchy {
 		if (index < 0) index = 0;
 		if (index >= this.childLength()) index = this.childLength() - 1;
 
-		for (let row of this.rows()) {
-			if (row.hasClass('select')) row.removeClass('select');
-		}
+		for (let row of this.rows())
+			if (row.hasClass('select'))
+				row.removeClass('select');
+
 		const newRow = this.rows(index);
 		newRow.addClass('select');
 		this.container().inputBuffer().insertPhrase(this.phraseNum(),newRow.text());
@@ -3961,12 +3939,10 @@ class ConvertView extends AbstractHierarchy {
 		let rtnKatakana = '';
 		for (let char of str) {
 			const cKatakana = key_table.katakana[char];
-			if (cKatakana) {
+			if (cKatakana)
 				rtnKatakana += cKatakana;
-			} else {
-				// 変換できなければ元の文字をそのまま連結
-				rtnKatakana += char;
-			}
+			else
+				rtnKatakana += char; // 変換できなければ元の文字をそのまま連結
 		}
 		return rtnKatakana;
 	}
@@ -4005,9 +3981,8 @@ class ConvertContainer extends AbstractHierarchy {
 	 * @return {ConvertView} 現在アクティブな変換候補一覧のインスタンス。なければnull
 	 */
 	activeView() {
-		for (let view of this.views()) {
+		for (let view of this.views())
 			if (view.isActive()) return view;
-		}
 		return null;
 	}
 
@@ -4089,9 +4064,8 @@ class ConvertContainer extends AbstractHierarchy {
 	 */
 	createViews(data) {
 		this.empty();
-		for (let phraseData of data) {
+		for (let phraseData of data)
 			this.append(new ConvertView(phraseData));
-		}
 		return this;
 	}
 	/**
@@ -4107,9 +4081,8 @@ class ConvertContainer extends AbstractHierarchy {
 			this.createViews(json);
 			this.inputBuffer().setPhraseNum();
 			// すべて変換第一候補を選択する
-			for (let view of this.views()) {
+			for (let view of this.views())
 				view.select(0);
-			}
 			// 最初の文節を選択
 			this.inputBuffer().select(0);
 
@@ -4128,7 +4101,7 @@ class ConvertContainer extends AbstractHierarchy {
 	shiftUp() {
 		const activeView = this.activeView();
 
-		if (activeView.kanaLength() === 1) { return this; }
+		if (activeView.kanaLength() === 1) return this;
 
 		// 最終文節から
 		// 最後の一字を分離して、二文節を変換し直す
@@ -4143,25 +4116,22 @@ class ConvertContainer extends AbstractHierarchy {
 			return this;
 		}
 
-		// 最終文節からではない
 		// 選択文字列から最後の一文字を取り除き、その次の文節の頭につなげてそれぞれを変換し直す
-		if (!activeView.isLast()) {
-			const activeKana = activeView.hiragana();
-			const nextView = activeView.next();
-			const nextKana = nextView.hiragana();
-			const sendString = activeKana.slice(0,-1) + ',' + activeKana.slice(-1) + nextKana;
-			Util.post("/tategaki/KanjiProxy",{
-				sentence: sendString
-			},function (json) {
-				const newFirst = new ConvertView(json[0]);
-				activeView.replace(newFirst);
-				newFirst.select(0);
-				const newSecond = new ConvertView(json[1]);
-				nextView.replace(newSecond);
-				newSecond.select(0);
-			});
-			return this;
-		}
+		const activeKana = activeView.hiragana();
+		const nextView = activeView.next();
+		const nextKana = nextView.hiragana();
+		const sendString = activeKana.slice(0,-1) + ',' + activeKana.slice(-1) + nextKana;
+		Util.post("/tategaki/KanjiProxy",{
+			sentence: sendString
+		},function (json) {
+			const newFirst = new ConvertView(json[0]);
+			activeView.replace(newFirst);
+			newFirst.select(0);
+			const newSecond = new ConvertView(json[1]);
+			nextView.replace(newSecond);
+			newSecond.select(0);
+		});
+		return this;
 	}
 	/**
 	 * 文節区切りをひとつ下にずらして変換し直します(非同期通信)
@@ -4172,7 +4142,7 @@ class ConvertContainer extends AbstractHierarchy {
 		const activeView = this.activeView();
 		const nextView = activeView.next();
 
-		if (activeView.isLast()) return;
+		if (activeView.isLast()) return this;
 
 		// 次の文節の文字数が１文字だけなら融合して、１文節として変換する
 		if (nextView.kanaLength() === 1) {
@@ -4280,9 +4250,8 @@ class ConvertContainer extends AbstractHierarchy {
 		// 文節番号の振り直し
 		this.inputBuffer().setPhraseNum();
 		// 最初の候補で置き換える
-		for (let newView of newViews) {
+		for (let newView of newViews)
 			newView.select(0);
-		}
 		if (oldView.isActive()) newViews[0].active();
 		return this;
 	}
@@ -4415,11 +4384,10 @@ class InputChar extends Char {
 	phraseNum(opt_newNum) {
 		if (opt_newNum === undefined) {
 			return this._phraseNum;
-		} else {
-			this.elem().dataset.phraseNum = opt_newNum;
-			this._phraseNum = opt_newNum;
-			return this;
 		}
+		this.elem().dataset.phraseNum = opt_newNum;
+		this._phraseNum = opt_newNum;
+		return this;
 	}
 
 	// --Style
@@ -4495,9 +4463,9 @@ class InputBuffer extends Row {
 	 */
 	phrases(num) {
 		const ret = [];
-		for (let char of this.chars()) {
-			if (char.isPhraseNum(num)) ret.push(char);
-		}
+		for (let char of this.chars())
+			if (char.isPhraseNum(num))
+				ret.push(char);
 		return ret;
 	}
 	/**
@@ -4506,9 +4474,9 @@ class InputBuffer extends Row {
 	 */
 	selectPhrases() {
 		const ret = [];
-		for (let char of this.chars()) {
-			if (char.isSelect()) ret.push(char);
-		}
+		for (let char of this.chars())
+			if (char.isSelect())
+				ret.push(char);
 		return ret;
 	}
 
@@ -4525,7 +4493,7 @@ class InputBuffer extends Row {
 	// --Status
 
 	/**
-	 * 変換候補一覧群を作成した後に、各入力文字に文節番号をふります
+	 * 各入力文字に文節番号をふります。変換候補一覧群を作成した後で使用してください
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	setPhraseNum() {
@@ -4533,9 +4501,8 @@ class InputBuffer extends Row {
 		for (let view of this.convertContainer().views()) {
 			const num = view.phraseNum();
 			const len = view.getSelect().length(); // 選択行がなければひらがなを使って計算
-			for (let i = 0; i < len; i++,cnt++) {
+			for (let i = 0; i < len; i++,cnt++)
 				this.chars(cnt).phraseNum(num);
-			}
 		}
 		return this;
 	}
@@ -4544,9 +4511,9 @@ class InputBuffer extends Row {
 	 * @return {number} 選択文節のインデックス。選択されていなければ-1
 	 */
 	selectIndex() {
-		for (let char of this.chars()) {
-			if (char.isSelect()) return char.phraseNum();
-		}
+		for (let char of this.chars())
+			if (char.isSelect())
+				return char.phraseNum();
 		return -1;
 	}
 
@@ -4737,9 +4704,8 @@ class InputBuffer extends Row {
 			if (phrases[0].isSelect()) newChar.select(); // 選択中の文節なら入替え文字も選択
 		}
 		// 古い文字を削除
-		for (let old of phrases) {
+		for (let old of phrases)
 			old.remove();
-		}
 		this.resize();
 		return this;
 	}
@@ -4753,9 +4719,8 @@ class InputBuffer extends Row {
 		const phrases = this.phrases(num);
 		if (phrases.length === 0) return this; // 指定された文節番号の文字が見つからなかった
 		const nextChar = phrases[phrases.length -1].next(); // 挿入用の文字。最後にはEOLがあるので、必ず存在する
-		for (let c of str) {
+		for (let c of str)
 			nextChar.before(new InputChar(this.cursorChar().createData(c),-num));
-		}
 		this.resize();
 		return this;
 	}
@@ -4789,12 +4754,10 @@ class InputBuffer extends Row {
 		let rtnKatakana = '';
 		for (let char of str) {
 			const cKatakana = key_table.katakana[char];
-			if (cKatakana) {
+			if (cKatakana)
 				rtnKatakana += cKatakana;
-			} else {
-				// 変換できなければ元の文字をそのまま連結
-				rtnKatakana += char;
-			}
+			else
+				rtnKatakana += char; // 変換できなければ元の文字をそのまま連結
 		}
 		return rtnKatakana;
 	}
@@ -4932,9 +4895,9 @@ class File extends AbstractHierarchy {
 	 * @return {FileList} 自身の属するファイルリストのインスタンス。見つからなければnull
 	 */
 	fileList() {
-		for (let parentDir = this.parent(); parentDir ;parentDir = parentDir.parent() ) {
-			if (parentDir.isRoot()) return parentDir;
-		}
+		for (let parentDir = this.parent(); parentDir ;parentDir = parentDir.parent() )
+			if (parentDir.isRoot())
+				return parentDir;
 		return null;
 	}
 
@@ -5192,11 +5155,10 @@ class Directory extends AbstractHierarchy {
 		this._name = data['directoryname'];
 		for (let id in data) {
 			if (id === 'directoryname') continue;
-			if (typeof data[id] === 'string') {
+			if (typeof data[id] === 'string')
 				this.append(new File(id,data[id]));
-			} else {
+			if (typeof data[id] === 'object')
 				this.append(new Directory(id,data[id]));
-			}
 		}
 	}
 
@@ -5221,9 +5183,9 @@ class Directory extends AbstractHierarchy {
 	 * @return {FileList} 自身の属するファイルリストのインスタンス。見つからなければnull
 	 */
 	fileList() {
-		for (let parentDir = this.parent(); parentDir ;parentDir = parentDir.parent() ) {
-			if (parentDir.isRoot()) return parentDir;
-		}
+		for (let parentDir = this.parent(); parentDir; parentDir = parentDir.parent())
+			if (parentDir.isRoot())
+				return parentDir;
 		return null;
 	}
 	/**
@@ -5232,7 +5194,8 @@ class Directory extends AbstractHierarchy {
 	 */
 	findNextFile() {
 		for (let fileList = this.fileList(), nextFile = fileList.findNextFile(this); nextFile; nextFile = fileList.findNextFile(nextFile))
-			if (!this.contains(nextFile)) return nextFile;
+			if (!this.contains(nextFile))
+				return nextFile;
 		return null;
 	}
 
@@ -5266,7 +5229,8 @@ class Directory extends AbstractHierarchy {
 	 */
 	contains(fileOrDirectory) {
 		for (let fileList = this.fileList(), parents = fileOrDirectory.parent(); parents !== fileList; parents = parents.parent())
-			if (parents === this) return true;
+			if (parents === this)
+				return true;
 		return false;
 	}
 
@@ -5384,11 +5348,10 @@ class FileList extends AbstractHierarchy {
 		this._$modal = $('#file_list_modal');
 		this._filterInputElem = document.getElementById('file_list_filter');
 		this.addEventListenerOnInput();
-		if (opt_data) {
+		if (opt_data)
 			this.init(opt_data);
-		} else {
+		else
 			this.read();
-		}
 	}
 	/**
 	 * 参照やDOMの構築を行います
@@ -5399,11 +5362,10 @@ class FileList extends AbstractHierarchy {
 		this.empty();
 		for (let id in data) {
 			if (id === 'directoryname') continue;
-			if (typeof data[id] === 'string') {
+			if (typeof data[id] === 'string')
 				this.append(new File(id,data[id]));
-			} else {
+			if (typeof data[id] === 'object')
 				this.append(new Directory(id,data[id]));
-			}
 		}
 		this.chainFile();
 		return this;
@@ -5439,9 +5401,9 @@ class FileList extends AbstractHierarchy {
 	 * @return {File} 現在開かれているファイルのインスタンス
 	 */
 	currentFile() {
-		for (let file = this.firstFile(); file; file = file.nextFile()) {
-			if (file.isOpen()) return file;
-		}
+		for (let file = this.firstFile(); file; file = file.nextFile())
+			if (file.isOpen())
+				return file;
 		return null;
 	}
 	/**
@@ -5466,11 +5428,12 @@ class FileList extends AbstractHierarchy {
 	 */
 	findFile(idOrName) {
 		const ret = [];
-		for (let file = this.firstFile(); file; file = file.nextFile()) {
-			if (file.id() == idOrName || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(file.name()))) {
+		this.each(file => {
+			if (file.isDirectory()) return;
+			if (file.id() == idOrName
+					|| (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(file.name())))
 				ret.push(file);
-			}
-		}
+		});
 		return ret;
 	}
 	/**
@@ -5481,10 +5444,11 @@ class FileList extends AbstractHierarchy {
 	 */
 	findDirectory(idOrName) {
 		const ret = [];
-		this.each(function (dir) {
-			if (dir.isDirectory && (dir.id() === idOrName || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(dir.name())))) {
+		this.each(dir => {
+			if (dir.isFile()) return;
+			if (dir.id() === idOrName
+					 || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(dir.name())))
 				ret.push(dir);
-			}
 		});
 		return ret;
 	}
@@ -5535,7 +5499,7 @@ class FileList extends AbstractHierarchy {
 	 */
 	chainFile() {
 		let prev;
-		this.each(function (file) {
+		this.each(file => {
 			if (!file.isFile()) return;
 			if (prev) prev.nextFile(file);
 			file.prevFile(prev);
@@ -5660,9 +5624,8 @@ class FileList extends AbstractHierarchy {
 		// 存在しないエレメントを削除しようとすることになりエラーが起こるため、オーバーライドする
 		const children = this.elem().children;
 		let child;
-		while (child = children[0]) {
+		while (child = children[0])
 			this.elem().removeChild(child);
-		}
 		return this;
 	}
 	/**
@@ -5671,7 +5634,7 @@ class FileList extends AbstractHierarchy {
 	 */
 	resetList() {
 		this.emptyElem();
-		this.each(function (file) {
+		this.each(file => {
 			file.parent().appendElem(file);
 		});
 		return this;
@@ -5684,11 +5647,10 @@ class FileList extends AbstractHierarchy {
 	filter(str) {
 		this.emptyElem();
 		const regexp = new RegExp('^'+ str +'.*','i');
-		this.each(function (file) {
-			if (regexp.test(file.name())) {
+		this.each(file => {
+			if (regexp.test(file.name()))
 				this.elem().appendChild(file.elem());
-			}
-		}.bind(this));
+		});
 		if (this.elem().children.length === 0) {
 			const li = document.createElement('li');
 			li.textContent = '該当するファイルは見つかりませんでした。';
@@ -5734,7 +5696,7 @@ class FileList extends AbstractHierarchy {
 		const file = currentFile && currentFile.prevFile();
 		if (file) {
 			file.open();
-		} else {
+		} else if (this.hasFile()) {
 			this.lastFile().open();
 		}
 		return this;
@@ -5760,9 +5722,8 @@ class FileList extends AbstractHierarchy {
 
 		if (fileLength > 0) {
 			if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。'))
-				for (let i = 0,file; file = files[i]; i++) {
+				for (let i = 0,file; file = files[i]; i++)
 					file.delete();
-				}
 			else 
 				console.log('[複数ファイル]削除できませんでした。:' + filename);
 		}
@@ -6144,16 +6105,15 @@ class SentenceContainer extends AbstractHierarchy {
 	// --Status
 
 	/**
-	 * 文書の内容を表したオブジェクトを作成します
-	 * @return {object} 文書内容を表すオブジェクト
+	 * 文書の内容を表したオブジェクトのjson文字列を作成します
+	 * @return {string} 文書内容を表すオブジェクトのjson文字列
 	 */
 	data() {
 		const data = {};
 		data["conf"] = this.menu().configueData();
 		const paraArr = [];
-		for (let paragraph of this.paragraphs()) {
+		for (let paragraph of this.paragraphs())
 			paraArr.push(paragraph.data());
-		}
 		data["text"] = paraArr;
 
 		return JSON.stringify(data);
@@ -6171,14 +6131,13 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer string} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイル名(引数を省略した場合)
 	 */
 	filename(opt_newFilename) {
-		if (opt_newFilename === undefined) {
+		if (opt_newFilename === undefined)
 			return this._filename;
-		} else {
-			this._filename = opt_newFilename;
-			this.titleElem().value = opt_newFilename;
-			this.titleElem().dataset.filename = opt_newFilename;
-			return this;
-		}
+
+		this._filename = opt_newFilename;
+		this.titleElem().value = opt_newFilename;
+		this.titleElem().dataset.filename = opt_newFilename;
+		return this;
 	}
 	/**
 	 * 現在のファイルに新たなIDを与える、あるいは引数省略で現在のファイルIDを取得します
@@ -6186,14 +6145,13 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイルID(引数を省略した場合)
 	 */
 	fileId(opt_newId) {
-		if (opt_newId === undefined) {
+		if (opt_newId === undefined)
 			return this._fileId;
-		} else {
-			const newId = opt_newId;
-			this._fileId = newId;
-			this.titleElem().dataset.fileId = newId;
-			return this;
-		}
+
+		const newId = opt_newId;
+		this._fileId = newId;
+		this.titleElem().dataset.fileId = newId;
+		return this;
 	}
 	/**
 	 * 最終更新日時を設定、あるいは引数省略で最終更新日時を取得します
@@ -6201,14 +6159,13 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer string} 自身のインスタンス(引数を渡した場合)、あるいは現在の最終更新日時の文字列(引数を省略した場合)
 	 */
 	saved(opt_newSaved) {
-		if (opt_newSaved === undefined) {
+		if (opt_newSaved === undefined)
 			return this._saved;
-		} else {
-			const newSaved = opt_newSaved;
-			this._saved = newSaved;
-			document.getElementById('saved').textContent = newSaved;
-			return this;
-		}
+
+		const newSaved = opt_newSaved;
+		this._saved = newSaved;
+		document.getElementById('saved').textContent = newSaved;
+		return this;
 	}
 	/**
 	 * 一行の文字数を変更する、あるいは引数省略で現在の設定上の一行の文字数を取得します
@@ -6216,15 +6173,14 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在の設定上の行内文字数(引数を省略した場合)
 	 */
 	strLenOnRow(opt_newStrLen) {
-		if (opt_newStrLen === undefined) {
+		if (opt_newStrLen === undefined)
 			return this._strLenOnRow;
-		} else {
-			const newStrLen = opt_newStrLen;
-			this._strLenOnRow = newStrLen;
-			this.cordinate().checkKinsoku().changeDisplay().breakPage().printInfo();
-			this.cursor().createCursorLine();
-			return this;
-		}
+
+		const newStrLen = opt_newStrLen;
+		this._strLenOnRow = newStrLen;
+		this.cordinate().checkKinsoku().changeDisplay().breakPage().printInfo();
+		this.cursor().createCursorLine();
+		return this;
 	}
 	// 設定上のページ内行数
 	/**
@@ -6233,14 +6189,13 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のページ内行数(引数を省略した場合)
 	 */
 	rowLenOnPage(opt_newRowLen) {
-		if (opt_newRowLen === undefined) {
+		if (opt_newRowLen === undefined)
 			return this._rowLenOnPage;
-		} else {
-			const newRowLen = opt_newRowLen;
-			this._rowLenOnPage = newRowLen;
-			this.breakPage().printInfo();
-			return this;
-		}
+
+		const newRowLen = opt_newRowLen;
+		this._rowLenOnPage = newRowLen;
+		this.breakPage().printInfo();
+		return this;
 	}
 	/**
 	 * 文書内文字数を数えます
@@ -6248,9 +6203,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 */
 	countChar() {
 		let cnt = 0;
-		for (let paragraph of this.paragraphs()) {
+		for (let paragraph of this.paragraphs())
 			cnt += paragraph.countChar();
-		}
 		return cnt;
 	}
 	// 全行数
@@ -6260,9 +6214,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 */
 	countRow() {
 		let cnt = 0;
-		for (let paragraph of this.paragraphs()) {
+		for (let paragraph of this.paragraphs())
 			cnt += paragraph.childLength();
-		}
 		return cnt;
 	}
 	/**
@@ -6271,9 +6224,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 */
 	countPage() {
 		let cnt = 0;
-		for (let row = this.firstRow(); row; row = row.next()) {
+		for (let row = this.firstRow(); row; row = row.next())
 			if (row.isPageBreak()) cnt++;
-		}
 		return cnt;
 	}
 
@@ -6303,9 +6255,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	removeClassFromAllChar(className) {
-		for (let paragraph of this.paragraphs()) {
+		for (let paragraph of this.paragraphs())
 			paragraph.removeClassFromAllChar(className);
-		}
 		return this;
 	}
 	/**
@@ -6315,9 +6266,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 *  @return {SentenceContainer} 自身のインスタンス
 	 */
 	search(str) {
-		for (let paragraph of this.paragraphs()) {
+		for (let paragraph of this.paragraphs())
 			paragraph.search(str);
-		}
 		return this;
 	}
 	/**
@@ -6359,11 +6309,13 @@ class SentenceContainer extends AbstractHierarchy {
 	selectChars(opt_bl) {
 		const ret = [];
 		const selection = getSelection();
-		if (this.selectText().length === 0) return ret; // rangeCount===0とすると、EOLのみ選択されることがある
+		if (this.selectText().length === 0)
+			return ret; // rangeCount===0とすると、EOLのみ選択されることがある
+
 		const selRange = selection.getRangeAt(0);
-		for (let char = this.firstChar(); char; char = char.nextChar()) {
+		for (let char = this.firstChar(); char; char = char.nextChar())
 			if (char.isInRange(selRange)) ret.push(char);
-		}
+
 		selRange.detach();
 		if (opt_bl) selection.removeAllRanges(); // 選択を解除する
 		return ret;
@@ -6466,9 +6418,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	cordinate() {
-		for (let paragraph of this.paragraphs()) {
+		for (let paragraph of this.paragraphs())
 			paragraph.cordinate();
-		}
 		return this;
 	}
 	/**
@@ -6477,9 +6428,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	checkKinsoku() {
-		for (let paragraph of this.paragraphs()) {
+		for (let paragraph of this.paragraphs())
 			paragraph.checkKinsoku();
-		}
 		return this;
 	}
 	// 改ページ
@@ -6493,11 +6443,10 @@ class SentenceContainer extends AbstractHierarchy {
 		let cnt1 = 0;
 		for (let paragraph of this.paragraphs()) {
 			for (let row of paragraph.rows()) {
-				if (cnt1 === 0 || cnt1 % pageNum === 0) { // １行目とpageNumの倍数行目
+				if (cnt1 === 0 || cnt1 % pageNum === 0) // １行目とpageNumの倍数行目
 					row.addClass('page-break');
-				} else {
+				else
 					row.removeClass('page-break');
-				}
 				cnt1++;
 			}
 		}
@@ -6506,11 +6455,10 @@ class SentenceContainer extends AbstractHierarchy {
 		const lastRow = this.countRow() -1;
 		for (let paragraph of this.paragraphs()) {
 			for (let row of paragraph.rows()) {
-				if ((cnt2 + 1) % pageNum === 0 || cnt2 === lastRow) { // (pageNumの倍数-1)行目と最終行
+				if ((cnt2 + 1) % pageNum === 0 || cnt2 === lastRow) // (pageNumの倍数-1)行目と最終行
 					row.addClass('page-last-row');
-				} else {
+				else
 					row.removeClass('page-last-row');
-				}
 				cnt2++;
 			}
 		}
@@ -6524,8 +6472,10 @@ class SentenceContainer extends AbstractHierarchy {
 	 */
 	userAlert(str,opt_color) {
 		this.userAlertElem().textContent = str;
-		if (opt_color) this.userAlertElem().style.color = opt_color;
-		else this.userAlertElem().style.color = '';
+		if (opt_color)
+			this.userAlertElem().style.color = opt_color;
+		else
+			this.userAlertElem().style.color = '';
 		return this;
 	}
 
@@ -6553,6 +6503,7 @@ class SentenceContainer extends AbstractHierarchy {
 			this.saveAsFile(this.filename());
 			return this;
 		}
+
 		this.userAlert('保存中');
 		Util.post('/tategaki/WriteJsonFile',{
 			user_id: this.userId(),
@@ -6588,7 +6539,7 @@ class SentenceContainer extends AbstractHierarchy {
 	}
 	/**
 	 * 新しいファイルを開きます
-	 * @param {string} filename 新しいファイル名
+	 * @param {string='newfile'} filename 新しいファイル名
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	newFile(filename) {
@@ -6681,21 +6632,22 @@ class SentenceContainer extends AbstractHierarchy {
 			const harfRange = (currentEnd - currentFirst)/2;
 			const ret = cursorIndex - harfRange;
 			return ret >= 0 ? ret : 0;
-		} else if (opt_pos === 'right') {
+		} 
+		if (opt_pos === 'right') {
 			return cursorIndex;
 		}
 
+		// カーソルが前にある
 		if (cursorIndex < currentFirst) {
-			// カーソルが前にある
 			return cursorIndex;
-		} else if (cursorIndex > currentEnd) {
-			// カーソルが後ろにある
+		} 
+		// カーソルが後ろにある
+		if (cursorIndex > currentEnd) {
 			return currentFirst + (cursorIndex - currentEnd);
-		} else {
-			// displayに囲まれた部分にdisplayでない行がある場合
-			// 途中行数変化
-			return currentFirst;
 		}
+		// displayに囲まれた部分にdisplayでない行がある場合
+		// 途中行数変化
+		return currentFirst;
 	}
 	/**
 	 * @private
@@ -6719,9 +6671,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {number} 現在表示されている行の最後の行のインデックス。表示行がなければ-1
 	 */
 	lastDisplayRowPos() {
-		for (let row = this.lastRow(),cnt = this.countRow() -1; row; row = row.prev(),cnt--) {
+		for (let row = this.lastRow(),cnt = this.countRow() -1; row; row = row.prev(),cnt--)
 			if (row.isDisplay()) return cnt;
-		}
 		return -1;
 	}
 	/**
@@ -6747,11 +6698,9 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {Row} 最初の表示行のインスタンス。表示行がなければnull
 	 */
 	firstDisplayRow() {
-		for (let paragraph of this.paragraphs()) {
-			for (let row of paragraph.rows()) {
+		for (let paragraph of this.paragraphs())
+			for (let row of paragraph.rows())
 				if (row.isDisplay()) return row;
-			}
-		}
 		return null;
 	}
 	/**
@@ -6760,9 +6709,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {Row} 最後の表示行のインスタンス。表示行がなければnull
 	 */
 	lastDisplayRow() {
-		for (let row = this.lastRow(); row; row = row.prev()) {
+		for (let row = this.lastRow(); row; row = row.prev())
 			if (row.isDisplay()) return row;
-		}
 		return null;
 	}
 
@@ -6773,7 +6721,7 @@ class SentenceContainer extends AbstractHierarchy {
 	shiftRightDisplay() {
 		const charPos = this.cursorRow().computeDisplayCharPos();
 		const firstDisplay = this.firstDisplayRow();
-		if (!firstDisplay.prev()) { return this; }
+		if (!firstDisplay.prev()) return this;
 		firstDisplay.prev().display(true,charPos);
 		this.lastDisplayRow().display(false);
 		return this;
@@ -6785,7 +6733,7 @@ class SentenceContainer extends AbstractHierarchy {
 	shiftLeftDisplay() {
 		const charPos = this.cursorRow().computeDisplayCharPos();
 		const lastDisplay = this.lastDisplayRow();
-		if (!lastDisplay.next()) { return this; }
+		if (!lastDisplay.next()) return this;
 		lastDisplay.next().display(true,charPos);
 		this.firstDisplayRow().display(false);
 		return this;
@@ -6929,11 +6877,12 @@ class SentenceContainer extends AbstractHierarchy {
 	 */
 	runWheel(e,isUp) {
 		const mvRowNum = 4; // 一度に動かす行数
-		if (isUp) {
-			for (let i = 0; i < mvRowNum; i++) { this.shiftRightDisplay(); }
-		} else {
-			for (let i = 0; i < mvRowNum; i++) { this.shiftLeftDisplay(); }
-		}
+		if (isUp)
+			for (let i = 0; i < mvRowNum; i++)
+				this.shiftRightDisplay();
+		else
+			for (let i = 0; i < mvRowNum; i++)
+				this.shiftLeftDisplay();
 		return this;
 	}
 
@@ -6988,9 +6937,10 @@ class SentenceContainer extends AbstractHierarchy {
 	addFileTitleEvent() {
 		// 与えっぱなし。実行内容もここで定義
 		this.titleElem().addEventListener('focusin',function (e) {
-			if (this.inputBuffer().isDisplay) { this.inputBuffer().empty().hide(); }
+			if (this.inputBuffer().isDisplay) this.inputBuffer().empty().hide();
 			this.removeKeydownEventListener();
 		}.bind(this),false);
+
 		this.titleElem().addEventListener('focusout',function (e) {
 			if (this.titleElem().value === '') {
 				this.userAlert('ファイル名が入力されていません','red');
