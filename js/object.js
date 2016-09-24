@@ -41,6 +41,7 @@ const Util = {
 		return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
 	},
 	post: function (url,data,callback) {
+		console.log('post send:', data);
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = 'json';
 		xhr.open('POST',url);
@@ -845,6 +846,7 @@ class CommandLine {
 				case ':delete':
 				case ':del':
 				case ':d':
+				case ':deldir':
 				case ':え':
 				case ':お':
 				case ':おぺｎ':
@@ -926,7 +928,7 @@ class CommandLine {
 			case ':お':
 			case ':おぺｎ':
 					 if (command[1]) {
-						 const files = this.fileList().findFile(commnad[1]);
+						 const files = this.fileList().findFile(command[1]);
 						 files.length > 0 && files[0].open();
 					 } else {
 						 this.sentenceContainer().newFile();
@@ -999,7 +1001,7 @@ class CommandLine {
 					 break;
 			case ':deldir':
 			case ':でｌぢｒ':
-					 this.fileList().deleteDirectory(command[1],false);
+					 this.fileList().deleteDirectory(command[1],true);
 					 break;
 			case ':noh':
 			case ':のｈ':
@@ -5224,6 +5226,15 @@ class Directory extends AbstractHierarchy {
 		}
 		return null;
 	}
+	/**
+	 * 自分の次のファイル(ディレクトリ、内部のファイルを除く)を探す
+	 * @return {File} 自分の次のファイル(ディレクトリ、内部のファイルを除く)。自分の後方にファイルがなければnull
+	 */
+	findNextFile() {
+		for (let fileList = this.fileList(), nextFile = fileList.findNextFile(this); nextFile; nextFile = fileList.findNextFile(nextFile))
+			if (!this.contains(nextFile)) return nextFile;
+		return null;
+	}
 
 	// --判定
 
@@ -5246,6 +5257,16 @@ class Directory extends AbstractHierarchy {
 	 * @return {boolean} 常にfalse
 	 */
 	isFile() {
+		return false;
+	}
+	/**
+	 * fileOrDirectoryがこのディレクトリ内にあるかどうかを判定します
+	 * @param {File Directory} fileOrDirectory 判定するファイル、またはディレクトリ
+	 * @return {boolean} 引数がこのディレクトリの中にあればtrue、そうでなければfalse
+	 */
+	contains(fileOrDirectory) {
+		for (let fileList = this.fileList(), parents = fileOrDirectory.parent(); parents !== fileList; parents = parents.parent())
+			if (parents === this) return true;
 		return false;
 	}
 
@@ -5307,14 +5328,25 @@ class Directory extends AbstractHierarchy {
 	 */
 	delete(opt_bl) {
 		const bl = opt_bl || false; // 引数省略の場合でも、明確にfalseを入れる
+		console.log("delete option:", bl);
 		Util.post("/tategaki/DeleteDirectory",{
 			directory_id: this.id(),
 			option: bl
 		},function (data) {
-			this.fileList().read();
+			const fileList = this.fileList();
+			fileList.read();
 			if (data.result === 'within') {
 				alert('ディレクトリが空ではないので削除できませんでした。');
+				return;
 			}
+
+			// 現在開いているファイルが自分の中にある場合、自分の次のファイルを開く
+			// 自分以降にファイルがなければ最初のファイル、それもなければ新しいファイルを開く
+			if (this.contains(fileList.currentFile())) {
+				const nextFile = this.findNextFile() || fileList.firstFile();
+				nextFile ? nextFile.open() : fileList.sentenceContainer().newFile();
+			}
+
 		}.bind(this));
 		return this;
 	}

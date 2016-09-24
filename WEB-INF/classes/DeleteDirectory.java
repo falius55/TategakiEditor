@@ -30,7 +30,7 @@ public class DeleteDirectory extends AbstractServlet  {
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			int directoryId = Integer.parseInt(request.getParameter("directory_id"));
-			boolean option = Boolean.getBoolean(request.getParameter("option"));
+			boolean option = Boolean.valueOf(request.getParameter("option"));
 			String rtnJson;
 			if (hasFileInDirectory(directoryId)) {
 				// ディレクトリ内にファイルが存在する
@@ -51,7 +51,7 @@ public class DeleteDirectory extends AbstractServlet  {
 			// レスポンス
 			out(rtnJson);
 
-			log("DeleteDirectory's directoryId:"+ directoryId);
+			log("DeleteDirectory's directoryId:"+ directoryId + ", option:"+ option);
 	}
 
 	// ディレクトリ内にファイルがあればtrue
