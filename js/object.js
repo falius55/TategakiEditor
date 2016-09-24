@@ -5053,9 +5053,7 @@ class File extends AbstractHierarchy {
 		data.user_id = sentenceContainer.userId();
 		data.file_id = this.id();
 		sentenceContainer.userAlert('読込中');
-		Util.post('/tategaki/ReadJsonFile',data,function (json) {
-			sentenceContainer.init(json).userAlert('読み込み完了');
-		}.bind(this));
+		Util.post('/tategaki/ReadJsonFile', data, json => sentenceContainer.init(json).userAlert('読み込み完了'));
 		return this;
 	}
 	/**
@@ -5068,26 +5066,33 @@ class File extends AbstractHierarchy {
 			user_id: this.fileList().sentenceContainer().userId(),
 			file_id: this.id()
 		},function (json) {
-			if (!result) { console.log('ファイル削除エラーです(ファイル番号：'+ this.id() + ')'); }
-					// 現在開いているファイルを削除したなら、前後どちらかのファイルを開く
-					// 同じディレクトリに他のファイルがなければ新しいファイルを開く
-					// 最後に、ファイルリストを作り直す
-					if (this.sentenceContainer().fileList().currentFile() === this) {
-						const nextFile = this.next() || this.prev();
-						if (nextFile) {
-							nextFile.open();
-							this.sentenceContainer().fileList().read();
-							return;
+			if (json.result == 'false') {
+				console.log('ファイル削除エラーです(ファイル番号：'+ this.id() + ')');
+						console.log('json.result', json.result);
+						return;
 						}
-						if (!nextFile) {
-							this.sentenceContainer().newFile();
-							this.sentenceContainer().fileList().read();
-							return;
+
+						const fileList = this.fileList();
+						const sentenceContainer = fileList.sentenceContainer();
+						// 現在開いているファイルを削除したなら、前後どちらかのファイルを開く
+						// 同じディレクトリに他のファイルがなければ新しいファイルを開く
+						// 最後に、ファイルリストを作り直す
+						if (fileList.currentFile() === this) {
+							const nextFile = this.nextFile() || this.prevFile();
+							if (nextFile) {
+								nextFile.open();
+								fileList.read();
+								return;
+							}
+							if (!nextFile) {
+								sentenceContainer.newFile();
+								fileList.read();
+								return;
+							}
 						}
-					}
-					this.sentenceContainer().fileList().read();
-					}.bind(this));
-			return this;
+						fileList.read();
+		}.bind(this));
+		return this;
 	}
 	/**
 	 * 自身をnewParentDirの中に移動し、ファイルリストを作り直します(非同期通信)
@@ -5101,9 +5106,7 @@ class File extends AbstractHierarchy {
 			user_id: fileList.sentenceContainer().userId(),
 			file_id: this.id(),
 			directory_id: newParentDir.id()
-		},function (data) {
-			fileList.read();
-		});
+		}, data => fileList.read());
 		return this;
 	}
 
