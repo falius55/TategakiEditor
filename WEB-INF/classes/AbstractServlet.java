@@ -119,6 +119,19 @@ abstract public class AbstractServlet extends HttpServlet  {
 		out.close();
 		out = null;
 	}
+	/**
+	 * ルートディレクトリのIDを取得する
+	 * @param userId ユーザーID
+	 * @return ユーザーID
+	 * @throws SQLException ユーザーIDに対応するルートディレクトリのレコードがデータベース上に見つからなかった場合
+	 */
+	protected int rootId(int userId) throws SQLException {
+		executeSql("select * from file_table where user_id = ? and type = ? ").setInt(userId).setString("root").query();
+		if (next()) {
+			return getInt("id");
+		}
+		throw new SQLException("database has no data");	
+	}
 
 	/*
 	 * DataBase

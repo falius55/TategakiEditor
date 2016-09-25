@@ -27,29 +27,26 @@ public class DeleteFile extends AbstractServlet {
 			ready(request, response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
-			// --- データベースから該当idのファイルレコードを削除 ---
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
-			int num = executeSql("delete from file_table where id = ?").setInt(fileId).update();
+			int num = deleteFileFromDatabase(fileId);
 
-			// --- 該当ファイルを削除 ---
 			int userId = Integer.parseInt(request.getParameter("user_id"));
-			// rootIdの取得
-			executeSql("select * from file_table where user_id = ? and type = ? ").setInt(userId).setString("root").query();
-			int rootId;
-			if (next()) {
-				rootId = getInt("id");
-			} else {
-				throw new SQLException("database has no new data");	
-			}
+			int rootId = rootId(userId);
 
-			boolean b = deleteFile(String.format("data/%d/%d.txt",rootId,fileId)); // 削除
+			boolean b = deleteFile(String.format("data/%d/%d.txt",rootId,fileId));
 
-			//	ajaxへ送信
 			out("{\"successRecord\" : \"%d\",\"result\": \"%b\"}\n",num,b);
 		} catch(SQLException e) {
 			log(e.getMessage());
 		} catch(Exception e) {
 			log(e.getMessage());
 		}
+	}
+
+	/**
+	 * @return 削除数
+	 */
+	private int deleteFileFromDatabase(int fileId) {
+		return executeSql("delete from file_table where id = ?").setInt(fileId).update();
 	}
 }

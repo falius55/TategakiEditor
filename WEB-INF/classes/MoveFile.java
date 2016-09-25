@@ -24,28 +24,27 @@ public class MoveFile extends AbstractServlet  {
 		throws IOException, ServletException {
 
 		try {
-			response.setContentType("application/json; charset=UTF-8");
-			// 受取のcharset
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
+			ready(request, response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
 			int parentDirId = Integer.parseInt(request.getParameter("directory_id"));
 
-			// 親ディレクトリの更新
-			executeSql("update file_table set parent_dir = ? where id = ?").setInt(parentDirId).setInt(fileId).update();
+			changeParentDir(fileId, parentDirId);
 
-			// レスポンス
 			String rtnJson = "{\"result\":\"success\"}";
-			out.println(rtnJson);
+			out(rtnJson);
 
 			log("MoveFile's parentDirId:"+ parentDirId + ",fileId:"+ fileId);
-			out.close();
-		} catch(IOException e) {
-			log(e.getMessage());
 		} catch(Exception e) {
 			log(e.getMessage());
 		}
+	}
+
+	/**
+	 * 親ディレクトリを変更します
+	 */
+	private void changeParentDir(int fileId, int newParentId) {
+		executeSql("update file_table set parent_dir = ? where id = ?").setInt(newParentId).setInt(fileId).update();
 	}
 }

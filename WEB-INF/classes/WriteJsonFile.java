@@ -26,52 +26,36 @@ public class WriteJsonFile extends AbstractServlet {
 		throws IOException, ServletException {
 
 		try {
-			response.setContentType("application/json; charset=UTF-8");
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
+			ready(request, response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			// ファイル名、最終更新日の更新
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
-
-			// ファイル名
-			String fileName = request.getParameter("filename");
-			executeSql("update file_table set filename = ? where id = ?").setString(fileName).setInt(fileId).update();
-
-			// 更新日
+			String filename = request.getParameter("filename");
 			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			executeSql("update file_table set saved = ? where id = ?").setTimeMillis(savedMillis).setInt(fileId).update();
 
-			// userIdから、ルートディレクトリのidを取得
-			log("get root id");
-			int userId = Integer.parseInt(request.getParameter("user_id"));
-			executeSql("select * from edit_users where id = ?").setInt(userId).query();
+			updateFilename(fileId, filename);
+			updateSaved(fileId, savedMillis);
 
-			int rootId;
-			if (next()) {
-				rootId = getInt("root_file_id");
-			} else {
-				log("database has no new data");
-				throw new SQLException();	
-			}
-			
 			// テキストファイルへの書き込み
-			log("witing text file");
-
+			int userId = Integer.parseInt(request.getParameter("user_id"));
+			int rootId = rootId(userId);
 			String json = request.getParameter("json");
 			writeFile(String.format("data/%d/%d.json",rootId,fileId), json);
 
-			// レスポンス
 			String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",dateFormat(savedMillis));
-			out.println(rtnJson);
+			out(rtnJson);
 
-			out.close();
-		} catch(IOException e) {
-			log(e.getMessage());
 		} catch(SQLException e) {
 			log(e.getMessage());
 		} catch(Exception e) {
 			log(e.getMessage());
 		}
+	}
+	private void updateFilename(int fileId, String newFilename) {
+		executeSql("update file_table set filename = ? where id = ?").setString(newFilename).setInt(fileId).update();
+	}
+	private void updateSaved(int fileId, long newSaved) {
+		executeSql("update file_table set saved = ? where id = ?").setTimeMillis(newSaved).setInt(fileId).update();
 	}
 }

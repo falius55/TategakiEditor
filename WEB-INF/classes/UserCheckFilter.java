@@ -25,11 +25,10 @@ public class UserCheckFilter implements Filter {
 				session = servletrequest.getSession(true);
 
 				servletresponse.sendRedirect("/tategaki/loginpage.jsp");
-			} else {
-				Boolean loginCheck = (Boolean)session.getAttribute("login");
-				if (loginCheck == null || loginCheck.equals(Boolean.FALSE)) {
-					servletresponse.sendRedirect("/tategaki/loginpage.jsp");
-				}
+			}
+			Boolean loginCheck = (Boolean)session.getAttribute("login");
+			if (loginCheck == null || loginCheck.equals(Boolean.FALSE)) {
+				servletresponse.sendRedirect("/tategaki/loginpage.jsp");
 			}
 			chain.doFilter(request,response);
 		} catch (ServletException e) {

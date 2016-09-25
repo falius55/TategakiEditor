@@ -33,19 +33,9 @@ public class DeleteDirectory extends AbstractServlet  {
 			boolean option = Boolean.valueOf(request.getParameter("option"));
 			String rtnJson;
 			if (hasFileInDirectory(directoryId)) {
-				// ディレクトリ内にファイルが存在する
-				if (option) {
-					// 強制的にディレクトリ内ファイルごと削除する
-					// データベース上だけ
-					executeSql("delete from file_table where id = ? or parent_dir = ?").setInt(directoryId).setInt(directoryId).update();
-					rtnJson = "{\"result\":\"success(fileIn)\"}";
-				} else {
-					rtnJson = "{\"result\":\"notEmpty\"}";
-				}
+				rtnJson = deleteInDirectory(directoryId, option);
 			} else {
-				// ディレクトリ内にファイルが存在しない
-				executeSql("delete from file_table where id = ?").setInt(directoryId).update();
-				rtnJson = "{\"result\":\"success\"}";
+				rtnJson = deleteEmptyDirectory(directoryId);
 			}
 
 			// レスポンス
@@ -58,5 +48,29 @@ public class DeleteDirectory extends AbstractServlet  {
 	private boolean hasFileInDirectory(int directoryId) {
 		executeSql("select * from file_table where parent_dir = ?").setInt(directoryId).query();
 		return next();
+	}
+
+	/**
+	 * 空のディレクトリを削除します
+	 * @param directoryId 削除するディレクトリのID
+	 */
+	private String deleteEmptyDirectory(int directoryId) {
+		executeSql("delete from file_table where id = ?").setInt(directoryId).update();
+		return "{\"result\":\"success\"}";
+	}
+
+	/**
+	 * ディレクトリ内にファイルが存在する場合の削除処理を行います
+	 * @param directoryId 削除するディレクトリのID
+	 * @param option 中のファイルごと削除する場合はtrue、そうでなければfalse
+	 */
+	private String deleteInDirectory(int directoryId, boolean option) {
+		if (option) {
+			// 強制的にディレクトリ内ファイルごと削除する
+			// データベース上だけ
+			executeSql("delete from file_table where id = ? or parent_dir = ?").setInt(directoryId).setInt(directoryId).update();
+			return "{\"result\":\"success(fileIn)\"}";
+		}
+		return "{\"result\":\"notEmpty\"}";
 	}
 }

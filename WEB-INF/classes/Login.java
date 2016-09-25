@@ -23,7 +23,6 @@ public class Login extends AbstractServlet {
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 
-		// フォームからの情報受取
 		String user = request.getParameter("username");
 		String pass = request.getParameter("password");
 

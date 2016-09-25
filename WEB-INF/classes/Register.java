@@ -22,10 +22,8 @@ public class Register extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
-		response.setContentType("application/json; charset=UTF-8");
-		PrintWriter out = response.getWriter();
+		ready(request, response);
 
-		// フォームからの情報受取
 		String user = request.getParameter("username");
 		String pass = request.getParameter("password");
 
@@ -35,18 +33,16 @@ public class Register extends AbstractServlet {
 		boolean check = registerUser(user,pass);
 
 		if (check) {
-			// 認証済みにセット
 			session.setAttribute("registered",Boolean.TRUE);
 
 			response.sendRedirect("/tategaki/loginpage.jsp");
 		} else {
-			// 認証に失敗したら、登録画面に戻す
 			session.setAttribute("registered",Boolean.FALSE);
 			response.sendRedirect("/tategaki/register.jsp");
 		}
 	}
 
-	protected boolean registerUser(String user,String pass) {
+	private boolean registerUser(String user,String pass) {
 		if (user == null || user.length() == 0 || pass == null || pass.length() == 0) {
 			return false;
 		}	
@@ -54,46 +50,10 @@ public class Register extends AbstractServlet {
 		java.util.Date nowDate = new java.util.Date();
 		try {
 
-			// データベースへのユーザー登録
-			long curMillis = new java.util.Date().getTime();
-			executeSql("insert into edit_users (name,password,registered) values (?,?,?)")
-				.setString(user).setString(pass).setTimeMillis(curMillis).update();
+			createUserRecord(user, pass);
 
-			// ユーザー専用ディレクトリの作成
-
-			// ユーザーIdの取得
-			executeSql("select * from edit_users where name = ? and password = ? and registered = ?")
-				.setString(user).setString(pass).setTimeMillis(curMillis).query();
-			int userId;
-			if (next()) {
-				userId = getInt("id");
-			} else {
-				log("database has no new data");
-				throw new SQLException();	
-			}
-
-			// データベースへのディレクトリ情報登録
-			executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
-				.setString("root").setString("root").setInt(0).setInt(userId).setTimeMillis(curMillis).update();
-
-			// rootIdの取得
-			executeSql("select * from file_table where user_id = ? and type = ? ")
-				.setInt(userId).setString("root").query();
-			int rootId;
-			if (next()) {
-				rootId = getInt("id");
-			} else {
-				log("database has no new data");
-				throw new SQLException();	
-			}
-
-			// edit_usersへのrootディレクトリ情報の登録
-			executeSql("update edit_users set root_file_id = ? where id = ?").setInt(rootId).setInt(userId).update();
-
-			// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
-			String path = contextPath(String.format("data/%d",rootId));	// ルートディレクトリ/data/userIdとなる
-			File userRootDir = new File(path);
-			userRootDir.mkdirs(); // dataディレクトリが存在しない場合は同時に作成される
+			int userId = userId(user, pass);
+			createRootDirectory(userId);
 
 			return true;
 
@@ -101,5 +61,49 @@ public class Register extends AbstractServlet {
 			log(e.getMessage());
 			return false;
 		}
+	}
+
+	/**
+	 * データベースへのユーザー登録を行います
+	 */
+	private void createUserRecord(String username, String password) {
+		// データベースへのユーザー登録
+		long curMillis = new java.util.Date().getTime();
+		executeSql("insert into edit_users (name,password,registered) values (?,?,?)")
+			.setString(username).setString(password).setTimeMillis(curMillis).update();
+	}
+
+	/**
+	 * ユーザーIDを取得します
+	 */
+	private int userId(String username, String password) throws SQLException {
+		executeSql("select * from edit_users where name = ? and password = ?")
+			.setString(username).setString(password).query();
+		if (next()) {
+			return getInt("id");
+		}
+		throw new SQLException("database has no data");	
+	}
+
+	/**
+	 * ユーザー専用ディレクトリを作成します
+	 */
+	private void createRootDirectory(int userId) throws SQLException {
+		long curMillis = new java.util.Date().getTime();
+
+		// データベースへのディレクトリ情報登録
+		executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
+			.setString("root").setString("root").setInt(0).setInt(userId).setTimeMillis(curMillis).update();
+
+		int rootId = rootId(userId);
+
+		// edit_usersへのrootディレクトリ情報の登録
+		executeSql("update edit_users set root_file_id = ? where id = ?").setInt(rootId).setInt(userId).update();
+
+		// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
+		String path = contextPath(String.format("data/%d",rootId));	// ルートディレクトリ/data/userIdとなる
+		File userRootDir = new File(path);
+
+		userRootDir.mkdirs(); // dataディレクトリが存在しない場合は同時に作成される
 	}
 }

@@ -28,32 +28,14 @@ public class DirectoryMaker extends AbstractServlet  {
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
 			int userId = Integer.parseInt(request.getParameter("user_id"));
-
-			// userIdから、ルートディレクトリのidを取得
-			executeSql("select * from edit_users where id = ?").setInt(userId).query();
-			int rootId;
-			if (next()) {
-				rootId = getInt("root_file_id");
-			} else {
-				log("database has no new data");
-				throw new SQLException();	
-			}
+			int rootId = rootId(userId);
 			
-			// 行を挿入し、ファイル名、ユーザーID、最終更新日を保存
 			String directoryname = request.getParameter("directoryname");
 			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
-				.setString(directoryname).setString("dir").setInt(rootId).setInt(userId).setTimeMillis(savedMillis).update();
+			insertDirectoryRecord(directoryname, rootId, userId, savedMillis);
 
 			// 新しいfileIdを取得
-			executeSql("select * from file_table where user_id = ? and saved = ?").setInt(userId).setTimeMillis(savedMillis).query();
-
-			int directoryId;
-			if (next()) {
-				directoryId = getInt("id");
-			} else {
-				throw new SQLException();
-			}
+			int directoryId = queryFileIdFromSaved(userId, savedMillis);
 
 			//	ajaxへ送信
 			String rtn = String.format("{\"newDirectoryID\" : \"%d\",\"directoryname\" : \"%s\"}",directoryId,directoryname);
@@ -65,5 +47,31 @@ public class DirectoryMaker extends AbstractServlet  {
 		} catch(Exception e) {
 			log(e.getMessage());
 		}
+	}
+
+	/**
+	 * 行を挿入し、ディレクトリ名、ユーザーID、最終更新日を保存します
+	 * @param directoryName ディレクトリ名
+	 * @param rootId ルートディレクトリのID
+	 * @param userId ユーザーID
+	 * @param savedMillis 最終更新日時のミリ秒
+	 */
+	private void insertDirectoryRecord(String directoryName, int rootId, int userId, long savedMillis) {
+		executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
+			.setString(directoryName).setString("dir").setInt(rootId).setInt(userId).setTimeMillis(savedMillis).update();
+	}
+
+	/**
+	 * 指定された最終更新日時に合致する特定のファイルIDを取得します
+	 * @param userId ユーザーID
+	 * @param savedMillis 最終更新日時のミリ秒
+	 */
+	private int queryFileIdFromSaved(int userId, long savedMillis) throws SQLException {
+		executeSql("select * from file_table where user_id = ? and saved = ?")
+			.setInt(userId).setTimeMillis(savedMillis).query();
+		if (next()) {
+			return getInt("id");
+		}
+		throw new SQLException("database has no data");
 	}
 }

@@ -1,9 +1,11 @@
 import java.io.PrintWriter;
 import java.io.InputStream;
-import java.io.BufferedInputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -58,23 +60,27 @@ public class KanjiProxy extends HttpServlet {
 	 * @return 通信で得た漢字変換候補のJSON文字列
 	 */
 	public static String getData(String str) {
+		// TODO: 読み込みは、bufferedReaderに変換してlinesで読み込む
 		byte[] b = new byte[10000];
-		try{
+		try {
 			// Google CGI API for Japanese Input(Google日本語入力API)
-		String strUrl = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + str;
-		URL url = new URL(strUrl);
-		InputStream in = url.openStream();
-		BufferedInputStream br = new BufferedInputStream(in);
-		br.read(b);
-		br.close();
-		in.close();
-		}catch(MalformedURLException e){
+			String strUrl = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + str;
+			URL url = new URL(strUrl);
+			InputStream in = url.openStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+			String ret = br.lines().collect(Collectors.joining());
+
+			in.close();
+			br.close();
+			return ret;
+		} catch(MalformedURLException e) {
 			System.err.println(e);
-		}catch(IOException e){
+		} catch(IOException e) {
 			System.err.println(e);
 		}
 		int i;
-		for(i = 0;b[i] != 0 && i < b.length;i++); // 読み込みバイト数を数える
+		for(i = 0; b[i] != 0 && i < b.length; i++); // 読み込みバイト数を数える
 		return new String(b,0,i);
 	}
 }

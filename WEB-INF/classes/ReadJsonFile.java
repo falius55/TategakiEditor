@@ -29,22 +29,11 @@ public class ReadJsonFile extends AbstractServlet  {
 			ready(request,response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
-			//	idから目的のファイル名、最終更新日を取得
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
-			executeSql("select * from file_table where id = ?").setInt(fileId).query();
+			String fileName = filename(fileId);
+			String saved = saved(fileId);
 
-			log("fileId"+ fileId);
-			String fileName;
-			String saved;
-			if (next()) {
-				fileName = getString("filename");
-				saved = getDateFormat("saved");
-			} else {
-				log("no database data");
-				throw new SQLException();	
-			}
-
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append("{\"filename\":\"");
 			sb.append(fileName);
 			sb.append("\",");
@@ -55,20 +44,13 @@ public class ReadJsonFile extends AbstractServlet  {
 			sb.append(saved);
 			sb.append("\",");
 
-			// userIdから、ルートディレクトリのidを取得
 			int userId = Integer.parseInt(request.getParameter("user_id"));
-			executeSql("select * from edit_users where id = ?").setInt(userId).query();
-			int rootId;
-			if (next()) {
-				rootId = getInt("root_file_id");
-			} else {
-				throw new SQLException("database has no new data");	
-			}
+			int rootId = rootId(userId);
 
-			//	ファイル読込
 			sb.append("\"userId\":\"");
 			sb.append(userId);
 			sb.append("\",");
+			//	ファイル読込
 			sb.append("\"data\":");
 			sb.append(readFile(String.format("data/%d/%d.json",rootId,fileId)));
 			sb.append("}");
@@ -84,5 +66,20 @@ public class ReadJsonFile extends AbstractServlet  {
 		} catch(Exception e) {
 			log(e.getMessage());
 		}
+	}
+
+	private String filename(int fileId) throws SQLException {
+		executeSql("select * from file_table where id = ?").setInt(fileId).query();
+
+		if (next())
+			return getString("filename");
+		throw new SQLException("no database data");	
+	}
+	private String saved(int fileId) throws SQLException {
+		executeSql("select * from file_table where id = ?").setInt(fileId).query();
+
+		if (next())
+			return getDateFormat("saved");
+		throw new SQLException("no database data");	
 	}
 }

@@ -38,21 +38,11 @@ public class FileListMaker extends AbstractServlet  {
 			ready(request, response);
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor",/* username = */"serveruser", /* password = */"digk473");
 
-			// userIdから、ルートディレクトリのidを取得
 			int userId = Integer.parseInt(request.getParameter("user_id"));
-			executeSql("select * from edit_users where id = ?").setInt(userId).query();
-			int rootId;
-			if (next()) {
-				rootId = getInt("root_file_id");
-			} else {
-				log("database has no new data");
-				throw new SQLException();	
-			}
+			int rootId = rootId(userId);
 
-			//	 ajaxへ送信
 			String rtnJson = getFileJson(userId,rootId);
 			out(rtnJson);
-
 
 			log("FileListMaker return is " + rtnJson);
 		} catch(SQLException e) {
@@ -62,9 +52,30 @@ public class FileListMaker extends AbstractServlet  {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * <code>
+	 *  // 戻り値例
+	 * {
+	 * 	"directoryname": "root",
+	 * 	"1":"sample",
+	 * 	"8":"file",
+	 * 	"6": {
+	 * 		"directoryname": "dirname",
+	 * 		"4":"indirfile",
+	 * 		"9":"file",
+	 * 		"12": {
+	 * 			"directoryname": "seconddir",
+	 * 			"17": "file"
+	 * 		}
+	 * 	}
+	 * }
+	 * </code>
+	 * </pre>
+	 */
 	private String getFileJson(int userId,int parentId) {
 		// 再帰的にデータベースへの問い合わせを行うため、preparestatementを一つしか持てないexecuteSql()が使えない
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		try {
 			String sql = "select * from file_table where user_id = ? and (parent_dir = ? or id = ?)";
 			PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -73,7 +84,7 @@ public class FileListMaker extends AbstractServlet  {
 			pstmt.setInt(3,parentId);
 			ResultSet rs = pstmt.executeQuery();
 			sb.append("{");
-			for (int i=0;rs.next();i++) {
+			for (int i = 0; rs.next(); i++) {
 				if(i != 0) sb.append(",");
 				int fileId = rs.getInt("id");
 				sb.append("\"");

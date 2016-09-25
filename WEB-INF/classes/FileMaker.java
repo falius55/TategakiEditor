@@ -28,33 +28,14 @@ public class FileMaker extends AbstractServlet  {
 			PrintWriter out = response.getWriter();
 			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 
-			// userIdから、ルートディレクトリのidを取得
 			int userId = Integer.parseInt(request.getParameter("user_id"));
-			executeSql("select * from edit_users where id = ?").setInt(userId).query();
+			int rootId = rootId(userId);
 
-			int rootId;
-			if (next()) {
-				rootId = getInt("root_file_id");
-			} else {
-				log("database has no new data");
-				throw new SQLException();	
-			}
-
-			// 行を挿入し、ファイルId、ユーザー名、最終更新日を保存
 			String fileName = request.getParameter("filename");
 			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
-				.setString(fileName).setString("file").setInt(rootId).setInt(userId).setTimeMillis(savedMillis).update();
+			insertFileRecord(fileName, rootId, userId, savedMillis);
 
-			// 新しいfileIdを取得
-			executeSql("select * from file_table where user_id = ? and saved = ?").setInt(userId).setTimeMillis(savedMillis).query();
-
-			int fileId;
-			if (next()) {
-				fileId = getInt("id");
-			} else {
-				throw new SQLException();
-			}
+			int fileId = queryFileIdFromSaved(userId, savedMillis);
 
 			// ファイルを作成
 			createFile(String.format("data/%d/%d.txt",rootId,fileId));
@@ -71,5 +52,30 @@ public class FileMaker extends AbstractServlet  {
 		} catch(Exception e) {
 			log(e.getMessage());
 		}
+	}
+
+	/**
+	 * 行を挿入し、ファイル名、ユーザーID、最終更新日を保存します
+	 * @param directoryName ディレクトリ名
+	 * @param rootId ルートディレクトリのID
+	 * @param userId ユーザーID
+	 * @param savedMillis 最終更新日時のミリ秒
+	 */
+	private void insertFileRecord(String fileName, int rootId, int userId, long savedMillis) {
+		executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
+			.setString(fileName).setString("file").setInt(rootId).setInt(userId).setTimeMillis(savedMillis).update();
+	}
+	/**
+	 * 指定された最終更新日時に合致する特定のファイルIDを取得します
+	 * @param userId ユーザーID
+	 * @param savedMillis 最終更新日時のミリ秒
+	 */
+	private int queryFileIdFromSaved(int userId, long savedMillis) throws SQLException {
+		executeSql("select * from file_table where user_id = ? and saved = ?")
+			.setInt(userId).setTimeMillis(savedMillis).query();
+		if (next()) {
+			return getInt("id");
+		}
+		throw new SQLException();
 	}
 }
