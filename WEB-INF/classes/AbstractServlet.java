@@ -11,6 +11,12 @@ import java.sql.ResultSet;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalDouble;
+import java.util.OptionalLong;
+import java.util.List;
+import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,15 +29,12 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <code>
  * // データベースへの接続
- * String url = "jdbc:mysql://network_adress/database_name";
- * String user = "username";
- * String password = "pass";
- * connectDatabase(url,user,password);
+ * connectDatabase();
  *
  * // データベースへの問い合わせ
  * int id = Integer.parseInt(request.getParameter("id"));
  *	long savedMillis = Long.parseLong(request.getParameter("saved"));
- * executeSql("select * from table_name where id = ? and save = ?")
+ * Entry entry = executeSql("select * from table_name where id = ? and save = ?")
  * 			.setInt(id).setTimeMillis(savedMillis) // ?への値は前から順にセットされる
  * 			.query(); // 実行	データの取得ではなく更新ならupdate()を使う
  *
@@ -39,23 +42,23 @@ import javax.servlet.http.HttpServletResponse;
  * int id;
  * long savedMillis;
  * String saved;
- * if (next()) {
- *		id = getInt("id");
- *		savedMillis = getTimeMillis("saved"); // ミリ秒で取得される
- *		saved = getDateFormat("saved"); // "yyyy-MM-dd HH:mm:ss"のフォーマットで取得する
+ * if (entry.next()) {
+ *		id = entry.getInt("id");
+ *		savedMillis = entry.getTimeMillis("saved"); // ミリ秒で取得される
+ *		saved = entry.getDateFormat("saved"); // "yyyy-MM-dd HH:mm:ss"のフォーマットで取得する
  * }
  * </code>
  * </pre>
- * <p>※この使い方は同時並行で使えないため注意(二度問い合わせする場合は、一度目の問い合わせの処理を完全に終えてから二度目の問い合わせを行うこと)
  */
 abstract public class AbstractServlet extends HttpServlet  {
 	private PrintWriter out = null;
 
-	private PreparedStatement preparedStatement = null;
-	private ResultSet resultSet = null;
-	protected Connection connection = null; // FileListMakerでも利用するためprotected
+	private static final String URL = "jdbc:mysql://localhost/tategaki_editor";
+	private static final String USER = "serveruser";
+	private static final String PASSWORD = "digk473";
 
-	private int indexCounter = 0;
+	private Connection connection = null;
+	private List<Entry> entries = new ArrayList<Entry>();
 
 	/*
 	 *	common operator
@@ -86,9 +89,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 */
 	public void destroy() {
 		try {
-			if (preparedStatement != null) {
-				preparedStatement.close();
-			}
+			entryClose();
 			if (connection != null) {
 				connection.close();
 			}
@@ -126,9 +127,9 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 * @throws SQLException ユーザーIDに対応するルートディレクトリのレコードがデータベース上に見つからなかった場合
 	 */
 	protected int rootId(int userId) throws SQLException {
-		executeSql("select * from file_table where user_id = ? and type = ? ").setInt(userId).setString("root").query();
-		if (next()) {
-			return getInt("id");
+		Entry entry = executeSql("select * from file_table where user_id = ? and type = ? ").setInt(userId).setString("root").query();
+		if (entry.next()) {
+			return entry.getInt("id").orElseThrow(() -> new SQLException("not found database data"));
 		}
 		throw new SQLException("database has no data");	
 	}
@@ -142,13 +143,13 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	@param	user	データベースのユーザー名
 	 *	@param	password	データベースのパスワード
 	 */
-	protected void connectDatabase(String url, String user, String password) {
+	protected void connectDatabase() {
 		try {
 			// 指定したクラスのインスタンスを作成してJDBCドライバをロードする
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 
 			// Drivermanagerに接続(データベースへの接続)
-			connection = DriverManager.getConnection(url,user,password);
+			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 
 		} catch (ClassNotFoundException e) {
 			log(e.getMessage());
@@ -164,256 +165,25 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	@param	sql	SQLへの問い合わせ文
 	 *	@return 自らのインスタンス
 	 */
-	protected AbstractServlet executeSql(String sql) {
+	protected Entry executeSql(String sql) {
+		Entry entry = null;
 		try {
-			if (preparedStatement != null) {
-				preparedStatement.close();
-			}
-			indexCounter = 0;
-			preparedStatement = connection.prepareStatement(sql);
+			entry = new Entry(sql);
 		} catch (SQLException e) {
 			log(e.getMessage());
 		}
-		return this;
+		entries.add(entry);
+		return entry;
 	}
-
-	/**
-	 *	SQL文のクエスチョンマークにint値をセットします
-	 *	@param x セットする整数
-	 *	@return 自らのインスタンス
-	 */
-	protected AbstractServlet setInt(int x) {
-		try {
-			indexCounter++;
-			preparedStatement.setInt(indexCounter,x);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return this;
-	}
-
-	/**
-	 *	SQL文のクエスチョンマークに文字列をセットします
-	 *	@param x セットする文字列
-	 *	@return 自らのインスタンス
-	 */
-	protected AbstractServlet setString(String x) {
-		try {
-			indexCounter++;
-			preparedStatement.setString(indexCounter,x);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return this;
-	}
-
-	/**
-	 *	SQL文のクエスチョンマークに真偽値をセットします
-	 *	@param x セットする真偽値
-	 *	@return 自らのインスタンス
-	 */
-	protected AbstractServlet setBoolean(boolean x) {
-		try {
-			indexCounter++;
-			preparedStatement.setBoolean(indexCounter,x);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return this;
-	}
-
-	/**
-	 *	SQL文のクエスチョンマークに、ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換してセットします
-	 *	@param x	セットする、単位がミリ秒の時刻
-	 *	@return 自らのインスタンス
-	 */
-	protected AbstractServlet setTimeMillis(long x) {
-		try {
-			String strDate = dateFormat(x);
-			indexCounter++;
-			preparedStatement.setString(indexCounter,strDate);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return this;
-	}
-
-	/**
-	 *	SQL文のクエスチョンマークに、java.sql.Date値をセットします
-	 *	時分秒は切り捨て
-	 *	@param	x	java.sql.Date値
-	 *	@return 自らのインスタンス
-	 */
-	protected AbstractServlet setDate(java.sql.Date x) {
-		try {
-			indexCounter++;
-			preparedStatement.setDate(indexCounter,x);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return this;
-	}
-
-	/**
-	 *	SQL文のクエスチョンマークに、double値をセットします
-	 *	@param	x	セットするdouble値
-	 *	@return 自らのインスタンス
-	 */
-	protected AbstractServlet setDouble(double x) {
-		try {
-			indexCounter++;
-			preparedStatement.setDouble(indexCounter,x);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return this;
-	}
-
-	/**
-	 *	SQL文のクエスチョンマークにfloat値をセットします
-	 *	@param x セットするfloat値
-	 *	@return 自らのインスタンス
-	 */
-	protected AbstractServlet setFloat(float x) {
-		try {
-			indexCounter++;
-			preparedStatement.setFloat(indexCounter,x);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return this;
-	}
-
-	/**
-	 *	SQL文のクエスチョンマークにlong値をセットします
-	 *	@param x セットするlong値
-	 *	@return 自らのインスタンス
-	 */
-	protected AbstractServlet setLong(long x) {
-		try {
-			indexCounter++;
-			preparedStatement.setLong(indexCounter,x);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return this;
-	}
-
-	/**
-	 *	SQL文の問い合わせを実行します
-	 */
-	protected void query() {
-		try {
-			resultSet =  preparedStatement.executeQuery();
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-	}
-
-	/**
-	 *	SQL文の問い合わせ結果を一行次に進めます
-	 *	@return	次の行が存在し、正常にカーソルが進めばtrue
-	 */
-	protected boolean next() {
-		try {
-			return resultSet.next();
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return false;
-	}
-
-	/**
-	 * SQL文の指定した問い合わせ結果をint値で取り出します
-	 * @param column 結果を取り出すカラム名
-	 * @return 問い合わせ結果。正常に取り出せなければ最小の値
-	 */
-	protected int getInt(String column) {
-		try {
-			return resultSet.getInt(column);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return Integer.MIN_VALUE;
-	}
-
-	/**
-	 * SQL文の指定した問い合わせ結果を文字列で取り出します
-	 * @param column 結果を取り出すカラム名
-	 * @return 問い合わせ結果。正常に取り出せなければnull
-	 */
-	protected String getString(String column) {
-		try {
-			return resultSet.getString(column);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return null;
-	}
-
-	/**
-	 * SQL文の指定した問い合わせ結果をdouble値で取り出します
-	 * @param column 結果を取り出すカラム名
-	 * @return 問い合わせ結果。正常に取り出せなければNaN
-	 */
-	protected double getDouble(String column) {
-		try {
-			return resultSet.getDouble(column);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return Double.NaN;
-	}
-
-	/**
-	 * SQL文の指定した問い合わせ結果をミリ秒で取り出します
-	 * @param column 結果を取り出すカラム名
-	 * @return 問い合わせ結果。正常に取り出せなければ０
-	 */
-	protected long getTimeMillis(String column) {
-		try {
-			long millis = resultSet.getTimestamp(column).getTime();
-			return millis;
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return 0L;
-	}
-
-	/**
-	 * SQL文の指定した問い合わせ結果を"yyyy-MM-dd HH:mm:ss"の形式で取り出します
-	 * @param column 結果を取り出すカラム名
-	 * @return 問い合わせ結果
-	 */
-	protected String getDateFormat(String column) {
-		long millis = getTimeMillis(column);
-		String saved = dateFormat(millis);
-		return saved;
-	}
-
 	/**
 	 *	ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換します
 	 *	@param millis 変換するミリ秒の値
 	 *	@return フォーマットされた文字列
 	 */
-	protected String dateFormat(long millis) {
+	protected static String dateFormat(long millis) {
 		java.util.Date date = new java.util.Date(millis); // java.sql.Date()の場合、時分秒が切り捨てられてしまうので、java.util.Date()を使う必要がある
 		String saved = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
 		return saved;
-	}
-
-	/**
-	 *	データベースへの更新を実行します
-	 *	@return	正常に処理が終了した行数
-	 */
-	protected int update() {
-		int rows = 0;
-		try {
-			rows = preparedStatement.executeUpdate();
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		return rows;
 	}
 
 	/*
@@ -514,5 +284,263 @@ abstract public class AbstractServlet extends HttpServlet  {
 			return file.delete();
 		}
 		return false;
+	}
+
+	/**
+	 * すべてのエントリー内部に保持されているPreparedStatementをcloseします
+	 * @return 自身のインスタンス
+	 * @throws SQLException PreparedStatementのcloseに失敗した場合
+	 */
+	protected AbstractServlet entryClose() throws SQLException {
+		for (Entry entry : entries)
+			entry.close();
+		entries.clear();
+		return this;
+	}
+
+	public class Entry {
+		private final PreparedStatement preparedStatement;
+		private int indexCounter = 0;
+		private ResultSet resultSet = null;
+
+		private Entry(String sql) throws SQLException {
+			try {
+				indexCounter = 0;
+				preparedStatement = connection.prepareStatement(sql);
+			} catch (SQLException e) {
+				throw new SQLException("fail new Entry");
+			}
+		}
+		/**
+		 *	SQL文の問い合わせを実行します
+		 *	@return 自身のインスタンス
+		 */
+		protected Entry query() {
+			try {
+				resultSet =  preparedStatement.executeQuery();
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+		/**
+		 *	データベースへの更新を実行します
+		 *	@return	正常に処理が終了した行数
+		 */
+		protected int update() {
+			int rows = 0;
+			try {
+				rows = preparedStatement.executeUpdate();
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return rows;
+		}
+
+		/**
+		 *	SQL文の問い合わせ結果を一行次に進めます
+		 *	@return	次の行が存在し、正常にカーソルが進めばtrue
+		 */
+		protected boolean next() {
+			try {
+				return resultSet.next();
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return false;
+		}
+		protected void close() throws SQLException {
+			preparedStatement.close();
+		}
+
+		/**
+		 *	SQL文のクエスチョンマークにint値をセットします
+		 *	@param x セットする整数
+		 *	@return 自らのインスタンス
+		 */
+		protected Entry setInt(int x) {
+			try {
+				indexCounter++;
+				preparedStatement.setInt(indexCounter,x);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+
+		/**
+		 *	SQL文のクエスチョンマークに文字列をセットします
+		 *	@param x セットする文字列
+		 *	@return 自らのインスタンス
+		 */
+		protected Entry setString(String x) {
+			try {
+				indexCounter++;
+				preparedStatement.setString(indexCounter,x);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+
+		/**
+		 *	SQL文のクエスチョンマークに真偽値をセットします
+		 *	@param x セットする真偽値
+		 *	@return 自らのインスタンス
+		 */
+		protected Entry setBoolean(boolean x) {
+			try {
+				indexCounter++;
+				preparedStatement.setBoolean(indexCounter,x);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+
+		/**
+		 *	SQL文のクエスチョンマークに、ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換してセットします
+		 *	@param x	セットする、単位がミリ秒の時刻
+		 *	@return 自らのインスタンス
+		 */
+		protected Entry setTimeMillis(long x) {
+			try {
+				String strDate = dateFormat(x);
+				indexCounter++;
+				preparedStatement.setString(indexCounter,strDate);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+
+		/**
+		 *	SQL文のクエスチョンマークに、java.sql.Date値をセットします
+		 *	時分秒は切り捨て
+		 *	@param	x	java.sql.Date値
+		 *	@return 自らのインスタンス
+		 */
+		protected Entry setDate(java.sql.Date x) {
+			try {
+				indexCounter++;
+				preparedStatement.setDate(indexCounter,x);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+
+		/**
+		 *	SQL文のクエスチョンマークに、double値をセットします
+		 *	@param	x	セットするdouble値
+		 *	@return 自らのインスタンス
+		 */
+		protected Entry setDouble(double x) {
+			try {
+				indexCounter++;
+				preparedStatement.setDouble(indexCounter,x);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+
+		/**
+		 *	SQL文のクエスチョンマークにfloat値をセットします
+		 *	@param x セットするfloat値
+		 *	@return 自らのインスタンス
+		 */
+		protected Entry setFloat(float x) {
+			try {
+				indexCounter++;
+				preparedStatement.setFloat(indexCounter,x);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+
+		/**
+		 *	SQL文のクエスチョンマークにlong値をセットします
+		 *	@param x セットするlong値
+		 *	@return 自らのインスタンス
+		 */
+		protected Entry setLong(long x) {
+			try {
+				indexCounter++;
+				preparedStatement.setLong(indexCounter,x);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return this;
+		}
+
+		/**
+		 * SQL文の指定した問い合わせ結果をint値で取り出します
+		 * @param column 結果を取り出すカラム名
+		 * @return 問い合わせ結果。正常に取り出せなければ空のOptionalInt
+		 */
+		protected OptionalInt getInt(String column) {
+			try {
+				return OptionalInt.of(resultSet.getInt(column));
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return OptionalInt.empty();
+		}
+
+		/**
+		 * SQL文の指定した問い合わせ結果を文字列で取り出します
+		 * @param column 結果を取り出すカラム名
+		 * @return 問い合わせ結果。正常に取り出せなければ空のOptional
+		 */
+		protected Optional<String> getString(String column) {
+			try {
+				return Optional.of(resultSet.getString(column));
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return Optional.empty();
+		}
+
+		/**
+		 * SQL文の指定した問い合わせ結果をdouble値で取り出します
+		 * @param column 結果を取り出すカラム名
+		 * @return 問い合わせ結果。正常に取り出せなければ空のOptionalDouble
+		 */
+		protected OptionalDouble getDouble(String column) {
+			try {
+				return OptionalDouble.of(resultSet.getDouble(column));
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return OptionalDouble.empty();
+		}
+
+		/**
+		 * SQL文の指定した問い合わせ結果をミリ秒で取り出します
+		 * @param column 結果を取り出すカラム名
+		 * @return 問い合わせ結果。正常に取り出せなければ空のOptionalLong
+		 */
+		protected OptionalLong getTimeMillis(String column) {
+			try {
+				long millis = resultSet.getTimestamp(column).getTime();
+				return OptionalLong.of(millis);
+			} catch (SQLException e) {
+				log(e.getMessage());
+			}
+			return OptionalLong.empty();
+		}
+
+		/**
+		 * SQL文の指定した問い合わせ結果を"yyyy-MM-dd HH:mm:ss"の形式で取り出します
+		 * @param column 結果を取り出すカラム名
+		 * @return 問い合わせ結果
+		 */
+		protected String getDateFormat(String column) {
+			long millis = getTimeMillis(column).orElse(0);
+			String saved = dateFormat(millis);
+			return saved;
+		}
 	}
 }

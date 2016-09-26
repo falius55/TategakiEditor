@@ -20,8 +20,8 @@ public class Login extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
-		response.setContentType("application/json; charset=UTF-8");
-		PrintWriter out = response.getWriter();
+		ready(request, response);
+		connectDatabase();
 
 		String user = request.getParameter("username");
 		String pass = request.getParameter("password");
@@ -32,11 +32,9 @@ public class Login extends AbstractServlet {
 		boolean checked = userCheck(user,pass,session);
 
 		if (checked) {
-			// 認証済みにセット
 			session.setAttribute("login",Boolean.TRUE);
 			response.sendRedirect("/tategaki/tategaki.jsp");
 		} else {
-			// 認証に失敗したら、ログイン画面に戻す
 			session.setAttribute("login",Boolean.FALSE);
 			response.sendRedirect("/tategaki/loginpage.jsp");
 		}
@@ -46,13 +44,12 @@ public class Login extends AbstractServlet {
 		if (user == null || user.length() == 0 || pass == null || pass.length() == 0) {
 			return false;
 		}	
-		connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
-		executeSql("select * from edit_users where name = ? && password = ?")
+		Entry entry = executeSql("select * from edit_users where name = ? && password = ?")
 			.setString(user).setString(pass).query();
 
-		if (next()) {
-			String userid = getString("id");
-			String username = getString("name");
+		if (entry.next()) {
+			String userid = entry.getString("id").orElse("-1");
+			String username = entry.getString("name").orElse("not found");
 
 			session.setAttribute("userid",userid);
 			session.setAttribute("username",username);

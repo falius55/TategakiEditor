@@ -1,6 +1,7 @@
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.StringJoiner;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,39 +28,30 @@ public class ReadJsonFile extends AbstractServlet  {
 
 		try {
 			ready(request,response);
-			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
+			connectDatabase();
 
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
-			String fileName = filename(fileId);
+			String filename = filename(fileId);
 			String saved = saved(fileId);
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("{\"filename\":\"");
-			sb.append(fileName);
-			sb.append("\",");
-			sb.append("\"fileId\":\"");
-			sb.append(fileId);
-			sb.append("\",");
-			sb.append("\"saved\":\"");
-			sb.append(saved);
-			sb.append("\",");
+			StringJoiner sj = new StringJoiner(",", "{", "}");
+			sj.add(String.format("\"filename\":\"%s\"", filename));
+			sj.add(String.format("\"fileId\":\"%d\"", fileId));
+			sj.add(String.format("\"saved\":\"%s\"", saved));
 
 			int userId = Integer.parseInt(request.getParameter("user_id"));
 			int rootId = rootId(userId);
 
-			sb.append("\"userId\":\"");
-			sb.append(userId);
-			sb.append("\",");
+			sj.add(String.format("\"userId\":\"%d\"", userId));
+
 			//	ファイル読込
-			sb.append("\"data\":");
-			sb.append(readFile(String.format("data/%d/%d.json",rootId,fileId)));
-			sb.append("}");
+			sj.add(String.format("\"data\":%s", readFile(String.format("data/%d/%d.json", rootId, fileId))));
 
 			//	ajaxへ送信
-			String rtnJson = sb.toString().replaceAll("\"","\\\""); // jsonファイル中の"を\"にエスケープする
+			String rtnJson = sj.toString().replaceAll("\"","\\\""); // jsonファイル中の"を\"にエスケープする
 			out(rtnJson);
 
-			log("fileName is " + fileName);
+			log("fileName is " + filename);
 			log(rtnJson);
 		} catch(SQLException e) {
 			log(e.getMessage());
@@ -69,17 +61,17 @@ public class ReadJsonFile extends AbstractServlet  {
 	}
 
 	private String filename(int fileId) throws SQLException {
-		executeSql("select * from file_table where id = ?").setInt(fileId).query();
+		Entry entry = executeSql("select * from file_table where id = ?").setInt(fileId).query();
 
-		if (next())
-			return getString("filename");
+		if (entry.next())
+			return entry.getString("filename").orElse("not found");
 		throw new SQLException("no database data");	
 	}
 	private String saved(int fileId) throws SQLException {
-		executeSql("select * from file_table where id = ?").setInt(fileId).query();
+		Entry entry = executeSql("select * from file_table where id = ?").setInt(fileId).query();
 
-		if (next())
-			return getDateFormat("saved");
+		if (entry.next())
+			return entry.getDateFormat("saved");
 		throw new SQLException("no database data");	
 	}
 }

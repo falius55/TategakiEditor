@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.StringJoiner;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +37,7 @@ public class FileListMaker extends AbstractServlet  {
 
 		try {
 			ready(request, response);
-			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor",/* username = */"serveruser", /* password = */"digk473");
+			connectDatabase();
 
 			int userId = Integer.parseInt(request.getParameter("user_id"));
 			int rootId = rootId(userId);
@@ -53,6 +54,7 @@ public class FileListMaker extends AbstractServlet  {
 	}
 
 	/**
+	 * ディレクトリツリーを表すJSON文字列を作成します
 	 * <pre>
 	 * <code>
 	 *  // 戻り値例
@@ -73,45 +75,21 @@ public class FileListMaker extends AbstractServlet  {
 	 * </code>
 	 * </pre>
 	 */
-	private String getFileJson(int userId,int parentId) {
-		// 再帰的にデータベースへの問い合わせを行うため、preparestatementを一つしか持てないexecuteSql()が使えない
-		StringBuilder sb = new StringBuilder();
-		try {
-			String sql = "select * from file_table where user_id = ? and (parent_dir = ? or id = ?)";
-			PreparedStatement pstmt = connection.prepareStatement(sql);
-			pstmt.setInt(1,userId);
-			pstmt.setInt(2,parentId);
-			pstmt.setInt(3,parentId);
-			ResultSet rs = pstmt.executeQuery();
-			sb.append("{");
-			for (int i = 0; rs.next(); i++) {
-				if(i != 0) sb.append(",");
-				int fileId = rs.getInt("id");
-				sb.append("\"");
-				if (fileId == parentId) {
-					// parentIdのディレクトリ自身
-					sb.append("directoryname\":\"");
-					sb.append(rs.getString("filename"));
-					sb.append("\"");
-				} else {
-					// 親がparentId
-					sb.append(fileId);
-					sb.append("\":");
-					if (rs.getString("type").equals("file")) {
-						sb.append("\"");
-						sb.append(rs.getString("filename"));
-						sb.append("\"");
-					} else {
-						// 親がparentIdのディレクトリなら再帰
-						sb.append(getFileJson(userId,fileId));
-					}
-				}
+	private String getFileJson(int userId, int parentId) {
+		Entry entry = executeSql("select * from file_table where user_id = ? and (parent_dir = ? or id = ?)")
+			.setInt(userId).setInt(parentId).setInt(parentId).query();
+		StringJoiner sj = new StringJoiner(",", "{", "}");
+		for (int i = 0; entry.next(); i++) {
+			int id = entry.getInt("id").orElse(-1);
+			if (id == parentId) {
+				sj.add(String.format("\"directoryname\":\"%s\"", entry.getString("filename").orElse("not found")));
+				continue;
 			}
-			sb.append("}");
-			pstmt.close();
-		} catch(SQLException e) {
-			log(e.getMessage());
+			if (entry.getString("type").orElse("").equals("file"))
+				sj.add(String.format("\"%d\":\"%s\"", id, entry.getString("filename").orElse("not found")));
+			if (entry.getString("type").orElse("").equals("dir"))
+				sj.add(String.format("\"%d\":%s", id, getFileJson(userId, id)));
 		}
-		return sb.toString();
+		return sj.toString();
 	}
 }

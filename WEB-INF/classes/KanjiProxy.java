@@ -27,25 +27,19 @@ import javax.servlet.http.HttpServletResponse;
  * ]
  * </pre>
  */
-public class KanjiProxy extends HttpServlet {
-	String sentence;
-	String rtnString;
+public class KanjiProxy extends AbstractServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
-		try{
-		response.setContentType("application/json; charset=UTF-8");
-		PrintWriter out = response.getWriter();
+		try {
+		ready(request, response);
 
-		sentence = request.getParameter("sentence");
-		rtnString = getData(sentence);
+		String sentence = request.getParameter("sentence");
+		String rtnString = getData(sentence);
 
 		log("rtnKanjiJson:"+ rtnString);
-		out.println(rtnString);
-		out.close();
-		}catch(IOException e){
-			log(e.getMessage());
-		}catch(Exception e){
+		out(rtnString);
+		} catch(Exception e) {
 			log(e.getMessage());
 		}
 	}
@@ -58,10 +52,9 @@ public class KanjiProxy extends HttpServlet {
 	 * 漢字変換候補を返します
 	 * @param str 変換する文字列
 	 * @return 通信で得た漢字変換候補のJSON文字列
+	 *     取得に失敗すると空文字列
 	 */
 	public static String getData(String str) {
-		// TODO: 読み込みは、bufferedReaderに変換してlinesで読み込む
-		byte[] b = new byte[10000];
 		try {
 			// Google CGI API for Japanese Input(Google日本語入力API)
 			String strUrl = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + str;
@@ -79,8 +72,6 @@ public class KanjiProxy extends HttpServlet {
 		} catch(IOException e) {
 			System.err.println(e);
 		}
-		int i;
-		for(i = 0; b[i] != 0 && i < b.length; i++); // 読み込みバイト数を数える
-		return new String(b,0,i);
+		return "";
 	}
 }

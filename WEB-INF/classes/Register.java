@@ -23,6 +23,7 @@ public class Register extends AbstractServlet {
 		throws IOException, ServletException {
 
 		ready(request, response);
+		connectDatabase();
 
 		String user = request.getParameter("username");
 		String pass = request.getParameter("password");
@@ -46,7 +47,6 @@ public class Register extends AbstractServlet {
 		if (user == null || user.length() == 0 || pass == null || pass.length() == 0) {
 			return false;
 		}	
-		connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
 		java.util.Date nowDate = new java.util.Date();
 		try {
 
@@ -75,12 +75,14 @@ public class Register extends AbstractServlet {
 
 	/**
 	 * ユーザーIDを取得します
+	 * @return ユーザーID
+	 *     取得に失敗すると-1
 	 */
 	private int userId(String username, String password) throws SQLException {
-		executeSql("select * from edit_users where name = ? and password = ?")
+		Entry entry = executeSql("select * from edit_users where name = ? and password = ?")
 			.setString(username).setString(password).query();
-		if (next()) {
-			return getInt("id");
+		if (entry.next()) {
+			return entry.getInt("id").orElse(-1);
 		}
 		throw new SQLException("database has no data");	
 	}

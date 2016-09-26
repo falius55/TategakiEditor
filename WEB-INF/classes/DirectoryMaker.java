@@ -25,7 +25,7 @@ public class DirectoryMaker extends AbstractServlet  {
 
 		try {
 			ready(request, response);
-			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
+			connectDatabase();
 
 			int userId = Integer.parseInt(request.getParameter("user_id"));
 			int rootId = rootId(userId);
@@ -65,12 +65,13 @@ public class DirectoryMaker extends AbstractServlet  {
 	 * 指定された最終更新日時に合致する特定のファイルIDを取得します
 	 * @param userId ユーザーID
 	 * @param savedMillis 最終更新日時のミリ秒
+	 *     取得に失敗すると-1
 	 */
 	private int queryFileIdFromSaved(int userId, long savedMillis) throws SQLException {
-		executeSql("select * from file_table where user_id = ? and saved = ?")
+		Entry entry = executeSql("select * from file_table where user_id = ? and saved = ?")
 			.setInt(userId).setTimeMillis(savedMillis).query();
-		if (next()) {
-			return getInt("id");
+		if (entry.next()) {
+			return entry.getInt("id").orElse(-1);
 		}
 		throw new SQLException("database has no data");
 	}

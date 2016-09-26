@@ -24,9 +24,8 @@ public class FileMaker extends AbstractServlet  {
 		throws IOException, ServletException {
 
 		try {
-			response.setContentType("application/json; charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
+			ready(request, response);
+			connectDatabase();
 
 			int userId = Integer.parseInt(request.getParameter("user_id"));
 			int rootId = rootId(userId);
@@ -42,11 +41,8 @@ public class FileMaker extends AbstractServlet  {
 
 			//	ajaxへ送信
 			String rtn = String.format("{\"newFileId\" : \"%d\",\"filename\" : \"%s\"}",fileId,fileName);
-			out.println(rtn);
+			out(rtn);
 
-			out.close();
-		} catch(IOException e) {
-			log(e.getMessage());
 		} catch(SQLException e) {
 			log(e.getMessage());
 		} catch(Exception e) {
@@ -69,12 +65,13 @@ public class FileMaker extends AbstractServlet  {
 	 * 指定された最終更新日時に合致する特定のファイルIDを取得します
 	 * @param userId ユーザーID
 	 * @param savedMillis 最終更新日時のミリ秒
+	 *     取得に失敗すると-1
 	 */
 	private int queryFileIdFromSaved(int userId, long savedMillis) throws SQLException {
-		executeSql("select * from file_table where user_id = ? and saved = ?")
+		Entry entry = executeSql("select * from file_table where user_id = ? and saved = ?")
 			.setInt(userId).setTimeMillis(savedMillis).query();
-		if (next()) {
-			return getInt("id");
+		if (entry.next()) {
+			return entry.getInt("id").orElse(-1);
 		}
 		throw new SQLException();
 	}

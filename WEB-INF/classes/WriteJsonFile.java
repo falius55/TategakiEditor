@@ -27,7 +27,7 @@ public class WriteJsonFile extends AbstractServlet {
 
 		try {
 			ready(request, response);
-			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
+			connectDatabase();
 
 			// ファイル名、最終更新日の更新
 			int fileId = Integer.parseInt(request.getParameter("file_id"));

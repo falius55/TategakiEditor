@@ -27,7 +27,7 @@ public class DeleteDirectory extends AbstractServlet  {
 		throws IOException, ServletException {
 
 			ready(request, response);
-			connectDatabase(/* url = */"jdbc:mysql://localhost/tategaki_editor", /* username = */"serveruser", /* password = */"digk473");
+			connectDatabase();
 
 			int directoryId = Integer.parseInt(request.getParameter("directory_id"));
 			boolean option = Boolean.valueOf(request.getParameter("option"));
@@ -46,8 +46,8 @@ public class DeleteDirectory extends AbstractServlet  {
 
 	// ディレクトリ内にファイルがあればtrue
 	private boolean hasFileInDirectory(int directoryId) {
-		executeSql("select * from file_table where parent_dir = ?").setInt(directoryId).query();
-		return next();
+		Entry entry = executeSql("select * from file_table where parent_dir = ?").setInt(directoryId).query();
+		return entry.next();
 	}
 
 	/**
