@@ -37,7 +37,7 @@ public class FileMaker extends AbstractServlet  {
 			int fileId = queryFileIdFromSaved(userId, savedMillis);
 
 			// ファイルを作成
-			createFile(String.format("data/%d/%d.txt",rootId,fileId));
+			createFile(String.format("data/%d/%d.json",rootId,fileId));
 
 			//	ajaxへ送信
 			String rtn = String.format("{\"newFileId\" : \"%d\",\"filename\" : \"%s\"}",fileId,fileName);

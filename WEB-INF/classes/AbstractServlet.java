@@ -17,6 +17,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalLong;
 import java.util.List;
 import java.util.ArrayList;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +54,8 @@ import javax.servlet.http.HttpServletResponse;
 abstract public class AbstractServlet extends HttpServlet  {
 	private PrintWriter out = null;
 
-	private static final String URL = "jdbc:mysql://localhost/tategaki_editor";
+	private static final String DATABASE_NAME = "tategaki_editor";
+	private static final String URL = "jdbc:mysql://localhost/"+ DATABASE_NAME;
 	private static final String USER = "serveruser";
 	private static final String PASSWORD = "digk473";
 
@@ -132,6 +134,13 @@ abstract public class AbstractServlet extends HttpServlet  {
 			return entry.getInt("id").orElseThrow(() -> new SQLException("not found database data"));
 		}
 		throw new SQLException("database has no data");	
+	}
+	/**
+	 * データベース上に指定されたテーブルが存在するかを確認します
+	 */
+	protected final boolean existTable(String table) throws SQLException {
+		return executeSql(String.format("show tables where Tables_in_%s like ?", DATABASE_NAME))
+			.setString(table).query().next();
 	}
 
 	/*

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
  * <p>ユーザー名、パスワードを受け取り、ユーザー登録を行うサーブレット<br>
  * 同時に、ユーザー専用のホームディレクトリを作成します<br>
  * また、認証に失敗したら再度登録画面に戻します
+ * データベース上に規定の名称のテーブルが存在しなければ、新たに作成します
  * <pre>
  * request: {
  * 		username,
@@ -46,9 +47,10 @@ public class Register extends AbstractServlet {
 	private boolean registerUser(String user,String pass) {
 		if (user == null || user.length() == 0 || pass == null || pass.length() == 0) {
 			return false;
-		}	
-		java.util.Date nowDate = new java.util.Date();
+		}
 		try {
+			if (!existTable("edit_users")) createUserTable();
+			if (!existTable("file_table")) createFileTable();
 
 			createUserRecord(user, pass);
 
@@ -107,5 +109,21 @@ public class Register extends AbstractServlet {
 		File userRootDir = new File(path);
 
 		userRootDir.mkdirs(); // dataディレクトリが存在しない場合は同時に作成される
+	}
+	/**
+	 * データベース上にedit_usersという名前のユーザー管理テーブルを作成します
+	 */
+	private void createUserTable() throws SQLException {
+		log("create user table");
+		executeSql("create table edit_users( id int not null auto_increment primary key, name varchar(255) unique not null, password varchar(32) not null, root_file_id int, registered datetime)")
+			.update();
+	}
+	/**
+	 * データベース上にfile_tableという名前のファイル管理テーブルを作成します
+	 */
+	private void createFileTable() throws SQLException {
+		log("create file table");
+		executeSql("create table file_table( id int not null auto_increment primary key, filename varchar(255), type enum('root','dir','file') default 'file', parent_dir int, user_id int not null, saved datetime)")
+			.update();
 	}
 }

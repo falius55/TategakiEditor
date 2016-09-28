@@ -5549,10 +5549,11 @@ class FileList extends AbstractHierarchy {
 	 * @return {FileList} 自身のインスタンス
 	 */
 	each(func) {
+		if (this.firstChild() === null) return this; // ファイルやディレクトリがひとつもない場合
 		// fileに子があれば子に進み、なければ次に進む(子のあるディレクトリなら最初の子、fileか空ディレクトリなら次に進む)
 		// 次がなければ親の次に進む。それでもなければさらに親の次、と繰り返す
 		// その過程でルートディレクトリが見つかれば探索終了
-		for (let file = this.firstChild(),temp = this;; temp = file, file = file.hasChild() ? file.firstChild() : file.next()) {
+		for (let file = this.firstChild(), temp = this;; temp = file, file = file.hasChild() ? file.firstChild() : file.next()) {
 			if (!file) {
 				for (let parentDir = temp.parent(); !(file = parentDir.next()); parentDir = parentDir.parent())
 					if (parentDir.isRoot()) return this;
