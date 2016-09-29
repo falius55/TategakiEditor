@@ -8,34 +8,8 @@
 TomcatとMySQLを利用します。
 
 ## Installation
-1. MySQLでデータベースの設定
-
-     `mysql -u root -p`
-
-     `create database tategaki_editor;`
-       
-     `grant all on tategaki_editor.* to serveruser@localhost identified by 'digk473';` ※ユーザー名及びパスワードを変更する場合は、コードの該当箇所を適宜変更すること
-
-     `mysql -u serveruser -p`
-
-     `pass: digk473`
-
-     `create table edit_users(
-      id int not null auto_increment primary key,
-       name varchar(255) unique not null,
-       password varchar(32) not null,
-		 root_file_id int,
-       registered datetime
-       );`
-
-     `create table file_table(
-      id int not null auto_increment primary key,
-      filename varchar(255),
-		type enum('root','dir','file') default 'file',
-		parent_dir int,
-      user_id int not null,
-      saved datetime
-      );`
+1. MySQLでデータベースの設定  
+     WEB-INF/classes/AbstractServlet.java内のprivate static finalフィールドのDATABASE_NAME,USER,PASSWORDにそれぞれMySQLで使用するデータベース名、ユーザー名、パスワードを設定する  
 
      また、MySQL用のJDBCドライバを取得してクラスパスを通しておく
 
