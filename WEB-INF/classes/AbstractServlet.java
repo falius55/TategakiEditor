@@ -15,8 +15,15 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalDouble;
 import java.util.OptionalLong;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
@@ -214,20 +221,12 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	@return 読み込まれた文字列
 	 */
 	protected String readFile(String path) {
-		StringBuffer sb = new StringBuffer();
-		try {
-			File file = new File(contextPath(path));
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String str;
-			for(int i=0;(str = br.readLine()) != null ;i++) {
-				sb.append(str);
-				str = br.readLine();
-			}
-			br.close();
+		try (Stream<String> stream = Files.lines(Paths.get(contextPath(path)), StandardCharsets.UTF_8)) {
+			return stream.collect(Collectors.joining());
 		} catch (IOException e) {
 			log(e.getMessage());
+			return "読み込みに失敗しました";
 		}
-		return sb.toString();
 	}
 
 	/**
@@ -235,13 +234,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
 	 *	@param	str	書き込む内容
 	 */
-	protected void writeFile(String path, String str) {
+	protected void writeFile(String path, String... str) {
+		log("strs is "+ Arrays.asList(str));
 		try {
-			File file = new File(contextPath(path));
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file,false));
-			bw.write(str);
-			bw.close();
-		} catch (IOException	e) {
+			Files.write(Paths.get(contextPath(path)), Arrays.asList(str), StandardOpenOption.CREATE);
+		} catch (IOException e) {
 			log(e.getMessage());
 		}
 	}
@@ -252,8 +249,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 */
 	protected void createFile(String path) {
 		try {
-			File newFile = new File(contextPath(path));
-			newFile.createNewFile(); // ファイル作成
+			Files.createFile(Paths.get(path));
 		} catch (IOException e) {
 			log(e.getMessage());
 		}
