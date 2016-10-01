@@ -144,6 +144,9 @@ abstract public class AbstractServlet extends HttpServlet  {
 	}
 	/**
 	 * データベース上に指定されたテーブルが存在するかを確認します
+	 * @param table 確認するテーブル名
+	 * @return 指定されたテーブルが存在すればtrue、そうでなければfalse
+	 * @throws SQLException データベースからの情報取得に失敗した場合
 	 */
 	protected final boolean existTable(String table) throws SQLException {
 		return executeSql(String.format("show tables where Tables_in_%s like ?", DATABASE_NAME))
@@ -155,9 +158,6 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 */
 	/**
 	 *	データベースに接続します
-	 *	@param	url	データベースのurl("jdbc:mysql://network_adress/database_name")
-	 *	@param	user	データベースのユーザー名
-	 *	@param	password	データベースのパスワード
 	 */
 	protected void connectDatabase() {
 		try {
@@ -303,6 +303,9 @@ abstract public class AbstractServlet extends HttpServlet  {
 		return this;
 	}
 
+	/**
+	 * データベースへの各問い合わせを担当するクラス
+	 */
 	public class Entry {
 		private final PreparedStatement preparedStatement;
 		private int indexCounter = 0;
