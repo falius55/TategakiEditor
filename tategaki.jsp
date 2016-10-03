@@ -17,7 +17,6 @@
 			String userId = (String)session.getAttribute("userid");
 			String username = (String)session.getAttribute("username");
 			%>
-			<h1 id="site_title" data-user-id="<%= userId %>">縦書きエディタ</h1>
 			<nav class="nav navbar-default navbar-fixed-top">
 				<ul class="nav navbar-nav">
 					<li>
@@ -40,22 +39,6 @@
 				</ul>
 			</nav>
 
-			<div id="app_container">
-				<input type="text" id="file_title" data-file-id="-1" value="newfile"></input>
-				<div id="cursor_line"></div>
-					<div id="sentence_container"> </div>
-				<div id="doc_info">
-					文字:<span id="str_pos">-</span>/<span id="str_len">-</span>&nbsp;
-					行:<span id="row_pos">-</span>/<span id="row_len">-</span>&nbsp;
-					ページ:<span id="page_pos">-</span>/<span id="page_len">-</span>&nbsp;
-					最終更新日時:<span id="saved">-</span>
-				</div>
-				<div id="input_buffer" class="row"><span class="char EOL display"></span></div>
-				<div id="convert_container"></div>
-				<input type="text" id="command"></input>
-				<input type="text" id="search"></input>
-			</div>
-
 			<nav id="palette" class="nav navbar-default">
 
 					<ul class="nav navbar-nav">
@@ -67,6 +50,8 @@
 									<li><a href="#" data-color="black">black</a></li>
 									<li><a href="#" class="select-red" data-color="red">red</a></li>
 									<li><a href="#" class="select-blue" data-color="blue">blue</a></li>
+									<li><a href="#" class="select-green" data-color="green">green</a></li>
+									<li><a href="#" class="select-yellow" data-color="yellow">yellow</a></li>
 								</ul>
 							</div>
 						</li>
@@ -81,6 +66,7 @@
 											<li><a href="#" data-size="8">8</a></li>
 											<li><a href="#" data-size="14">14</a></li>
 											<li><a href="#" data-size="18">18</a></li>
+											<li><a href="#" data-size="25">25</a></li>
 											<li><a href="#" data-size="30">30</a></li>
 											</ul>
 										</div>
@@ -96,6 +82,23 @@
 							</li>
 					</ul>
 				</nav>
+
+
+			<div id="app_container">
+				<input type="text" id="file_title" data-file-id="-1" value="newfile"></input>
+				<div id="cursor_line"></div>
+					<div id="sentence_container"> </div>
+				<div id="doc_info">
+					文字:<span id="str_pos">-</span>/<span id="str_len">-</span>&nbsp;
+					行:<span id="row_pos">-</span>/<span id="row_len">-</span>&nbsp;
+					ページ:<span id="page_pos">-</span>/<span id="page_len">-</span>&nbsp;
+					最終更新日時:<span id="saved">-</span>
+				</div>
+				<div id="input_buffer" class="row"><span class="char EOL display"></span></div>
+				<div id="convert_container"></div>
+				<input type="text" id="command"></input>
+				<input type="text" id="search"></input>
+			</div>
 
 			<div class="modal fade" id="file_list_modal">
 				<div class="modal-dialog">

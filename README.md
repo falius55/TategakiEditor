@@ -13,7 +13,7 @@ TomcatとMySQLを利用します。
 
      また、MySQL用のJDBCドライバを取得してクラスパスを通しておく
 
-2. tategakiディレクトリを作成し、Tomcatのディレクトリ/conf/Catalina/localhost/tategaki.xmlに以下を記述
+2. tategakiディレクトリを作成し、Tomcatのディレクトリ/conf/Catalina/localhost/tategaki.xmlを作成し、以下を記述
 
      `<Context path="/tategaki"  
      docBase="tategakiディレクトリを作成したディレクトリのパス/tategaki" />`

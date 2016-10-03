@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalDouble;
@@ -63,7 +64,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 
 	private static final String DATABASE_NAME = "tategaki_editor";
 	private static final String URL = "jdbc:mysql://localhost/"+ DATABASE_NAME;
-	private static final String USER = "serveruser";
+	private static final String USER = "sampleuser";
 	private static final String PASSWORD = "digk473";
 
 	private Connection connection = null;
@@ -174,6 +175,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 		} catch (Exception e) {
 			log(e.getMessage());
 		} 
+		assert connection != null : "database failed connect";
 	}
 
 	/**
@@ -182,6 +184,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	@return 自らのインスタンス
 	 */
 	protected Entry executeSql(String sql) {
+		Objects.requireNonNull(connection, "need to connect database");
 		Entry entry = null;
 		try {
 			entry = new Entry(sql);

@@ -1,12 +1,63 @@
-.style-strLen-30 .char {
-	padding: 1% 1% 0 0;
+#palette {
+	width: 100%;
+	position: fixed;
+	top: 40px;
+}
+#palette .navbar-btn{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+#palette a {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.decolation-font-bold {
+	font-weight: bold;
+}
+.decolation-font-italic {
+	font-style: italic;
+}
+
+.select-red {
+	color: white;
+	background-color: red;
 }
 span.decolation-color-red {
 	color: red;
 }
+.select-blue {
+	color: white;
+	background-color: blue;
+}
 span.decolation-color-blue {
 	color: blue;
 }
+.select-green {
+	color: white;
+	background-color: green;
+}
+span.decolation-color-green {
+	color: green;
+}
+.select-yellow {
+	color: white;
+	background-color: yellow;
+}
+span.decolation-color-yellow {
+	color: yellow;
+}
+
+.decolation-textalign-left .row {
+	text-align: left;
+}
+.decolation-textalign-center .row {
+	text-align: center;
+}
+.decolation-textalign-right .row {
+	text-align: right;
+}
+
 .char[data-font-size="8"] {
 	font-size: 8px;
 	height: 8px;
@@ -22,77 +73,13 @@ span.decolation-color-blue {
 	height: 18px;
 	width: 18px;
 }
+.char[data-font-size="25"] {
+	font-size: 25px;
+	height: 25px;
+	width: 25px;
+}
 .char[data-font-size="30"] {
 	font-size: 30px;
 	height: 30px;
 	width: 30px;
-}
-span.decolation-font-big {
-	font-size: 45px;
-	width: 45px;
-	height: auto;
-}
-.decolation-font-big > .row {
-	width: auto;
-}
-#sentence_container span.EOL.char.decolation-font-big {
-	width: 45px;
-}
-span.decolation-font-small {
-	font-size: 15px;
-}
-.decolation-font-bold{
-	font-weight: bold;
-}
-.decolation-font-italic {
-	font-style: italic;
-}
-#palette {
-	width: 100%;
-	/* height: 500px;           */
-	position: fixed;
-	/* bottom: 0px;             */
-	/* right: 0px;              */
-	/* background-color: green; */
-	top: 40px;
-}
-#palette .navbar-btn{
-	/* padding: 0px; */
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
-#palette a{
-	/* padding: 0px; */
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
-#select_color {
-	/*
-	opacity: 0;
-	*/
-}
-.select-red {
-	/* display: inline-block; */
-	color: white;
-	background-color: red;
-}
-.select-blue {
-	/* display: inline-block; */
-	color: white;
-	background-color: blue;
-}
-.decolation-textalign-left .row {
-	text-align: left;
-}
-.decolation-textalign-center .row {
-	text-align: center;
-}
-.decolation-textalign-right .row {
-	text-align: right;
-}
-.decolation-fontsize-big {
-	font-size: 30px;
-}
-.decolation-fontsize-small {
-	font-size: 10px;
 }
