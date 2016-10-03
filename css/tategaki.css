@@ -18,6 +18,10 @@ html,body {
 	#file_list_modal.command-modal .modal-title-open {
 		display: none;
 	}
+	.navbar-nav > li > a {
+		margin-top: 0px;
+		margin-bottom: 0px;
+	}
 	ul.nav.navbar-nav .input-group {
 		width: 140px;
 	}
@@ -85,6 +89,12 @@ html,body {
 		width: 100%;
 		text-align: center;
 		z-index: 7;
+	}
+	#changed {
+		display: none;
+	}
+	#changed.active {
+		display: inline-block;
 	}
 
 	#sentence_container {

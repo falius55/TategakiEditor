@@ -58,12 +58,13 @@ const Util = {
 		xhr.addEventListener('load',function (e) {
 			if (xhr.response) {
 				callback(xhr.response);
+				console.log('success', xhr.response, e);
 			} else {
-				console.log('unsuccess');
+				console.log('unsuccess', xhr.response, e);
 			}
 		});
 		xhr.addEventListener('abort',function (e) {
-			console.log('abort');
+			console.log('abort', e);
 		});
 		xhr.send(sendData);
 	}
@@ -413,6 +414,7 @@ class Menu {
 		for (let char of chars) {
 			char.color(color);
 		}
+		this.sentenceContainer().isChanged(true);
 		return this;
 	}
 	/**
@@ -442,6 +444,7 @@ class Menu {
 		for (let char of chars) {
 			char.bold(bl);
 		}
+		this.sentenceContainer().isChanged(true);
 		return this;
 	}
 	/**
@@ -471,6 +474,7 @@ class Menu {
 		for (let char of chars) {
 			char.italic(bl);
 		}
+		this.sentenceContainer().isChanged(true);
 		return this;
 	}
 	/**
@@ -483,7 +487,7 @@ class Menu {
 		for (let char of chars) {
 			char.fontSize(size);
 		}
-		this.sentenceContainer().cordinate().checkKinsoku().changeDisplay().breakPage().printInfo();
+		this.sentenceContainer().cordinate().checkKinsoku().changeDisplay().breakPage().printInfo().isChanged(true);
 		return this;
 	}
 	// 'center','left','right'
@@ -495,6 +499,7 @@ class Menu {
 	align(align) {
 		const cursorParagraph = this.sentenceContainer().cursor().getParagraph();
 		cursorParagraph.align(align);
+		this.sentenceContainer().isChanged(true);
 		return this;
 	}
 
@@ -1239,7 +1244,7 @@ class Cursor {
 
 		cursorChar.paragraph().cordinate().checkKinsoku();
 		this.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えず取得しなおし
-		this.sentenceContainer().changeDisplay().breakPage().printInfo();
+		this.sentenceContainer().changeDisplay().breakPage().printInfo().isChanged(true);
 		return this;
 	}
 	/**
@@ -5013,12 +5018,16 @@ class File extends AbstractHierarchy {
 	 */
 	open() {
 		const sentenceContainer = this.fileList().sentenceContainer();
+		if (sentenceContainer.isChanged()) {
+			sentenceContainer.userAlert('最後の変更が保存されていません');
+			return this;
+		}
 
 		const data = {};
 		data.user_id = sentenceContainer.userId();
 		data.file_id = this.id();
 		sentenceContainer.userAlert('読込中');
-		Util.post('/tategaki/ReadJsonFile', data, json => sentenceContainer.init(json).userAlert('読み込み完了'));
+		Util.post('/tategaki/ReadJsonFile', data, json => sentenceContainer.init(json).isChanged(false).userAlert('読み込み完了'));
 		return this;
 	}
 	/**
@@ -5879,6 +5888,7 @@ class SentenceContainer extends AbstractHierarchy {
 		this._titleElem = document.getElementById('file_title');
 		this._searchInputElem = document.getElementById('search');
 		this._userAlertElem = document.getElementById('user_info');
+		this._changedElem = document.getElementById('changed');
 		this.addFileTitleEvent();
 		this.addSelectEvent();
 		this._cursor = new Cursor(this);
@@ -6167,6 +6177,19 @@ class SentenceContainer extends AbstractHierarchy {
 		this._saved = newSaved;
 		document.getElementById('saved').textContent = newSaved;
 		return this;
+	}
+	isChanged(opt_bl) {
+		if (opt_bl == undefined)
+			return this._changedElem.classList.contains('active');
+
+		if (opt_bl === true) {
+			this._changedElem.classList.add('active');
+			return this;
+		}
+		if (opt_bl === false) {
+			this._changedElem.classList.remove('active');
+			return this;
+		}
 	}
 	/**
 	 * 一行の文字数を変更する、あるいは引数省略で現在の設定上の一行の文字数を取得します
@@ -6515,6 +6538,7 @@ class SentenceContainer extends AbstractHierarchy {
 		},function (json) {
 			this.saved(json.strDate).userAlert('保存しました');
 			this.fileList().read();
+			this.isChanged(false);
 		}.bind(this));
 		return this;
 	}

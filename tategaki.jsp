@@ -93,6 +93,7 @@
 					行:<span id="row_pos">-</span>/<span id="row_len">-</span>&nbsp;
 					ページ:<span id="page_pos">-</span>/<span id="page_len">-</span>&nbsp;
 					最終更新日時:<span id="saved">-</span>
+					<span id="changed">[+]</span>
 				</div>
 				<div id="input_buffer" class="row"><span class="char EOL display"></span></div>
 				<div id="convert_container"></div>
