@@ -1,5 +1,5 @@
 'use strict';
-console.log('key_table.js');
+console.log('utils.js');
 const Util = {
 	/**
 	 * baseArrayをcnt個ずつの配列に分割する
@@ -287,33 +287,35 @@ ElemCreater.createDirectoryElement = (function () {
  * キーコードから日本語文字列を作成します
  */
 const key_table = {
-	getString : function (buffer_string,keycode) {
+	makeString : function (buffer_string,keycode) {
 			// bufferに文字なし キーコードの文字をそのまま返す
 		if (buffer_string.length === 0)
 			return this.key_table_jpn[keycode];
-
 		// bufferに一文字のみ
-		if(buffer_string.length === 1) {
-			// bufferの文字がアルファベットでなければbufferの文字とキーコード文字を連結した文字列を返す
-			if (!this.convertable.includes(buffer_string))
-				return buffer_string + this.key_table_jpn[keycode];
-			// bufferの文字が変換可能アルファベット
-			const s = this.key_table_jpn[buffer_string]; // keytableからオブジェクト取得
-			// オブジェクトにキーコードを与えて、変換文字取得
-			const str =  s[keycode];
-			if (str)
-				return str; // 変換できた場合 buffer文字をkeytableに与えて返ってきたオブジェクトにkeycodeを与えて得た文字を返す
-			// 変換文字が取得できないということは、アルファベット二文字が変換可能な組み合わせではないということ
-			const typestr = this.key_table_jpn[keycode];
-			// 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
-			if (buffer_string === typestr)
-				return "っ" + typestr;
-			// 異なるアルファベットの場合、そのまま連結
-			return buffer_string + typestr;
-		}
-
+		if(buffer_string.length === 1)
+			return this.makeStringFromOnceBufferString(buffer_string, keycode);
 		// 以下はbufferの文字列が二文字以上であることが保証されている
-
+		return this.makeStringFromMultipleBufferString(buffer_string, keycode);
+	},
+	makeStringFromOnceBufferString : function (buffer_string, keycode) {
+		// bufferの文字がアルファベットでなければbufferの文字とキーコード文字を連結した文字列を返す
+		if (!this.convertable.includes(buffer_string))
+			return buffer_string + this.key_table_jpn[keycode];
+		// bufferの文字が変換可能アルファベット
+		const s = this.key_table_jpn[buffer_string]; // keytableからオブジェクト取得
+		// オブジェクトにキーコードを与えて、変換文字取得
+		const str =  s[keycode];
+		if (str)
+			return str; // 変換できた場合 buffer文字をkeytableに与えて返ってきたオブジェクトにkeycodeを与えて得た文字を返す
+		// 変換文字が取得できないということは、アルファベット二文字が変換可能な組み合わせではないということ
+		const typestr = this.key_table_jpn[keycode];
+		// 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
+		if (buffer_string === typestr)
+			return "っ" + typestr;
+		// 異なるアルファベットの場合、そのまま連結
+		return buffer_string + typestr;
+	},
+	makeStringFromMultipleBufferString : function (buffer_string, keycode) {
 		const noEncode = buffer_string.substring(0,buffer_string.length - 2); // 変換しない文字
 		const first = buffer_string.charAt(buffer_string.length - 2);
 		const second = buffer_string.charAt(buffer_string.length -1);
@@ -331,33 +333,12 @@ const key_table = {
 				// sy + a →  "しゃ" など
 				if (str) return noEncode + str;
 			}
-			// 三文字で一文字が完成しない場合、後ろ二文字で１文字が完成する可能性があるので再帰
-			// staの三文字で"sた"となる場合がある
-			// 後ろ二文字で１文字が完成しなければそのまま二文字が返ってくるので、やはりfirstを挟んで連結
-			return noEncode + first + this.getString(second,keycode);
 		}
 
 		// 最後から二文字目が変換可能アルファベットではない
-		if (!this.convertable.includes(first)) {
-			// bufferの最終文字だけがアルファベット
-			if (this.convertable.includes(second)) {
-				const s = this.key_table_jpn[second];
-				const str =  s[keycode];
-				// 変換文字取得成功
-				// 無変換文字 + first + secondをkeytableに与えて返ってきたオブジェクトにkeycodeを与えて得た文字を返す
-				if (str)
-					return noEncode + first + str;
-				// 変換文字が取得できないということは、アルファベット二文字が変換可能な組み合わせではないということ
-				const typestr = this.key_table_jpn[keycode];
-				if (second === typestr)
-					return noEncode + first + "っ" + typestr; // 例えばzzと打つなど同じアルファベットの連続の場合、"っｚ"と返す
-				return buffer_string + typestr; // 異なるアルファベットの場合、そのまま連結
-			}
-			// bufferに変換する変換可能アルファベットがない
-			// キーコード文字列をbufferに連結した文字列を返す
-			return buffer_string + this.key_table_jpn[keycode];
-		}
-		return buffer_string;
+		// 三文字で一文字が完成しない場合、後ろ二文字で１文字が完成する可能性 staの三文字で"sた"となる場合がある
+		//     後ろ二文字で１文字が完成しなければそのまま二文字が返ってくるので、やはりfirstを挟んで連結
+		return noEncode + first + this.makeStringFromOnceBufferString(second, keycode);
 	},
 	convertable : ["k","s","t","n","h","m","y","r","w","g","z","d","b","p","j","f","l","x","c","v","q"],
 	katakana : {
@@ -561,6 +542,7 @@ const key_table = {
 		"y": { "65": "や", "73": "い", "85": "ゆ", "69": "いぇ", "79": "よ" },
 		"r": { "65": "ら", "73": "り", "85": "る", "69": "れ", "79": "ろ",
 			"y" : {
+				// FIXME: keycode65 rya
 				"65": "りょ", "73": "りぃ", "85": "りゅ", "69": "りぇ", "79": "りょ"
 			}
 		},

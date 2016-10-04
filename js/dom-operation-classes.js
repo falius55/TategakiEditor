@@ -6,7 +6,7 @@
  *	要素の再利用のため、要素作成のみクロージャで行う
  *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
  */
-console.log('object.js');
+console.log('dom-operation-classes.js');
 
 // Class
 /**
@@ -4471,7 +4471,7 @@ class InputBuffer extends Row {
 		if (bShift) {
 			return inputStr + key_table.shift_key[keycode];
 		} else {
-			return key_table.getString(inputStr,keycode); //keycodeを加えた新しい文字列
+			return key_table.makeString(inputStr,keycode); //keycodeを加えた新しい文字列
 		}
 	}
 	/**
@@ -4745,15 +4745,15 @@ class File extends AbstractHierarchy {
 	open() {
 		const sentenceContainer = this.fileList().sentenceContainer();
 		if (sentenceContainer.isChanged()) {
-			sentenceContainer.userAlert('最後の変更が保存されていません');
+			sentenceContainer.announce('最後の変更が保存されていません');
 			return this;
 		}
 
 		const data = {};
 		data.user_id = sentenceContainer.userId();
 		data.file_id = this.id();
-		sentenceContainer.userAlert('読込中');
-		Util.post('/tategaki/ReadJsonFile', data, json => sentenceContainer.init(json).isChanged(false).userAlert('読み込み完了'));
+		sentenceContainer.announce('読込中');
+		Util.post('/tategaki/ReadJsonFile', data, json => sentenceContainer.init(json).isChanged(false).announce('読み込み完了'));
 		return this;
 	}
 	/**
@@ -5447,7 +5447,7 @@ class FileList extends AbstractHierarchy {
 		const files = this.findFile(filename);
 		const fileLength = files.length;
 		if (fileLength === 0) {
-			this.sentenceContainer().userAlert('存在しないファイルです','red');
+			this.sentenceContainer().announce('存在しないファイルです','red');
 			return this;
 		}
 
@@ -5478,7 +5478,7 @@ class FileList extends AbstractHierarchy {
 			directoryname: dirname,
 			saved: Date.now()
 		},function (data) {
-			this.sentenceContainer().userAlert('ディレクトリを作成しました:'+ dirname);
+			this.sentenceContainer().announce('ディレクトリを作成しました:'+ dirname);
 			this.read();
 		}.bind(this));
 		return this;
@@ -5613,7 +5613,7 @@ class SentenceContainer extends AbstractHierarchy {
 		this._userId = userId;
 		this._titleElem = document.getElementById('file_title');
 		this._searchInputElem = document.getElementById('search');
-		this._userAlertElem = document.getElementById('user_info');
+		this._announceElem = document.getElementById('user_info');
 		this._changedElem = document.getElementById('changed');
 		this.addFileTitleEvent();
 		this.addSelectEvent();
@@ -5790,8 +5790,8 @@ class SentenceContainer extends AbstractHierarchy {
 	 * ユーザーへの情報を表示するinputフォームのDOM要素を返します
 	 * @return {Element} 情報表示inputフォームのDOM要素
 	 */
-	userAlertElem() {
-		return this._userAlertElem;
+	announceElem() {
+		return this._announceElem;
 	}
 	/**
 	 * この文書を操作するMenuクラスのインスタンスを返します
@@ -6220,12 +6220,12 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @param {string} [opt_color='black'] 黒文字以外の文字色で表示する場合に色名を指定する
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
-	userAlert(str,opt_color) {
-		this.userAlertElem().textContent = str;
+	announce(str,opt_color) {
+		this.announceElem().textContent = str;
 		if (opt_color)
-			this.userAlertElem().style.color = opt_color;
+			this.announceElem().style.color = opt_color;
 		else
-			this.userAlertElem().style.color = '';
+			this.announceElem().style.color = '';
 		return this;
 	}
 
@@ -6254,7 +6254,7 @@ class SentenceContainer extends AbstractHierarchy {
 			return this;
 		}
 
-		this.userAlert('保存中');
+		this.announce('保存中');
 		Util.post('/tategaki/WriteJsonFile',{
 			user_id: this.userId(),
 			file_id: this.fileId(),
@@ -6262,7 +6262,7 @@ class SentenceContainer extends AbstractHierarchy {
 			json: this.data(),
 			saved: Date.now()
 		},function (json) {
-			this.saved(json.strDate).userAlert('保存しました');
+			this.saved(json.strDate).announce('保存しました');
 			this.fileList().read();
 			this.isChanged(false);
 		}.bind(this));
@@ -6510,7 +6510,7 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	runKeydown(e,keycode) {
-		this.userAlert('');
+		this.announce('');
 		if (e.ctrlKey) return this.runControlKeyDown(e,keycode);
 
 		switch (keycode) {
@@ -6694,7 +6694,7 @@ class SentenceContainer extends AbstractHierarchy {
 
 		this.titleElem().addEventListener('focusout',function (e) {
 			if (this.titleElem().value === '') {
-				this.userAlert('ファイル名が入力されていません','red');
+				this.announce('ファイル名が入力されていません','red');
 				this.titleElem().value = this.titleElem().dataset.filename;
 			}
 			this.addKeydownEventListener();
