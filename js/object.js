@@ -411,9 +411,8 @@ class Menu {
 	 */
 	addColor(color) {
 		const chars = this.sentenceContainer().selectChars(true);
-		for (let char of chars) {
+		for (let char of chars)
 			char.color(color);
-		}
 		this.sentenceContainer().isChanged(true);
 		return this;
 	}
@@ -1100,35 +1099,36 @@ class Cursor {
 	// --参照操作
 
 	/**
-	 * @private
-	 * カーソル文字への参照を変更します
+	 * カーソル文字を変更します
 	 * @param {Char} newChar 新しいカーソル文字
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	setChar(newChar) {
+		if (this.getChar()) {
+			this.memorySelection();
+			this.getChar().removeClass('cursor');
+		}
+		newChar.addClass('cursor');
 		this._char = newChar;
 		return this;
 	}
 	/**
-	 * charにカーソルを与えます
+	 * カーソルを移動させます
+	 * 加えて、与えられた文字の前の文字に文字装飾があれば対応する装飾ボタン等をその文字に合わせて変化させます
+	 * また、シフトキーが押されながら(bShiftがtrue)カーソルが与えられた場合、選択範囲を拡張します
 	 * @param {Char} char 新しいカーソル文字
 	 * @param {boolean} [bShift] シフトキーが押された状態でカーソルが与えられたかどうか。trueなら選択範囲を拡張する。falseなら解除する。省略(undefined)すると選択範囲には影響しない
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	addCursor(char,bShift) {
-		if (this.getChar()) {
-			this.memorySelection();
-			this.getChar().removeClass('cursor');
-		}
-		char.addClass('cursor');
 		this.setChar(char);
 
 		// 前の文字に装飾があれば、そのボタンをオンにする
 		const prevChar = char.prevCharOnParagraph();
 		const menu = this.sentenceContainer().menu();
 		menu.colorButton(prevChar ? prevChar.color() : 'black');
-		menu.boldButton(prevChar ? prevChar.isBold() : false);
-		menu.italicButton(prevChar ? prevChar.isItalic() : false);
+		menu.boldButton(prevChar ? prevChar.bold() : false);
+		menu.italicButton(prevChar ? prevChar.italic() : false);
 		menu.fontSizeInput(prevChar ? prevChar.fontSize() : 'auto');
 
 		// シフトキーが押されながらなら、選択範囲を広げる
@@ -1232,20 +1232,35 @@ class Cursor {
 
 	/**
 	 * カーソル位置に文字を挿入します
-	 * @param {string} str 挿入する文字列
+	 * @param {string Char[]} chars 挿入する文字列、あるいはCharオブジェクトの配列
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	insert(str) {
+	insert(chars) {
 		const cursorChar = this.getChar();
-		for (let char of str) {
-			const newChar = new Char(cursorChar.createData(char));
-			cursorChar.before(newChar);
+		if (typeof chars === 'string')
+			chars = this.charsFromString(chars);
+		for (let char of chars) {
+			cursorChar.before(char);
 		}
 
 		cursorChar.paragraph().cordinate().checkKinsoku();
 		this.getChar().setPosMemory(); // cordinate()によってカーソル文字が変わっている可能性があるため、cursorCharは使えず取得しなおし
 		this.sentenceContainer().changeDisplay().breakPage().printInfo().isChanged(true);
 		return this;
+	}
+	/**
+	 * 文字列をCharオブジェクトの配列に変換します
+	 * @param {string} str 変換する文字列
+	 * @return {Char[]} 変換されたCharオブジェクトの配列
+	 */
+	charsFromString(str) {
+		const ret = [];
+		const cursorChar = this.getChar();
+		for (let char of str) {
+			const newChar = new Char(cursorChar.createData(char));
+			ret.push(newChar);
+		}
+		return ret;
 	}
 	/**
 	 * カーソル位置でバックスペースを押下した時の処理を行います
@@ -1263,7 +1278,7 @@ class Cursor {
 				moveRow.moveLastBefore();
 			}
 			newParagraph.cordinate().checkKinsoku();
-			// HACK: 最終行が表示されている状態でbackSpace()すると、カーソル行が表示されているために表示開始行が変わらず、行数が足りているにも関わらず表示行数が少なくなってしまう
+			// FIXME: 最終行が表示されている状態でbackSpace()すると、カーソル行が表示されているために表示開始行が変わらず、行数が足りているにも関わらず表示行数が少なくなってしまう
 			this.sentenceContainer().changeDisplay().breakPage().printInfo();
 			return this;
 		}
@@ -1428,8 +1443,7 @@ class Cursor {
 	}
 	// カーソル移動前に、selectionにカーソル位置を覚えさせる
 	/**
-	 * @private
-	 * selectionにカーソル位置を覚えさせる
+	 * 何も選択されていない状態の場合に、Selectionにカーソル位置を覚えさせます
 	 * @return {Cursor} 自身のインスタンス
 	 */
 	memorySelection() {
@@ -2166,20 +2180,6 @@ class Char extends AbstractHierarchy {
 		charRange.detach();
 		return false;
 	}
-	/**
-	 * この文字が太字になっているかどうかを返します
-	 * @return {boolean} 太字になっていればtrue、そうでなければfalse
-	 */
-	isBold() {
-		return this.hasClass('decolation-font-bold');
-	}
-	/**
-	 * この文字が斜体になっているかどうかを返します
-	 * @return {boolean} 斜体になっていればtrue、そうでなければfalse
-	 */
-	isItalic() {
-		return this.hasClass('decolation-font-italic');
-	}
 
 	// --Status
 
@@ -2258,11 +2258,15 @@ class Char extends AbstractHierarchy {
 	}
 	/**
 	 * この文字の太字を設定、解除します
-	 * @param {boolean} bl trueなら太字にする、falseなら太字を解除する
-	 * @return {Char} 自身のインスタンス
+	 *     または引数省略でこの文字が太字になっているかどうかを返します
+	 * @param {boolean} [opt_bl] trueなら太字にする、falseなら太字を解除する
+	 * @return {Char boolean} 自身のインスタンス(引数を渡した場合)、あるいは太字になっているかどうかの真偽値(引数を省略した場合)
 	 */
-	bold(bl) {
-		if (bl) {
+	bold(opt_bl) {
+		if (opt_bl === undefined)
+			return this.hasClass('decolation-font-bold');
+
+		if (opt_bl) {
 			this.addClass('decolation-font-bold');
 		} else {
 			this.removeClass('decolation-font-bold');
@@ -2271,11 +2275,15 @@ class Char extends AbstractHierarchy {
 	}
 	/**
 	 * この文字の斜体を設定、解除します
-	 * @param {boolean} bl trueなら斜体にする、falseなら斜体を解除する
-	 * @return {Char} 自身のインスタンス
+	 *     または引数省略でこの文字が斜体になっているかどうかを返します
+	 * @param {boolean} [opt_bl] trueなら斜体にする、falseなら斜体を解除する
+	 * @return {Char} 自身のインスタンス(引数を渡した場合)、あるいは斜体になっているかどうかの真偽値(引数を省略した場合)
 	 */
-	italic(bl) {
-		if (bl) {
+	italic(opt_bl) {
+		if (opt_bl === undefined)
+			return this.hasClass('decolation-font-italic');
+
+		if (opt_bl) {
 			this.addClass('decolation-font-italic');
 		} else {
 			this.removeClass('decolation-font-italic');
