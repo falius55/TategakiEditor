@@ -216,6 +216,7 @@
 			<script src="/tategaki/lib/jquery.mousewheel.js"></script>
 			<script src="/tategaki/lib/honoka/js/bootstrap.min.js"></script>
 			<script src="/tategaki/js/utils.js"></script>
+			<script src="/tategaki/js/undo-redo.js"></script>
 			<script src="/tategaki/js/dom-operation-classes.js"></script>
 			<script>
 			  window.container = new SentenceContainer(<%= userId %>);

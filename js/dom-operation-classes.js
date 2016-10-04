@@ -124,10 +124,12 @@ class Menu {
 	/**
 	 * 選択範囲の文字色を変えます
 	 * @param {string} color 新しい文字色
+	 * @param {boolean} [useUndo] Undoスタックに積む場合はtrue
 	 * @return {Menu} 自身のインスタンス
 	 */
-	addColor(color) {
+	addColor(color, useUndo) {
 		const chars = this.sentenceContainer().selectChars(true);
+		if (useUndo) this.sentenceContainer().addDo(new ColorDoMemory(chars, color));
 		for (let char of chars)
 			char.color(color);
 		this.sentenceContainer().isChanged(true);
@@ -153,10 +155,12 @@ class Menu {
 	/**
 	 * 選択範囲を太字にします。または太字を外します
 	 * @param {boolean} bl trueで太字にする。falseで外す
+	 * @param {boolean} [useUndo] Undoスタックに積む場合はtrue
 	 * @return {Menu} 自身のインスタンス
 	 */
-	bold(bl) {
+	bold(bl, useUndo) {
 		const chars = this.sentenceContainer().selectChars(true);
+		if (useUndo) this.sentenceContainer().addDo(new BoldDoMemory(chars, bl));
 		for (let char of chars) {
 			char.bold(bl);
 		}
@@ -183,10 +187,12 @@ class Menu {
 	/**
 	 * 選択範囲を斜体にします。または太字を外します
 	 * @param {boolean} bl trueで斜体にする。falseで外す
+	 * @param {boolean} [useUndo] Undoスタックに積む場合はtrue
 	 * @return {Menu} 自身のインスタンス
 	 */
-	italic(bl) {
+	italic(bl, useUndo) {
 		const chars = this.sentenceContainer().selectChars(true);
+		if (useUndo) this.sentenceContainer().addDo(new ItalicDoMemory(chars, bl));
 		for (let char of chars) {
 			char.italic(bl);
 		}
@@ -196,10 +202,12 @@ class Menu {
 	/**
 	 * 選択範囲のフォントサイズを変更します
 	 * @param {number} size 新しいフォントサイズ
+	 * @param {boolean} [useUndo] Undoスタックに積む場合はtrue
 	 * @return {Menu} 自身のインスタンス
 	 */
-	fontSize(size) {
+	fontSize(size, useUndo) {
 		const chars = this.sentenceContainer().selectChars(true);
+		if (useUndo) this.sentenceContainer().addDo(chars, size);
 		for (let char of chars) {
 			char.fontSize(size);
 		}
@@ -254,7 +262,7 @@ class Menu {
 		// パレットボタン
 		// 文字色ボタン
 		document.getElementById('color_btn').addEventListener('click',function (e) {
-			this.addColor(this.colorButton());
+			this.addColor(this.colorButton(), true);
 		}.bind(this),false);
 		// 文字色ドロップダウン
 		this.addColorSelectClickEvent();
@@ -263,12 +271,12 @@ class Menu {
 		document.getElementById('btn-bold').addEventListener('click',function (e) {
 			const eBtn = document.getElementById('btn-bold');
 			eBtn.classList.toggle('active');
-			this.bold(this.boldButton());
+			this.bold(this.boldButton(), true);
 		}.bind(this),false);
 		document.getElementById('btn-italic').addEventListener('click',function (e) {
 			const eBtn = document.getElementById('btn-italic');
 			eBtn.classList.toggle('active');
-			this.italic(this.italicButton());
+			this.italic(this.italicButton(), true);
 		}.bind(this),false);
 
 		// align
@@ -294,7 +302,7 @@ class Menu {
 			const color = eSelColor.dataset.color;
 			eSelColor.addEventListener('click',function (e) {
 				this.colorButton(color);
-				this.addColor(color);
+				this.addColor(color, true);
 			}.bind(this),false);
 		}
 		return this;
@@ -730,16 +738,16 @@ class CommandLine {
 					 this.sentenceContainer().stopSearchMode();
 					 break;
 			case '::':
-					 this.sentenceContainer().cursor().insert(':');
+					 this.sentenceContainer().cursor().insert(':', true);
 					 break;
 			case ':;':
-					 this.sentenceContainer().cursor().insert(';');
+					 this.sentenceContainer().cursor().insert(';', true);
 					 break;
 			case ':/':
-					  this.sentenceContainer().cursor().insert('/');
+					  this.sentenceContainer().cursor().insert('/', true);
 					  break;
 			case ':i':
-					 command[1] && this.sentenceContainer().cursor().insert(command[1]);
+					 command[1] && this.sentenceContainer().cursor().insert(command[1], true);
 					 break;
 			case ':bold':
 					 this.sentenceContainer().menu().boldButton(!this.sentenceContainer().menu().boldButton());
@@ -951,13 +959,17 @@ class Cursor {
 
 	/**
 	 * カーソル位置に文字を挿入します
+	 *     文字列を渡した場合のみ、Undoスタックにプッシュされます
 	 * @param {string Char[]} chars 挿入する文字列、あるいはCharオブジェクトの配列
+	 * @param {boolean} [useUndo] Undoスタックに積む場合はtrue
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	insert(chars) {
+	insert(chars, useUndo) {
 		const cursorChar = this.getChar();
-		if (typeof chars === 'string')
+		if (typeof chars === 'string') {
 			chars = this.charsFromString(chars);
+		}
+		if (useUndo) this.sentenceContainer().addDo(new PrintDoMemory(this, chars));
 		for (let char of chars) {
 			cursorChar.before(char);
 		}
@@ -983,9 +995,10 @@ class Cursor {
 	}
 	/**
 	 * カーソル位置でバックスペースを押下した時の処理を行います
+	 * @param {boolean} [useUndo] Undoスタックに積む場合はtrue
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	backSpace() {
+	backSpace(useUndo) {
 		const cursorChar = this.getChar();
 		if (!cursorChar.prev()) return this; // 文章先頭からのバックスペースは何もしない
 
@@ -998,23 +1011,25 @@ class Cursor {
 			}
 			newParagraph.cordinate().checkKinsoku();
 			// FIXME: 最終行が表示されている状態でbackSpace()すると、カーソル行が表示されているために表示開始行が変わらず、行数が足りているにも関わらず表示行数が少なくなってしまう
-			this.sentenceContainer().changeDisplay().breakPage().printInfo();
+			this.sentenceContainer().changeDisplay().breakPage().printInfo().isChanged(true);
 			return this;
 		}
 
 		//  段落先頭以外からのバックスペース
 		//  カーソルの前の位置にある文字を削除する(行頭なら行をまたいで前の文字)
 		if (!(cursorChar.isFirst() && cursorChar.row().isFirst())) {
+			if (useUndo) this.sentenceContainer().addDo(new DeleteDoMemory(this, [cursorChar.prevChar()]));
 			cursorChar.prevChar().delete();
-			this.sentenceContainer().changeDisplay().breakPage().printInfo();
+			this.sentenceContainer().changeDisplay().breakPage().printInfo().isChanged(true);
 			return this;
 		}
 	}
 	/**
 	 * カーソル位置で改行した時の処理を行います
+	 * @param {boolean} [useUndo] Undoスタックに積む場合はtrue
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	lineBreak() {
+	lineBreak(useUndo) {
 		// 段落の分割
 		const cursorParagraph = this.getParagraph().divide(this.getChar());
 		// 新しくできた段落の最初の文字にカーソルを移動する
@@ -1022,7 +1037,8 @@ class Cursor {
 		newParagraph.firstChild().firstChild().addCursor().setPosMemory();
 		// HACK:changeDisplay()を二回続けている:新しい段落がdisplayされて表示されるので、最終表示行から改行した場合にカーソル行が表示から外れる(最終表示行とカーソル行が等しいため、表示開始行を変えずに表示)
 		// かといって新しい段落を非表示にしてから挿入すると、表示行が文章コンテナを埋めていない状態の時に改行すると表示開始行が毎回ひとつ後ろにずれる(カーソル行が最終表示行より後ろにあるため)という現象が起こるので、行数が十分にあっても表示行が不足してしまう
-		this.sentenceContainer().changeDisplay().changeDisplay().breakPage().printInfo();
+		this.sentenceContainer().changeDisplay().changeDisplay().breakPage().printInfo().isChanged(true);
+		if (useUndo) this.sentenceContainer().addDo(new LineBreakDoMemory(this));
 		return this;
 	}
 
@@ -4396,7 +4412,7 @@ class InputBuffer extends Row {
 	 * @return {InputBuffer} 自身のインスタンス
 	 */
 	print() {
-		this.cursor().insert(this.text());
+		this.cursor().insert(this.text(), true);
 		this.empty().hide();
 		this.container().addKeydownEventListener();
 		this.container().changeDisplay();
@@ -5622,6 +5638,7 @@ class SentenceContainer extends AbstractHierarchy {
 		this._fileList = new FileList(this);
 		this._command = new CommandLine(this);
 		this._menu = new Menu(this);
+		this._doManager = new DoManager(this);
 
 		if (!opt_data) this.newFile();
 	}
@@ -5650,6 +5667,7 @@ class SentenceContainer extends AbstractHierarchy {
 		this.breakPage().printInfo();
 		this.addKeydownEventListener();
 		this.addWheelEventListener();
+		this._doManager.reset();
 		return this;
 	}
 
@@ -6490,6 +6508,25 @@ class SentenceContainer extends AbstractHierarchy {
 		return this;
 	}
 
+	addDo(doMemory) {
+		this._doManager.add(doMemory);
+		return this;
+	}
+	undo() {
+		if (this._doManager.hasUndo())
+			this._doManager.undo();
+		else
+			this.announce('すでに一番古い変更です');
+		return this;
+	}
+	redo() {
+		if (this._doManager.hasRedo())
+			this._doManager.redo();
+		else
+			this.announce('すでに一番新しい変更です');
+		return this;
+	}
+
 	// --イベント
 
 	// keydown
@@ -6516,15 +6553,15 @@ class SentenceContainer extends AbstractHierarchy {
 		switch (keycode) {
 			case 8:
 				// backspace
-				this.cursor().backSpace();
+				this.cursor().backSpace(true);
 				break;
 			case 13:
 				// Enter
-				this.cursor().lineBreak();
+				this.cursor().lineBreak(true);
 				break;
 			case 32:
 				// space
-				this.cursor().insert('　');
+				this.cursor().insert('　', true);
 				break;
 			case 37:
 				// Left
@@ -6563,6 +6600,7 @@ class SentenceContainer extends AbstractHierarchy {
 	 * @return {SentenceContainer} 自身のインスタンス
 	 */
 	runControlKeyDown(e,keycode) {
+		console.log('keycode', keycode);
 		switch (keycode) {
 			case 67:
 				// c
@@ -6597,9 +6635,17 @@ class SentenceContainer extends AbstractHierarchy {
 				// o
 				this.fileList().openPrevFile();
 				break;
+			case 82:
+				//r
+				this.redo();
+				break;
 			case 83:
 				// s
 				this.saveFile();
+				break;
+			case 85:
+				//u
+				this.undo();
 				break;
 			case 86:
 				// v
