@@ -184,7 +184,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	@return 自らのインスタンス
 	 */
 	protected Entry executeSql(String sql) {
-		Objects.requireNonNull(connection, "need to connect database");
+		if (Objects.isNull(connection)) throw new IllegalStateException("need to connect database");
 		Entry entry = null;
 		try {
 			entry = new Entry(sql);

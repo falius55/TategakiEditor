@@ -7,294 +7,11 @@
  *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
  */
 console.log('object.js');
-/**
- * @namespace
- */
-const Util = {
-	/**
-	 * baseArrayをcnt個ずつの配列に分割する
-	 */
-	splitArray:function(baseArray,cnt) {
-		'use strict';
-		const b = baseArray.length;
-		const newArray = [];
-
-		for (let i = 0,j,p; i < Math.ceil(b/cnt); i++) {
-			j = i*cnt;
-			p = baseArray.slice(j,j+cnt);
-			newArray.push(p);
-		}
-		return newArray;
-	},
-	copyArray:function (array) {
-		'use strict';
-		const retArray = [];
-		for (let value of array) {
-			retArray.push(value);
-		}
-		return retArray;
-	},
-	// ２点間の距離を計算する
-	computeDistanceP2P:function(x1,y1,x2,y2) {
-		// ２乗を使っているので、戻り値は必ず正の数になる
-		// √{(b.x - a.x)^2+ (b.y - a.y)^2}
-		return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
-	},
-	post: function (url,data,callback) {
-		console.log('post send:', data);
-		const xhr = new XMLHttpRequest();
-		xhr.responseType = 'json';
-		xhr.open('POST',url);
-		xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=UTF-8');
-
-		let sendData = '';
-		for (let name in data) {
-			if (sendData != '') {
-				sendData += '&';
-			}
-			sendData += name + '=' + encodeURI(data[name]).replace(/&/g,'%26');
-		}
-
-		xhr.addEventListener('load',function (e) {
-			if (xhr.response) {
-				callback(xhr.response);
-				console.log('success', xhr.response, e);
-			} else {
-				console.log('unsuccess', xhr.response, e);
-			}
-		});
-		xhr.addEventListener('abort',function (e) {
-			console.log('abort', e);
-		});
-		xhr.send(sendData);
-	}
-};
-// closer
-/**
- * @memberof Util
- */
-Util.createCharElement = (function () {
-	const eCharTemplate = document.createElement('span');
-	eCharTemplate.classList.add('char');
-	eCharTemplate.classList.add('display');
-
-	return function (data) {
-		const eChar = eCharTemplate.cloneNode(true);
-		const char = data['char'];
-		const classArr = data['decolation'];
-		const fontSize = data['fontSize'];
-		eChar.textContent = char;
-		eChar.dataset.fontSize = fontSize || 'auto';
-		for (let decolation of classArr) {
-			eChar.classList.add(decolation);
-		}
-
-		// 文字の種類に応じて付与するクラス
-		if (/[。、,.,]/.test(char))
-			eChar.classList.add('vertical-dot');
-		else if (/[「『]/.test(char))
-			eChar.classList.add('vertical-before-kagi-bracket');
-		else if (/[」』]/.test(char))
-			eChar.classList.add('vertical-after-kagi-bracket');
-		else if (/[（\[<\{【\(［〈]/.test(char))
-			eChar.classList.add('vertical-before-bracket');
-		else if (/[\)\]>\}】）］〉]/.test(char))
-			eChar.classList.add('vertical-after-bracket');
-		else if (/[-ー―〜]/.test(char))
-			eChar.classList.add('character-line');
-		else if (/[a-z]/.test(char))
-			eChar.classList.add('alphabet');
-		else if (/[１-９]/.test(char))
-			eChar.classList.add('number');
-		else if (/[っゃゅょぁぃぅぇぉァィゥェォッャュョ]/.test(char))
-			eChar.classList.add('yoin');
-
-		return eChar;
-	}
-})();
-Util.createRowElement = (function () {
-	/*
-	 *	[												 // 各文字のオブジェクトが配列で格納される
-	 *		{											 // 文字を表すオブジェクト
-	 *			"char":"あ",
-	 *			"decolation":["decolation-color-blue"]
-	 *		},
-	 *		{
-	 *			"char":"い",
-	 *			"decolation":null
-	 *		}
-	 *	]
-	 */
-	const eRowTemplate = document.createElement('div');
-	eRowTemplate.classList.add('row');
-	eRowTemplate.classList.add('display');
-	const eEOL = document.createElement('span');
-	eEOL.classList.add('char');
-	eEOL.classList.add('EOL');
-	eEOL.classList.add('display');
-	eRowTemplate.appendChild(eEOL);
-
-	return function (data) {
-		const eRow = eRowTemplate.cloneNode(true);
-		return eRow;
-	}
-})();
-Util.createParagraphElement = (function () {
-	/*
-	 * 			[
-	 * 				["decolation-textalign-center"],		 // 段落のクラスが文字列の配列で格納される
-	 * 				[												 // 各文字のオブジェクトが配列で格納される
-	 * 					{											 // 文字を表すオブジェクト
-	 * 						"char":"あ",
-	 * 						"decolation":["decolation-color-blue"]
-	 * 					},
-	 * 					{
-	 * 						"char":"い",
-	 * 						"decolation":[]
-	 * 					}
-	 * 					]
-	 * 			]
-	 */
-	const eParagraphTemplate = document.createElement('div');
-	eParagraphTemplate.classList.add('paragraph');
-
-	return function (data) {
-		const eParagraph = eParagraphTemplate.cloneNode(true);
-		// 段落そのものにクラスを付与する
-		for (let className of data[0]) {
-			eParagraph.classList.add(className);
-		}
-		return eParagraph;
-	}
-})();
-Util.createCharPosElement = (function () {
-	const eCharPosTemplate = document.createElement('span');
-	eCharPosTemplate.classList.add('char-pos');
-
-	return function (strLen) {
-		const flagment = document.createDocumentFragment();
-		for (var i = 0; i <= strLen; i++) { // EOLの分も作成する
-			const eCharPos = eCharPosTemplate.cloneNode(true);
-			flagment.appendChild(eCharPos);
-		}
-		return flagment;
-	}
-})();
-Util.createConvertViewElement = (function () {
-	const eViewTemplate = document.createElement('div');
-	eViewTemplate.classList.add('convert-view');
-
-	return function () {
-		'use strict';
-		const eView = eViewTemplate.cloneNode(true);
-		return eView;
-	}
-})();
-// file_listの中に入れるファイル行を作成する
-Util.createFileElement = (function () {
-	/*
-	 * 作成例
-	 * <li>
-	 * <a class="file"
-	 * data-type="file"
-	 * href="#"
-	 * data-file-id="1"
-	 * data-file-name="filename"
-	 * >
-	 * filename
-	 * </a>
-	 * </li>
-	 */
-	const eFileTemplate = document.createElement('li');
-	eFileTemplate.classList.add('fileLi');
-	const eFileLinkTemplate = document.createElement('a');
-	eFileLinkTemplate.classList.add('file');
-	eFileLinkTemplate.dataset.type = 'file';
-	eFileLinkTemplate.href = '#';
-
-	return function (id,filename) {
-		const eFile = eFileTemplate.cloneNode(true);
-		const eFileLink = eFileLinkTemplate.cloneNode(true);
-		eFileLink.dataset.fileId = id;
-		eFileLink.dataset.fileName = filename;
-		eFileLink.textContent = filename;
-		eFile.appendChild(eFileLink);
-		return eFile;
-	}
-})();
-// file_listの中に入れるディレクトリ行を作成する
-Util.createDirectoryElement = (function () {
-	/*
-	 * 作成例
-	 * <li>
-	 * 	<a class="directory"
-	 * 	data-type="directory"
-	 * 	data-toggle="collapse"
-	 * 	data-directory-id="1"
-	 * 	data-directory-name="filename.directoryname"
-	 * 	href="#directory1"
-	 * 	>
-	 *		<span
-	 *		class="glyphicon glyphicon-folder-close"
-	 *		aria-hidden="true">
-	 *		</span>
-	 *		filename.directoryname
-	 *		</a>
-	 *
-	 *		<div class="collapse" id="directory1">
-	 *			<div class="well">
-	 *				<ul>
-	 *					<li>filename</li>
-	 *					<li>filename</li>
-	 *					<li>filename</li>
-	 *				</ul>
-	 *			</div>
-	 *		</div>
-	 *	</li>
-	 */
-	const eDirectoryTemplete = document.createElement('li');
-	eDirectoryTemplete.classList.add('dirLi');
-	const eDirLinkTemplete = document.createElement('a');
-	eDirLinkTemplete.classList.add('directory');
-	eDirLinkTemplete.dataset.type = 'directory';
-	eDirLinkTemplete.dataset.toggle = 'collapse';
-	eDirLinkTemplete.innerHTML = '<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'; // フォルダアイコン
-
-	const eCollapseTemplate = document.createElement('div');
-	const eInnerUlTemplate = document.createElement('ul');
-	const eWellTemplate = document.createElement('div');
-	eCollapseTemplate.classList.add('collapse');
-	eWellTemplate.classList.add('well');
-
-	return function (id,innerData) {
-		const eDirectory = eDirectoryTemplete.cloneNode(true);
-		const eDirLink = eDirLinkTemplete.cloneNode(true);
-		const directoryname = innerData.directoryname;
-		eDirLink.dataset.directoryId = id;
-		eDirLink.dataset.directoryName = directoryname;
-		eDirLink.href = '#directory' + id;
-		eDirLink.insertAdjacentHTML('beforeend',directoryname);
-
-		eDirectory.appendChild(eDirLink);
-
-		const eCollapse = eCollapseTemplate.cloneNode(true);
-		const eInnerUl = eInnerUlTemplate.cloneNode(true);
-		const eWell = eWellTemplate.cloneNode(true);
-		eCollapse.id = 'directory' + id;
-
-		// eInnerUl内にファイルリストを加える
-
-		eCollapse.appendChild(eWell);
-		eWell.appendChild(eInnerUl);
-
-		eDirectory.appendChild(eCollapse); // コラプスも加える
-		return eDirectory;
-	}
-})();
 
 // Class
 /**
  * メニューバーを担当するクラス
+ *     メニューバー上のボタンによるイベントを一括して請け負います
  */
 class Menu {
 	/**
@@ -647,6 +364,7 @@ class Menu {
 }
 /**
  * コマンドラインを表すクラス
+ *     コマンド操作を一括して請け負います
  */
 class CommandLine {
 	/**
@@ -1037,6 +755,7 @@ class CommandLine {
 // 段落最後のEOL以外のEOLにカーソルは止まらない(EOLは基本、文字挿入のために存在)
 /**
  * カーソルを表すクラス
+ *     カーソルを起点とした操作を一括して請け負います
  */
 class Cursor {
 	/**
@@ -1226,7 +945,7 @@ class Cursor {
 		for (let eOldCharPos; eOldCharPos = eOldCharPoses[0];) {
 			eCursorLine.removeChild(eOldCharPos);
 		}
-		eCursorLine.appendChild(Util.createCharPosElement(this.sentenceContainer().strLenOnRow()));
+		eCursorLine.appendChild(ElemCreater.createCharPosElement(this.sentenceContainer().strLenOnRow()));
 		return this;
 	}
 
@@ -2012,7 +1731,7 @@ class Char extends AbstractHierarchy {
 	 *	</pre>
 	 */
 	constructor(data) {
-		super(data.char ? Util.createCharElement(data) : data); // dataオブジェクトにcharプロパティがなければEOLからの呼び出しで、dataにはエレメントが入っている
+		super(data.char ? ElemCreater.createCharElement(data) : data); // dataオブジェクトにcharプロパティがなければEOLからの呼び出しで、dataにはエレメントが入っている
 		data.fontSize && (this._fontSize = data.fontSize);
 	}
 
@@ -2195,7 +1914,6 @@ class Char extends AbstractHierarchy {
 		return data;
 	}
 	/**
-	 * @private
 	 * この文字にかかっている装飾のクラスを配列にして返します
 	 * @return {string[]} この文字にかかっている装飾のクラスの配列。文字装飾がかかっていなければ空の配列
 	 */
@@ -2217,7 +1935,7 @@ class Char extends AbstractHierarchy {
 
 	/**
 	 * この文字のフォントサイズを変更します。あるいは引数省略で現在のフォントサイズを取得します
-	 * @param {number} [opt_fontSize] 新たに設定するフォントサイズ
+	 * @param {number string} [opt_fontSize] 新たに設定するフォントサイズ(数値以外では'auto'が渡せる)
 	 * @return {Char number string} 自身のインスタンス(引数を渡した場合)。現在のフォントサイズ(引数を省略した場合)、フォントサイズが数値で設定されていなければ文字列の'auto'
 	 */
 	fontSize(opt_fontSize) {
@@ -2635,7 +2353,7 @@ class Row extends AbstractHierarchy {
 	constructor(data) {
 		// 配列が渡されたら新しく要素を作り、そうでなければ要素が渡されたとしてそれを元にインスタンスを作る
 		if (Array.isArray(data)) {
-			super(Util.createRowElement(data));
+			super(ElemCreater.createRowElement(data));
 		} else {
 			// InputBufferの場合
 			super(data);
@@ -3281,7 +2999,7 @@ class Paragraph extends AbstractHierarchy {
 	 *	</pre>
 	 */
 	constructor(data) {
-		super(Util.createParagraphElement(data));
+		super(ElemCreater.createParagraphElement(data));
 		const strLen = 40;
 		const spArray = Util.splitArray(data[1],strLen); // data[1]が空配列なら、spArrayにも空配列が入る
 		for (let charArray of spArray) {
@@ -3704,7 +3422,7 @@ class ConvertView extends AbstractHierarchy {
 	 *	</pre>
 	 */
 	constructor(data) {
-		super(Util.createConvertViewElement());
+		super(ElemCreater.createConvertViewElement());
 		data[1].push(data[0]); // 末尾に明確にひらがなを入れる
 		for (let str of data[1]) {
 			const row = Row.createEmptyRow();
@@ -4892,7 +4610,7 @@ class File extends AbstractHierarchy {
 	 * @param {string} filename ファイル名
 	 */
 	constructor(id,filename) {
-		super(Util.createFileElement(id,filename));
+		super(ElemCreater.createFileElement(id,filename));
 		this._link = this.elem().getElementsByTagName('a')[0];
 		this._id = id;
 		this._name = filename;
@@ -5164,7 +4882,7 @@ class Directory extends AbstractHierarchy {
 		 * }
 		 * fileId:filename
 		 */
-		super(Util.createDirectoryElement(dirId,data));
+		super(ElemCreater.createDirectoryElement(dirId,data));
 		this._link = this.elem().getElementsByTagName('a')[0];
 		this._innerList = this.elem().getElementsByTagName('ul')[0];
 
