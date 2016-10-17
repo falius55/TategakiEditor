@@ -182,6 +182,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	データベースの操作を始めます
 	 *	@param	sql	SQLへの問い合わせ文
 	 *	@return 自らのインスタンス
+	 *	@throws IllegalStateException connectDatabase()でデータベースに接続する前に実行された場合
 	 */
 	protected Entry executeSql(String sql) {
 		if (Objects.isNull(connection)) throw new IllegalStateException("need to connect database");
@@ -319,7 +320,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 				indexCounter = 0;
 				preparedStatement = connection.prepareStatement(sql);
 			} catch (SQLException e) {
-				throw new SQLException("fail new Entry");
+				throw new SQLException("fail new Entry", e);
 			}
 		}
 		/**
