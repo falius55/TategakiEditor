@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import database.Database;
+
 /**
  * ユーザーIDとファイルIDを受け取り、読み込んだファイルの内容を文字列でクライアントに送り返すサーブレット
  * <pre>
@@ -28,7 +30,6 @@ public class ReadJsonFile extends AbstractServlet  {
 
 		try {
 			ready(request,response);
-			connectDatabase();
 
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
 			String filename = filename(fileId);
@@ -61,14 +62,14 @@ public class ReadJsonFile extends AbstractServlet  {
 	}
 
 	private String filename(int fileId) throws SQLException {
-		Entry entry = executeSql("select * from file_table where id = ?").setInt(fileId).query();
+		Database.Entry entry = executeSql("select * from file_table where id = ?").setInt(fileId).query();
 
 		if (entry.next())
 			return entry.getString("filename").orElse("not found");
 		throw new SQLException("no database data");	
 	}
 	private String saved(int fileId) throws SQLException {
-		Entry entry = executeSql("select * from file_table where id = ?").setInt(fileId).query();
+		Database.Entry entry = executeSql("select * from file_table where id = ?").setInt(fileId).query();
 
 		if (entry.next())
 			return entry.getDateFormat("saved");

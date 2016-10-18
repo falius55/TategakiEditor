@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.Database;
+
 /**
  * <p>送られてきたユーザー名とパスワードを確認してログインするサーブレット
  * <p>認証に失敗したら、ログイン画面に戻します
@@ -22,7 +24,6 @@ public class Login extends AbstractServlet {
 		throws IOException, ServletException {
 
 		request.setCharacterEncoding("UTF-8"); // 受取のcharset
-		connectDatabase();
 
 		String user = request.getParameter("username");
 		String pass = request.getParameter("password");
@@ -50,7 +51,7 @@ public class Login extends AbstractServlet {
 		} catch (SQLException e) {
 			log(e.getMessage());
 		}
-		Entry entry = executeSql("select * from edit_users where name = ? && password = ?")
+		Database.Entry entry = executeSql("select * from edit_users where name = ? && password = ?")
 			.setString(user).setString(pass).query();
 
 		if (entry.next()) {

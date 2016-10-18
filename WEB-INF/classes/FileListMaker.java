@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import database.Database;
+
 /**
  * <p>ユーザーIDを受け取り、ファイルのツリー構造を表すJSONを文字列で返すサーブレット
  * <pre>
@@ -37,7 +39,6 @@ public class FileListMaker extends AbstractServlet  {
 
 		try {
 			ready(request, response);
-			connectDatabase();
 
 			int userId = Integer.parseInt(request.getParameter("user_id"));
 			int rootId = rootId(userId);
@@ -76,7 +77,7 @@ public class FileListMaker extends AbstractServlet  {
 	 * </pre>
 	 */
 	private String getFileJson(int userId, int parentId) {
-		Entry entry = executeSql("select * from file_table where user_id = ? and (parent_dir = ? or id = ?)")
+		Database.Entry entry = executeSql("select * from file_table where user_id = ? and (parent_dir = ? or id = ?)")
 			.setInt(userId).setInt(parentId).setInt(parentId).query();
 		StringJoiner sj = new StringJoiner(",", "{", "}");
 		for (int i = 0; entry.next(); i++) {

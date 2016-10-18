@@ -5,6 +5,9 @@
  *     そうすることでDoManagerクラスのundoメソッド、redoメソッドで各操作に対するundo,redoを統一された操作によって行うことが可能になります
  */
 class DoManager {
+	/**
+	 * @param {SentenceContainer} 対応する文章コンテナのインスタンス
+	 */
 	constructor(sentenceContainer) {
 		this._sentenceContainer = sentenceContainer;
 		this._undos = [];
@@ -25,6 +28,10 @@ class DoManager {
 		return this._redos.length > 0;
 	}
 
+	/**
+	 * Undoを実行し、使い終わったタスクをRedoスタックに再度積みます
+	 * @return {DoManager} 自身のインスタンス
+	 */
 	undo() {
 		const doMemory = this._undos.pop();
 		doMemory.undo();
@@ -32,6 +39,10 @@ class DoManager {
 		this._sentenceContainer.isChanged(true);
 		return this;
 	}
+	/**
+	 * Redoを実行し、使い終わったタスクをUndoスタックに再度積みます
+	 * @return {DoManager} 自身のインスタンス
+	 */
 	redo() {
 		const doMemory = this._redos.pop();
 		doMemory.redo();
@@ -51,9 +62,14 @@ class DoManager {
 		return this;
 	}
 
+	/**
+	 * スタックを初期化します
+	 * @return {DoManager} 自身のインスタンス
+	 */
 	reset() {
 		this._undos = [];
 		this._redos = [];
+		return this;
 	}
 }
 /**
@@ -136,6 +152,9 @@ class DeleteDoMemory extends DoMemory {
 
 class LineBreakDoMemory extends DoMemory {
 
+	/**
+	 * @param {Cursor} cursor カーソルオブジェクト
+	 */
 	constructor(cursor) {
 		super();
 		this._cursor = cursor;
@@ -156,6 +175,8 @@ class LineBreakDoMemory extends DoMemory {
 class ColorDoMemory extends DoMemory {
 	/**
 	 * このクラスでは古い文字色も情報として必要となるので、必ず文字色変更前に作成してください
+	 * @param {Char[]} 文字色を変更したCharインスタンスの配列
+	 * @param {string} 変更後の文字色
 	 */
 	constructor(targets, newColor) {
 		super();
@@ -178,6 +199,8 @@ class ColorDoMemory extends DoMemory {
 class ItalicDoMemory extends DoMemory {
 	/**
 	 * このクラスでは古い状態も情報として必要となるので、必ず文字の変更前に作成してください
+	 * @param {Char[]} targets 斜体に変更されたCharインスタンスの配列
+	 * @param {boolean} 変更後の状態を表す真偽値
 	 */
 	constructor(targets, blNew) {
 		super();
@@ -200,6 +223,8 @@ class ItalicDoMemory extends DoMemory {
 class BoldDoMemory extends DoMemory {
 	/**
 	 * このクラスでは古い状態も情報として必要となるので、必ず文字の変更前に作成してください
+	 * @param {Char[]} targets 太字に変更されたCharインスタンスの配列
+	 * @param {boolean} 変更後の状態を表す真偽値
 	 */
 	constructor(targets, blNew) {
 		super();
@@ -222,6 +247,8 @@ class BoldDoMemory extends DoMemory {
 class FontSizeDoMemory extends DoMemory {
 	/**
 	 * このクラスでは古い状態も情報として必要となるので、必ず文字の変更前に作成してください
+	 * @param {Char[]} targets フォントサイズが変更されたCharインスタンスの配列
+	 * @param {number string} newSize 変更後のフォントサイズ
 	 */
 	constructor(targets, newSize) {
 		this._targets = targets;

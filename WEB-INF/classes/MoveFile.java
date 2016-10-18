@@ -25,7 +25,6 @@ public class MoveFile extends AbstractServlet  {
 
 		try {
 			ready(request, response);
-			connectDatabase();
 
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
 			int parentDirId = Integer.parseInt(request.getParameter("directory_id"));

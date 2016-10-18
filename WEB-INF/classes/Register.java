@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.Database;
+
 /**
  * <p>ユーザー名、パスワードを受け取り、ユーザー登録を行うサーブレット<br>
  * 同時に、ユーザー専用のホームディレクトリを作成します<br>
@@ -24,7 +26,6 @@ public class Register extends AbstractServlet {
 		throws IOException, ServletException {
 
 		ready(request, response);
-		connectDatabase();
 
 		String user = request.getParameter("username");
 		String pass = request.getParameter("password");
@@ -81,7 +82,7 @@ public class Register extends AbstractServlet {
 	 *     取得に失敗すると-1
 	 */
 	private int userId(String username, String password) throws SQLException {
-		Entry entry = executeSql("select * from edit_users where name = ? and password = ?")
+		Database.Entry entry = executeSql("select * from edit_users where name = ? and password = ?")
 			.setString(username).setString(password).query();
 		if (entry.next()) {
 			return entry.getInt("id").orElse(-1);

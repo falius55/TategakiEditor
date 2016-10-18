@@ -25,7 +25,6 @@ public class DeleteFile extends AbstractServlet {
 
 		try {
 			ready(request, response);
-			connectDatabase();
 
 			int fileId = Integer.parseInt(request.getParameter("file_id"));
 			int num = deleteFileFromDatabase(fileId);
