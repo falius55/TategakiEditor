@@ -2,6 +2,8 @@ import java.io.PrintWriter;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.CompletionException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,10 +58,7 @@ public class Register extends AbstractServlet {
 			createUserRecord(user, pass);
 
 			int userId = userId(user, pass);
-			createRootDirectory(userId);
-
-			return true;
-
+			return createRootDirectory(userId);
 		} catch (SQLException e) {
 			log(e.getMessage());
 			return false;
@@ -69,7 +68,7 @@ public class Register extends AbstractServlet {
 	/**
 	 * データベースへのユーザー登録を行います
 	 */
-	private void createUserRecord(String username, String password) {
+	private void createUserRecord(String username, String password) throws SQLException {
 		// データベースへのユーザー登録
 		long curMillis = new java.util.Date().getTime();
 		executeSql("insert into edit_users (name,password,registered) values (?,?,?)")
@@ -92,39 +91,54 @@ public class Register extends AbstractServlet {
 
 	/**
 	 * ユーザー専用ディレクトリを作成します
+     * @return ディレクトリの作成に成功した場合
 	 */
-	private void createRootDirectory(int userId) throws SQLException {
-		long curMillis = new java.util.Date().getTime();
+	private boolean createRootDirectory(int userId) {
+        try {
+            long curMillis = new java.util.Date().getTime();
 
-		// データベースへのディレクトリ情報登録
-		executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
-			.setString("root").setString("root").setInt(0).setInt(userId).setTimeMillis(curMillis).update();
+            // データベースへのディレクトリ情報登録
+            executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
+                .setString("root").setString("root").setInt(0).setInt(userId).setTimeMillis(curMillis).update();
 
-		int rootId = rootId(userId);
+            int rootId = rootId(userId);
 
-		// edit_usersへのrootディレクトリ情報の登録
-		executeSql("update edit_users set root_file_id = ? where id = ?").setInt(rootId).setInt(userId).update();
+            // edit_usersへのrootディレクトリ情報の登録
+            executeSql("update edit_users set root_file_id = ? where id = ?").setInt(rootId).setInt(userId).update();
 
-		// サーバー用ルートディレクトリ(/tategaki)までのパスを取得
-		String path = contextPath(String.format("data/%d",rootId));	// ルートディレクトリ/data/userIdとなる
-		File userRootDir = new File(path);
+            // サーバー用ルートディレクトリ(/tategaki)までのパスを取得
+            String path = contextPath(String.format("data/%d",rootId));	// ルートディレクトリ/data/userIdとなる
+            File userRootDir = new File(path);
 
-		userRootDir.mkdirs(); // dataディレクトリが存在しない場合は同時に作成される
+            boolean result = userRootDir.mkdirs(); // dataディレクトリが存在しない場合は同時に作成される
+            return result;
+        } catch (SQLException e) {
+            log(e.getMessage());
+            return false;
+        }
 	}
 	/**
 	 * データベース上にedit_usersという名前のユーザー管理テーブルを作成します
 	 */
-	private void createUserTable() throws SQLException {
+	private void createUserTable() {
 		log("create user table");
-		executeSql("create table edit_users( id int not null auto_increment primary key, name varchar(255) unique not null, password varchar(32) not null, root_file_id int, registered datetime)")
-			.update();
+        try {
+            executeSql("create table edit_users( id int not null auto_increment primary key, name varchar(255) unique not null, password varchar(32) not null, root_file_id int, registered datetime)")
+                .update();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 	/**
 	 * データベース上にfile_tableという名前のファイル管理テーブルを作成します
 	 */
 	private void createFileTable() throws SQLException {
 		log("create file table");
-		executeSql("create table file_table( id int not null auto_increment primary key, filename varchar(255), type enum('root','dir','file') default 'file', parent_dir int, user_id int not null, saved datetime)")
-			.update();
+        try {
+            executeSql("create table file_table( id int not null auto_increment primary key, filename varchar(255), type enum('root','dir','file') default 'file', parent_dir int, user_id int not null, saved datetime)")
+                .update();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 }

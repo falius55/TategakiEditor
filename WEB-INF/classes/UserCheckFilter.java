@@ -35,8 +35,6 @@ public class UserCheckFilter implements Filter {
 			System.err.println(e.getMessage());
 		} catch(IOException e) {
 			System.err.println(e.getMessage());
-		} catch(Exception e) {
-			System.err.println(e.getMessage());
 		}
 	}
 

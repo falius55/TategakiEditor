@@ -1,6 +1,6 @@
-import java.io.PrintWriter;
-import java.io.IOException;
+import java.util.concurrent.CompletionException;
 import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,32 +23,26 @@ import database.Database;
  */
 public class DirectoryMaker extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
+        throws ServletException {
 
-		try {
-			ready(request, response);
+        ready(request, response);
 
-			int userId = Integer.parseInt(request.getParameter("user_id"));
-			int rootId = rootId(userId);
-			
-			String directoryname = request.getParameter("directoryname");
-			long savedMillis = Long.parseLong(request.getParameter("saved"));
-			insertDirectoryRecord(directoryname, rootId, userId, savedMillis);
+        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int rootId = rootId(userId);
 
-			// 新しいfileIdを取得
-			int directoryId = queryFileIdFromSaved(userId, savedMillis);
+        String directoryname = request.getParameter("directoryname");
+        long savedMillis = Long.parseLong(request.getParameter("saved"));
+        insertDirectoryRecord(directoryname, rootId, userId, savedMillis);
 
-			//	ajaxへ送信
-			String rtn = String.format("{\"newDirectoryID\" : \"%d\",\"directoryname\" : \"%s\"}",directoryId,directoryname);
-			out(rtn);
+        // 新しいfileIdを取得
+        int directoryId = queryFileIdFromSaved(userId, savedMillis);
 
-			log("DirectoryMaker return is " + rtn);
-		} catch(SQLException e) {
-			log(e.getMessage());
-		} catch(Exception e) {
-			log(e.getMessage());
-		}
-	}
+        //	ajaxへ送信
+        String rtn = String.format("{\"newDirectoryID\" : \"%d\",\"directoryname\" : \"%s\"}",directoryId,directoryname);
+        out(response, rtn);
+
+        log("DirectoryMaker return is " + rtn);
+    }
 
 	/**
 	 * 行を挿入し、ディレクトリ名、ユーザーID、最終更新日を保存します
@@ -58,22 +52,31 @@ public class DirectoryMaker extends AbstractServlet  {
 	 * @param savedMillis 最終更新日時のミリ秒
 	 */
 	private void insertDirectoryRecord(String directoryName, int rootId, int userId, long savedMillis) {
-		executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
-			.setString(directoryName).setString("dir").setInt(rootId).setInt(userId).setTimeMillis(savedMillis).update();
+        try {
+            executeSql("insert into file_table (filename,type,parent_dir,user_id,saved) values (?,?,?,?,?)")
+                .setString(directoryName).setString("dir").setInt(rootId).setInt(userId).setTimeMillis(savedMillis).update();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 
 	/**
 	 * 指定された最終更新日時に合致する特定のファイルIDを取得します
 	 * @param userId ユーザーID
 	 * @param savedMillis 最終更新日時のミリ秒
-	 *     取得に失敗すると-1
+     * @throws CompletionException 取得に失敗した場合
+     * @throws IllegalArgumentException 条件に合うファイルが存在しない場合
 	 */
-	private int queryFileIdFromSaved(int userId, long savedMillis) throws SQLException {
-		Database.Entry entry = executeSql("select * from file_table where user_id = ? and saved = ?")
-			.setInt(userId).setTimeMillis(savedMillis).query();
-		if (entry.next()) {
-			return entry.getInt("id").orElse(-1);
-		}
-		throw new SQLException("database has no data");
+	private int queryFileIdFromSaved(int userId, long savedMillis) {
+        try {
+            Database.Entry entry = executeSql("select * from file_table where user_id = ? and saved = ?")
+                .setInt(userId).setTimeMillis(savedMillis).query();
+            if (entry.next()) {
+                return entry.getInt("id").orElse(-1);  // おそらく-1になることはない
+            }
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
+		throw new IllegalArgumentException("database has no data");
 	}
 }

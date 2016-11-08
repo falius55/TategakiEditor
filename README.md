@@ -5,11 +5,11 @@
 ※アンドゥ機能は未実装
 
 ## Requirements
-TomcatとMySQLを利用します。
+java8、TomcatとMySQLを利用します。
 
 ## Installation
-1. MySQLでデータベースの設定  
-     WEB-INF/classes/AbstractServlet.java内のprivate static finalフィールドのDATABASE_NAME,USER,PASSWORDにそれぞれMySQLで使用するデータベース名、ユーザー名、パスワードを設定する  
+1. MySQLの情報を設定  
+     WEB-INF/classes/AbstractServlet.java内のprivate static finalフィールドのDATABASE_NAME,USER,PASSWORDをそれぞれMySQLで使用するデータベース名、ユーザー名、パスワードに書き換える  
 
      また、MySQL用のJDBCドライバを取得してクラスパスを通しておく
 
@@ -18,7 +18,7 @@ TomcatとMySQLを利用します。
      `<Context path="/tategaki"  
      docBase="tategakiディレクトリを作成したディレクトリのパス/tategaki" />`
 
-3. tategakiディレクトリにソースコードを配置し、WEB-INF/classes/にある各JavaファイルをTomcatのディレクトリ/lib/servlet-api.jarにクラスパスを通してコンパイル
+3. tategakiディレクトリにソースコードを配置し、WEB-INF/classes/にある各JavaファイルをTomcatのディレクトリ/lib/servlet-api.jarとソースコード内WEB-INF/classesの２箇所にクラスパスを通してコンパイル
 
 4. Tomcatを起動し、webブラウザからURLにhttp://localhost:8080/tategakiを指定してアクセス　※localhost、8080の部分は設定や利用方法により異なる
 

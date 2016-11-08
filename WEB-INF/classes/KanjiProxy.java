@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.stream.Collectors;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,18 +31,14 @@ import javax.servlet.http.HttpServletResponse;
 public class KanjiProxy extends AbstractServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
-		try {
+		throws ServletException {
 		ready(request, response);
 
 		String sentence = request.getParameter("sentence");
 		String rtnString = getData(sentence);
 
 		log("rtnKanjiJson:"+ rtnString);
-		out(rtnString);
-		} catch(Exception e) {
-			log(e.getMessage());
-		}
+		out(response, rtnString);
 	}
 
 	public static void main(String args[]) {
@@ -55,23 +52,20 @@ public class KanjiProxy extends AbstractServlet {
 	 *     取得に失敗すると空文字列
 	 */
 	public static String getData(String str) {
-		try {
-			// Google CGI API for Japanese Input(Google日本語入力API)
-			String strUrl = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + str;
-			URL url = new URL(strUrl);
-			InputStream in = url.openStream();
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        // Google CGI API for Japanese Input(Google日本語入力API)
+        String strUrl = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + str;
+        try {
+            URL url = new URL(strUrl);
+            try (InputStream is = url.openStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF8"))) {
+                return br.lines().collect(Collectors.joining());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-			String ret = br.lines().collect(Collectors.joining());
-
-			in.close();
-			br.close();
-			return ret;
-		} catch(MalformedURLException e) {
-			System.err.println(e);
-		} catch(IOException e) {
-			System.err.println(e);
-		}
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 		return "";
 	}
 }

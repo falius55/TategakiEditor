@@ -1,6 +1,8 @@
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.CompletionException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,39 +26,40 @@ import java.text.SimpleDateFormat;
  */
 public class WriteJsonFile extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
+		throws ServletException {
 
-		try {
-			ready(request, response);
+        ready(request, response);
 
-			// ファイル名、最終更新日の更新
-			int fileId = Integer.parseInt(request.getParameter("file_id"));
-			String filename = request.getParameter("filename");
-			long savedMillis = Long.parseLong(request.getParameter("saved"));
+        // ファイル名、最終更新日の更新
+        int fileId = Integer.parseInt(request.getParameter("file_id"));
+        String filename = request.getParameter("filename");
+        long savedMillis = Long.parseLong(request.getParameter("saved"));
 
-			updateFilename(fileId, filename);
-			updateSaved(fileId, savedMillis);
+        updateFilename(fileId, filename);
+        updateSaved(fileId, savedMillis);
 
-			// テキストファイルへの書き込み
-			int userId = Integer.parseInt(request.getParameter("user_id"));
-			int rootId = rootId(userId);
-			String json = request.getParameter("json");
-			writeFile(String.format("data/%d/%d.json",rootId,fileId), json);
+        // テキストファイルへの書き込み
+        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int rootId = rootId(userId);
+        String json = request.getParameter("json");
+        writeFile(String.format("data/%d/%d.json",rootId,fileId), json);
 
-			String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",dateFormat(savedMillis));
-			out(rtnJson);
-
-		} catch(SQLException e) {
-			log(e.getMessage());
-		} catch(Exception e) {
-			log(e.getMessage());
-		}
-	}
+        String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",dateFormat(savedMillis));
+        out(response, rtnJson);
+    }
 	private void updateFilename(int fileId, String newFilename) {
-		executeSql("update file_table set filename = ? where id = ?").setString(newFilename).setInt(fileId).update();
+        try {
+            executeSql("update file_table set filename = ? where id = ?").setString(newFilename).setInt(fileId).update();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 	private void updateSaved(int fileId, long newSaved) {
-		executeSql("update file_table set saved = ? where id = ?").setTimeMillis(newSaved).setInt(fileId).update();
+        try {
+            executeSql("update file_table set saved = ? where id = ?").setTimeMillis(newSaved).setInt(fileId).update();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 	/**
 	 *	ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換します

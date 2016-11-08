@@ -1,6 +1,8 @@
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.CompletionException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,25 +47,26 @@ public class Login extends AbstractServlet {
 	private boolean userCheck(String user,String pass,HttpSession session) {
 		if (user == null || user.length() == 0 || pass == null || pass.length() == 0)
 			return false;
-		try {
-			if (!existTable("edit_users")) return false;
-			if (!existTable("file_table")) return false;
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-		Database.Entry entry = executeSql("select * from edit_users where name = ? && password = ?")
-			.setString(user).setString(pass).query();
+        if (!existTable("edit_users")) return false;
+        if (!existTable("file_table")) return false;
 
-		if (entry.next()) {
-			String userid = entry.getString("id").orElse("-1");
-			String username = entry.getString("name").orElse("not found");
+        try {
+            Database.Entry entry = executeSql("select * from edit_users where name = ? && password = ?")
+                .setString(user).setString(pass).query();
 
-			session.setAttribute("userid",userid);
-			session.setAttribute("username",username);
+            if (entry.next()) {
+                String userid = entry.getString("id").orElse("-1");
+                String username = entry.getString("name").orElse("not found");
 
-			return true;
-		} else {
-			return false;		
-		}
-	}
+                session.setAttribute("userid",userid);
+                session.setAttribute("username",username);
+
+                return true;
+            } else {
+                return false;		
+            }
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
+    }
 }

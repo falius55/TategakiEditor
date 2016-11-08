@@ -1,6 +1,8 @@
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.CompletionException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,31 +23,29 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DeleteFile extends AbstractServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
+		throws ServletException {
 
-		try {
-			ready(request, response);
+        ready(request, response);
 
-			int fileId = Integer.parseInt(request.getParameter("file_id"));
-			int num = deleteFileFromDatabase(fileId);
+        int fileId = Integer.parseInt(request.getParameter("file_id"));
+        int num = deleteFileFromDatabase(fileId);
 
-			int userId = Integer.parseInt(request.getParameter("user_id"));
-			int rootId = rootId(userId);
+        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int rootId = rootId(userId);
 
-			boolean b = deleteFile(String.format("data/%d/%d.txt",rootId,fileId));
+        boolean b = deleteFile(String.format("data/%d/%d.txt",rootId,fileId));
 
-			out("{\"successRecord\" : \"%d\",\"result\": \"%b\"}\n",num,b);
-		} catch(SQLException e) {
-			log(e.getMessage());
-		} catch(Exception e) {
-			log(e.getMessage());
-		}
-	}
+        out(response, "{\"successRecord\" : \"%d\",\"result\": \"%b\"}\n",num,b);
+    }
 
 	/**
 	 * @return 削除数
 	 */
 	private int deleteFileFromDatabase(int fileId) {
-		return executeSql("delete from file_table where id = ?").setInt(fileId).update();
+        try {
+            return executeSql("delete from file_table where id = ?").setInt(fileId).update();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 }

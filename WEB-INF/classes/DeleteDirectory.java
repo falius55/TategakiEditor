@@ -1,5 +1,8 @@
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.util.concurrent.CompletionException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +29,7 @@ import database.Database;
  */
 public class DeleteDirectory extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
+		throws ServletException {
 
 			ready(request, response);
 
@@ -40,15 +43,19 @@ public class DeleteDirectory extends AbstractServlet  {
 			}
 
 			// レスポンス
-			out(rtnJson);
+			out(response, rtnJson);
 
 			log("DeleteDirectory's directoryId:"+ directoryId + ", option:"+ option);
 	}
 
 	// ディレクトリ内にファイルがあればtrue
 	private boolean hasFileInDirectory(int directoryId) {
-		Database.Entry entry = executeSql("select * from file_table where parent_dir = ?").setInt(directoryId).query();
-		return entry.next();
+        try {
+            Database.Entry entry = executeSql("select * from file_table where parent_dir = ?").setInt(directoryId).query();
+            return entry.next();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 
 	/**
@@ -56,7 +63,11 @@ public class DeleteDirectory extends AbstractServlet  {
 	 * @param directoryId 削除するディレクトリのID
 	 */
 	private String deleteEmptyDirectory(int directoryId) {
-		executeSql("delete from file_table where id = ?").setInt(directoryId).update();
+        try {
+            executeSql("delete from file_table where id = ?").setInt(directoryId).update();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 		return "{\"result\":\"success\"}";
 	}
 
@@ -69,7 +80,11 @@ public class DeleteDirectory extends AbstractServlet  {
 		if (option) {
 			// 強制的にディレクトリ内ファイルごと削除する
 			// データベース上だけ
-			executeSql("delete from file_table where id = ? or parent_dir = ?").setInt(directoryId).setInt(directoryId).update();
+            try {
+                executeSql("delete from file_table where id = ? or parent_dir = ?").setInt(directoryId).setInt(directoryId).update();
+            } catch (SQLException e ) {
+                throw new CompletionException(e);
+            }
 			return "{\"result\":\"success(fileIn)\"}";
 		}
 		return "{\"result\":\"notEmpty\"}";

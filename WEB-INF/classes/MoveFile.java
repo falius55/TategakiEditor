@@ -1,5 +1,8 @@
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.util.concurrent.CompletionException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,29 +24,29 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MoveFile extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
+		throws ServletException {
 
-		try {
-			ready(request, response);
+        ready(request, response);
 
-			int fileId = Integer.parseInt(request.getParameter("file_id"));
-			int parentDirId = Integer.parseInt(request.getParameter("directory_id"));
+        int fileId = Integer.parseInt(request.getParameter("file_id"));
+        int parentDirId = Integer.parseInt(request.getParameter("directory_id"));
 
-			changeParentDir(fileId, parentDirId);
+        changeParentDir(fileId, parentDirId);
 
-			String rtnJson = "{\"result\":\"success\"}";
-			out(rtnJson);
+        String rtnJson = "{\"result\":\"success\"}";
+        out(response, rtnJson);
 
-			log("MoveFile's parentDirId:"+ parentDirId + ",fileId:"+ fileId);
-		} catch(Exception e) {
-			log(e.getMessage());
-		}
-	}
+        log("MoveFile's parentDirId:"+ parentDirId + ",fileId:"+ fileId);
+    }
 
 	/**
 	 * 親ディレクトリを変更します
 	 */
 	private void changeParentDir(int fileId, int newParentId) {
-		executeSql("update file_table set parent_dir = ? where id = ?").setInt(newParentId).setInt(fileId).update();
+        try {
+            executeSql("update file_table set parent_dir = ? where id = ?").setInt(newParentId).setInt(fileId).update();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 }

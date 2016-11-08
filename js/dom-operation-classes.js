@@ -847,7 +847,7 @@ class Cursor {
 	 * @param {boolean} [bShift] シフトキーが押された状態でカーソルが与えられたかどうか。trueなら選択範囲を拡張する。falseなら解除する。省略(undefined)すると選択範囲には影響しない
 	 * @return {Cursor} 自身のインスタンス
 	 */
-	addCursor(char,bShift) {
+	addCursor(char, bShift) {
 		this.setChar(char);
 
 		// 前の文字に装飾があれば、そのボタンをオンにする
@@ -5922,6 +5922,11 @@ class SentenceContainer extends AbstractHierarchy {
 		document.getElementById('saved').textContent = newSaved;
 		return this;
 	}
+    /**
+     * 最後の保存から変更があったのかどうかを示すマーク([+]記号)を設定、あるいは引数省略で現在設定されているのかどうかを取得します
+     * @param {boolean} [opt_bl] 設定する場合はtrue、外す場合はfalse
+	 * @return {SentenceContainer boolean} 自身のインスタンス(引数を渡した場合)、あるいは現在の設定状態の真偽値(引数を省略した場合)
+     */
 	isChanged(opt_bl) {
 		if (opt_bl == undefined)
 			return this._changedElem.classList.contains('active');

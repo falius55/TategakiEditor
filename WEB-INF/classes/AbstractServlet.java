@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.sql.SQLException;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.CompletionException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -55,7 +57,6 @@ abstract public class AbstractServlet extends HttpServlet  {
 	private static final String USER = "sampleuser";
 	private static final String PASSWORD = "digk473";
 
-	private PrintWriter out = null;
 	private Database database = null;
 
 	/*
@@ -73,7 +74,6 @@ abstract public class AbstractServlet extends HttpServlet  {
 		try {
 			response.setContentType("application/json; charset=UTF-8");
 			request.setCharacterEncoding("UTF-8"); // 受取のcharset
-			out = response.getWriter();
 		} catch (IOException e) {
 			log(e.getMessage());
 		}
@@ -93,9 +93,6 @@ abstract public class AbstractServlet extends HttpServlet  {
 	public void destroy() {
 		try {
 			database.close();
-			if (out != null) {
-				out.close();
-			}
 		} catch(SQLException e) {
 			log(e.getMessage());
 		}
@@ -104,43 +101,59 @@ abstract public class AbstractServlet extends HttpServlet  {
 	/**
 	 *	レスポンスのストリームに書き込みます。書き込みは一度きりです
 	 *	@param output ストリームに書き込む文字列
+     *	@throws UncheckedIOException 書き込みに失敗した場合
 	 */
-	protected final void out(String output) {
-		out.println(output);
-		out.close();
-		out = null;
+	protected final void out(HttpServletResponse response, String output) {
+        // TODO: responseを引数に追加したため、使用箇所すべてを修正する
+        try (PrintWriter out = response.getWriter()) {
+            out.println(output);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
 	}
 	/**
-	 *	レスポンスのストリームにフォーマットを用いて書き込みます。書き込みは一度きりです
+	 *	レスポンスのストリームにフォーマットを用いて書き込みます。
 	 *	@param format 書き込む文字列
 	 *	@param args フォーマットで置き換える各種値
+     *	@throws UncheckedIOException 書き込みに失敗した場合
 	 */
-	protected final void out(String format, Object... args) {
-		out.printf(format, args);
-		out.close();
-		out = null;
+	protected final void out(HttpServletResponse response, String format, Object... args) {
+        try (PrintWriter out = response.getWriter()) {
+            out.printf(format, args);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
 	}
 	/**
 	 * ルートディレクトリのIDを取得する
 	 * @param userId ユーザーID
 	 * @return ユーザーID
-	 * @throws SQLException ユーザーIDに対応するルートディレクトリのレコードがデータベース上に見つからなかった場合
+	 * @throws CompletionException データベースエラーやデータベース上にデータが見つからない等により、結果を正常に取得できなかった場合
 	 */
-	protected final int rootId(int userId) throws SQLException {
-		Database.Entry entry = executeSql("select * from file_table where user_id = ? and type = ? ").setInt(userId).setString("root").query();
-		if (entry.next()) {
-			return entry.getInt("id").orElseThrow(() -> new SQLException("not found database data"));
-		}
-		throw new SQLException("database has no data");	
+	protected final int rootId(int userId) {
+        try {
+            Database.Entry entry = executeSql("select * from file_table where user_id = ? and type = ? ").setInt(userId).setString("root").query();
+            if (entry.next()) {
+                return entry.getInt("id").orElse(-1);  // おそらく-1になることはない
+            }
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
+		throw new IllegalArgumentException("database has no data for index :" + userId);
 	}
 	/**
 	 * データベース上に指定されたテーブルが存在するかを確認します
 	 * @param table 確認するテーブル名
 	 * @return 指定されたテーブルが存在すればtrue、そうでなければfalse
+     * @throws CompletionException データベースエラー等により結果を正常に取得できなかった場合
 	 */
 	protected final boolean existTable(String table) {
-		return executeSql(String.format("show tables where Tables_in_%s like ?", DATABASE_NAME))
-			.setString(table).query().next();
+        try {
+            return executeSql(String.format("show tables where Tables_in_%s like ?", DATABASE_NAME))
+                .setString(table).query().next();
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
 	}
 
 	/*
@@ -150,10 +163,11 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	データベースの操作を始めます
 	 *	@param	sql	SQLへの問い合わせ文
 	 *	@return データベースクラスの各問い合わせを担当するクラスのインスタンス
+     *	@throws SQLException データベースアクセスエラーの場合、SQL文が不正の場合
 	 */
-	protected final Database.Entry executeSql(String sql) {
-		return database.entry(sql);
-	}
+	protected final Database.Entry executeSql(String sql) throws SQLException {
+        return database.entry(sql);
+    }
 
 	/*
 	 *	File
@@ -172,13 +186,13 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	サーバーのローカルファイルを文字列で読み込みます
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
 	 *	@return 読み込まれた文字列
+     *	@throws UncheckedIOException 読み込みに失敗した場合
 	 */
 	protected final String readFile(String path) {
 		try (Stream<String> stream = Files.lines(Paths.get(contextPath(path)), StandardCharsets.UTF_8)) {
 			return stream.collect(Collectors.joining());
 		} catch (IOException e) {
-			log(e.getMessage());
-			return "読み込みに失敗しました";
+            throw new UncheckedIOException(e);
 		}
 	}
 
@@ -186,25 +200,27 @@ abstract public class AbstractServlet extends HttpServlet  {
 	 *	サーバーのローカルファイルに文字列で書き込みます(上書き保存)
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
 	 *	@param	str	書き込む内容
+     *	@throws UncheckedIOException 書き込みに失敗した場合
 	 */
 	protected final void writeFile(String path, String... str) {
 		log("strs is "+ Arrays.asList(str));
 		try {
 			Files.write(Paths.get(contextPath(path)), Arrays.asList(str), StandardOpenOption.CREATE);
 		} catch (IOException e) {
-			log(e.getMessage());
+            throw new UncheckedIOException(e);
 		}
 	}
 
 	/**
 	 *	サーバーのローカルファイルを新しく作成します
 	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
+     *	@throws UncheckedIOException ファイル作成に失敗した場合
 	 */
 	protected final void createFile(String path) {
 		try {
 			Files.createFile(Paths.get(path));
 		} catch (IOException e) {
-			log(e.getMessage());
+            throw new UncheckedIOException(e);
 		}
 	}
 

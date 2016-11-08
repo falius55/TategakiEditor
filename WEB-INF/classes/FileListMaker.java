@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringJoiner;
+import java.util.concurrent.CompletionException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,22 +39,18 @@ public class FileListMaker extends AbstractServlet  {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
-		try {
-			ready(request, response);
+        ready(request, response);
 
-			int userId = Integer.parseInt(request.getParameter("user_id"));
-			int rootId = rootId(userId);
+        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int rootId = rootId(userId);
 
-			String rtnJson = getFileJson(userId,rootId);
-			out(rtnJson);
-
-			log("FileListMaker return is " + rtnJson);
-		} catch(SQLException e) {
-			log(e.getMessage());
-		} catch(Exception e) {
-			log(e.getMessage());
-		}
-	}
+        try {
+            String rtnJson = getFileJson(userId,rootId);
+            out(response, rtnJson);
+        } catch (SQLException e) {
+            throw new CompletionException(e);
+        }
+    }
 
 	/**
 	 * ディレクトリツリーを表すJSON文字列を作成します
@@ -76,7 +74,7 @@ public class FileListMaker extends AbstractServlet  {
 	 * </code>
 	 * </pre>
 	 */
-	private String getFileJson(int userId, int parentId) {
+	private String getFileJson(int userId, int parentId) throws SQLException {
 		Database.Entry entry = executeSql("select * from file_table where user_id = ? and (parent_dir = ? or id = ?)")
 			.setInt(userId).setInt(parentId).setInt(parentId).query();
 		StringJoiner sj = new StringJoiner(",", "{", "}");
