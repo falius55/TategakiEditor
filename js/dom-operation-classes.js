@@ -1,8 +1,8 @@
 'use strict';
 /*
- *	オブジェクト指向
+ * オブジェクト指向
  *	Paragraph,Row,Charは、親や子の参照を保持するのはもちろんのこと、木構造を無視して異なる親であっても次と前にある同種オブジェクトの参照を持つ
- *	Dom要素の参照を持つコンポジション
+ * Dom要素の参照を持つコンポジション
  *	要素の再利用のため、要素作成のみクロージャで行う
  *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
  */
@@ -93,8 +93,8 @@ class Menu {
 	 */
 	configueData() {
 		const ret = {};
-		ret["strLen"] = this.confStrLenElem().value;
-		ret["rowLen"] = this.confRowLenElem().value;
+		ret.strLen = this.confStrLenElem().value;
+		ret.rowLen = this.confRowLenElem().value;
 		return ret;
 	}
 
@@ -298,29 +298,48 @@ class Menu {
 	 */
 	addColorSelectClickEvent() {
 		const eSelectColors = document.querySelectorAll('#color_dropdown a');
-		for (let i = 0,eSelColor; eSelColor = eSelectColors[i]; i++) {
+		for (let i = 0, eSelColor; (eSelColor = eSelectColors[i]); i++) {
 			const color = eSelColor.dataset.color;
-			eSelColor.addEventListener('click',function (e) {
-				this.colorButton(color);
-				this.addColor(color, true);
-			}.bind(this),false);
+            // (function(eSelColor,  color) {
+            //     eSelColor.addEventListener('click',function (e) {
+            //         this.colorButton(color);
+            //         this.addColor(color, true);
+            //     }.bind(this),false);
+            // }(eSelColor, color))();
+
+            eSelColor.addEventLister('click', this._addColorCallback(eSelColor, color).bind(this), false);
 		}
 		return this;
 	}
+    // ループ内で使われるため別に定義する(関数外の変数を内部で使わないようにするため)
+    // 即時関数に入れなければ、eSelColorとcolorの中身がクロージャ的に変化して
+    // すべての場合で最後の値が利用されてしまうおそれがある
+    _addColorCallback(eSelColor, color) {
+        return function (e) {
+            this.colorButton(color);
+            this.addColor(color, true);
+        };
+    }
 	/**
 	 * text-alignボタンをクリックするとカーソルのある段落のtext-alignが変更されるイベントを付加します
 	 * @return {Menu} 自身のインスタンス
 	 */
 	addAlignClickEvent() {
 		const eAligns = document.querySelectorAll('#align_btns button');
-		for (let i = 0,eAlign; eAlign = eAligns[i]; i++) {
-			eAlign.addEventListener('click',function (e) {
-				const align = eAlign.id.match(/text_btn_(\S+)/);
-				this.align(align[1]);
-			}.bind(this),false);
+		for (let i = 0, eAlign; (eAlign = eAligns[i]); i++) {
+            const align = eAlign.id.match(/text_btn_(\S+)/);
+			// eAlign.addEventListener('click',function (e) {
+			// 	this.align(align[1]);
+			// }.bind(this),false);
+            eAlign.addEventListener('click', this._addAlignCallback(align).bind(this), false);
 		}
 		return this;
 	}
+    _addAlignCallback(align) {
+        return function (e) {
+            this.align(align);
+        };
+    }
 
 	// font size
 
@@ -331,7 +350,7 @@ class Menu {
 	 */
 	addFontSizeEvnet() {
 		const eFontSizeDropdowns = document.querySelectorAll('#fontsize_dropdown a');
-		for (let i = 0,eFontSize; eFontSize = eFontSizeDropdowns[i]; i++) {
+		for (let i = 0,eFontSize; (eFontSize = eFontSizeDropdowns[i]); i++) {
 			eFontSize.addEventListener('click',function (e) {
 				const size = parseInt(e.target.dataset.size) || 'auto';
 				this.fontSizeInput(size);
@@ -535,11 +554,10 @@ class CommandLine {
 	 * keyupイベントの前処理を行い、イベントを実行します
 	 */
 	onKeyup(e) {
-		'use strict';
 		let keycode;
 		if (document.all) {
 			// IE
-			keycode = e.keyCode
+			keycode = e.keyCode;
 		} else {
 			// IE以外
 			keycode = e.which;
@@ -554,8 +572,8 @@ class CommandLine {
 	 * @param {Event} e イベントオブジェクト
 	 * @param {number} keycode 押下されたキーのキーコード
 	 */
-	runKeyup(e,keycode) {
-		if (keycode == 13) {
+	runKeyup(e, keycode) {
+		if (keycode === 13) {
 			// enter
 			this.runCommand();
 			this.stop();
@@ -659,7 +677,9 @@ class CommandLine {
 			case ':おぺｎ':
 					 if (command[1]) {
 						 const files = this.fileList().findFile(command[1]);
-						 files.length > 0 && files[0].open();
+                         if (files.length > 0) {
+                         files[0].open();
+                         }
 					 } else {
 						 this.sentenceContainer().newFile();
 					 }
