@@ -218,8 +218,9 @@ abstract public class AbstractServlet extends HttpServlet  {
      */
     protected final void createFile(String path) {
         try {
-            Files.createFile(Paths.get(path));
+            Files.createFile(Paths.get(contextPath(path)));
         } catch (IOException e) {
+            log("path:" + path);
             throw new UncheckedIOException(e);
         }
     }
