@@ -215,9 +215,15 @@
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 			<script src="/tategaki/lib/jquery.mousewheel.js"></script>
 			<script src="/tategaki/lib/honoka/js/bootstrap.min.js"></script>
+
 			<script src="/tategaki/js/utils.js"></script>
 			<script src="/tategaki/js/undo-redo.js"></script>
-			<script src="/tategaki/js/dom-operation-classes.js"></script>
+			<script src="/tategaki/js/abstract.js"></script>
+			<script src="/tategaki/js/character.js"></script>
+			<script src="/tategaki/js/input.js"></script>
+			<script src="/tategaki/js/filelist.js"></script>
+			<script src="/tategaki/js/other-classes.js"></script>
+			<script src="/tategaki/js/container.js"></script>
 			<script>
 			  window.container = new SentenceContainer(<%= userId %>);
 			</script>

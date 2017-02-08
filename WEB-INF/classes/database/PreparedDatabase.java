@@ -40,7 +40,7 @@ public final class PreparedDatabase implements Database {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		}
 		if (connection == null)
 			throw new SQLException("database failed connect");
 	}

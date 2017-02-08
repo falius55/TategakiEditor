@@ -52,85 +52,85 @@ import database.PreparedDatabase;
  * </pre>
  */
 abstract public class AbstractServlet extends HttpServlet  {
-	private static final String DATABASE_NAME = "tategaki_editor";
-	private static final String URL = "jdbc:mysql://localhost/"+ DATABASE_NAME;
-	private static final String USER = "sampleuser";
-	private static final String PASSWORD = "digk473";
+    private static final String DATABASE_NAME = "tategaki_editor";
+    private static final String URL = "jdbc:mysql://localhost/"+ DATABASE_NAME;
+    private static final String USER = "sampleuser";
+    private static final String PASSWORD = "digk473";
 
-	private Database database = null;
+    private Database database = null;
 
-	/*
-	 *	common operator
-	 */
-	/**
-	 *	初期設定を行います<br>
-	 *	文字コード:UTF-8<br>
-	 *	返送データのtype: json<br>
-	 *	PrintWriterの取得<br>
-	 *	@param request doGet()およびdoPost()に渡されたHttpServletRequest
-	 *	@param response doGet()およびdoPost()に渡されたHttpServletResponse
-	 */
-	protected final void ready(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			response.setContentType("application/json; charset=UTF-8");
-			request.setCharacterEncoding("UTF-8"); // 受取のcharset
-		} catch (IOException e) {
-			log(e.getMessage());
-		}
-	}
+    /*
+     *	common operator
+     */
+    /**
+     *	初期設定を行います<br>
+     *	文字コード:UTF-8<br>
+     *	返送データのtype: json<br>
+     *	PrintWriterの取得<br>
+     *	@param request doGet()およびdoPost()に渡されたHttpServletRequest
+     *	@param response doGet()およびdoPost()に渡されたHttpServletResponse
+     */
+    protected final void ready(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            response.setContentType("application/json; charset=UTF-8");
+            request.setCharacterEncoding("UTF-8"); // 受取のcharset
+        } catch (IOException e) {
+            log(e.getMessage());
+        }
+    }
 
-	public void init() throws ServletException {
-		try {
-			database = new PreparedDatabase(URL, USER, PASSWORD);
-		} catch (SQLException e) {
-			log(e.getMessage());
-		}
-	}
+    public void init() throws ServletException {
+        try {
+            database = new PreparedDatabase(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            log(e.getMessage());
+        }
+    }
 
-	/**
-	 *	サーブレットインスタンス破棄時の処理を行います。明示的に呼ぶ必要はありません<br>
-	 */
-	public void destroy() {
-		try {
-			database.close();
-		} catch(SQLException e) {
-			log(e.getMessage());
-		}
-	}
+    /**
+     *	サーブレットインスタンス破棄時の処理を行います。明示的に呼ぶ必要はありません<br>
+     */
+    public void destroy() {
+        try {
+            database.close();
+        } catch(SQLException e) {
+            log(e.getMessage());
+        }
+    }
 
-	/**
-	 *	レスポンスのストリームに書き込みます。書き込みは一度きりです
-	 *	@param output ストリームに書き込む文字列
+    /**
+     *	レスポンスのストリームに書き込みます。書き込みは一度きりです
+     *	@param output ストリームに書き込む文字列
      *	@throws UncheckedIOException 書き込みに失敗した場合
-	 */
-	protected final void out(HttpServletResponse response, String output) {
+     */
+    protected final void out(HttpServletResponse response, String output) {
         // TODO: responseを引数に追加したため、使用箇所すべてを修正する
         try (PrintWriter out = response.getWriter()) {
             out.println(output);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-	}
-	/**
-	 *	レスポンスのストリームにフォーマットを用いて書き込みます。
-	 *	@param format 書き込む文字列
-	 *	@param args フォーマットで置き換える各種値
+    }
+    /**
+     *	レスポンスのストリームにフォーマットを用いて書き込みます。
+     *	@param format 書き込む文字列
+     *	@param args フォーマットで置き換える各種値
      *	@throws UncheckedIOException 書き込みに失敗した場合
-	 */
-	protected final void out(HttpServletResponse response, String format, Object... args) {
+     */
+    protected final void out(HttpServletResponse response, String format, Object... args) {
         try (PrintWriter out = response.getWriter()) {
             out.printf(format, args);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-	}
-	/**
-	 * ルートディレクトリのIDを取得する
-	 * @param userId ユーザーID
-	 * @return ユーザーID
-	 * @throws CompletionException データベースエラーやデータベース上にデータが見つからない等により、結果を正常に取得できなかった場合
-	 */
-	protected final int rootId(int userId) {
+    }
+    /**
+     * ルートディレクトリのIDを取得する
+     * @param userId ユーザーID
+     * @return ユーザーID
+     * @throws CompletionException データベースエラーやデータベース上にデータが見つからない等により、結果を正常に取得できなかった場合
+     */
+    protected final int rootId(int userId) {
         try {
             Database.Entry entry = executeSql("select * from file_table where user_id = ? and type = ? ").setInt(userId).setString("root").query();
             if (entry.next()) {
@@ -139,124 +139,124 @@ abstract public class AbstractServlet extends HttpServlet  {
         } catch (SQLException e) {
             throw new CompletionException(e);
         }
-		throw new IllegalArgumentException("database has no data for index :" + userId);
-	}
-	/**
-	 * データベース上に指定されたテーブルが存在するかを確認します
-	 * @param table 確認するテーブル名
-	 * @return 指定されたテーブルが存在すればtrue、そうでなければfalse
+        throw new IllegalArgumentException("database has no data for index :" + userId);
+    }
+    /**
+     * データベース上に指定されたテーブルが存在するかを確認します
+     * @param table 確認するテーブル名
+     * @return 指定されたテーブルが存在すればtrue、そうでなければfalse
      * @throws CompletionException データベースエラー等により結果を正常に取得できなかった場合
-	 */
-	protected final boolean existTable(String table) {
+     */
+    protected final boolean existTable(String table) {
         try {
             return executeSql(String.format("show tables where Tables_in_%s like ?", DATABASE_NAME))
                 .setString(table).query().next();
         } catch (SQLException e) {
             throw new CompletionException(e);
         }
-	}
+    }
 
-	/*
-	 * DataBase
-	 */
-	/**
-	 *	データベースの操作を始めます
-	 *	@param	sql	SQLへの問い合わせ文
-	 *	@return データベースクラスの各問い合わせを担当するクラスのインスタンス
+    /*
+     * DataBase
+     */
+    /**
+     *	データベースの操作を始めます
+     *	@param	sql	SQLへの問い合わせ文
+     *	@return データベースクラスの各問い合わせを担当するクラスのインスタンス
      *	@throws SQLException データベースアクセスエラーの場合、SQL文が不正の場合
-	 */
-	protected final Database.Entry executeSql(String sql) throws SQLException {
+     */
+    protected final Database.Entry executeSql(String sql) throws SQLException {
         return database.entry(sql);
     }
 
-	/*
-	 *	File
-	 */
-	/**
-	 *	サーブレットのルートディレクトリ以上も含めた絶対パスを取得します
-	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
-	 *	@return 絶対パス
-	 */
-	protected final String contextPath(String path) {
-		ServletContext context = getServletContext();
-		return context.getRealPath(path);	// ルートディレクトリ/pathとなる
-	}
+    /*
+     *	File
+     */
+    /**
+     *	サーブレットのルートディレクトリ以上も含めた絶対パスを取得します
+     *	@param	path	サーブレットのルートディレクトリからのファイルパス
+     *	@return 絶対パス
+     */
+    protected final String contextPath(String path) {
+        ServletContext context = getServletContext();
+        return context.getRealPath(path);	// ルートディレクトリ/pathとなる
+    }
 
-	/**
-	 *	サーバーのローカルファイルを文字列で読み込みます
-	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
-	 *	@return 読み込まれた文字列
+    /**
+     *	サーバーのローカルファイルを文字列で読み込みます
+     *	@param	path	サーブレットのルートディレクトリからのファイルパス
+     *	@return 読み込まれた文字列
      *	@throws UncheckedIOException 読み込みに失敗した場合
-	 */
-	protected final String readFile(String path) {
-		try (Stream<String> stream = Files.lines(Paths.get(contextPath(path)), StandardCharsets.UTF_8)) {
-			return stream.collect(Collectors.joining());
-		} catch (IOException e) {
+     */
+    protected final String readFile(String path) {
+        try (Stream<String> stream = Files.lines(Paths.get(contextPath(path)), StandardCharsets.UTF_8)) {
+            return stream.collect(Collectors.joining());
+        } catch (IOException e) {
             throw new UncheckedIOException(e);
-		}
-	}
+        }
+    }
 
-	/**
-	 *	サーバーのローカルファイルに文字列で書き込みます(上書き保存)
-	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
-	 *	@param	str	書き込む内容
+    /**
+     *	サーバーのローカルファイルに文字列で書き込みます(上書き保存)
+     *	@param	path	サーブレットのルートディレクトリからのファイルパス
+     *	@param	str	書き込む内容
      *	@throws UncheckedIOException 書き込みに失敗した場合
-	 */
-	protected final void writeFile(String path, String... str) {
-		log("strs is "+ Arrays.asList(str));
-		try {
-			Files.write(Paths.get(contextPath(path)), Arrays.asList(str), StandardOpenOption.CREATE);
-		} catch (IOException e) {
+     */
+    protected final void writeFile(String path, String... str) {
+        log("strs is "+ Arrays.asList(str));
+        try {
+            Files.write(Paths.get(contextPath(path)), Arrays.asList(str), StandardOpenOption.CREATE);
+        } catch (IOException e) {
             throw new UncheckedIOException(e);
-		}
-	}
+        }
+    }
 
-	/**
-	 *	サーバーのローカルファイルを新しく作成します
-	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
+    /**
+     *	サーバーのローカルファイルを新しく作成します
+     *	@param	path	サーブレットのルートディレクトリからのファイルパス
      *	@throws UncheckedIOException ファイル作成に失敗した場合
-	 */
-	protected final void createFile(String path) {
-		try {
-			Files.createFile(Paths.get(path));
-		} catch (IOException e) {
+     */
+    protected final void createFile(String path) {
+        try {
+            Files.createFile(Paths.get(path));
+        } catch (IOException e) {
             throw new UncheckedIOException(e);
-		}
-	}
+        }
+    }
 
-	/**
-	 *	サーバーのローカルファイルを削除します
-	 *	@param	path	サーブレットのルートディレクトリからのファイルパス
-	 *	@return 削除に成功した場合にtrue
-	 */
-	protected final boolean deleteFile(String path) {
-		File delFile = new File(contextPath(path));
-		return recDeleteFile(delFile);
-	}
+    /**
+     *	サーバーのローカルファイルを削除します
+     *	@param	path	サーブレットのルートディレクトリからのファイルパス
+     *	@return 削除に成功した場合にtrue
+     */
+    protected final boolean deleteFile(String path) {
+        File delFile = new File(contextPath(path));
+        return recDeleteFile(delFile);
+    }
 
-	// ディレクトリの内部も含めて、ファイル・ディレクトリを削除する
-	private boolean recDeleteFile(File file) {
-		// 削除処理が行われればtrueを返す。ただし、すべての処理において正しく削除処理が終了したことを保証するものではない。
+    // ディレクトリの内部も含めて、ファイル・ディレクトリを削除する
+    private boolean recDeleteFile(File file) {
+        // 削除処理が行われればtrueを返す。ただし、すべての処理において正しく削除処理が終了したことを保証するものではない。
 
-		// ファイルまたはディレクトリが存在しない場合は何もしない
-		if (file.exists() == false) {
-			return false;
-		}		
-		// ファイルの場合は削除する
-		if (file.isFile()) {
-			return file.delete();
-		}
-		// ディレクトリの場合は、すべてのファイルを削除する
-		if (file.isDirectory()) {
-			File[] files = file.listFiles(); // 対象ディレクトリ内のファイル及びディレクトリの一覧を取得
-			// ファイル及びディレクトリをすべて削除
-			for (File f : files) {
-				// 自身をコールし、再帰的に削除する
-				recDeleteFile(f);
-			}
-			// 自ディレクトリを削除する
-			return file.delete();
-		}
-		return false;
-	}
+        // ファイルまたはディレクトリが存在しない場合は何もしない
+        if (file.exists() == false) {
+            return false;
+        }
+        // ファイルの場合は削除する
+        if (file.isFile()) {
+            return file.delete();
+        }
+        // ディレクトリの場合は、すべてのファイルを削除する
+        if (file.isDirectory()) {
+            File[] files = file.listFiles(); // 対象ディレクトリ内のファイル及びディレクトリの一覧を取得
+            // ファイル及びディレクトリをすべて削除
+            for (File f : files) {
+                // 自身をコールし、再帰的に削除する
+                recDeleteFile(f);
+            }
+            // 自ディレクトリを削除する
+            return file.delete();
+        }
+        return false;
+    }
 }

@@ -28,65 +28,65 @@ import database.Database;
  *     になります
  */
 public class DeleteDirectory extends AbstractServlet  {
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException {
 
-			ready(request, response);
+        ready(request, response);
 
-			int directoryId = Integer.parseInt(request.getParameter("directory_id"));
-			boolean option = Boolean.valueOf(request.getParameter("option"));
-			String rtnJson;
-			if (hasFileInDirectory(directoryId)) {
-				rtnJson = deleteInDirectory(directoryId, option);
-			} else {
-				rtnJson = deleteEmptyDirectory(directoryId);
-			}
+        int directoryId = Integer.parseInt(request.getParameter("directory_id"));
+        boolean option = Boolean.valueOf(request.getParameter("option"));
+        String rtnJson;
+        if (hasFileInDirectory(directoryId)) {
+            rtnJson = deleteInDirectory(directoryId, option);
+        } else {
+            rtnJson = deleteEmptyDirectory(directoryId);
+        }
 
-			// レスポンス
-			out(response, rtnJson);
+        // レスポンス
+        out(response, rtnJson);
 
-			log("DeleteDirectory's directoryId:"+ directoryId + ", option:"+ option);
-	}
+        log("DeleteDirectory's directoryId:"+ directoryId + ", option:"+ option);
+    }
 
-	// ディレクトリ内にファイルがあればtrue
-	private boolean hasFileInDirectory(int directoryId) {
+    // ディレクトリ内にファイルがあればtrue
+    private boolean hasFileInDirectory(int directoryId) {
         try {
             Database.Entry entry = executeSql("select * from file_table where parent_dir = ?").setInt(directoryId).query();
             return entry.next();
         } catch (SQLException e) {
             throw new CompletionException(e);
         }
-	}
+    }
 
-	/**
-	 * 空のディレクトリを削除します
-	 * @param directoryId 削除するディレクトリのID
-	 */
-	private String deleteEmptyDirectory(int directoryId) {
+    /**
+     * 空のディレクトリを削除します
+     * @param directoryId 削除するディレクトリのID
+     */
+    private String deleteEmptyDirectory(int directoryId) {
         try {
             executeSql("delete from file_table where id = ?").setInt(directoryId).update();
         } catch (SQLException e) {
             throw new CompletionException(e);
         }
-		return "{\"result\":\"success\"}";
-	}
+        return "{\"result\":\"success\"}";
+    }
 
-	/**
-	 * ディレクトリ内にファイルが存在する場合の削除処理を行います
-	 * @param directoryId 削除するディレクトリのID
-	 * @param option 中のファイルごと削除する場合はtrue、そうでなければfalse
-	 */
-	private String deleteInDirectory(int directoryId, boolean option) {
-		if (option) {
-			// 強制的にディレクトリ内ファイルごと削除する
-			// データベース上だけ
+    /**
+     * ディレクトリ内にファイルが存在する場合の削除処理を行います
+     * @param directoryId 削除するディレクトリのID
+     * @param option 中のファイルごと削除する場合はtrue、そうでなければfalse
+     */
+    private String deleteInDirectory(int directoryId, boolean option) {
+        if (option) {
+            // 強制的にディレクトリ内ファイルごと削除する
+            // データベース上だけ
             try {
                 executeSql("delete from file_table where id = ? or parent_dir = ?").setInt(directoryId).setInt(directoryId).update();
             } catch (SQLException e ) {
                 throw new CompletionException(e);
             }
-			return "{\"result\":\"success(fileIn)\"}";
-		}
-		return "{\"result\":\"notEmpty\"}";
-	}
+            return "{\"result\":\"success(fileIn)\"}";
+        }
+        return "{\"result\":\"notEmpty\"}";
+    }
 }

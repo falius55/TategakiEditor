@@ -8,7 +8,7 @@ import java.util.OptionalLong;
 
 /**
  * データベースを操作するクラスです
- * {@code 
+ * {@code
  *      try (Database db = new PreparedDatabase(url, user, password)) {
  *          Database.Entry entry = db.entry(sql).setInt(i).setString(s).query();
  *          while (entry.next()) {
