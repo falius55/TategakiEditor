@@ -22,6 +22,7 @@ import database.Database;
  * </pre>
  */
 public class Login extends AbstractServlet {
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
@@ -33,7 +34,7 @@ public class Login extends AbstractServlet {
 		// 認証のチェック
 		HttpSession session = request.getSession(true);
 
-		boolean checked = userCheck(user,pass,session);
+		boolean checked = userCheck(user, pass, session);
 
 		if (checked) {
 			session.setAttribute("login",Boolean.TRUE);
@@ -44,7 +45,7 @@ public class Login extends AbstractServlet {
 		}
 	}
 
-	private boolean userCheck(String user,String pass,HttpSession session) {
+	private boolean userCheck(String user, String pass, HttpSession session) {
 		if (user == null || user.length() == 0 || pass == null || pass.length() == 0)
 			return false;
         if (!existTable("edit_users")) return false;
@@ -63,7 +64,7 @@ public class Login extends AbstractServlet {
 
                 return true;
             } else {
-                return false;		
+                return false;
             }
         } catch (SQLException e) {
             throw new CompletionException(e);

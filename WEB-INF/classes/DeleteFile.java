@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * successRecordは処理した行数、resultは削除に成功するとtrue
  */
 public class DeleteFile extends AbstractServlet {
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException {
 

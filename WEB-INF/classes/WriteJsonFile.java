@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
  *	</pre>
  */
 public class WriteJsonFile extends AbstractServlet {
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException {
 
@@ -47,6 +48,7 @@ public class WriteJsonFile extends AbstractServlet {
         String rtnJson = String.format("{\"result\":\"save success\",\"strDate\":\"%s\"}",dateFormat(savedMillis));
         out(response, rtnJson);
     }
+
 	private void updateFilename(int fileId, String newFilename) {
         try {
             executeSql("update file_table set filename = ? where id = ?").setString(newFilename).setInt(fileId).update();
@@ -54,6 +56,7 @@ public class WriteJsonFile extends AbstractServlet {
             throw new CompletionException(e);
         }
 	}
+
 	private void updateSaved(int fileId, long newSaved) {
         try {
             executeSql("update file_table set saved = ? where id = ?").setTimeMillis(newSaved).setInt(fileId).update();
@@ -61,6 +64,7 @@ public class WriteJsonFile extends AbstractServlet {
             throw new CompletionException(e);
         }
 	}
+
 	/**
 	 *	ミリ秒を"yyyy-MM-dd HH:mm:ss"のフォーマットに変換します
 	 *	@param millis 変換するミリ秒の値

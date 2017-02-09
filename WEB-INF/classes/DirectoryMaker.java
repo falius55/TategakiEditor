@@ -22,6 +22,7 @@ import database.Database;
  * </pre>
  */
 public class DirectoryMaker extends AbstractServlet  {
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException {
 

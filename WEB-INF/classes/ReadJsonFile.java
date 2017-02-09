@@ -27,8 +27,9 @@ import database.Database;
  *	</pre>
  */
 public class ReadJsonFile extends AbstractServlet  {
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException {
 
         ready(request,response);
 
@@ -56,7 +57,7 @@ public class ReadJsonFile extends AbstractServlet  {
         log(rtnJson);
     }
 
-	private String filename(int fileId) {
+    private String filename(int fileId) {
         try {
             Database.Entry entry = executeSql("select * from file_table where id = ?").setInt(fileId).query();
             if (entry.next())
@@ -65,9 +66,10 @@ public class ReadJsonFile extends AbstractServlet  {
             throw new CompletionException(e);
         }
 
-		throw new IllegalArgumentException("no database data");	
-	}
-	private String saved(int fileId) {
+        throw new IllegalArgumentException("no database data");
+    }
+
+    private String saved(int fileId) {
         try {
             Database.Entry entry = executeSql("select * from file_table where id = ?").setInt(fileId).query();
             if (entry.next())
@@ -75,6 +77,6 @@ public class ReadJsonFile extends AbstractServlet  {
         } catch (SQLException e) {
             throw new CompletionException(e);
         }
-		throw new IllegalArgumentException("no database data");	
-	}
+        throw new IllegalArgumentException("no database data");
+    }
 }

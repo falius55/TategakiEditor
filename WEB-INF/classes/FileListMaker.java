@@ -36,8 +36,9 @@ import database.Database;
  * </pre>
  */
 public class FileListMaker extends AbstractServlet  {
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException {
 
         ready(request, response);
 
@@ -52,43 +53,43 @@ public class FileListMaker extends AbstractServlet  {
         }
     }
 
-	/**
-	 * ディレクトリツリーを表すJSON文字列を作成します
-	 * <pre>
-	 * <code>
-	 *  // 戻り値例
-	 * {
-	 * 	"directoryname": "root",
-	 * 	"1":"sample",
-	 * 	"8":"file",
-	 * 	"6": {
-	 * 		"directoryname": "dirname",
-	 * 		"4":"indirfile",
-	 * 		"9":"file",
-	 * 		"12": {
-	 * 			"directoryname": "seconddir",
-	 * 			"17": "file"
-	 * 		}
-	 * 	}
-	 * }
-	 * </code>
-	 * </pre>
-	 */
-	private String getFileJson(int userId, int parentId) throws SQLException {
-		Database.Entry entry = executeSql("select * from file_table where user_id = ? and (parent_dir = ? or id = ?)")
-			.setInt(userId).setInt(parentId).setInt(parentId).query();
-		StringJoiner sj = new StringJoiner(",", "{", "}");
-		for (int i = 0; entry.next(); i++) {
-			int id = entry.getInt("id").orElse(-1);
-			if (id == parentId) {
-				sj.add(String.format("\"directoryname\":\"%s\"", entry.getString("filename").orElse("not found")));
-				continue;
-			}
-			if (entry.getString("type").orElse("").equals("file"))
-				sj.add(String.format("\"%d\":\"%s\"", id, entry.getString("filename").orElse("not found")));
-			if (entry.getString("type").orElse("").equals("dir"))
-				sj.add(String.format("\"%d\":%s", id, getFileJson(userId, id)));
-		}
-		return sj.toString();
-	}
+    /**
+     * ディレクトリツリーを表すJSON文字列を作成します
+     * <pre>
+     * <code>
+     *  // 戻り値例
+     * {
+     * 	"directoryname": "root",
+     * 	"1":"sample",
+     * 	"8":"file",
+     * 	"6": {
+     * 		"directoryname": "dirname",
+     * 		"4":"indirfile",
+     * 		"9":"file",
+     * 		"12": {
+     * 			"directoryname": "seconddir",
+     * 			"17": "file"
+     * 		}
+     * 	}
+     * }
+     * </code>
+     * </pre>
+     */
+    private String getFileJson(int userId, int parentId) throws SQLException {
+        Database.Entry entry = executeSql("select * from file_table where user_id = ? and (parent_dir = ? or id = ?)")
+            .setInt(userId).setInt(parentId).setInt(parentId).query();
+        StringJoiner sj = new StringJoiner(",", "{", "}");
+        for (int i = 0; entry.next(); i++) {
+            int id = entry.getInt("id").orElse(-1);
+            if (id == parentId) {
+                sj.add(String.format("\"directoryname\":\"%s\"", entry.getString("filename").orElse("not found")));
+                continue;
+            }
+            if (entry.getString("type").orElse("").equals("file"))
+                sj.add(String.format("\"%d\":\"%s\"", id, entry.getString("filename").orElse("not found")));
+            if (entry.getString("type").orElse("").equals("dir"))
+                sj.add(String.format("\"%d\":%s", id, getFileJson(userId, id)));
+        }
+        return sj.toString();
+    }
 }

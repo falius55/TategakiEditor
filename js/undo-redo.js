@@ -4,7 +4,8 @@
  *     Undo可能な操作を行った際に、addメソッドを使ってDoMemoryクラスの操作に対応するサブクラスを追加してください
  *     そうすることでDoManagerクラスのundoメソッド、redoメソッドで各操作に対するundo,redoを統一された操作によって行うことが可能になります
  */
-class DoManager {
+class DoManager {//{{{
+    // constructor {{{
 	/**
 	 * @param {SentenceContainer} 対応する文章コンテナのインスタンス
 	 */
@@ -12,7 +13,8 @@ class DoManager {
 		this._sentenceContainer = sentenceContainer;
 		this._undos = [];
 		this._redos = [];
-	}
+	}//}}}
+
 	/**
 	 * Undo可能かどうかを検査します
 	 * @return Undoのスタックに要素が残っていればtrue、そうでなければfalse
@@ -20,6 +22,7 @@ class DoManager {
 	hasUndo() {
 		return this._undos.length > 0;
 	}
+
 	/**
 	 * Redo可能かどうかを検査します
 	 * @return Redoのスタックに要素が残っていればtrue、そうでなければfalse
@@ -39,6 +42,7 @@ class DoManager {
 		this._sentenceContainer.isChanged(true);
 		return this;
 	}
+
 	/**
 	 * Redoを実行し、使い終わったタスクをUndoスタックに再度積みます
 	 * @return {DoManager} 自身のインスタンス
@@ -71,13 +75,16 @@ class DoManager {
 		this._redos = [];
 		return this;
 	}
-}
+}//}}}
+
+
 /**
  * Undo, Redoを記憶するすべてのオブジェクトの基底クラス
  */
-class DoMemory {
+class DoMemory {//{{{
 	constructor() {
 	}
+
 	/**
 	 * Undoします
 	 * このメソッドは、サブクラスでオーバーライドする必要があります
@@ -85,6 +92,7 @@ class DoMemory {
 	undo() {
 		throw new Error('このメソッドは、サブクラスでオーバーライドする必要があります');
 	}
+
 	/**
 	 * Redoします
 	 * このメソッドは、サブクラスでオーバーライドする必要があります
@@ -92,11 +100,13 @@ class DoMemory {
 	redo() {
 		throw new Error('このメソッドは、サブクラスでオーバーライドする必要があります');
 	}
-}
+}//}}}
+
+
 /**
  * 文字をカーソルから入力した際のUndo,Redoを担当するクラス
  */
-class PrintDoMemory extends DoMemory {
+class PrintDoMemory extends DoMemory {//{{{
 
 	/**
 	 * @param {Cursor} cursor カーソルオブジェクト
@@ -120,11 +130,13 @@ class PrintDoMemory extends DoMemory {
 		this._cursor.insert(this._targets);
 		return this;
 	}
-}
+}//}}}
+
+
 /**
  * 文字をカーソルから削除した際のUndo,Redoを担当するクラス
  */
-class DeleteDoMemory extends DoMemory {
+class DeleteDoMemory extends DoMemory {//{{{
 	// TODO: backspaceで段落をつなげた際のUndo,Redoは別途作成すること
 	/**
 	 * @param {Cursor} cursor カーソルオブジェクト
@@ -148,9 +160,10 @@ class DeleteDoMemory extends DoMemory {
 			this._cursor.backSpace();
 		return this;
 	}
-}
+}//}}}
 
-class LineBreakDoMemory extends DoMemory {
+
+class LineBreakDoMemory extends DoMemory {//{{{
 
 	/**
 	 * @param {Cursor} cursor カーソルオブジェクト
@@ -170,9 +183,10 @@ class LineBreakDoMemory extends DoMemory {
 			.lineBreak();
 		return this;
 	}
-}
+}//}}}
 
-class ColorDoMemory extends DoMemory {
+
+class ColorDoMemory extends DoMemory {//{{{
 	/**
 	 * このクラスでは古い文字色も情報として必要となるので、必ず文字色変更前に作成してください
 	 * @param {Char[]} 文字色を変更したCharインスタンスの配列
@@ -195,8 +209,10 @@ class ColorDoMemory extends DoMemory {
 			char.color(this._newColor);
 		return this;
 	}
-}
-class ItalicDoMemory extends DoMemory {
+}//}}}
+
+
+class ItalicDoMemory extends DoMemory {//{{{
 	/**
 	 * このクラスでは古い状態も情報として必要となるので、必ず文字の変更前に作成してください
 	 * @param {Char[]} targets 斜体に変更されたCharインスタンスの配列
@@ -214,13 +230,16 @@ class ItalicDoMemory extends DoMemory {
 			entry[1].italic(this._olders[entry[0]]);
 		return this;
 	}
+
 	redo() {
 		for (let char of this._targets)
 			char.italic(this._blNew);
 		return this;
 	}
-}
-class BoldDoMemory extends DoMemory {
+}//}}}
+
+
+class BoldDoMemory extends DoMemory {//{{{
 	/**
 	 * このクラスでは古い状態も情報として必要となるので、必ず文字の変更前に作成してください
 	 * @param {Char[]} targets 太字に変更されたCharインスタンスの配列
@@ -238,13 +257,16 @@ class BoldDoMemory extends DoMemory {
 			entry[1].bold(this._olders[entry[0]]);
 		return this;
 	}
+
 	redo() {
 		for (let char of this._targets)
 			char.bold(this._blNew);
 		return this;
 	}
-}
-class FontSizeDoMemory extends DoMemory {
+}//}}}
+
+
+class FontSizeDoMemory extends DoMemory {//{{{
 	/**
 	 * このクラスでは古い状態も情報として必要となるので、必ず文字の変更前に作成してください
 	 * @param {Char[]} targets フォントサイズが変更されたCharインスタンスの配列
@@ -255,11 +277,13 @@ class FontSizeDoMemory extends DoMemory {
 		this._olders = targets.map(char => char.fontSize());
 		this._newSize = newSize;
 	}
+
 	undo() {
 		for (let entry of this._targets.entries())
 			entry[1].fontSize(this._olders[entry[0]]);
 		return this;
 	}
+
 	redo() {
 		for (let char of this._targets)
 			char.fontSize(this._newSize);
@@ -267,4 +291,4 @@ class FontSizeDoMemory extends DoMemory {
 	}
 
 	// TODO: align
-}
+}//}}}

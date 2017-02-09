@@ -13,35 +13,36 @@ import javax.servlet.http.HttpSession;
  * アクセスしたクライアントのセッションを確認し、セッションがまだ始まっていないか、ログインがされていなければログインページに飛ばすフィルター
  */
 public class UserCheckFilter implements Filter {
-	
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
-		try {
-			HttpServletRequest servletrequest = (HttpServletRequest)request;
-			HttpServletResponse servletresponse= (HttpServletResponse)response;
 
-			HttpSession session = servletrequest.getSession();
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
+        try {
+            HttpServletRequest servletrequest = (HttpServletRequest)request;
+            HttpServletResponse servletresponse= (HttpServletResponse)response;
 
-			if (session == null) {
-				session = servletrequest.getSession(true);
+            HttpSession session = servletrequest.getSession();
 
-				servletresponse.sendRedirect("/tategaki/loginpage.jsp");
-			}
-			Boolean loginCheck = (Boolean)session.getAttribute("login");
-			if (loginCheck == null || loginCheck.equals(Boolean.FALSE)) {
-				servletresponse.sendRedirect("/tategaki/loginpage.jsp");
-			}
-			chain.doFilter(request,response);
-		} catch (ServletException e) {
-			System.err.println(e.getMessage());
-		} catch(IOException e) {
-			System.err.println(e.getMessage());
-		}
-	}
+            if (session == null) {
+                session = servletrequest.getSession(true);
 
-	public void init(FilterConfig filterconfig) throws ServletException {
-			
-	}
-	public void destroy() {
-			
-	}
+                servletresponse.sendRedirect("/tategaki/loginpage.jsp");
+            }
+            Boolean loginCheck = (Boolean)session.getAttribute("login");
+            if (loginCheck == null || loginCheck.equals(Boolean.FALSE)) {
+                servletresponse.sendRedirect("/tategaki/loginpage.jsp");
+            }
+            chain.doFilter(request,response);
+        } catch (ServletException e) {
+            System.err.println(e.getMessage());
+        } catch(IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void init(FilterConfig filterconfig) throws ServletException {
+
+    }
+
+    public void destroy() {
+
+    }
 }

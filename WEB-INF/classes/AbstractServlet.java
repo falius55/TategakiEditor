@@ -111,6 +111,7 @@ abstract public class AbstractServlet extends HttpServlet  {
             throw new UncheckedIOException(e);
         }
     }
+
     /**
      *	レスポンスのストリームにフォーマットを用いて書き込みます。
      *	@param format 書き込む文字列
@@ -124,6 +125,7 @@ abstract public class AbstractServlet extends HttpServlet  {
             throw new UncheckedIOException(e);
         }
     }
+
     /**
      * ルートディレクトリのIDを取得する
      * @param userId ユーザーID
@@ -141,6 +143,7 @@ abstract public class AbstractServlet extends HttpServlet  {
         }
         throw new IllegalArgumentException("database has no data for index :" + userId);
     }
+
     /**
      * データベース上に指定されたテーブルが存在するかを確認します
      * @param table 確認するテーブル名

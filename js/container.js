@@ -1,8 +1,11 @@
 'use strict';
+/* global AbstractHierarchy, Paragraph, Cursor, InputBuffer, CommandLine, Menu, DoManager, Util, getSelection */
 /**
  * 文章コンテナを表すクラス
  */
 class SentenceContainer extends AbstractHierarchy {
+
+    // constructor {{{
     /**
      * @param {number} userId ユーザーID
      * @param {object} [opt_data] 文書情報のオブジェクト
@@ -71,6 +74,7 @@ class SentenceContainer extends AbstractHierarchy {
 
         if (!opt_data) this.newFile();
     }
+
     /**
      * 文書をコンテナに展開します
      * @param {object} data 文書情報のオブジェクト
@@ -79,15 +83,15 @@ class SentenceContainer extends AbstractHierarchy {
     init(data) {
         this.empty();
         // 文書情報
-        this.filename(data["filename"]);
-        this.fileId(data["fileId"]);
-        this.saved(data["saved"] || (new Date(Date.now()).toLocaleDateString() + ' ' + new Date(Date.now()).toLocaleTimeString()).replace(/\//g,'-'));
-        this._strLenOnRow = data["data"]["conf"]["strLen"] || 40; // １行の文字数
-        this._rowLenOnPage = data["data"]["conf"]["rowLen"] || 40; // １ページの行数
+        this.filename(data.filename);
+        this.fileId(data.fileId);
+        this.saved(data.saved || (new Date(Date.now()).toLocaleDateString() + ' ' + new Date(Date.now()).toLocaleTimeString()).replace(/\//g,'-'));
+        this._strLenOnRow = data.data.conf.strLen || 40; // １行の文字数
+        this._rowLenOnPage = data.data.conf.rowLen || 40; // １ページの行数
         this.menu().confStrLenElem().value = this._strLenOnRow;
         this.menu().confRowLenElem().value = this._rowLenOnPage;
         // DOMの構築
-        for (let paraData of data["data"]["text"]) {
+        for (let paraData of data.data.text) {
             this.append(new Paragraph(paraData));
         }
 
@@ -99,8 +103,9 @@ class SentenceContainer extends AbstractHierarchy {
         this._doManager.reset();
         return this;
     }
+    // }}}
 
-    // --参照取得
+    // --参照取得 {{{
 
     /**
      * 指定された段落のインスタンス、あるいは引数省略で子の段落のインスタンスの配列を取得します
@@ -110,6 +115,7 @@ class SentenceContainer extends AbstractHierarchy {
     paragraphs(opt_index) {
         return this.children(opt_index);
     }
+
     /**
      * 文章内の最初の行のインスタンスを返します
      * @return {Row} 最初の行のインスタンス
@@ -117,6 +123,7 @@ class SentenceContainer extends AbstractHierarchy {
     firstRow() {
         return this.firstChild().firstChild();
     }
+
     /**
      * 文章内の最終行のインスタンスを返します
      * @return {Row} 最終行のインスタンス
@@ -124,6 +131,7 @@ class SentenceContainer extends AbstractHierarchy {
     lastRow() {
         return this.lastChild().lastChild();
     }
+
     /**
      * num行目のRowを取得します。
      *     numが負の数なら最初の行、numが行数以上の数値であれば最終行のインスタンスが取得されます
@@ -139,6 +147,7 @@ class SentenceContainer extends AbstractHierarchy {
         }
         return this.lastRow();
     }
+
     /**
      * numページ目の第一行目のRowを取得します。
      *     numが負の数なら最初の行、numがページ数以上の数値であれば最終行のインスタンスが取得されます
@@ -156,6 +165,7 @@ class SentenceContainer extends AbstractHierarchy {
         }
         return this.lastRow();
     }
+
     /**
      * 文書内で最初の文字(あるいはEOL)のインスタンスを返します
      * @return {Char EOL} 見つかった文字のインスタンス
@@ -163,6 +173,7 @@ class SentenceContainer extends AbstractHierarchy {
     firstChar() {
         return this.firstRow().firstChild();
     }
+
     /**
      * 文書内で最終文字(EOLは除く)のインスタンスを返します
      * @return {Char} 見つかった文字のインスタンス
@@ -170,6 +181,7 @@ class SentenceContainer extends AbstractHierarchy {
     lastChar() {
         return this.lastEOL().prevChar();
     }
+
     /**
      * 文書内で最終行のEOLを返します
      * @return {EOL} 最後のEOL
@@ -177,6 +189,7 @@ class SentenceContainer extends AbstractHierarchy {
     lastEOL() {
         return this.lastRow().lastChild();
     }
+
     /**
      * カーソルのインスタンスを返します
      * @return {Cursor} 文書内のカーソルのインスタンス
@@ -184,6 +197,7 @@ class SentenceContainer extends AbstractHierarchy {
     cursor() {
         return this._cursor;
     }
+
     /**
      * この文書内でカーソルのあたっている文字のインスタンスを返します
      * @return {Char} カーソル文字のインスタンス
@@ -191,6 +205,7 @@ class SentenceContainer extends AbstractHierarchy {
     cursorChar() {
         return this.cursor().getChar();
     }
+
     /**
      * この文書内でカーソルのある行のインスタンスを返します
      * @return {Row} カーソル行のインスタンス
@@ -198,6 +213,7 @@ class SentenceContainer extends AbstractHierarchy {
     cursorRow() {
         return this.cursorChar().row();
     }
+
     /**
      * この文書に入力する際に使用する入力バッファーのインスタンスを返します
      * @return {InputBuffer} 入力バッファーのインスタンス
@@ -205,6 +221,7 @@ class SentenceContainer extends AbstractHierarchy {
     inputBuffer() {
         return this._inputBuffer;
     }
+
     /**
      * この文書コンテナを使用するファイルリストのインスタンスを返します
      * @return {FileList} ファイルリストのインスタンス
@@ -212,6 +229,7 @@ class SentenceContainer extends AbstractHierarchy {
     fileList() {
         return this._fileList;
     }
+
     /**
      * コマンドラインのインスタンスを返します
      * @return {CommandLine} コマンドラインのインスタンス
@@ -219,6 +237,7 @@ class SentenceContainer extends AbstractHierarchy {
     command() {
         return this._command;
     }
+
     /**
      * ファイル名InputフォームのDOM要素を返します
      * @return {Element} ファイル名inputフォームのDOM要素
@@ -226,6 +245,7 @@ class SentenceContainer extends AbstractHierarchy {
     titleElem() {
         return this._titleElem;
     }
+
     /**
      * 文書内語句検索で使用するinputフォームのDOM要素を返します
      * @return {Element} 語句検索inputフォームのDOM要素
@@ -233,6 +253,7 @@ class SentenceContainer extends AbstractHierarchy {
     searchInputElem() {
         return this._searchInputElem;
     }
+
     /**
      * ユーザーへの情報を表示するinputフォームのDOM要素を返します
      * @return {Element} 情報表示inputフォームのDOM要素
@@ -240,6 +261,7 @@ class SentenceContainer extends AbstractHierarchy {
     announceElem() {
         return this._announceElem;
     }
+
     /**
      * この文書を操作するMenuクラスのインスタンスを返します
      * @return {Menu} メニューバーのインスタンス
@@ -247,9 +269,9 @@ class SentenceContainer extends AbstractHierarchy {
     menu() {
         return this._menu;
     }
+    // }}}
 
-    // --判定
-
+    // --判定 {{{
     /**
      * この文書内に段落が存在するかどうかを返します
      * @return {boolean} 段落が存在するならtrue、そうでなければfalse
@@ -268,6 +290,7 @@ class SentenceContainer extends AbstractHierarchy {
     pushParagraph(paragraph) {
         return this.pushChild(paragraph);
     }
+
     /**
      * 子の指定された位置にparagraphを挿入します
      * @param {number} pos 挿入する位置のインデックス
@@ -277,6 +300,7 @@ class SentenceContainer extends AbstractHierarchy {
     insertParagraph(pos,paragraph) {
         return this.insertChild(pos,paragraph);
     }
+
     /**
      * 子からparagraphを削除します
      * @param {Paragraph} paragraph 削除する段落のインスタンス
@@ -284,24 +308,24 @@ class SentenceContainer extends AbstractHierarchy {
      */
     deleteParagraph(paragraph) {
         return this.deleteChild(paragraph);
-    }
+    }//}}}
 
-    // --Status
-
+    // --Status {{{
     /**
      * 文書の内容を表したオブジェクトのjson文字列を作成します
      * @return {string} 文書内容を表すオブジェクトのjson文字列
      */
     data() {
         const data = {};
-        data["conf"] = this.menu().configueData();
+        data.conf = this.menu().configueData();
         const paraArr = [];
         for (let paragraph of this.paragraphs())
             paraArr.push(paragraph.data());
-        data["text"] = paraArr;
+        data.text = paraArr;
 
         return JSON.stringify(data);
     }
+
     /**
      * ユーザーIDを返します
      * @return {number} ユーザーID
@@ -309,6 +333,7 @@ class SentenceContainer extends AbstractHierarchy {
     userId() {
         return this._userId;
     }
+
     /**
      * この文書内に展開しているファイル名を変更する、あるいは引数省略で現在のファイル名を取得します
      * @param {string} [opt_newFilename] 新たに設定するファイル名
@@ -323,6 +348,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.titleElem().dataset.filename = opt_newFilename;
         return this;
     }
+
     /**
      * 現在のファイルに新たなIDを与える、あるいは引数省略で現在のファイルIDを取得します
      * @param {number} [opt_newId] 新たに設定するID
@@ -337,6 +363,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.titleElem().dataset.fileId = newId;
         return this;
     }
+
     /**
      * 最終更新日時を設定、あるいは引数省略で最終更新日時を取得します
      * @param {string} [opt_newSaved] 新たに設定する最終更新日時の文字列
@@ -351,13 +378,14 @@ class SentenceContainer extends AbstractHierarchy {
         document.getElementById('saved').textContent = newSaved;
         return this;
     }
+
     /**
      * 最後の保存から変更があったのかどうかを示すマーク([+]記号)を設定、あるいは引数省略で現在設定されているのかどうかを取得します
      * @param {boolean} [opt_bl] 設定する場合はtrue、外す場合はfalse
      * @return {SentenceContainer boolean} 自身のインスタンス(引数を渡した場合)、あるいは現在の設定状態の真偽値(引数を省略した場合)
      */
     isChanged(opt_bl) {
-        if (opt_bl == undefined)
+        if (opt_bl === undefined)
             return this._changedElem.classList.contains('active');
 
         if (opt_bl === true) {
@@ -369,6 +397,7 @@ class SentenceContainer extends AbstractHierarchy {
             return this;
         }
     }
+
     /**
      * 一行の文字数を変更する、あるいは引数省略で現在の設定上の一行の文字数を取得します
      * @param {number} [opt_newStrLen] 新たに設定する行内文字数
@@ -384,6 +413,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.cursor().createCursorLine();
         return this;
     }
+
     // 設定上のページ内行数
     /**
      * 一ページの行数を変更する、あるいは引数省略で現在の一ページの行数を取得します
@@ -399,6 +429,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.breakPage().printInfo();
         return this;
     }
+
     /**
      * 文書内文字数を数えます
      * @return {number} 文書内の総文字数
@@ -409,6 +440,7 @@ class SentenceContainer extends AbstractHierarchy {
             cnt += paragraph.countChar();
         return cnt;
     }
+
     // 全行数
     /**
      * 文書内行数を数えます
@@ -420,6 +452,7 @@ class SentenceContainer extends AbstractHierarchy {
             cnt += paragraph.childLength();
         return cnt;
     }
+
     /**
      * 文書内のページ数を数えます
      * @return {number} 文書内の総ページ数
@@ -429,9 +462,9 @@ class SentenceContainer extends AbstractHierarchy {
         for (let row = this.firstRow(); row; row = row.next())
             if (row.isPageBreak()) cnt++;
         return cnt;
-    }
+    }//}}}
 
-    // --Style
+    // --Style {{{
 
     /**
      * この文書コンテナの横幅を返えます。
@@ -442,6 +475,7 @@ class SentenceContainer extends AbstractHierarchy {
     width(opt_useCache) {
         return super.height(opt_useCache);
     }
+
     /**
      * この文書コンテナの高さを返します。
      *     文書コンテナは９０度回転しているため、css上は横幅と同様です
@@ -451,6 +485,7 @@ class SentenceContainer extends AbstractHierarchy {
     height(opt_useCache) {
         return super.width(opt_useCache);
     }
+
     /**
      * 文書内すべての文字から、指定されたクラスを除去します
      * @param {string} className 除去するクラス名
@@ -461,6 +496,7 @@ class SentenceContainer extends AbstractHierarchy {
             paragraph.removeClassFromAllChar(className);
         return this;
     }
+
     /**
      * 渡された文字列を本文内から探し、見つかった文字列にsearch-wordクラスを付与します。
      *     さらに、見つかった文字列の先頭文字にsearch-labelクラスを付与します
@@ -472,6 +508,7 @@ class SentenceContainer extends AbstractHierarchy {
             paragraph.search(str);
         return this;
     }
+
     /**
      * 文書内語句検索を始めます
      * @return {SentenceContainer} 自身のインスタンス
@@ -489,6 +526,7 @@ class SentenceContainer extends AbstractHierarchy {
         }
         return this;
     }
+
     /**
      * 文書内語句検索を完全に終了します
      * @return {SentenceContainer} 自身のインスタンス
@@ -499,10 +537,9 @@ class SentenceContainer extends AbstractHierarchy {
         this.searchInputElem().classList.remove('active');
         this.removeClassFromAllChar('search-label').removeClassFromAllChar('search-word');
         return this;
-    }
+    }//}}}
 
-    // selection
-
+    // selection {{{
     /**
      * 選択範囲にある文字インスタンスを配列で返します
      * @param {boolean} [opt_bl] 選択範囲を解除するならtrueを指定する
@@ -522,6 +559,7 @@ class SentenceContainer extends AbstractHierarchy {
         if (opt_bl) selection.removeAllRanges(); // 選択を解除する
         return ret;
     }
+
     /**
      * 選択範囲内にある文字列をローカルストレージに保存します
      * @return {SentenceContainer} 自身のインスタンス
@@ -530,6 +568,7 @@ class SentenceContainer extends AbstractHierarchy {
         localStorage.clipBoard = this.selectText();
         return this;
     }
+
     // ペースト
     /**
      * ローカルストレージに保存した文字列をカーソル位置から挿入します
@@ -539,6 +578,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.cursor().insert(localStorage.clipBoard);
         return this;
     }
+
     /**
      * 選択範囲内にある文字列を返します
      * @return {string} 選択範囲内の文字列
@@ -551,10 +591,9 @@ class SentenceContainer extends AbstractHierarchy {
             ret += selRange.toString();
         }
         return ret;
-    }
+    }//}}}
 
-    // --DOM操作関係
-
+    // --DOM操作関係 {{{
     /**
      * 子を空にし、入力モード、語句検索モードは終了します
      * @return {SentenceContainer} 自身のインスタンス
@@ -570,6 +609,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.stopSearchMode();
         return this;
     }
+
     /**
      * この文章コンテナの末尾にparagraphを追加します
      * @param {Paragraph} paragraph 追加する段落のインスタンス
@@ -596,7 +636,9 @@ class SentenceContainer extends AbstractHierarchy {
 
         this.pushParagraph(paragraph);
         return this;
-    }
+    }//}}}
+
+// printInfo {{{
     /**
      * 文書情報を表示します
      * @return {SentenceContainer} 自身のインスタンス
@@ -609,10 +651,9 @@ class SentenceContainer extends AbstractHierarchy {
         document.getElementById('page_pos').textContent = this.cursor().currentPage();
         document.getElementById('page_len').textContent = this.countPage();
         return this;
-    }
+    }//}}}
 
-    // --文章整理
-
+    // --文章整理 {{{
     /**
      * 各行が指定文字数と異なる文字数なら、指定文字数に合わせて文字数を調節します。
      *     標準以外のフォントサイズの文字があればフォントサイズに合わせて文字数は調整されます。
@@ -624,6 +665,7 @@ class SentenceContainer extends AbstractHierarchy {
             paragraph.cordinate();
         return this;
     }
+
     /**
      * 禁則処理を行います。
      *     各行の文字数への変化が伴うため、cordinate()の後に実行してください
@@ -633,8 +675,9 @@ class SentenceContainer extends AbstractHierarchy {
         for (let paragraph of this.paragraphs())
             paragraph.checkKinsoku();
         return this;
-    }
-    // 改ページ
+    }//}}}
+
+    // 改ページ {{{
     /**
      * ページの最初の行と最終行に目印となるクラスを与えます
      * @return {SentenceContainer} 自身のインスタンス
@@ -665,7 +708,9 @@ class SentenceContainer extends AbstractHierarchy {
             }
         }
         return this;
-    }
+    }//}}}
+
+// announce {{{
     /**
      * ユーザーへの情報を表示します
      * @param {string} str 表示する情報
@@ -679,10 +724,9 @@ class SentenceContainer extends AbstractHierarchy {
         else
             this.announceElem().style.color = '';
         return this;
-    }
+    }//}}}
 
-    // --ファイル操作
-
+    // --ファイル操作 {{{
     /**
      * 指定されたファイルを開きます(非同期通信)
      * @param {number} fileId 開くファイルのID
@@ -694,6 +738,7 @@ class SentenceContainer extends AbstractHierarchy {
         file.open();
         return this;
     }
+
     /**
      * 現在開いているファイルを上書き保存します。
      *     newFile()されて初めての保存なら名前をつけて保存します。(ともに非同期通信)
@@ -720,6 +765,7 @@ class SentenceContainer extends AbstractHierarchy {
         }.bind(this));
         return this;
     }
+
     /**
      * 現在開いているファイルを名前をつけて保存します(非同期通信)
      * @param {string} filename 新しいファイルの名前
@@ -740,6 +786,7 @@ class SentenceContainer extends AbstractHierarchy {
         }.bind(this));
         return this;
     }
+
     /**
      * 新しいファイルを開きます
      * @param {string='newfile'} filename 新しいファイル名
@@ -756,10 +803,9 @@ class SentenceContainer extends AbstractHierarchy {
             }
         }); // 空段落のデータ
         return this;
-    }
+    }//}}}
 
-    // --Display関係
-
+    // --Display関係 {{{
     /**
      * 文書を１行目の１文字目から表示します
      * @return {SentenceContainer} 自身のインスタンス
@@ -768,6 +814,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.addDisplay(0,0);
         return this;
     }
+
     // strPos: 'center','right'
     /**
      * カーソル位置を基準として文書を表示し直します
@@ -782,6 +829,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.addDisplay(rowPos,charPos);
         return this;
     }
+
     /**
      * firstRow行目以降を表示します。
      *     文字はfirstChar文字目以降が表示されます
@@ -817,6 +865,7 @@ class SentenceContainer extends AbstractHierarchy {
         }
         return this;
     }
+
     /**
      * @private
      * カーソル位置を基準に、最初に表示されるべき行のインデックスを返します
@@ -835,7 +884,7 @@ class SentenceContainer extends AbstractHierarchy {
             const harfRange = (currentEnd - currentFirst)/2;
             const ret = cursorIndex - harfRange;
             return ret >= 0 ? ret : 0;
-        } 
+        }
         if (opt_pos === 'right') {
             return cursorIndex;
         }
@@ -843,7 +892,7 @@ class SentenceContainer extends AbstractHierarchy {
         // カーソルが前にある
         if (cursorIndex < currentFirst) {
             return cursorIndex;
-        } 
+        }
         // カーソルが後ろにある
         if (cursorIndex > currentEnd) {
             return currentFirst + (cursorIndex - currentEnd);
@@ -852,6 +901,7 @@ class SentenceContainer extends AbstractHierarchy {
         // 途中行数変化
         return currentFirst;
     }
+
     /**
      * @private
      * 現在表示されている行の最初の行のインデックスを返します
@@ -868,6 +918,7 @@ class SentenceContainer extends AbstractHierarchy {
         }
         return -1;
     }
+
     /**
      * @private
      * 現在表示されている行の最後の行のインデックスを返します
@@ -878,6 +929,7 @@ class SentenceContainer extends AbstractHierarchy {
             if (row.isDisplay()) return cnt;
         return -1;
     }
+
     /**
      * @private
      * カーソル行の文書全体で何行目かを返します
@@ -895,6 +947,7 @@ class SentenceContainer extends AbstractHierarchy {
         }
         return -1;
     }
+
     /**
      * @private
      * 表示されている行のうち最初の行のインスタンスを返します
@@ -906,6 +959,7 @@ class SentenceContainer extends AbstractHierarchy {
             if (row.isDisplay()) return row;
         return null;
     }
+
     /**
      * @private
      * 表示されている行のうち最後の行のインスタンスを返します
@@ -929,6 +983,7 @@ class SentenceContainer extends AbstractHierarchy {
         this.lastDisplayRow().display(false);
         return this;
     }
+
     /**
      * 表示を一行分左に動かします
      * @return {SentenceContainer} 自身のインスタンス
@@ -940,12 +995,14 @@ class SentenceContainer extends AbstractHierarchy {
         lastDisplay.next().display(true,charPos);
         this.firstDisplayRow().display(false);
         return this;
-    }
+    } //}}}
 
+    // undo redo {{{
     addDo(doMemory) {
         this._doManager.add(doMemory);
         return this;
     }
+
     undo() {
         if (this._doManager.hasUndo())
             this._doManager.undo();
@@ -953,16 +1010,16 @@ class SentenceContainer extends AbstractHierarchy {
             this.announce('すでに一番古い変更です');
         return this;
     }
+
     redo() {
         if (this._doManager.hasRedo())
             this._doManager.redo();
         else
             this.announce('すでに一番新しい変更です');
         return this;
-    }
+    }//}}}
 
-    // --イベント
-
+    // --イベント {{{
     // keydown
     /**
      * この文書コンテナにkeydownイベントリスナーを付加します
@@ -974,6 +1031,7 @@ class SentenceContainer extends AbstractHierarchy {
         super.addKeydownEventListener();
         return this;
     }
+
     /**
      * keydownイベントの実行内容です
      * @param {Event} e イベントオブジェクト
@@ -1028,6 +1086,7 @@ class SentenceContainer extends AbstractHierarchy {
         }
         return this;
     }
+
     /**
      * @private
      * コントロールキーを押されていた場合のkeydownイベントの実行内容です
@@ -1126,7 +1185,7 @@ class SentenceContainer extends AbstractHierarchy {
         let keycode;
         if (document.all) {
             // IE
-            keycode = e.keyCode
+            keycode = e.keyCode;
         } else {
             // IE以外
             keycode = e.which;
@@ -1146,6 +1205,7 @@ class SentenceContainer extends AbstractHierarchy {
 
         this.search(this.searchInputElem().value.slice(1));
     }
+
     /**
      * 語句検索inputフォームからフォーカスが外れた際のイベント実行内容です。
      *     文書コンテナ本体にkeydownイベントを戻します
@@ -1153,6 +1213,7 @@ class SentenceContainer extends AbstractHierarchy {
     onFocusoutOnSearchMode() {
         this.addKeydownEventListener();
     }
+
     /**
      * 語句検索inputフォームにフォーカスがあたった際のイベント実行内容です。
      *     文書コンテナ本体のkeydownイベントを外します
@@ -1196,4 +1257,5 @@ class SentenceContainer extends AbstractHierarchy {
             }
         }.bind(this),false);
     }
+    //}}}
 }

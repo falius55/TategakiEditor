@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * resultには"success"が入る
  */
 public class MoveFile extends AbstractServlet  {
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException {
 

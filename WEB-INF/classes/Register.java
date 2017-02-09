@@ -24,6 +24,7 @@ import database.Database;
  *	</pre>
  */
 public class Register extends AbstractServlet {
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
@@ -117,6 +118,7 @@ public class Register extends AbstractServlet {
             return false;
         }
 	}
+
 	/**
 	 * データベース上にedit_usersという名前のユーザー管理テーブルを作成します
 	 */
@@ -129,6 +131,7 @@ public class Register extends AbstractServlet {
             throw new CompletionException(e);
         }
 	}
+
 	/**
 	 * データベース上にfile_tableという名前のファイル管理テーブルを作成します
 	 */

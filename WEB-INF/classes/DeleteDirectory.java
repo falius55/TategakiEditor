@@ -28,6 +28,7 @@ import database.Database;
  *     になります
  */
 public class DeleteDirectory extends AbstractServlet  {
+
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException {
 

@@ -24,6 +24,7 @@ import database.Database;
  * </pre>
  */
 public class FileMaker extends AbstractServlet  {
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
 
@@ -62,6 +63,7 @@ public class FileMaker extends AbstractServlet  {
             throw new CompletionException(e);
         }
 	}
+
 	/**
 	 * 指定された最終更新日時に合致する特定のファイルIDを取得します
 	 * @param userId ユーザーID
