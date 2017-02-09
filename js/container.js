@@ -998,11 +998,18 @@ class SentenceContainer extends AbstractHierarchy {
     } //}}}
 
     // undo redo {{{
+    /**
+     * DoMemoryをアンドゥスタックに積みます
+     * @param {DoMemory} doMemory アンドゥスタックに積むDoMemory
+     */
     addDo(doMemory) {
         this._doManager.add(doMemory);
         return this;
     }
 
+    /**
+     * アンドゥします
+     */
     undo() {
         if (this._doManager.hasUndo())
             this._doManager.undo();
@@ -1011,6 +1018,9 @@ class SentenceContainer extends AbstractHierarchy {
         return this;
     }
 
+    /**
+     * リドゥします
+     */
     redo() {
         if (this._doManager.hasRedo())
             this._doManager.redo();

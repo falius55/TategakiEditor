@@ -1,0 +1,3019 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">ConvertView | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Char.html">Char</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~FileList.html">FileList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/input.js~ConvertContainer.html">ConvertContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/input.js~InputBuffer.html">InputBuffer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/input.js~InputChar.html">InputChar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/other-classes.js~CommandLine.html">CommandLine</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/other-classes.js~Cursor.html">Cursor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/other-classes.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~BoldDoMemory.html">BoldDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~ColorDoMemory.html">ColorDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~DeleteDoMemory.html">DeleteDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~DoManager.html">DoManager</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~DoMemory.html">DoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~FontSizeDoMemory.html">FontSizeDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~ItalicDoMemory.html">ItalicDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~LineBreakDoMemory.html">LineBreakDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~PrintDoMemory.html">PrintDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ElemCreator">ElemCreator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KeyTable">KeyTable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="header-notice">
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {ConvertView} from &apos;<span><a href="file/js/input.js.html#lineNumber581">./js/input.js</a></span>&apos;</code></pre></div>
+  <span data-ice="access">public</span>
+  <span data-ice="kind">class</span>
+  
+  
+  
+  <span data-ice="source">| <span><a href="file/js/input.js.html#lineNumber581">source</a></span></span>
+</div>
+
+<div class="self-detail detail">
+  <h1 data-ice="name">ConvertView</h1>
+
+  
+
+  
+  
+  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span> &#x2192; ConvertView</div></div>
+  
+  
+  
+  
+  
+  
+
+  
+  
+  <div class="description" data-ice="description"><p>&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30D3;&#x30E5;&#x30FC;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;&#x3002;
+    &#x305D;&#x308C;&#x305E;&#x308C;&#x4E00;&#x3064;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x62C5;&#x5F53;&#x3057;&#x3001;&#x8907;&#x6570;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x6301;&#x3061;&#x307E;&#x3059;&#x3002;
+    &#x307E;&#x305F;&#x3001;&#x5185;&#x90E8;&#x306B;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3068;&#x3057;&#x3066;Row&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x6301;&#x3061;&#x307E;&#x3059;</p>
+</div>
+  
+
+  
+
+  
+
+  
+
+  
+</div>
+
+
+
+<div data-ice="constructorSummary"><h2>Constructor Summary</h2><table class="summary" data-ice="summary">
+  <thead><tr><td data-ice="title" colspan="3">Public Constructor</td></tr></thead>
+  <tbody>
+  
+  <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(data: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<div data-ice="methodSummary"><h2>Method Summary</h2><table class="summary" data-ice="summary">
+  <thead><tr><td data-ice="title" colspan="3">Public Methods</td></tr></thead>
+  <tbody>
+  
+  <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-active">active</a></span></span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x3053;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x53EF;&#x8996;&#x5316;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-after">after</a></span></span><span data-ice="signature">(view: <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x76F4;&#x5F8C;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x633F;&#x5165;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-append">append</a></span></span><span data-ice="signature">(row: <span><a href="class/js/character.js~Row.html">Row</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-before">before</a></span></span><span data-ice="signature">(view: <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x76F4;&#x524D;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x633F;&#x5165;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-container">container</a></span></span><span data-ice="signature">(opt_newContainer: <span><a href="class/js/input.js~ConvertContainer.html">ConvertContainer</a></span>): <span>ConvertView ConvertContainer</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x5206;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x5C5E;&#x3057;&#x3066;&#x3044;&#x308B;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-getSelect">getSelect</a></span></span><span data-ice="signature">(): <span><a href="class/js/character.js~Row.html">Row</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x73FE;&#x5728;&#x9078;&#x629E;&#x4E2D;&#x306E;&#x884C;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-hiragana">hiragana</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x3053;&#x306E;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x304C;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;&#x6587;&#x5B57;&#x5217;&#x3067;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-isActive">isActive</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x3053;&#x306E;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x304C;&#x53EF;&#x8996;&#x5316;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-kanaLength">kanaLength</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x3072;&#x3089;&#x304C;&#x306A;&#x3067;&#x306E;&#x6587;&#x5B57;&#x6570;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-phraseNum">phraseNum</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-remove">remove</a></span></span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x3092;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-replace">replace</a></span></span><span data-ice="signature">(view: <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x3092;view&#x3068;&#x5165;&#x308C;&#x66FF;&#x3048;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-rows">rows</a></span></span><span data-ice="signature">(opt_index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><span>Row Row</span><span>[]</span></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-select">select</a></span></span><span data-ice="signature">(index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x9078;&#x629E;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-selectLeft">selectLeft</a></span></span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x9078;&#x629E;&#x3092;&#x3072;&#x3068;&#x3064;&#x5DE6;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-selectRight">selectRight</a></span></span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x9078;&#x629E;&#x3092;&#x3072;&#x3068;&#x3064;&#x53F3;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/input.js~ConvertView.html#instance-method-toKatakana">toKatakana</a></span></span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x3092;&#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x5909;&#x63DB;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<div class="inherited-summary" data-ice="inheritedSummary"><h2>Inherited Summary</h2><table class="summary" data-ice="summary">
+  <thead><tr><td data-ice="title" colspan="3"><span class="toggle closed"></span> From class <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></td></tr></thead>
+  <tbody>
+  
+  <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-addClass">addClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x306B;className&#x3092;&#x52A0;&#x3048;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-addClickEventListener">addClickEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306B;&#x30AF;&#x30EA;&#x30C3;&#x30AF;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4ED8;&#x52A0;&#x3057;&#x307E;&#x3059;&#x3002;&#x91CD;&#x306D;&#x304C;&#x3051;&#x306F;&#x7121;&#x52B9;&#x3068;&#x306A;&#x308A;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-addKeydownEventListener">addKeydownEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306B;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30EA;&#x30B9;&#x30CA;&#x30FC;&#x3092;&#x4ED8;&#x52A0;&#x3057;&#x307E;&#x3059;&#x3002;&#x91CD;&#x306D;&#x304C;&#x3051;&#x306F;&#x7121;&#x52B9;&#x3068;&#x306A;&#x308A;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-addWheelEventListener">addWheelEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306B;&#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4ED8;&#x52A0;&#x3057;&#x307E;&#x3059;&#x3002;&#x91CD;&#x306D;&#x304C;&#x3051;&#x306F;&#x7121;&#x52B9;&#x3068;&#x306A;&#x308A;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-childLength">childLength</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x6570;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-children">children</a></span></span><span data-ice="signature">(opt_index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5B50;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;&#x3002;&#x307E;&#x305F;&#x3001;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x3092;&#x914D;&#x5217;&#x3067;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-className">className</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x6301;&#x3064;&#x30AF;&#x30E9;&#x30B9;&#x3059;&#x3079;&#x3066;&#x3092;&#x3072;&#x3068;&#x3064;&#x306E;&#x6587;&#x5B57;&#x5217;&#x3067;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-computeCenterPoint">computeCenterPoint</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x4E2D;&#x5FC3;&#x70B9;&#x306E;&#x5EA7;&#x6A19;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-computeDistanceFromPoint">computeDistanceFromPoint</a></span></span><span data-ice="signature">(x: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, y: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x3042;&#x308B;&#x70B9;&#x304B;&#x3089;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306E;&#x4E2D;&#x5FC3;&#x70B9;&#x307E;&#x3067;&#x306E;&#x8DDD;&#x96E2;&#x3092;&#x8A08;&#x7B97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-deleteChild">deleteChild</a></span></span><span data-ice="signature">(child: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>child&#x3092;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x304B;&#x3089;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-elem">elem</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;DOM&#x8981;&#x7D20;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-empty">empty</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x5185;&#x90E8;&#x306E;&#x30A8;&#x30EC;&#x30E1;&#x30F3;&#x30C8;&#x306B;&#x52A0;&#x3048;&#x3001;&#x5185;&#x90E8;&#x306E;&#x53C2;&#x7167;&#x3082;&#x7A7A;&#x306B;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-emptyChild">emptyChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x5B50;&#x306E;&#x53C2;&#x7167;&#x3092;&#x81EA;&#x8EAB;&#x304B;&#x3089;&#x5207;&#x308A;&#x96E2;&#x3057;&#x3066;&#x7A7A;&#x306B;&#x3057;&#x307E;&#x3059;&#x3002;DOM&#x8981;&#x7D20;&#x306B;&#x306F;&#x5F71;&#x97FF;&#x3057;&#x307E;&#x305B;&#x3093;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-emptyElem">emptyElem</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x5185;&#x90E8;&#x306E;&#x30A8;&#x30EC;&#x30E1;&#x30F3;&#x30C8;&#x3092;&#x7A7A;&#x306B;&#x3057;&#x307E;&#x3059;&#x3002;children&#x3068;&#x3057;&#x3066;&#x6301;&#x3063;&#x3066;&#x3044;&#x306A;&#x3044;&#x8981;&#x7D20;(EOL&#x306A;&#x3069;)&#x306F;&#x524A;&#x9664;&#x3055;&#x308C;&#x307E;&#x305B;&#x3093;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-firstChild">firstChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x6700;&#x521D;&#x306E;&#x5B50;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-hasChild">hasChild</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x5B50;&#x3092;&#x6301;&#x3063;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-hasClass">hasClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x30AF;&#x30E9;&#x30B9;&#x306B;className&#x3092;&#x6301;&#x3063;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-hasNextSibling">hasNextSibling</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x540C;&#x4E00;&#x306E;&#x89AA;&#x3092;&#x6301;&#x3064;&#x6B21;&#x306E;&#x5144;&#x5F1F;&#x304C;&#x5B58;&#x5728;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-hasPrevSibling">hasPrevSibling</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x540C;&#x4E00;&#x306E;&#x89AA;&#x3092;&#x6301;&#x3064;&#x524D;&#x306E;&#x5144;&#x5F1F;&#x304C;&#x5B58;&#x5728;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-height">height</a></span></span><span data-ice="signature">(opt_useCache: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-index">index</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x540C;&#x4E00;&#x306E;&#x89AA;&#x3092;&#x6301;&#x3064;&#x5144;&#x5F1F;&#x306E;&#x4E2D;&#x3067;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-insertChild">insertChild</a></span></span><span data-ice="signature">(pos: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, child: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;pos&#x756A;&#x76EE;&#x306B;child&#x3092;&#x52A0;&#x3048;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-is">is</a></span></span><span data-ice="signature">(obj: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>obj&#x304C;&#x81EA;&#x8EAB;&#x3068;&#x540C;&#x4E00;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-isEmpty">isEmpty</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x304C;&#x7A7A;&#x3067;&#x3042;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-isFirst">isFirst</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x89AA;&#x306E;&#x7B2C;&#x4E00;&#x306E;&#x5B50;&#x3067;&#x3042;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-isLast">isLast</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x89AA;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x5B50;&#x3067;&#x3042;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;&#x3002;Char&#x306E;&#x5834;&#x5408;&#x306F;&#x3001;EOL&#x306E;&#x524D;&#x306E;&#x6587;&#x5B57;&#x3068;EOL&#x306E;&#xFF12;&#x3064;&#x3067;true&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-isOnlyChild">isOnlyChild</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x89AA;&#x306B;&#x3068;&#x3063;&#x3066;&#x552F;&#x4E00;&#x306E;&#x5B50;&#x3067;&#x3042;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-lastChild">lastChild</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x5B50;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-length">length</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x8868;&#x3059;&#x6587;&#x5B57;&#x5217;&#x306E;&#x6587;&#x5B57;&#x6570;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-next">next</a></span></span><span data-ice="signature">(opt_newNext: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3057;&#x307E;&#x3059;&#x3002;&#x307E;&#x305F;&#x3001;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x6B21;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-parent">parent</a></span></span><span data-ice="signature">(opt_newParent: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x3092;&#x8A2D;&#x5B9A;&#x3057;&#x307E;&#x3059;&#x3002;&#x307E;&#x305F;&#x3001;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-prev">prev</a></span></span><span data-ice="signature">(opt_newPrev: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3057;&#x307E;&#x3059;&#x3002;&#x307E;&#x305F;&#x3001;&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x81EA;&#x8EAB;&#x306E;&#x524D;&#x306B;&#x3042;&#x308B;&#x540C;&#x5217;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-pushChild">pushChild</a></span></span><span data-ice="signature">(child: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>child&#x3092;&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x52A0;&#x3048;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-removeClass">removeClass</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x304B;&#x3089;className&#x3092;&#x9664;&#x53BB;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-removeClassFromAllChild">removeClassFromAllChild</a></span></span><span data-ice="signature">(className: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x6301;&#x3064;&#x3059;&#x3079;&#x3066;&#x306E;&#x5B50;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x304B;&#x3089;className&#x3092;&#x9664;&#x53BB;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-removeClickEventListener">removeClickEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x30AF;&#x30EA;&#x30C3;&#x30AF;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x9664;&#x53BB;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-removeKeydownEventListener">removeKeydownEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30EA;&#x30B9;&#x30CA;&#x30FC;&#x3092;&#x9664;&#x53BB;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-removeWheelEventListener">removeWheelEventListener</a></span></span><span data-ice="signature">(): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x9664;&#x53BB;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-replaceChild">replaceChild</a></span></span><span data-ice="signature">(oldChild: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>, newChild: <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span>): <span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;oldChild&#x3092;&#x5B50;&#x304B;&#x3089;&#x524A;&#x9664;&#x3057;&#x3001;&#x65B0;&#x305F;&#x306B;newChild&#x3092;&#x540C;&#x3058;&#x4F4D;&#x7F6E;&#x306B;&#x52A0;&#x3048;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-text">text</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x8868;&#x3059;&#x6587;&#x5B57;&#x5217;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-width">width</a></span></span><span data-ice="signature">(opt_useCache: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x5E45;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-x">x</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x8981;&#x7D20;&#x5DE6;&#x4E0A;&#x306E;X&#x5EA7;&#x6A19;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-method-y">y</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>&#x8981;&#x7D20;&#x5DE6;&#x4E0A;&#x306E;Y&#x5EA7;&#x6A19;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+
+
+<div data-ice="constructorDetails"><h2 data-ice="title">Public Constructors</h2>
+
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-constructor-constructor">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">constructor</span><span data-ice="signature">(data: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber594">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  <div data-ice="override"><h4>Override:</h4><span><a href="class/js/abstract.js~AbstractHierarchy.html#instance-constructor-constructor">AbstractHierarchy#constructor</a></span></div>
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">data</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;<br>
+&#x4F8B;</p>
+<p><pre>
+<code>
+[[&#x3072;&#x3089;&#x304C;&#x306A;],[&#x5E73;&#x4EEE;&#x540D;,&#x30D2;&#x30E9;&#x30AC;&#x30CA;,&#x5E73;&#x8CC0;&#x306A;,&#x5E73;&#x304C;&#x306A;,HIRAGANA]]
+</code>
+</pre></p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+</div>
+
+<div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
+
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-active">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">active</span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber678">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x3053;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x53EF;&#x8996;&#x5316;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-after">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">after</span><span data-ice="signature">(view: <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber779">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x76F4;&#x5F8C;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x633F;&#x5165;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">view</td>
+      <td data-ice="type"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x633F;&#x5165;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-append">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">append</span><span data-ice="signature">(row: <span><a href="class/js/character.js~Row.html">Row</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber732">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">row</td>
+      <td data-ice="type"><span><a href="class/js/character.js~Row.html">Row</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x8FFD;&#x52A0;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-before">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">before</span><span data-ice="signature">(view: <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber752">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x306E;&#x76F4;&#x524D;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x633F;&#x5165;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">view</td>
+      <td data-ice="type"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x633F;&#x5165;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-container">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">container</span><span data-ice="signature">(opt_newContainer: <span><a href="class/js/input.js~ConvertContainer.html">ConvertContainer</a></span>): <span>ConvertView ConvertContainer</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber613">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x81EA;&#x5206;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x5C5E;&#x3057;&#x3066;&#x3044;&#x308B;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">opt_newContainer</td>
+      <td data-ice="type"><span><a href="class/js/input.js~ConvertContainer.html">ConvertContainer</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span>ConvertView ConvertContainer</span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x6240;&#x5C5E;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getSelect">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">getSelect</span><span data-ice="signature">(): <span><a href="class/js/character.js~Row.html">Row</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber630">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x73FE;&#x5728;&#x9078;&#x629E;&#x4E2D;&#x306E;&#x884C;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/character.js~Row.html">Row</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x73FE;&#x5728;&#x9078;&#x629E;&#x4E2D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x9078;&#x629E;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x5019;&#x88DC;&#x6700;&#x5F8C;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-hiragana">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">hiragana</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber652">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x3053;&#x306E;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x304C;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;&#x6587;&#x5B57;&#x5217;&#x3067;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x62C5;&#x5F53;&#x6587;&#x7BC0;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-isActive">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">isActive</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber642">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x3053;&#x306E;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x304C;&#x53EF;&#x8996;&#x5316;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x53EF;&#x8996;&#x5316;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-kanaLength">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">kanaLength</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber660">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x3072;&#x3089;&#x304C;&#x306A;&#x3067;&#x306E;&#x6587;&#x5B57;&#x6570;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x3072;&#x3089;&#x304C;&#x306A;&#x3067;&#x306E;&#x6587;&#x5B57;&#x6570;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-phraseNum">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">phraseNum</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber668">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x62C5;&#x5F53;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;(&#xFF10;&#x59CB;&#x307E;&#x308A;)</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-remove">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">remove</span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber809">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x3092;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-replace">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">replace</span><span data-ice="signature">(view: <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber838">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x3092;view&#x3068;&#x5165;&#x308C;&#x66FF;&#x3048;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">view</td>
+      <td data-ice="type"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x5165;&#x308C;&#x66FF;&#x3048;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-rows">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">rows</span><span data-ice="signature">(opt_index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><span>Row Row</span><span>[]</span></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber622">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">opt_index</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>&#x53D6;&#x5F97;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><span>Row Row</span><span>[]</span></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-select">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">select</span><span data-ice="signature">(index: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber711">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x9078;&#x629E;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">index</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>&#x9078;&#x629E;&#x3059;&#x308B;&#x5019;&#x88DC;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-selectLeft">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">selectLeft</span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber690">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x9078;&#x629E;&#x3092;&#x3072;&#x3068;&#x3064;&#x5DE6;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-selectRight">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">selectRight</span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber700">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x9078;&#x629E;&#x3092;&#x3072;&#x3068;&#x3064;&#x53F3;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-toKatakana">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">toKatakana</span><span data-ice="signature">(): <span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/js/input.js.html#lineNumber848">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>&#x81EA;&#x8EAB;&#x304C;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x3092;&#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x5909;&#x63DB;&#x3057;&#x307E;&#x3059;</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>&#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

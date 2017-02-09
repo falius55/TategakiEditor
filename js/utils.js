@@ -66,7 +66,7 @@ const Util = {//{{{
 
 
 /**
- * DOM操作クロージャをまとめます
+ * DOM要素を生成する関数の集まりです
  */
 const ElemCreator = {};//{{{
 
