@@ -1,11 +1,69 @@
 {
-  "coverage": "100%",
-  "expectCount": 457,
-  "actualCount": 457,
+  "coverage": "95.84%",
+  "expectCount": 505,
+  "actualCount": 484,
   "files": {
-    "js/object.js": {
-      "expectCount": 457,
-      "actualCount": 457,
+    "js/filelist.js": {
+      "expectCount": 71,
+      "actualCount": 71,
+      "undocumentLines": []
+    },
+    "js/abstract.js": {
+      "expectCount": 45,
+      "actualCount": 45,
+      "undocumentLines": []
+    },
+    "js/undo-redo.js": {
+      "expectCount": 40,
+      "actualCount": 20,
+      "undocumentLines": [
+        242,
+        189,
+        269,
+        215,
+        166,
+        85,
+        287,
+        234,
+        128,
+        207,
+        157,
+        181,
+        261,
+        122,
+        152,
+        202,
+        281,
+        228,
+        176,
+        255
+      ]
+    },
+    "js/character.js": {
+      "expectCount": 117,
+      "actualCount": 117,
+      "undocumentLines": []
+    },
+    "js/other-classes.js": {
+      "expectCount": 75,
+      "actualCount": 75,
+      "undocumentLines": []
+    },
+    "js/input.js": {
+      "expectCount": 81,
+      "actualCount": 81,
+      "undocumentLines": []
+    },
+    "js/utils.js": {
+      "expectCount": 3,
+      "actualCount": 2,
+      "undocumentLines": [
+        6
+      ]
+    },
+    "js/container.js": {
+      "expectCount": 73,
+      "actualCount": 73,
       "undocumentLines": []
     }
   }

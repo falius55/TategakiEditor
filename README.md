@@ -2,20 +2,18 @@
 ブラウザから縦書きで表示し、サーバーにテキストファイルを保存、編集できるプログラムです。
 また、ショートカットキーや簡易的なコマンドモード(後述)もあり、MSワードでは上下にページがスクロールするのに対し、このプログラムでは。左右にページがスクロールします。
 
-※アンドゥ機能は未実装
-
 ## Requirements
 java8、TomcatとMySQLを利用します。
 
 ## Installation
-1. MySQLの情報を設定  
-     WEB-INF/classes/AbstractServlet.java内のprivate static finalフィールドのDATABASE_NAME,USER,PASSWORDをそれぞれMySQLで使用するデータベース名、ユーザー名、パスワードに書き換える  
+1. MySQLの情報を設定
+     WEB-INF/classes/AbstractServlet.java内のprivate static finalフィールドのDATABASE_NAME,USER,PASSWORDをそれぞれMySQLで使用するデータベース名、ユーザー名、パスワードに書き換える
 
      また、MySQL用のJDBCドライバを取得してクラスパスを通しておく
 
 2. tategakiディレクトリを作成し、Tomcatのディレクトリ/conf/Catalina/localhost/tategaki.xmlを作成し、以下を記述
 
-     `<Context path="/tategaki"  
+     `<Context path="/tategaki"
      docBase="tategakiディレクトリを作成したディレクトリのパス/tategaki" />`
 
 3. tategakiディレクトリにソースコードを配置し、WEB-INF/classes/にある各JavaファイルをTomcatのディレクトリ/lib/servlet-api.jarとソースコード内WEB-INF/classesの２箇所にクラスパスを通してコンパイル
@@ -26,7 +24,7 @@ java8、TomcatとMySQLを利用します。
 
 ## Usage
 * ショートカットキー
-　　　　
+
        * \<CTL-J\>  カーソル移動[Down]
        * \<CTL-K\>  カーソル移動[Up]
        * \<CTL-L\>  カーソル移動[Right]
