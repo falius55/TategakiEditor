@@ -27,6 +27,7 @@ import database.Database;
  *	</pre>
  */
 public class ReadJsonFile extends AbstractServlet  {
+    private static final long serialVersionUID = 1L;
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException {
@@ -42,7 +43,7 @@ public class ReadJsonFile extends AbstractServlet  {
         sj.add(String.format("\"fileId\":\"%d\"", fileId));
         sj.add(String.format("\"saved\":\"%s\"", saved));
 
-        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int userId = userId(request);
         int rootId = rootId(userId);
 
         sj.add(String.format("\"userId\":\"%d\"", userId));

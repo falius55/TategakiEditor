@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
  *	</pre>
  */
 public class WriteJsonFile extends AbstractServlet {
+    private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException {
@@ -40,7 +41,7 @@ public class WriteJsonFile extends AbstractServlet {
         updateSaved(fileId, savedMillis);
 
         // テキストファイルへの書き込み
-        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int userId = userId(request);
         int rootId = rootId(userId);
         String json = request.getParameter("json");
         writeFile(String.format("data/%d/%d.json",rootId,fileId), json);

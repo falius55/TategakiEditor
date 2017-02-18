@@ -22,13 +22,14 @@ import database.Database;
  * </pre>
  */
 public class DirectoryMaker extends AbstractServlet  {
+    private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException {
 
         ready(request, response);
 
-        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int userId = userId(request);
         int rootId = rootId(userId);
 
         String directoryname = request.getParameter("directoryname");

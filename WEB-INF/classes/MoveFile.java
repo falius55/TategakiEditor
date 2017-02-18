@@ -23,12 +23,14 @@ import javax.servlet.http.HttpServletResponse;
  * resultには"success"が入る
  */
 public class MoveFile extends AbstractServlet  {
+    private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException {
 
         ready(request, response);
 
+        // TODO: ユーザーIDから、そのファイルやディレクトリがそのユーザーのものかどうかを検査
         int fileId = Integer.parseInt(request.getParameter("file_id"));
         int parentDirId = Integer.parseInt(request.getParameter("directory_id"));
 

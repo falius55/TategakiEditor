@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
  * <p>ユーザーIDとファイルIDを受け取り、指定されたファイルを削除するサーブレット
  * <pre>
  * request: {
- * 	user_id,
  * 	file_id
+ * 	user_id
  * 	}
  * response: {
  * 	successRecord,
@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * successRecordは処理した行数、resultは削除に成功するとtrue
  */
 public class DeleteFile extends AbstractServlet {
+    private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException {
@@ -31,7 +32,7 @@ public class DeleteFile extends AbstractServlet {
         int fileId = Integer.parseInt(request.getParameter("file_id"));
         int num = deleteFileFromDatabase(fileId);
 
-        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int userId = userId(request);
         int rootId = rootId(userId);
 
         boolean b = deleteFile(String.format("data/%d/%d.txt",rootId,fileId));

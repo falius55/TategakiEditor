@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import database.Database;
 import database.PreparedDatabase;
@@ -52,6 +53,7 @@ import database.PreparedDatabase;
  * </pre>
  */
 abstract public class AbstractServlet extends HttpServlet  {
+    private static final long serialVersionUID = 1L;
     private static final String DATABASE_NAME = "tategaki_editor";
     private static final String URL = "jdbc:mysql://localhost/"+ DATABASE_NAME;
     private static final String USER = "sampleuser";
@@ -124,6 +126,14 @@ abstract public class AbstractServlet extends HttpServlet  {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    protected final int userId(HttpServletRequest request) throws ServletException {
+        HttpSession session = request.getSession();
+        if (session == null) {
+            throw new ServletException("not found session");
+        }
+        return Integer.parseInt(session.getAttribute(Login.SESSION_USER_ID).toString());
     }
 
     /**

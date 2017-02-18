@@ -36,18 +36,20 @@ import database.Database;
  * </pre>
  */
 public class FileListMaker extends AbstractServlet  {
+    private static final long serialVersionUID = 1L;
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
 
         ready(request, response);
 
-        int userId = Integer.parseInt(request.getParameter("user_id"));
+        int userId = userId(request);
         int rootId = rootId(userId);
 
         try {
             String rtnJson = getFileJson(userId,rootId);
             out(response, rtnJson);
+            log("return FileList:" + rtnJson);
         } catch (SQLException e) {
             throw new CompletionException(e);
         }

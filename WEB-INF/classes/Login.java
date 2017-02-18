@@ -22,6 +22,9 @@ import database.Database;
  * </pre>
  */
 public class Login extends AbstractServlet {
+    private static final long serialVersionUID = 1L;
+    public static final String SESSION_USER_ID = "userid";
+    public static final String SESSION_USER_NAME = "username";
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws IOException, ServletException {
@@ -59,8 +62,8 @@ public class Login extends AbstractServlet {
                 String userid = entry.getString("id").orElse("-1");
                 String username = entry.getString("name").orElse("not found");
 
-                session.setAttribute("userid",userid);
-                session.setAttribute("username",username);
+                session.setAttribute(SESSION_USER_ID,userid);
+                session.setAttribute(SESSION_USER_NAME,username);
 
                 return true;
             } else {

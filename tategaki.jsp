@@ -13,8 +13,7 @@
         </head>
         <body>
             <%
-            // セッションからユーザーIDを取得
-            String userId = (String)session.getAttribute("userid");
+            // セッションからユーザー名を取得
             String username = (String)session.getAttribute("username");
             %>
             <nav class="nav navbar-default navbar-fixed-top">
@@ -225,7 +224,7 @@
                         <script src="/tategaki/js/other-classes.js"></script>
                         <script src="/tategaki/js/container.js"></script>
                         <script>
-                            window.container = new SentenceContainer(<%= userId %>);
+                            window.container = new SentenceContainer();
                         </script>
                     </body>
                 </html>

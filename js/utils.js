@@ -68,7 +68,7 @@ const Util = {//{{{
 /**
  * DOM要素を生成する関数の集まりです
  */
-const ElemCreator = {};//{{{
+var ElemCreator = {};//{{{
 
 ElemCreator.createCharElement = (function () {//{{{
     const eCharTemplate = document.createElement('span');

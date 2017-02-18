@@ -7,7 +7,6 @@ class SentenceContainer extends AbstractHierarchy {
 
     // constructor {{{
     /**
-     * @param {number} userId ユーザーID
      * @param {object} [opt_data] 文書情報のオブジェクト
      * <pre>
      * {
@@ -55,10 +54,9 @@ class SentenceContainer extends AbstractHierarchy {
      * }
      * </pre>
      */
-    constructor(userId,opt_data) {
+    constructor(opt_data) {
         super(document.getElementById('sentence_container'));
         if (opt_data) this.init(opt_data);
-        this._userId = userId;
         this._titleElem = document.getElementById('file_title');
         this._searchInputElem = document.getElementById('search');
         this._announceElem = document.getElementById('user_info');
@@ -324,14 +322,6 @@ class SentenceContainer extends AbstractHierarchy {
         data.text = paraArr;
 
         return JSON.stringify(data);
-    }
-
-    /**
-     * ユーザーIDを返します
-     * @return {number} ユーザーID
-     */
-    userId() {
-        return this._userId;
     }
 
     /**
@@ -753,7 +743,6 @@ class SentenceContainer extends AbstractHierarchy {
 
         this.announce('保存中');
         Util.post('/tategaki/WriteJsonFile',{
-            user_id: this.userId(),
             file_id: this.fileId(),
             filename: this.filename(),
             json: this.data(),
@@ -775,7 +764,6 @@ class SentenceContainer extends AbstractHierarchy {
      */
     saveAsFile(filename) {
         Util.post('/tategaki/FileMaker',{
-            user_id: this.userId(),
             filename: filename,
             saved: Date.now()
         },function (data) {

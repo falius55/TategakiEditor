@@ -157,10 +157,10 @@ class File extends AbstractHierarchy {//{{{
         }
 
         const data = {};
-        data.user_id = sentenceContainer.userId();
         data.file_id = this.id();
         sentenceContainer.announce('読込中');
-        Util.post('/tategaki/ReadJsonFile', data, json => sentenceContainer.init(json).isChanged(false).announce('読み込み完了'));
+        Util.post('/tategaki/ReadJsonFile', data,
+            json => sentenceContainer.init(json).isChanged(false).announce('読み込み完了'));
         return this;
     }
 
@@ -171,7 +171,6 @@ class File extends AbstractHierarchy {//{{{
      */
     delete() {
         Util.post('/tategaki/DeleteFile',{
-            user_id: this.fileList().sentenceContainer().userId(),
             file_id: this.id()
         },function (json) {
             if (json.result === 'false' || json.result === false) {
@@ -212,7 +211,6 @@ class File extends AbstractHierarchy {//{{{
     move(newParentDir) {
         const fileList = this.fileList();
         Util.post('/tategaki/MoveFile',{
-            user_id: fileList.sentenceContainer().userId(),
             file_id: this.id(),
             directory_id: newParentDir.id()
         }, data => fileList.read());
@@ -500,7 +498,7 @@ class FileList extends AbstractHierarchy {//{{{
      * </code>
      * </pre>
      */
-    constructor(sentenceContainer,opt_data) {
+    constructor(sentenceContainer, opt_data) {
         super(document.getElementById('file_list'));
         this._sentenceContainer = sentenceContainer;
         this._$modal = $('#file_list_modal');
@@ -841,9 +839,7 @@ class FileList extends AbstractHierarchy {//{{{
      * @see ../WEB-INF/classes/doc/FileListMaker.html
      */
     read() {
-        const userId = this.sentenceContainer().userId();
-        Util.post('/tategaki/FileListMaker',{
-            user_id: userId
+        Util.post('/tategaki/FileListMaker', {
         },function (json) {
             this.init(json);
         }.bind(this));
@@ -918,7 +914,6 @@ class FileList extends AbstractHierarchy {//{{{
     mkdir(dirname) {
         if (!dirname) return this;
         Util.post('/tategaki/DirectoryMaker',{
-            user_id: this.sentenceContainer().userId(),
             directoryname: dirname,
             saved: Date.now()
         },function (data) {
@@ -949,7 +944,7 @@ class FileList extends AbstractHierarchy {//{{{
      * @return {FileList} 自身のインスタンス
      * @see ../WEB-INF/classes/doc/MoveFile.html
      */
-    moveFile(filename,dirname) {
+    moveFile(filename, dirname) {
         const files = this.findFile(filename);
         const dirs = this.findDirectory(dirname);
         if (files.length === 0 || dirs.length === 0) return this;
