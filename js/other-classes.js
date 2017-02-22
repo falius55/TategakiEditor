@@ -692,7 +692,7 @@ class CommandLine {//{{{
             case ':さヴぇ':
             case ':ｓ':
                 if (command[1]) {
-                    this.sentenceContainer().saveAsFile(command[1]);
+                    this.sentenceContainer().fileId(-1).filename(command[1]).saveFile();
                 } else {
                     this.sentenceContainer().saveFile();
                 }

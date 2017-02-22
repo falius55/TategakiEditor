@@ -432,7 +432,7 @@ class InputBuffer extends Row {//{{{
     /**
      * 入力文字すべてを漢字変換します(非同期通信)
      * @return {InputBuffer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     convert() {
         this.convertContainer().convert(this.text());
@@ -1004,12 +1004,10 @@ class ConvertContainer extends AbstractHierarchy {//{{{
      * 漢字変換を始めます(非同期通信)
      * @param {string} str 変換する文字列
      * @return {ConvertContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     convert(str) {
-        Util.post('/tategaki/KanjiProxy',{
-            sentence: str
-        },function (json) {
+        Util.get('/tategaki/Convert', function (json) {
             this.createViews(json);
             this.inputBuffer().setPhraseNum();
             // すべて変換第一候補を選択する
@@ -1020,7 +1018,9 @@ class ConvertContainer extends AbstractHierarchy {//{{{
 
             this.reposition();
             this.addKeydownEventListener();
-        }.bind(this));
+        }.bind(this), {
+            sentence: str
+        });
         this.show();
 
         return this;
@@ -1029,7 +1029,7 @@ class ConvertContainer extends AbstractHierarchy {//{{{
     /**
      * 文節区切りをひとつ前にずらして変換し直します(非同期通信)
      * @return {ConvertContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     shiftUp() {
         const activeView = this.activeView();
@@ -1041,11 +1041,11 @@ class ConvertContainer extends AbstractHierarchy {//{{{
         if (activeView.isLast()) {
             const activeKana = activeView.hiragana();
             const sendString = activeKana.slice(0, -1) + ',' + activeKana.slice(-1);
-            Util.post('/tategaki/KanjiProxy',{
-                sentence: sendString
-            },function (json) {
+            Util.get('/tategaki/Convert', function (json) {
                 this.replace(activeView.phraseNum(),json);
-            }.bind(this));
+            }.bind(this), {
+                sentence: sendString
+            });
             return this;
         }
 
@@ -1054,15 +1054,15 @@ class ConvertContainer extends AbstractHierarchy {//{{{
         const nextView = activeView.next();
         const nextKana = nextView.hiragana();
         const sendString = activeKana.slice(0,-1) + ',' + activeKana.slice(-1) + nextKana;
-        Util.post('/tategaki/KanjiProxy',{
-            sentence: sendString
-        },function (json) {
+        Util.get('/tategaki/Convert', function (json) {
             const newFirst = new ConvertView(json[0]);
             activeView.replace(newFirst);
             newFirst.select(0);
             const newSecond = new ConvertView(json[1]);
             nextView.replace(newSecond);
             newSecond.select(0);
+        }, {
+            sentence: sendString
         });
         return this;
     }
@@ -1070,7 +1070,7 @@ class ConvertContainer extends AbstractHierarchy {//{{{
     /**
      * 文節区切りをひとつ下にずらして変換し直します(非同期通信)
      * @return {ConvertContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     shiftDown() {
         const activeView = this.activeView();
@@ -1082,16 +1082,16 @@ class ConvertContainer extends AbstractHierarchy {//{{{
         if (nextView.kanaLength() === 1) {
             const nextPhrase = this.inputBuffer().phrases(nextView.phraseNum())[0];
             const sendString = activeView.hiragana() + nextView.hiragana() + ','; // 文節を区切られないよう、,を末尾に追加する
-            Util.post('/tategaki/KanjiProxy',{
-                sentence: sendString
-            },function (json) {
+            Util.get('/tategaki/Convert', function (json) {
                 const newView = new ConvertView(json[0]);
                 activeView.replace(newView);
                 nextView.remove();
                 nextPhrase.remove();
                 newView.select(0);
                 this.inputBuffer().setPhraseNum();
-            }.bind(this));
+            }.bind(this), {
+                sentence: sendString
+            });
             return this;
         }
 
@@ -1100,15 +1100,15 @@ class ConvertContainer extends AbstractHierarchy {//{{{
         const activeKana = activeView.hiragana();
         const nextKana = nextView.hiragana();
         const sendString = activeKana + nextKana.slice(0,1) + ',' + nextKana.slice(1);
-        Util.post('/tategaki/KanjiProxy',{
-            sentence: sendString
-        },function (json) {
+        Util.get('/tategaki/Convert', function (json) {
             const newFirst = new ConvertView(json[0]);
             activeView.replace(newFirst);
             newFirst.select(0);
             const newSecond = new ConvertView(json[1]);
             nextView.replace(newSecond);
             newSecond.select(0);
+        }, {
+            sentence: sendString
         });
         return this;
     }
@@ -1117,7 +1117,7 @@ class ConvertContainer extends AbstractHierarchy {//{{{
      * 入力中の文字が二文字以上あれば最後の１音のみ削除して選択文節を変換し直します(非同期通信)。
      *     入力中の文字がひらがなにして１文字しかなければ全て破棄して入力を終了します
      * @return {ConvertContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     backSpace() {
         const activeView = this.activeView();
@@ -1145,11 +1145,11 @@ class ConvertContainer extends AbstractHierarchy {//{{{
         // 最後の一字を削除して、その文節を変換し直す
         const phraseNum = activeView.phraseNum();
         const newString = activeView.hiragana().slice(0,-1) + ','; // 文節を区切られないよう、,を末尾に追加する
-        Util.post('/tategaki/KanjiProxy',{
-            sentence: newString
-        },function (json) {
+        Util.get('/tategaki/Convert', function (json) {
             this.replace(phraseNum,json);
-        }.bind(this));
+        }.bind(this), {
+            sentence: newString
+        });
         return this;
     }
 

@@ -1,3 +1,5 @@
+package servlet;
+
 import java.io.PrintWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,10 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
  * <p>文字列を受け取り、漢字変換の候補を返すサーブレット<br>
  *	変換にはウェブAPIの'Google CGI API for Japanese Input(Google日本語入力API)'を使用します
+ *
+ *	<p>
+ *	GET: sentenceを受け取り、漢字に変換した候補を送り返します。
  * <pre>
  * request: {
  *	sentence
@@ -28,22 +32,17 @@ import javax.servlet.http.HttpServletResponse;
  * ]
  * </pre>
  */
-public class KanjiProxy extends AbstractServlet {
+public class JapaneseConvertServlet extends AbstractServlet {
+    private static final long serialVersionUID = 1L;
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
-		ready(request, response);
-
+    /**
+     * リクエストされたファイルの内容を返します。
+     */
+    @Override
+    protected String onGet(long userID, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String sentence = request.getParameter("sentence");
-		String rtnString = getData(sentence);
-
-		log("rtnKanjiJson:"+ rtnString);
-		out(response, rtnString);
-	}
-
-	public static void main(String args[]) {
-		System.out.println(getData(args[0]));
-	}
+        return communicate(sentence);
+    }
 
 	/**
 	 * 漢字変換候補を返します
@@ -51,21 +50,18 @@ public class KanjiProxy extends AbstractServlet {
 	 * @return 通信で得た漢字変換候補のJSON文字列
 	 *     取得に失敗すると空文字列
 	 */
-	public static String getData(String str) {
+    public static String communicate(String sentence) throws IOException {
         // Google CGI API for Japanese Input(Google日本語入力API)
-        String strUrl = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + str;
+        String strUrl = "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + sentence;
         try {
             URL url = new URL(strUrl);
             try (InputStream is = url.openStream();
                     BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF8"))) {
                 return br.lines().collect(Collectors.joining());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+                    }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-		return "";
-	}
+        return "";
+    }
 }

@@ -733,47 +733,46 @@ class SentenceContainer extends AbstractHierarchy {
      * 現在開いているファイルを上書き保存します。
      *     newFile()されて初めての保存なら名前をつけて保存します。(ともに非同期通信)
      * @return {SentenceContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/WriteJsonFile.html
+     * @see ../WEB-INF/classes/doc/FileDataServlet.html
      */
     saveFile() {
-        if (this.fileId() === -1) {
-            this.saveAsFile(this.filename());
-            return this;
-        }
-
         this.announce('保存中');
-        Util.post('/tategaki/WriteJsonFile',{
+        Util.post('/tategaki/FileData',{
             file_id: this.fileId(),
             filename: this.filename(),
             json: this.data(),
             saved: Date.now()
         },function (json) {
-            this.saved(json.strDate).announce('保存しました');
-            this.fileList().read();
-            this.isChanged(false);
+            if (json.result === 'true') {
+                this.saved(json.saved).announce('保存しました');
+                this.fileId(json.fileID);
+                this.fileList().read();
+                this.isChanged(false);
+            } else {
+                this.announce('保存エラー');
+            }
         }.bind(this));
         return this;
     }
-
-    /**
-     * 現在開いているファイルを名前をつけて保存します(非同期通信)
-     * @param {string} filename 新しいファイルの名前
-     * @return {SentenceContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/FileMaker.html
-     * @see ../WEB-INF/classes/doc/WriteJsonFile.html
-     */
-    saveAsFile(filename) {
-        Util.post('/tategaki/FileMaker',{
-            filename: filename,
-            saved: Date.now()
-        },function (data) {
-            this.filename(data.filename).fileId(data.newFileId);
-            const file = new File(data.newFileId,data.filename);
-            this.fileList().append(file).chainFile();
-            this.saveFile();
-        }.bind(this));
-        return this;
-    }
+    //
+    // /**
+    //  * 現在開いているファイルを名前をつけて保存します(非同期通信)
+    //  * @param {string} filename 新しいファイルの名前
+    //  * @return {SentenceContainer} 自身のインスタンス
+    //  * @see ../WEB-INF/classes/doc/FileDataServlet.html
+    //  */
+    // saveAsFile(filename) {
+    //     Util.post('/tategaki/FileData',{
+    //         filename: filename,
+    //         saved: Date.now()
+    //     }, function (data) {
+    //         this.filename(data.filename).fileId(data.newFileId);
+    //         const file = new File(data.newFileId,data.filename);
+    //         this.fileList().append(file).chainFile();
+    //         this.saveFile();
+    //     }.bind(this));
+    //     return this;
+    // }
 
     /**
      * 新しいファイルを開きます
@@ -1036,7 +1035,7 @@ class SentenceContainer extends AbstractHierarchy {
      * @param {number} keycode 押下されたキーのキーコード
      * @return {SentenceContainer} 自身のインスタンス
      */
-    runKeydown(e,keycode) {
+    runKeydown(e, keycode) {
         this.announce('');
         if (e.ctrlKey) return this.runControlKeyDown(e,keycode);
 

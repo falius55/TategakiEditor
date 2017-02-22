@@ -7,12 +7,12 @@ const Util = {//{{{
     /**
      * baseArrayをcnt個ずつの配列に分割する
      */
-    splitArray:function(baseArray,cnt) {
+    splitArray:function(baseArray,  cnt) {
         const b = baseArray.length;
         const newArray = [];
 
         for (let i = 0,j,p; i < Math.ceil(b/cnt); i++) {
-            j = i*cnt;
+            j = i * cnt;
             p = baseArray.slice(j,j+cnt);
             newArray.push(p);
         }
@@ -28,28 +28,42 @@ const Util = {//{{{
     },
 
     // ２点間の距離を計算する
-    computeDistanceP2P:function(x1,y1,x2,y2) {
+    computeDistanceP2P:function(x1, y1, x2, y2) {
         // ２乗を使っているので、戻り値は必ず正の数になる
         // √{(b.x - a.x)^2+ (b.y - a.y)^2}
-        return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     },
 
     post: function (url, data, callback) {
         console.log('post send:', data);
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = 'json';
-        xhr.open('POST',url);
-        xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=UTF-8');
+        this._communicate(url, callback, 'POST', data);
+    },
 
+    get: function (url, callback, opt_data) {
+        this._communicate(url, callback, 'GET', opt_data);
+    },
+
+    _communicate: function (url, callback, methodType, opt_data) {
         let sendData = '';
-        for (let name in data) {
-            if (sendData !== '') {
-                sendData += '&';
+        if (opt_data) {
+            for (let name in opt_data) {
+                if (sendData !== '') {
+                    sendData += '&';
+                }
+                sendData += name + '=' + encodeURI(opt_data[name]).replace(/&/g, '%26');
             }
-            sendData += name + '=' + encodeURI(data[name]).replace(/&/g,'%26');
         }
 
-        xhr.addEventListener('load',function (e) {
+        if (methodType === 'GET') {
+            url += '?' + sendData;  // GET通信ではsendの引数は無視されるのでurlにデータを追加する
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'json';
+        xhr.open(methodType, url);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+
+        xhr.addEventListener('load', function (e) {
             if (xhr.response) {
                 callback(xhr.response);
                 console.log('success', xhr.response, e);
@@ -57,9 +71,10 @@ const Util = {//{{{
                 console.log('unsuccess', xhr.response, e);
             }
         });
-        xhr.addEventListener('abort',function (e) {
+        xhr.addEventListener('abort', function (e) {
             console.log('abort', e);
         });
+        console.log('send data:', sendData);
         xhr.send(sendData);
     }
 };//}}}
@@ -298,7 +313,7 @@ ElemCreator.createDirectoryElement = (function () {//{{{
 /**
  * キーコードから日本語文字列を作成します
  */
-const KeyTable = {
+const KeyTable = {//{{{
     makeString : function (buffer_string, keycode) {//{{{
         // bufferに文字なし キーコードの文字をそのまま返す
         if (buffer_string.length === 0)
@@ -595,4 +610,4 @@ const KeyTable = {
         'v': { '65': 'ヴァ', '73': 'ヴィ', '85': 'ヴ', '69': 'ヴェ', '79': 'ヴォ' },
         'q': { '65': 'くぁ', '73': 'くぃ', '85': 'く', '69': 'くぇ', '79': 'くぉ' }//}}}
     }//}}}
-};
+};//}}}
