@@ -11,7 +11,7 @@ class File extends AbstractHierarchy {//{{{
      * @param {string} filename ファイル名
      */
     constructor(id, filename) {
-        super(ElemCreator.createFileElement(id,filename));
+        super(ElemCreator.createFileElement(id, filename));
         this._link = this.elem().getElementsByTagName('a')[0];
         this._id = id;
         this._name = filename;

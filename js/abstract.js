@@ -454,7 +454,7 @@ class AbstractHierarchy {
             keycode = e.which;
         }
         if (keycode === 123) { return; } // F12のみブラウザショートカットキー
-        this.runKeydown(e,keycode);
+        this.runKeydown(e, keycode);
         // デフォルトの動作を無効化する
         e.preventDefault();
     }
@@ -466,7 +466,7 @@ class AbstractHierarchy {
      * @param {number} keycode 押下されたキーのキーコード
      * @return {AbstractHierarchy} 自身のインスタンス
      */
-    runKeydown(e,keycode) {
+    runKeydown(e, keycode) {
         return this;
     }
 

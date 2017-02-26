@@ -139,6 +139,7 @@ public class DatabaseTest {
     }
 
     private void singleWhere() throws SQLException {
+        // where句がaaa=bbbの形であれば文字列で引数を与えないパターン
         Map<TestColumn, Object> values = new EnumMap<>(TestColumn.class);
         values.put(TestColumn.NAME, "single where");
         values.put(TestColumn.PASSWORD, "single password");

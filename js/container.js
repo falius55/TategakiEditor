@@ -1,9 +1,385 @@
 'use strict';
 /* global AbstractHierarchy, Paragraph, Cursor, InputBuffer, CommandLine, Menu, DoManager, Util, getSelection */
+
+class SearchMode {  // jshint ignore:line
+    //{{{
+    constructor(sentenceContainer) {
+        this._elem = document.getElementById('search');
+        this._sentenceContainer = sentenceContainer;
+    }
+
+    /**
+     * 渡された文字列を本文内から探し、見つかった文字列にsearch-wordクラスを付与します。
+     *     さらに、見つかった文字列の先頭文字にsearch-labelクラスを付与します
+     *  @param {string} str 検索文字列
+     *  @return {SentenceContainer} 自身のインスタンス
+     */
+    _search(str) {
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            paragraph.search(str);
+        }
+        return this;
+    }
+
+    /**
+     * 文書内語句検索を始めます
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    start() {
+        this._elem.classList.add('active');
+        this._elem.focus();
+        this._elem.value = '/';
+        this._sentenceContainer.removeKeydownEventListener();
+        if (!this._keyupArg) {
+            this._keyupArg = this._onKeyup.bind(this);
+            this._elem.addEventListener('keyup',this._keyupArg,false);
+            this._elem.addEventListener('focusin',this._onFocusin.bind(this));
+            this._elem.addEventListener('focusout',this._onFocusout.bind(this));
+        }
+        return this;
+    }
+
+    /**
+     * 文書内語句検索を完全に終了します
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    stop() {
+        this._sentenceContainer.addKeydownEventListener();
+        this._elem.value = '';
+        this._elem.classList.remove('active');
+        this._sentenceContainer.removeClassFromAllChar('search-label').removeClassFromAllChar('search-word');
+        return this;
+    }
+
+    /**
+     * 語句検索inputフォームのkeyupイベントです
+     * @param {Event} e イベントオブジェクト
+     */
+    _onKeyup(e) {
+        let keycode;
+        if (document.all) {
+            // IE
+            keycode = e.keyCode;
+        } else {
+            // IE以外
+            keycode = e.which;
+        }
+        if (keycode === 13) {
+            // enter
+            this._elem.blur(); // enterを押しただけではフォーカスが外れない
+            return;
+        }
+
+        // 中身が空になればsearchモードを完全に終了する
+        if (this._elem.value === '') {
+            this._elem.blur();
+            this.stop();
+            return;
+        }
+
+        this._search(this._elem.value.slice(1));
+    }
+
+    /**
+     * 語句検索inputフォームからフォーカスが外れた際のイベント実行内容です。
+     *     文書コンテナ本体にkeydownイベントを戻します
+     */
+    _onFocusout() {
+        this._sentenceContainer.addKeydownEventListener();
+    }
+
+    /**
+     * 語句検索inputフォームにフォーカスがあたった際のイベント実行内容です。
+     *     文書コンテナ本体のkeydownイベントを外します
+     */
+    _onFocusin() {
+        this._sentenceContainer.removeKeydownEventListener();
+    }
+}//}}}
+
+
+class SelectRange {  // jshint ignore:line
+    //{{{
+
+    constructor(sentenceContainer) {
+        this._sentenceContainer = sentenceContainer;
+        this._cursor = sentenceContainer.cursor();
+    }
+
+    /**
+     * 選択範囲にある文字インスタンスを配列で返します
+     * @param {boolean} [opt_bl] 選択範囲を解除するならtrueを指定する
+     * @return {Char[]} 選択範囲内にある文字インスタンスの配列
+     */
+    selectChars(opt_bl) {
+        const ret = [];
+        const selection = getSelection();
+        if (this._selectText().length === 0)
+            return ret; // rangeCount===0とすると、EOLのみ選択されることがある
+
+        const selRange = selection.getRangeAt(0);
+        for (let char = this._sentenceContainer.firstChar(); char; char = char.nextChar())
+            if (char.isInRange(selRange)) ret.push(char);
+
+        selRange.detach();
+        if (opt_bl) selection.removeAllRanges(); // 選択を解除する
+        return ret;
+    }
+
+    /**
+     * 選択範囲内にある文字列をローカルストレージに保存します
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    copySelectText() {
+        localStorage.clipBoard = this._selectText();
+        return this;
+    }
+
+    // ペースト
+    /**
+     * ローカルストレージに保存した文字列をカーソル位置から挿入します
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    pasteText() {
+        this._cursor.insert(localStorage.clipBoard);
+        return this;
+    }
+
+    /**
+     * 選択範囲内にある文字列を返します
+     * @return {string} 選択範囲内の文字列
+     */
+    _selectText() {
+        const selection = getSelection();
+        let ret = '';
+        for (let i = 0, cnt = selection.rangeCount; i < cnt; i++) {
+            const selRange = selection.getRangeAt(i);
+            ret += selRange.toString();
+        }
+        return ret;
+    }
+
+    /**
+     * マウスで選択範囲を変更した際のイベントを与えます。選択範囲最後の文字の次の文字にカーソルを当てます
+     */
+    addSelectEvent() {
+        this._sentenceContainer.elem().addEventListener('mouseup',function (e) {
+            const selChars = this.selectChars();
+            // 選択範囲の直後にカーソルを当てる
+            if (selChars.length > 0) {
+                const lastCharOnSelect = selChars[selChars.length -1];
+                const newCursor = lastCharOnSelect.hasNextSibling() ? lastCharOnSelect.next() : lastCharOnSelect;
+                newCursor.addCursor().setPosMemory();
+            }
+        }.bind(this),false);
+    }
+}//}}}
+
+
+class Displayer { // jshint ignore:line
+    //{{{
+    constructor(sentenceContainer) {
+        this._sentenceContainer = sentenceContainer;
+    }
+
+    /**
+     * 文書を１行目の１文字目から表示します
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    resetDisplay() {
+        this._addDisplay(0,0);
+        return this;
+    }
+
+    // strPos: 'center','right'
+    /**
+     * カーソル位置を基準として文書を表示し直します
+     * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'と'right'に対応。
+     *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    changeDisplay(opt_pos) {
+        const cursorChar = this._sentenceContainer.cursorChar();
+        const rowPos = this._computeDisplayRowPos(opt_pos);
+        const charPos = cursorChar.row().computeDisplayCharPos();
+        this._addDisplay(rowPos, charPos);
+        return this;
+    }
+
+    /**
+     * 表示を一行分右に動かします
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    shiftRightDisplay() {
+        const charPos = this._sentenceContainer.cursorRow().computeDisplayCharPos();
+        const firstDisplay = this._firstDisplayRow();
+        if (!firstDisplay.prev()) return this;
+        firstDisplay.prev().display(true,charPos);
+        this._lastDisplayRow().display(false);
+        return this;
+    }
+
+    /**
+     * 表示を一行分左に動かします
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    shiftLeftDisplay() {
+        const charPos = this._sentenceContainer.cursorRow().computeDisplayCharPos();
+        const lastDisplay = this._lastDisplayRow();
+        if (!lastDisplay.next()) return this;
+        lastDisplay.next().display(true, charPos);
+        this._firstDisplayRow().display(false);
+        return this;
+    }
+
+    /**
+     * firstRow行目以降を表示します。
+     *     文字はfirstChar文字目以降が表示されます
+     * @param {number} firstRow 表示される最初の行のインデックス
+     * @param {number} firstChar 表示される最初の文字のインデックス
+     * @return {SentenceContainer} 自身のインスタンス
+     */
+    _addDisplay(firstRow, firstChar) {
+        const dispWidth = this.width();
+        const cache = {};
+        let cnt = 0; // 総行数をカウントする
+        let sum = 0; // 表示行の幅合計
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            for (let row of paragraph.rows()) {
+                if (cnt < firstRow) {
+                    row.display(false);
+                    cnt++;
+                    continue;
+                }
+                // 行の幅は子の最大のフォントによって決まると考え、最大フォントごとの行幅をキャッシュする(レンダリング頻度の削減)
+                const maxFont = row.maxFont();
+                if (cache[maxFont]) {
+                    const rowWidth = cache[maxFont];
+                    sum += rowWidth + 2; // 2はボーダーの幅
+                } else {
+                    cache[maxFont] = row.width();
+                    const rowWidth = cache[maxFont];
+                    sum += rowWidth + 2; // 2はボーダーの幅
+                }
+                row.display((sum < dispWidth), firstChar);
+                cnt++;
+            }
+        }
+        return this;
+    }
+
+    /**
+     * @private
+     * カーソル位置を基準に、最初に表示されるべき行のインデックスを返します
+     * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'なら、カーソル位置を中央にする。'right'なら、カーソル位置が最も右になるよう表示される。
+     *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される(現在のカーソル位置が現在表示されている画面から一行後ろにあれば一行分表示位置が後ろにずれる、といった形)
+     * @return {number} 計算された最初に表示されるべき行のインデックス
+     */
+    _computeDisplayRowPos(opt_pos) {
+        const currentFirst = this._firstDisplayRowPos();
+        const cursorIndex = this._cursorRowPos();
+        const currentEnd = this._lastDisplayRowPos();
+
+        // カーソル位置を中央にする
+        // HACK:計算前のdisplayの数を基準にするので、フォントの大きさなどによってずれもありうる
+        if (opt_pos === 'center') {
+            const harfRange = (currentEnd - currentFirst) / 2;
+            const ret = cursorIndex - harfRange;
+            return ret >= 0 ? ret : 0;
+        }
+        if (opt_pos === 'right') {
+            return cursorIndex;
+        }
+
+        // カーソルが前にある
+        if (cursorIndex < currentFirst) {
+            return cursorIndex;
+        }
+        // カーソルが後ろにある
+        if (cursorIndex > currentEnd) {
+            return currentFirst + (cursorIndex - currentEnd);
+        }
+        // displayに囲まれた部分にdisplayでない行がある場合
+        // 途中行数変化
+        return currentFirst;
+    }
+
+    /**
+     * @private
+     * 現在表示されている行の最初の行のインデックスを返します
+     * @return {number} 現在表示されている行の最初の行のインデックス。表示行がなければ-1
+     */
+    _firstDisplayRowPos() {
+        let cnt = 0;
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            for (let row of paragraph.rows()) {
+                if (row.isDisplay())
+                    return cnt;
+                cnt++;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * @private
+     * 現在表示されている行の最後の行のインデックスを返します
+     * @return {number} 現在表示されている行の最後の行のインデックス。表示行がなければ-1
+     */
+    _lastDisplayRowPos() {
+        for (let row = this._sentenceContainer.lastRow(), index = this._sentenceContainer.countRow() -1;
+            row; row = row.prev(), index--)
+            if (row.isDisplay()) return index;
+        return -1;
+    }
+
+    /**
+     * @private
+     * カーソル行が文書全体で何行目かを返します
+     * @return {number} カーソル行の文書全体でのインデックス。文書内に段落がない、あるいはカーソル行がなければ-1
+     */
+    _cursorRowPos() {
+        const cursorRow = this._sentenceContainer.cursorRow();
+        let cnt = 0;
+        for (let paragraph of this.paragraphs()) {
+            for (let row of paragraph.rows()) {
+                if (row.is(cursorRow))
+                    return cnt;
+                cnt++;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * @private
+     * 表示されている行のうち最初の行のインスタンスを返します
+     * @return {Row} 最初の表示行のインスタンス。表示行がなければnull
+     */
+    _firstDisplayRow() {
+        for (let paragraph of this._sentenceContainer.paragraphs())
+            for (let row of paragraph.rows())
+            if (row.isDisplay()) return row;
+        return null;
+    }
+
+    /**
+     * @private
+     * 表示されている行のうち最後の行のインスタンスを返します
+     * @return {Row} 最後の表示行のインスタンス。表示行がなければnull
+     */
+    _lastDisplayRow() {
+        for (let row = this._sentenceContainer.lastRow(); row; row = row.prev())
+            if (row.isDisplay()) return row;
+        return null;
+    }
+}//}}}
+
+
 /**
  * 文章コンテナを表すクラス
  */
-class SentenceContainer extends AbstractHierarchy {
+class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
 
     // constructor {{{
     /**
@@ -58,7 +434,6 @@ class SentenceContainer extends AbstractHierarchy {
         super(document.getElementById('sentence_container'));
         if (opt_data) this.init(opt_data);
         this._titleElem = document.getElementById('file_title');
-        this._searchInputElem = document.getElementById('search');
         this._announceElem = document.getElementById('user_info');
         this._changedElem = document.getElementById('changed');
         this.addFileTitleEvent();
@@ -69,6 +444,9 @@ class SentenceContainer extends AbstractHierarchy {
         this._command = new CommandLine(this);
         this._menu = new Menu(this);
         this._doManager = new DoManager(this);
+        this._displayer = new Displayer(this);
+        this._searchMode = new SearchMode(this);
+        this._selectRange = new SelectRange(this);
 
         if (!opt_data) this.newFile();
     }
@@ -94,7 +472,8 @@ class SentenceContainer extends AbstractHierarchy {
         }
 
         this.cursor().init();
-        this.cordinate().resetDisplay();
+        this.cordinate();
+        this._displayer.resetDisplay();
         this.breakPage().printInfo();
         this.addKeydownEventListener();
         this.addWheelEventListener();
@@ -237,30 +616,6 @@ class SentenceContainer extends AbstractHierarchy {
     }
 
     /**
-     * ファイル名InputフォームのDOM要素を返します
-     * @return {Element} ファイル名inputフォームのDOM要素
-     */
-    titleElem() {
-        return this._titleElem;
-    }
-
-    /**
-     * 文書内語句検索で使用するinputフォームのDOM要素を返します
-     * @return {Element} 語句検索inputフォームのDOM要素
-     */
-    searchInputElem() {
-        return this._searchInputElem;
-    }
-
-    /**
-     * ユーザーへの情報を表示するinputフォームのDOM要素を返します
-     * @return {Element} 情報表示inputフォームのDOM要素
-     */
-    announceElem() {
-        return this._announceElem;
-    }
-
-    /**
      * この文書を操作するMenuクラスのインスタンスを返します
      * @return {Menu} メニューバーのインスタンス
      */
@@ -334,8 +689,8 @@ class SentenceContainer extends AbstractHierarchy {
             return this._filename;
 
         this._filename = opt_newFilename;
-        this.titleElem().value = opt_newFilename;
-        this.titleElem().dataset.filename = opt_newFilename;
+        this._titleElem.value = opt_newFilename;
+        this._titleElem.dataset.filename = opt_newFilename;
         return this;
     }
 
@@ -350,7 +705,7 @@ class SentenceContainer extends AbstractHierarchy {
 
         const newId = opt_newId;
         this._fileId = newId;
-        this.titleElem().dataset.fileId = newId;
+        this._titleElem.dataset.fileId = newId;
         return this;
     }
 
@@ -485,103 +840,61 @@ class SentenceContainer extends AbstractHierarchy {
         for (let paragraph of this.paragraphs())
             paragraph.removeClassFromAllChar(className);
         return this;
-    }
-
-    /**
-     * 渡された文字列を本文内から探し、見つかった文字列にsearch-wordクラスを付与します。
-     *     さらに、見つかった文字列の先頭文字にsearch-labelクラスを付与します
-     *  @param {string} str 検索文字列
-     *  @return {SentenceContainer} 自身のインスタンス
-     */
-    search(str) {
-        for (let paragraph of this.paragraphs())
-            paragraph.search(str);
-        return this;
-    }
-
-    /**
-     * 文書内語句検索を始めます
-     * @return {SentenceContainer} 自身のインスタンス
-     */
-    startSearchMode() {
-        this.searchInputElem().classList.add('active');
-        this.searchInputElem().focus();
-        this.searchInputElem().value = '/';
-        this.removeKeydownEventListener();
-        if (!this._keyupOnSearchArg) {
-            this._keyupOnSearchArg = this.onKeyupOnSearchMode.bind(this);
-            this.searchInputElem().addEventListener('keyup',this._keyupOnSearchArg,false);
-            this.searchInputElem().addEventListener('focusin',this.onFocusinOnSearchMode.bind(this));
-            this.searchInputElem().addEventListener('focusout',this.onFocusoutOnSearchMode.bind(this));
-        }
-        return this;
-    }
-
-    /**
-     * 文書内語句検索を完全に終了します
-     * @return {SentenceContainer} 自身のインスタンス
-     */
-    stopSearchMode() {
-        this.addKeydownEventListener();
-        this.searchInputElem().value = '';
-        this.searchInputElem().classList.remove('active');
-        this.removeClassFromAllChar('search-label').removeClassFromAllChar('search-word');
-        return this;
-    }//}}}
+    } //}}}
 
     // selection {{{
-    /**
-     * 選択範囲にある文字インスタンスを配列で返します
-     * @param {boolean} [opt_bl] 選択範囲を解除するならtrueを指定する
-     * @return {Char[]} 選択範囲内にある文字インスタンスの配列
-     */
-    selectChars(opt_bl) {
-        const ret = [];
-        const selection = getSelection();
-        if (this.selectText().length === 0)
-            return ret; // rangeCount===0とすると、EOLのみ選択されることがある
-
-        const selRange = selection.getRangeAt(0);
-        for (let char = this.firstChar(); char; char = char.nextChar())
-            if (char.isInRange(selRange)) ret.push(char);
-
-        selRange.detach();
-        if (opt_bl) selection.removeAllRanges(); // 選択を解除する
-        return ret;
-    }
-
-    /**
-     * 選択範囲内にある文字列をローカルストレージに保存します
-     * @return {SentenceContainer} 自身のインスタンス
-     */
-    copySelectText() {
-        localStorage.clipBoard = this.selectText();
-        return this;
-    }
-
-    // ペースト
-    /**
-     * ローカルストレージに保存した文字列をカーソル位置から挿入します
-     * @return {SentenceContainer} 自身のインスタンス
-     */
-    pasteText() {
-        this.cursor().insert(localStorage.clipBoard);
-        return this;
-    }
-
-    /**
-     * 選択範囲内にある文字列を返します
-     * @return {string} 選択範囲内の文字列
-     */
-    selectText() {
-        const selection = getSelection();
-        let ret = '';
-        for (let i = 0,cnt = selection.rangeCount; i < cnt; i++) {
-            const selRange = selection.getRangeAt(i);
-            ret += selRange.toString();
-        }
-        return ret;
-    }//}}}
+    // /**
+    //  * 選択範囲にある文字インスタンスを配列で返します
+    //  * @param {boolean} [opt_bl] 選択範囲を解除するならtrueを指定する
+    //  * @return {Char[]} 選択範囲内にある文字インスタンスの配列
+    //  */
+    // selectChars(opt_bl) {
+    //     const ret = [];
+    //     const selection = getSelection();
+    //     if (this.selectText().length === 0)
+    //         return ret; // rangeCount===0とすると、EOLのみ選択されることがある
+    //
+    //     const selRange = selection.getRangeAt(0);
+    //     for (let char = this.firstChar(); char; char = char.nextChar())
+    //         if (char.isInRange(selRange)) ret.push(char);
+    //
+    //     selRange.detach();
+    //     if (opt_bl) selection.removeAllRanges(); // 選択を解除する
+    //     return ret;
+    // }
+    //
+    // /**
+    //  * 選択範囲内にある文字列をローカルストレージに保存します
+    //  * @return {SentenceContainer} 自身のインスタンス
+    //  */
+    // copySelectText() {
+    //     localStorage.clipBoard = this.selectText();
+    //     return this;
+    // }
+    //
+    // // ペースト
+    // /**
+    //  * ローカルストレージに保存した文字列をカーソル位置から挿入します
+    //  * @return {SentenceContainer} 自身のインスタンス
+    //  */
+    // pasteText() {
+    //     this.cursor().insert(localStorage.clipBoard);
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 選択範囲内にある文字列を返します
+    //  * @return {string} 選択範囲内の文字列
+    //  */
+    // selectText() {
+    //     const selection = getSelection();
+    //     let ret = '';
+    //     for (let i = 0, cnt = selection.rangeCount; i < cnt; i++) {
+    //         const selRange = selection.getRangeAt(i);
+    //         ret += selRange.toString();
+    //     }
+    //     return ret;
+    // }//}}}
 
     // --DOM操作関係 {{{
     /**
@@ -596,7 +909,7 @@ class SentenceContainer extends AbstractHierarchy {
         if (this.inputBuffer().isDisplay()) {
             this.inputBuffer().empty().hide();
         }
-        this.stopSearchMode();
+        this._searchMode.stop();
         return this;
     }
 
@@ -707,12 +1020,12 @@ class SentenceContainer extends AbstractHierarchy {
      * @param {string} [opt_color='black'] 黒文字以外の文字色で表示する場合に色名を指定する
      * @return {SentenceContainer} 自身のインスタンス
      */
-    announce(str,opt_color) {
-        this.announceElem().textContent = str;
+    announce(str, opt_color) {
+        this._announceElem.textContent = str;
         if (opt_color)
-            this.announceElem().style.color = opt_color;
+            this._announceElem.style.color = opt_color;
         else
-            this.announceElem().style.color = '';
+            this._announceElem.style.color = '';
         return this;
     }//}}}
 
@@ -754,25 +1067,6 @@ class SentenceContainer extends AbstractHierarchy {
         }.bind(this));
         return this;
     }
-    //
-    // /**
-    //  * 現在開いているファイルを名前をつけて保存します(非同期通信)
-    //  * @param {string} filename 新しいファイルの名前
-    //  * @return {SentenceContainer} 自身のインスタンス
-    //  * @see ../WEB-INF/classes/doc/FileDataServlet.html
-    //  */
-    // saveAsFile(filename) {
-    //     Util.post('/tategaki/FileData',{
-    //         filename: filename,
-    //         saved: Date.now()
-    //     }, function (data) {
-    //         this.filename(data.filename).fileId(data.newFileId);
-    //         const file = new File(data.newFileId,data.filename);
-    //         this.fileList().append(file).chainFile();
-    //         this.saveFile();
-    //     }.bind(this));
-    //     return this;
-    // }
 
     /**
      * 新しいファイルを開きます
@@ -793,196 +1087,9 @@ class SentenceContainer extends AbstractHierarchy {
     }//}}}
 
     // --Display関係 {{{
-    /**
-     * 文書を１行目の１文字目から表示します
-     * @return {SentenceContainer} 自身のインスタンス
-     */
-    resetDisplay() {
-        this.addDisplay(0,0);
-        return this;
-    }
-
-    // strPos: 'center','right'
-    /**
-     * カーソル位置を基準として文書を表示し直します
-     * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'と'right'に対応。
-     *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される
-     * @return {SentenceContainer} 自身のインスタンス
-     */
     changeDisplay(opt_pos) {
-        const cursorChar = this.cursorChar();
-        const rowPos = this.computeDisplayRowPos(opt_pos);
-        const charPos = cursorChar.row().computeDisplayCharPos();
-        this.addDisplay(rowPos,charPos);
-        return this;
-    }
-
-    /**
-     * firstRow行目以降を表示します。
-     *     文字はfirstChar文字目以降が表示されます
-     * @param {number} firstRow 表示される最初の行のインデックス
-     * @param {number} firstChar 表示される最初の文字のインデックス
-     * @return {SentenceContainer} 自身のインスタンス
-     */
-    addDisplay(firstRow,firstChar) {
-        const dispWidth = this.width();
-        const cache = {};
-        let cnt = 0; // 総行数をカウントする
-        let sum = 0; // 表示行の幅合計
-        for (let paragraph of this.paragraphs()) {
-            for (let row of paragraph.rows()) {
-                if (cnt < firstRow) {
-                    row.display(false);
-                    cnt++;
-                    continue;
-                }
-                // 行の幅は子の最大のフォントによって決まると考え、最大フォントごとの行幅をキャッシュする(レンダリング頻度の削減)
-                const maxFont = row.maxFont();
-                if (cache[maxFont]) {
-                    const rowWidth = cache[maxFont];
-                    sum += rowWidth + 2; // 2はボーダーの幅
-                } else {
-                    cache[maxFont] = row.width();
-                    const rowWidth = cache[maxFont];
-                    sum += rowWidth + 2; // 2はボーダーの幅
-                }
-                row.display((sum < dispWidth),firstChar);
-                cnt++;
-            }
-        }
-        return this;
-    }
-
-    /**
-     * @private
-     * カーソル位置を基準に、最初に表示されるべき行のインデックスを返します
-     * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'なら、カーソル位置を中央にする。'right'なら、カーソル位置が最も右になるよう表示される。
-     *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される
-     * @return {number} 計算された最初に表示されるべき行のインデックス
-     */
-    computeDisplayRowPos(opt_pos) {
-        const currentFirst = this.firstDisplayRowPos();
-        const cursorIndex = this.cursorRowPos();
-        const currentEnd = this.lastDisplayRowPos();
-
-        // カーソル位置を中央にする
-        // HACK:計算前のdisplayの数を基準にするので、フォントの大きさなどによってずれもありうる
-        if (opt_pos === 'center') {
-            const harfRange = (currentEnd - currentFirst)/2;
-            const ret = cursorIndex - harfRange;
-            return ret >= 0 ? ret : 0;
-        }
-        if (opt_pos === 'right') {
-            return cursorIndex;
-        }
-
-        // カーソルが前にある
-        if (cursorIndex < currentFirst) {
-            return cursorIndex;
-        }
-        // カーソルが後ろにある
-        if (cursorIndex > currentEnd) {
-            return currentFirst + (cursorIndex - currentEnd);
-        }
-        // displayに囲まれた部分にdisplayでない行がある場合
-        // 途中行数変化
-        return currentFirst;
-    }
-
-    /**
-     * @private
-     * 現在表示されている行の最初の行のインデックスを返します
-     * @return {number} 現在表示されている行の最初の行のインデックス。表示行がなければ-1
-     */
-    firstDisplayRowPos() {
-        let cnt = 0;
-        for (let paragraph of this.paragraphs()) {
-            for (let row of paragraph.rows()) {
-                if (row.isDisplay())
-                    return cnt;
-                cnt++;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * @private
-     * 現在表示されている行の最後の行のインデックスを返します
-     * @return {number} 現在表示されている行の最後の行のインデックス。表示行がなければ-1
-     */
-    lastDisplayRowPos() {
-        for (let row = this.lastRow(),cnt = this.countRow() -1; row; row = row.prev(),cnt--)
-            if (row.isDisplay()) return cnt;
-        return -1;
-    }
-
-    /**
-     * @private
-     * カーソル行の文書全体で何行目かを返します
-     * @return {number} カーソル行の文書全体でのインデックス。文書内に段落がない、あるいはカーソル行がなければ-1
-     */
-    cursorRowPos() {
-        const cursorRow = this.cursor().getChar().row();
-        let cnt = 0;
-        for (let paragraph of this.paragraphs()) {
-            for (let row of paragraph.rows()) {
-                if (row.is(cursorRow))
-                    return cnt;
-                cnt++;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * @private
-     * 表示されている行のうち最初の行のインスタンスを返します
-     * @return {Row} 最初の表示行のインスタンス。表示行がなければnull
-     */
-    firstDisplayRow() {
-        for (let paragraph of this.paragraphs())
-            for (let row of paragraph.rows())
-            if (row.isDisplay()) return row;
-        return null;
-    }
-
-    /**
-     * @private
-     * 表示されている行のうち最後の行のインスタンスを返します
-     * @return {Row} 最後の表示行のインスタンス。表示行がなければnull
-     */
-    lastDisplayRow() {
-        for (let row = this.lastRow(); row; row = row.prev())
-            if (row.isDisplay()) return row;
-        return null;
-    }
-
-    /**
-     * 表示を一行分右に動かします
-     * @return {SentenceContainer} 自身のインスタンス
-     */
-    shiftRightDisplay() {
-        const charPos = this.cursorRow().computeDisplayCharPos();
-        const firstDisplay = this.firstDisplayRow();
-        if (!firstDisplay.prev()) return this;
-        firstDisplay.prev().display(true,charPos);
-        this.lastDisplayRow().display(false);
-        return this;
-    }
-
-    /**
-     * 表示を一行分左に動かします
-     * @return {SentenceContainer} 自身のインスタンス
-     */
-    shiftLeftDisplay() {
-        const charPos = this.cursorRow().computeDisplayCharPos();
-        const lastDisplay = this.lastDisplayRow();
-        if (!lastDisplay.next()) return this;
-        lastDisplay.next().display(true,charPos);
-        this.firstDisplayRow().display(false);
-        return this;
-    } //}}}
+        self._displayer.changeDisplay(opt_pos);
+    } // }}}
 
     // undo redo {{{
     /**
@@ -1075,10 +1182,10 @@ class SentenceContainer extends AbstractHierarchy {
                 break;
             case 191:
                 // /
-                this.startSearchMode();
+                this._searchMode.start();
                 break;
             default:
-                this.inputBuffer().tryTransfer(keycode,e.shiftKey);
+                this.inputBuffer().tryTransfer(keycode, e.shiftKey);
                 break;
         }
         return this;
@@ -1094,7 +1201,7 @@ class SentenceContainer extends AbstractHierarchy {
         switch (keycode) {
             case 67:
                 // c
-                this.copySelectText();
+                this._selectRange.copySelectText();
                 break;
             case 18:
             case 70:
@@ -1162,61 +1269,15 @@ class SentenceContainer extends AbstractHierarchy {
      * @param {boolean} isUp 上方向にホイールが動かされたならtrue、そうでなければfalse
      * @return {SentenceContainer} 自身のインスタンス
      */
-    runWheel(e,isUp) {
+    runWheel(e, isUp) {
         const mvRowNum = 4; // 一度に動かす行数
         if (isUp)
             for (let i = 0; i < mvRowNum; i++)
-            this.shiftRightDisplay();
+            this._displayer.shiftRightDisplay();
         else
             for (let i = 0; i < mvRowNum; i++)
-            this.shiftLeftDisplay();
+            this._displayer.shiftLeftDisplay();
         return this;
-    }
-
-    // 語句検索
-    /**
-     * 語句検索inputフォームのkeyupイベントです
-     * @param {Event} e イベントオブジェクト
-     */
-    onKeyupOnSearchMode(e) {
-        let keycode;
-        if (document.all) {
-            // IE
-            keycode = e.keyCode;
-        } else {
-            // IE以外
-            keycode = e.which;
-        }
-        if (keycode === 13) {
-            // enter
-            this.searchInputElem().blur(); // enterを押しただけではフォーカスが外れない
-            return;
-        }
-
-        // 中身が空になればsearchモードを完全に終了する
-        if (this.searchInputElem().value === '') {
-            this.searchInputElem().blur();
-            this.stopSearchMode();
-            return;
-        }
-
-        this.search(this.searchInputElem().value.slice(1));
-    }
-
-    /**
-     * 語句検索inputフォームからフォーカスが外れた際のイベント実行内容です。
-     *     文書コンテナ本体にkeydownイベントを戻します
-     */
-    onFocusoutOnSearchMode() {
-        this.addKeydownEventListener();
-    }
-
-    /**
-     * 語句検索inputフォームにフォーカスがあたった際のイベント実行内容です。
-     *     文書コンテナ本体のkeydownイベントを外します
-     */
-    onFocusinOnSearchMode() {
-        this.removeKeydownEventListener();
     }
 
     // ファイル名input
@@ -1225,34 +1286,19 @@ class SentenceContainer extends AbstractHierarchy {
      */
     addFileTitleEvent() {
         // 与えっぱなし。実行内容もここで定義
-        this.titleElem().addEventListener('focusin',function (e) {
+        this._titleElem.addEventListener('focusin',function (e) {
             if (this.inputBuffer().isDisplay) this.inputBuffer().empty().hide();
             this.removeKeydownEventListener();
         }.bind(this),false);
 
-        this.titleElem().addEventListener('focusout',function (e) {
-            if (this.titleElem().value === '') {
+        this._titleElem.addEventListener('focusout',function (e) {
+            if (this._titleElem.value === '') {
                 this.announce('ファイル名が入力されていません','red');
-                this.titleElem().value = this.titleElem().dataset.filename;
+                this._titleElem.value = this._titleElem.dataset.filename;
             }
             this.addKeydownEventListener();
         }.bind(this),false);
     }
 
-    // selection
-    /**
-     * マウスで選択範囲を変更した際のイベントを与えます。選択範囲最後の文字の次の文字にカーソルを当てます
-     */
-    addSelectEvent() {
-        this.elem().addEventListener('mouseup',function (e) {
-            const selChars = this.selectChars();
-            // 選択範囲の直後にカーソルを当てる
-            if (selChars.length > 0) {
-                const lastCharOnSelect = selChars[selChars.length -1];
-                const newCursor = lastCharOnSelect.hasNextSibling() ? lastCharOnSelect.next() : lastCharOnSelect;
-                newCursor.addCursor().setPosMemory();
-            }
-        }.bind(this),false);
-    }
     //}}}
 }

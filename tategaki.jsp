@@ -173,11 +173,11 @@
                                                     <li> &lt;CTL-H&gt;&nbsp;カーソル移動[Left]</li>
                                                     <li> &lt;CTL-D&gt;&nbsp;カーソルの前にある文字を１文字削除[BackSpace]</li>
                                                     <li> &lt;CTL-S&gt;&nbsp;ファイルを上書き保存</li>
-                                                    <li> &lt;CTL-,&gt;&nbsp;同じディレクトリ内の次のファイルを開く</li>
-                                                    <li> &lt;CTL-.&gt;&nbsp;同じディレクトリ内の前のファイルを開く</li>
+                                                    <li> &lt;CTL-,&gt;&nbsp;次の検索語句に進む</li>
+                                                    <li> &lt;CTL-.&gt;&nbsp;前の検索語句に進む</li>
                                                     <li> &lt;CTL-F&gt;&nbsp;「ファイルを開く」ダイアログを開く</li>
-                                                    <li> &lt;CTL-I&gt;&nbsp;次の検索語句に進む</li>
-                                                    <li> &lt;CTL-O&gt;&nbsp;前の検索語句に進む</li>
+                                                    <li> &lt;CTL-I&gt;&nbsp;次のファイルを開く</li>
+                                                    <li> &lt;CTL-O&gt;&nbsp;同じディレクトリ内の前のファイルを開く</li>
                                                     <li> &lt;/&gt;&nbsp;語句検索を開始する</li>
                                                     <li> &lt;CTL-C&gt;&nbsp;選択範囲をコピー</li>
                                                     <li> &lt;CTL-V&gt;&nbsp;ペースト</li>

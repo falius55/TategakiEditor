@@ -269,11 +269,11 @@ class Char extends AbstractHierarchy {//{{{
      */
     color(opt_color) {
         if (opt_color) {
-            this.addColor(opt_color);
+            this._addColor(opt_color);
             return this;
         }
         if (opt_color === false) {
-            this.removeColor();
+            this._removeColor();
             return this;
         }
         if (opt_color === undefined) {
@@ -319,12 +319,11 @@ class Char extends AbstractHierarchy {//{{{
     }
 
     /**
-     * @private
      * 文字色を設定します
      * @param {string} color 設定する文字色
      * @return {Char} 自身のインスタンス
      */
-    addColor(color) {
+    _addColor(color) {
         // 同一種のクラスをすでに持っていたら外す
         this.removeColor();
         if (color === 'decolation-color-black') return; // ブラックなら外して終わり
@@ -333,11 +332,10 @@ class Char extends AbstractHierarchy {//{{{
     }
 
     /**
-     * @private
      * 文字色を解除します
      * @return {Char} 自身のインスタンス
      */
-    removeColor() {
+    _removeColor() {
         const regexp = new RegExp('decolation-color-\\S+');
         const rmClass = this.className().match(regexp);
         if (rmClass) { this.removeClass(rmClass[0]); }
