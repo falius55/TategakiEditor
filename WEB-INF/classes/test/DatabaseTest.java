@@ -22,11 +22,19 @@ import java.util.EnumMap;
 import java.sql.SQLException;
 
 public class DatabaseTest {
-	private static final String DATABASE_NAME = "tategaki_editor";
+	private static final String DATABASE_NAME = "test";
 	private static final String USER = "sampleuser";
 	private static final String PASSWORD = "digk473";
 
     private SQLDatabase mDB = null;
+
+    @Test(expected = IllegalArgumentException.class)
+    public void failedDB() throws SQLException {
+        SQLDatabase db = new PreparedDatabase(DATABASE_NAME, USER, PASSWORD);
+        // FailedColumnにはstaticなtableNameメソッドを定義していないためIllegalArgumentException
+        db.create(FailedColumn.class);
+        db.close();
+    }
 
     private void setupDB() throws SQLException {
         mDB = new PreparedDatabase(DATABASE_NAME, USER, PASSWORD);
@@ -72,39 +80,39 @@ public class DatabaseTest {
     private void checkSelectAll() throws SQLException {
         ResultSet rs = mDB.selectAll(TestColumn.class);
         assertTrue(rs.next());
-        assertThat(rs.getString(TestColumn.NAME.columnName()), is("name1"));
-        assertThat(rs.getString(TestColumn.PASSWORD.columnName()), is("pass"));
-        assertThat(rs.getInt(TestColumn.SCORE.columnName()), is(80));
-        assertThat(rs.getString(TestColumn.SEX.columnName()), is("male"));
-        assertThat(rs.getString(TestColumn.SAVED.columnName()), is("2017-02-21 17:07:42.0"));
+        assertThat(rs.getString(TestColumn.NAME.toString()), is("name1"));
+        assertThat(rs.getString(TestColumn.PASSWORD.toString()), is("pass"));
+        assertThat(rs.getInt(TestColumn.SCORE.toString()), is(80));
+        assertThat(rs.getString(TestColumn.SEX.toString()), is("male"));
+        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2017-02-21 17:07:42.0"));
 
         assertTrue(rs.next());
-        assertThat(rs.getString(TestColumn.NAME.columnName()), is("name2"));
-        assertThat(rs.getString(TestColumn.PASSWORD.columnName()), is("pass2"));
-        assertThat(rs.getInt(TestColumn.SCORE.columnName()), is(45));
-        assertThat(rs.getString(TestColumn.SEX.columnName()), is("female"));
-        assertThat(rs.getString(TestColumn.SAVED.columnName()), is("2014-12-01 14:16:02.0"));
+        assertThat(rs.getString(TestColumn.NAME.toString()), is("name2"));
+        assertThat(rs.getString(TestColumn.PASSWORD.toString()), is("pass2"));
+        assertThat(rs.getInt(TestColumn.SCORE.toString()), is(45));
+        assertThat(rs.getString(TestColumn.SEX.toString()), is("female"));
+        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2014-12-01 14:16:02.0"));
 
         rs = mDB.selectAllColumns(TestColumn.class, TestColumn.ID, 1);
         assertTrue(rs.next());
-        assertThat(rs.getString(TestColumn.NAME.columnName()), is("name1"));
-        assertThat(rs.getInt(TestColumn.SCORE.columnName()), is(80));
+        assertThat(rs.getString(TestColumn.NAME.toString()), is("name1"));
+        assertThat(rs.getInt(TestColumn.SCORE.toString()), is(80));
     }
 
     private void updateDB() throws SQLException {
         Map<TestColumn, Object> values = new EnumMap<>(TestColumn.class);
         values.put(TestColumn.PASSWORD, "changed");
         values.put(TestColumn.SCORE, 62);
-        int result = mDB.update(TestColumn.class, values, TestColumn.NAME.columnName() + " = ?", "name2");
+        int result = mDB.update(TestColumn.class, values, TestColumn.NAME.toString() + " = ?", "name2");
         assertThat(result, is(1));
 
-        ResultSet rs = mDB.selectAllColumns(TestColumn.class, TestColumn.NAME.columnName() + "=?", "name2");
+        ResultSet rs = mDB.selectAllColumns(TestColumn.class, TestColumn.NAME.toString() + "=?", "name2");
         assertTrue(rs.next());
-        assertThat(rs.getString(TestColumn.NAME.columnName()), is("name2"));
-        assertThat(rs.getString(TestColumn.PASSWORD.columnName()), is("changed"));
-        assertThat(rs.getInt(TestColumn.SCORE.columnName()), is(62));
-        assertThat(rs.getString(TestColumn.SEX.columnName()), is("female"));
-        assertThat(rs.getString(TestColumn.SAVED.columnName()), is("2014-12-01 14:16:02.0"));
+        assertThat(rs.getString(TestColumn.NAME.toString()), is("name2"));
+        assertThat(rs.getString(TestColumn.PASSWORD.toString()), is("changed"));
+        assertThat(rs.getInt(TestColumn.SCORE.toString()), is(62));
+        assertThat(rs.getString(TestColumn.SEX.toString()), is("female"));
+        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2014-12-01 14:16:02.0"));
     }
 
     private void checkSumMaxMinDB() throws SQLException {
@@ -119,12 +127,12 @@ public class DatabaseTest {
     }
 
     private void deleteRecord() throws SQLException {
-        int result = mDB.delete(TestColumn.class, TestColumn.NAME.columnName() + "=?", "name2");
+        int result = mDB.delete(TestColumn.class, TestColumn.NAME.toString() + "=?", "name2");
         assertThat(result, is(1));
 
         ResultSet rs = mDB.selectAll(TestColumn.class);
         assertTrue(rs.next());
-        assertThat(rs.getString(TestColumn.NAME.columnName()), is("name1"));
+        assertThat(rs.getString(TestColumn.NAME.toString()), is("name1"));
         assertFalse(rs.next());
 
         assertThat(mDB.count(TestColumn.class), is(1));
@@ -231,7 +239,7 @@ public class DatabaseTest {
     public void updateSqlStringByExpression() {
         String table = "test_table";
         Map<DatabaseColumn, Object> values = new LinkedHashMap<>();
-        values.put(TestColumn.SCORE, new SQLs.Expression(SQLs.createSelectFuncSql("max", table, TestColumn.SCORE.columnName(), null)));
+        values.put(TestColumn.SCORE, new SQLs.Expression(SQLs.createSelectFuncSql("max", table, TestColumn.SCORE.toString(), null)));
         String whereClause = "id == ?";
 
         String expected = "UPDATE test_table SET score = (SELECT max(score) FROM test_table) WHERE id == ?";
