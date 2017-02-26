@@ -4,7 +4,8 @@
 /**
  * ユーザーのファイル情報のひとつを扱うクラス
  */
-class File extends AbstractHierarchy {//{{{
+class File extends AbstractHierarchy {
+    //{{{
     // constructor {{{
     /**
      * @param {number} id ファイルのID
@@ -26,9 +27,11 @@ class File extends AbstractHierarchy {//{{{
      * @return {FileList} 自身の属するファイルリストのインスタンス。見つからなければnull
      */
     fileList() {
-        for (let parentDir = this.parent(); parentDir ;parentDir = parentDir.parent() )
-            if (parentDir.isRoot())
-            return parentDir;
+        for (let parentDir = this.parent(); parentDir ;parentDir = parentDir.parent() ) {
+            if (parentDir.isRoot()) {
+                return parentDir;
+            }
+        }
         return null;
     }
 
@@ -49,10 +52,10 @@ class File extends AbstractHierarchy {//{{{
     nextFile(opt_file) {
         if (opt_file === undefined) {
             return this._nextFile;
-        } else {
-            this._nextFile = opt_file;
-            return this;
         }
+
+        this._nextFile = opt_file;
+        return this;
     }
 
     /**
@@ -64,10 +67,10 @@ class File extends AbstractHierarchy {//{{{
     prevFile(opt_file) {
         if (opt_file === undefined) {
             return this._prevFile;
-        } else {
-            this._prevFile = opt_file;
-            return this;
         }
+
+        this._prevFile = opt_file;
+        return this;
     }//}}}
 
     // --判定 {{{
@@ -226,7 +229,7 @@ class File extends AbstractHierarchy {//{{{
      * @return {File} 自身のインスタンス
      */
     addClickEventListener() {
-        this._clickArg = this.onClick.bind(this);
+        this._clickArg = this._onClick.bind(this);
         this.link().addEventListener('click',this._clickArg);
         return this;
     }
@@ -236,7 +239,9 @@ class File extends AbstractHierarchy {//{{{
      * @return {File} 自身のインスタンス
      */
     removeClickEventListener() {
-        if (!this._clickArg) return this;
+        if (!this._clickArg) {
+            return this;
+        }
         this.link().removeEventListener('click',this._clickArg);
         this._clickArg = null;
         return this;
@@ -256,7 +261,8 @@ class File extends AbstractHierarchy {//{{{
 /**
  * ユーザーのディレクトリ情報のひとつを扱うクラス
  */
-class Directory extends AbstractHierarchy {//{{{
+class Directory extends AbstractHierarchy {
+    //{{{
     // constructor {{{
     /**
      * @param {number} dirId ディレクトリID
@@ -302,11 +308,15 @@ class Directory extends AbstractHierarchy {//{{{
         this._id = parseInt(dirId);
         this._name = data.directoryname;
         for (let id in data) {
-            if (id === 'directoryname') continue;
-            if (typeof data[id] === 'string')
+            if (id === 'directoryname') {
+                continue;
+            }
+            if (typeof data[id] === 'string') {
                 this.append(new File(id,data[id]));
-            if (typeof data[id] === 'object')
+            }
+            if (typeof data[id] === 'object') {
                 this.append(new Directory(id,data[id]));
+            }
         }
     }//}}}
 
@@ -332,9 +342,11 @@ class Directory extends AbstractHierarchy {//{{{
      * @return {FileList} 自身の属するファイルリストのインスタンス。見つからなければnull
      */
     fileList() {
-        for (let parentDir = this.parent(); parentDir; parentDir = parentDir.parent())
-            if (parentDir.isRoot())
-            return parentDir;
+        for (let parentDir = this.parent(); parentDir; parentDir = parentDir.parent()) {
+            if (parentDir.isRoot()) {
+                return parentDir;
+            }
+        }
         return null;
     }
 
@@ -343,9 +355,12 @@ class Directory extends AbstractHierarchy {//{{{
      * @return {File} 自分の次のファイル(ディレクトリ、内部のファイルを除く)。自分の後方にファイルがなければnull
      */
     findNextFile() {
-        for (let fileList = this.fileList(), nextFile = fileList.findNextFile(this); nextFile; nextFile = fileList.findNextFile(nextFile))
-            if (!this.contains(nextFile))
-            return nextFile;
+        for (let fileList = this.fileList(), nextFile = fileList.findNextFile(this);
+            nextFile; nextFile = fileList.findNextFile(nextFile)) {
+                if (!this.contains(nextFile)) {
+                    return nextFile;
+                }
+            }
         return null;
     }//}}}
 
@@ -380,9 +395,12 @@ class Directory extends AbstractHierarchy {//{{{
      * @return {boolean} 引数がこのディレクトリの中にあればtrue、そうでなければfalse
      */
     contains(fileOrDirectory) {
-        for (let fileList = this.fileList(), parents = fileOrDirectory.parent(); parents !== fileList; parents = parents.parent())
-            if (parents === this)
-            return true;
+        for (let fileList = this.fileList(), parents = fileOrDirectory.parent();
+            parents !== fileList; parents = parents.parent()) {
+                if (parents === this) {
+                    return true;
+                }
+            }
         return false;
     }//}}}
 
@@ -447,7 +465,7 @@ class Directory extends AbstractHierarchy {//{{{
         Util.post('/tategaki/Delete',{
             directory_id: this.id(),
             option: bl
-        },function (data) {
+        }, function (data) {
             const fileList = this.fileList();
             fileList.read();
             if (data.result === 'false') {
@@ -475,7 +493,8 @@ class Directory extends AbstractHierarchy {//{{{
 /**
  * ファイルやディレクトリを一覧にするファイルリストを表すクラス
  */
-class FileList extends AbstractHierarchy {//{{{
+class FileList extends AbstractHierarchy {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} sentenceContainer 自身のファイルを展開する文章コンテナのインスタンス
@@ -506,10 +525,11 @@ class FileList extends AbstractHierarchy {//{{{
         this._$modal = $('#file_list_modal');
         this._filterInputElem = document.getElementById('file_list_filter');
         this.addEventListenerOnInput();
-        if (opt_data)
+        if (opt_data) {
             this.init(opt_data);
-        else
+        } else {
             this.read();
+        }
     }
 
     /**
@@ -520,11 +540,16 @@ class FileList extends AbstractHierarchy {//{{{
     init(data) {
         this.empty();
         for (let id in data) {
-            if (id === 'directoryname') continue;
-            if (typeof data[id] === 'string')
+            if (id === 'directoryname') {
+                continue;
+            }
+
+            if (typeof data[id] === 'string') {
                 this.append(new File(id,data[id]));
-            if (typeof data[id] === 'object')
+            }
+            if (typeof data[id] === 'object') {
                 this.append(new Directory(id,data[id]));
+            }
         }
         this.chainFile();
         return this;
@@ -553,7 +578,9 @@ class FileList extends AbstractHierarchy {//{{{
      */
     lastFile() {
         for (let file = this.firstFile(); file; file = file.nextFile()) {
-            if (file.isLastFile()) return file;
+            if (file.isLastFile()) {
+                return file;
+            }
         }
         return null;
     }
@@ -563,9 +590,11 @@ class FileList extends AbstractHierarchy {//{{{
      * @return {File} 現在開かれているファイルのインスタンス
      */
     currentFile() {
-        for (let file = this.firstFile(); file; file = file.nextFile())
-            if (file.isOpen())
-            return file;
+        for (let file = this.firstFile(); file; file = file.nextFile()) {
+            if (file.isOpen()) {
+                return file;
+            }
+        }
         return null;
     }
 
@@ -594,9 +623,15 @@ class FileList extends AbstractHierarchy {//{{{
     findFile(idOrName) {
         const ret = [];
         this.each(file => {
-            if (file.isDirectory()) return;
-            if (file.id() === idOrName || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(file.name())))
-                ret.push(file);
+            if (file.isDirectory()) {
+                return;
+            }
+
+            if (file.id() === idOrName ||
+                (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i')
+                    .test(file.name()))) {
+                        ret.push(file);
+                    }
         });
         return ret;
     }
@@ -610,9 +645,15 @@ class FileList extends AbstractHierarchy {//{{{
     findDirectory(idOrName) {
         const ret = [];
         this.each(dir => {
-            if (dir.isFile()) return;
-            if (dir.id() === idOrName || (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i').test(dir.name())))
-                ret.push(dir);
+            if (dir.isFile()) {
+                return;
+            }
+
+            if (dir.id() === idOrName ||
+                (typeof idOrName === 'string' && new RegExp('^'+ idOrName +'$','i')
+                    .test(dir.name()))) {
+                        ret.push(dir);
+                    }
         });
         return ret;
     }//}}}
@@ -660,14 +701,19 @@ class FileList extends AbstractHierarchy {//{{{
 
     // --参照操作 {{{
     /**
-     * 内部のFile同士をポインタでつなぎます
+     * 内部のFile同士を参照でつなぎます
      * @return {FileList} 自身のインスタンス
      */
     chainFile() {
         let prev;
         this.each(file => {
-            if (!file.isFile()) return;
-            if (prev) prev.nextFile(file);
+            if (!file.isFile()) {
+                return;
+            }
+
+            if (prev) {
+                prev.nextFile(file);
+            }
             file.prevFile(prev);
             prev = file;
         });
@@ -680,17 +726,22 @@ class FileList extends AbstractHierarchy {//{{{
      * @return {File} 見つかったファイルのインスタンス。引数の次のファイルが見つからなければnull
      */
     findNextFile(file) {
-        // チェックする順番は、ファイルならその次のファイルをチェックし、ディレクトリなら下に潜って最初に見つけたファイルをチェックする
-        // -- 全要素を順に探索していくための道のり --
-        // 引数がファイルなら。引数の次を確認する
-        // 引数がディレクトリなら、その最初の子を確認する(FileListはディレクトリ扱い)
-        // 空ディレクトリ(firstChild()===null)なら、引数の次を確認する
-        // 引数の次が同じ階層になければ(ディレクトリ内の最後と判断する)、親ディレクトリの次を確認する(それでもなければ、さらに上の親ディレクトリの次、と繰り返す)
-        // 引数の次の要素が見つからず親をたどっていく過程でルートディレクトリ(FileList)に辿り着いた場合は、探索が最後に達したとしてnullを返す
-        // -- ここまでで確認要素を取得 --
-        // 取得した確認要素がディレクトリなら、さらに潜って探索を次に進めるため再帰する
-        // 取得した確認要素がファイルなら、その要素が引数の次のファイルなので返す
-        if (file.isEmpty() && file.isRoot()) return null;
+        /*
+         *
+         *  チェックする順番は、ファイルならその次のファイルをチェックし、ディレクトリなら下に潜って最初に見つけたファイルをチェックする
+         *  -- 全要素を順に探索していくための道のり --
+         *  引数がファイルなら。引数の次を確認する
+         *  引数がディレクトリなら、その最初の子を確認する(FileListはディレクトリ扱い)
+         *  空ディレクトリ(firstChild()===null)なら、引数の次を確認する
+         *  引数の次が同じ階層になければ(ディレクトリ内の最後と判断する)、親ディレクトリの次を確認する(それでもなければ、さらに上の親ディレクトリの次、と繰り返す)
+         *  引数の次の要素が見つからず親をたどっていく過程でルートディレクトリ(FileList)に辿り着いた場合は、探索が最後に達したとしてnullを返す
+         *  -- ここまでで確認要素を取得 --
+         *  取得した確認要素がディレクトリなら、さらに潜って探索を次に進めるため再帰する
+         *  取得した確認要素がファイルなら、その要素が引数の次のファイルなので返す
+         */
+        if (file.isEmpty() && file.isRoot()) {
+            return null;
+        }
         let check;
         if (file.isFile()) {
             check = file.next();
@@ -699,8 +750,12 @@ class FileList extends AbstractHierarchy {//{{{
             check = file.firstChild() || file.next();
         }
         if (!check) {
-            for (let parentDir = file.parent(); !(check = parentDir.next()); parentDir = parentDir.parent())
-                if (parentDir.isRoot()) return null;
+            for (let parentDir = file.parent();
+                !(check = parentDir.next()); parentDir = parentDir.parent()) {
+                    if (parentDir.isRoot()) {
+                        return null;
+                    }
+                }
         }
         if (check.isDirectory()) {
             return this.findNextFile(check);
@@ -717,17 +772,28 @@ class FileList extends AbstractHierarchy {//{{{
      * @return {FileList} 自身のインスタンス
      */
     each(func) {
-        if (this.firstChild() === null) return this; // ファイルやディレクトリがひとつもない場合
+        if (this.firstChild() === null) { // ファイルやディレクトリがひとつもない場合
+            return this;
+        }
+
         // fileに子があれば子に進み、なければ次に進む(子のあるディレクトリなら最初の子、fileか空ディレクトリなら次に進む)
         // 次がなければ親の次に進む。それでもなければさらに親の次、と繰り返す
         // その過程でルートディレクトリが見つかれば探索終了
-        for (let file = this.firstChild(), temp = this;; temp = file, file = file.hasChild() ? file.firstChild() : file.next()) {
-            if (!file) {
-                for (let parentDir = temp.parent(); !(file = parentDir.next()); parentDir = parentDir.parent())
-                    if (parentDir.isRoot()) return this;
+        for (let file = this.firstChild(), temp = this;; temp = file,
+            file = file.hasChild() ? file.firstChild() : file.next()) {
+                if (file) {
+                    func(file);
+                    continue;
+                }
+
+                for (let parentDir = temp.parent();
+                    !(file = parentDir.next()); parentDir = parentDir.parent()) {
+                        if (parentDir.isRoot()) {
+                            return this;
+                        }
+                    }
+                func(file);
             }
-            func(file);
-        }
         return this;
     }//}}}
 
@@ -796,8 +862,9 @@ class FileList extends AbstractHierarchy {//{{{
         // 存在しないエレメントを削除しようとすることになりエラーが起こるため、オーバーライドする
         const children = this.elem().children;
         let child;
-        while ((child = children[0]))
+        while ((child = children[0])) {
             this.elem().removeChild(child);
+        }
         return this;
     }
 
@@ -822,8 +889,9 @@ class FileList extends AbstractHierarchy {//{{{
         this.emptyElem();
         const regexp = new RegExp('^'+ str +'.*','i');
         this.each(file => {
-            if (regexp.test(file.name()))
+            if (regexp.test(file.name())) {
                 this.elem().appendChild(file.elem());
+            }
         });
         if (this.elem().children.length === 0) {
             const li = document.createElement('li');
@@ -843,8 +911,8 @@ class FileList extends AbstractHierarchy {//{{{
     read() {
         Util.get('/tategaki/FileList',
             function (json) {
-            this.init(json);
-        }.bind(this));
+                this.init(json);
+            }.bind(this));
         return this;
     }
 
@@ -898,11 +966,15 @@ class FileList extends AbstractHierarchy {//{{{
         }
 
         if (fileLength > 0) {
-            if (window.confirm('同一名のファイルが複数存在します。\nすべてのファイルを削除しますか。\nこのうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。'))
-                for (let i = 0,file; (file = files[i]); i++)
-                file.delete();
-            else
-                console.log('[複数ファイル]削除できませんでした。:' + filename);
+            if (window.confirm('同一名のファイルが複数存在します。\n' +
+                'すべてのファイルを削除しますか。\n' +
+                    'このうちのどれかのファイルを削除する場合はキャンセルし、個別に削除してください。')) {
+                        for (let i = 0,file; (file = files[i]); i++) {
+                            file.delete();
+                        }
+                    } else {
+                        console.log('[複数ファイル]削除できませんでした。:' + filename);
+                    }
         }
         return this;
     }
@@ -915,7 +987,10 @@ class FileList extends AbstractHierarchy {//{{{
      * @see ../WEB-INF/classes/doc/FileListServlet.html
      */
     mkdir(dirname, opt_parentID) {
-        if (!dirname) return this;
+        if (!dirname) {
+            return this;
+        }
+
         Util.post('/tategaki/FileList',{
             name: dirname,
             new_parent_id: opt_parentID || -1,
@@ -940,7 +1015,10 @@ class FileList extends AbstractHierarchy {//{{{
      */
     deleteDirectory(dirname, isForce) {
         const dirs = this.findDirectory(dirname);
-        if (dirs.length === 0) return this;
+        if (dirs.length === 0) {
+            return this;
+        }
+
         dirs[0].delete(isForce);
         return this;
     }
@@ -955,7 +1033,10 @@ class FileList extends AbstractHierarchy {//{{{
     moveFile(filename, dirname) {
         const files = this.findFile(filename);
         const dirs = this.findDirectory(dirname);
-        if (files.length === 0 || dirs.length === 0) return this;
+        if (files.length === 0 || dirs.length === 0) {
+            return this;
+        }
+
         files[0].move(dirs[0]);
         return this;
     }//}}}
@@ -987,6 +1068,7 @@ class FileList extends AbstractHierarchy {//{{{
             // IE以外
             keycode = e.which;
         }
+
         if (keycode === 123) { return; } // F12のみブラウザショートカットキー
         if (keycode === 13) {
             // enter

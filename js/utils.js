@@ -3,7 +3,8 @@ console.log('utils.js');
 // 	要素の再利用のため、要素作成のみクロージャで行う
 
 
-const Util = {//{{{
+const Util = {  // jshint ignore:line
+    //{{{
     /**
      * baseArrayをcnt個ずつの配列に分割する
      */
@@ -102,24 +103,25 @@ ElemCreator.createCharElement = (function () {//{{{
         }
 
         // 文字の種類に応じて付与するクラス
-        if (/[。、,.,]/.test(char))
+        if (/[。、,.,]/.test(char)) {
             eChar.classList.add('vertical-dot');
-        else if (/[「『]/.test(char))
+        } else if (/[「『]/.test(char)) {
             eChar.classList.add('vertical-before-kagi-bracket');
-        else if (/[」』]/.test(char))
+        } else if (/[」』]/.test(char)) {
             eChar.classList.add('vertical-after-kagi-bracket');
-        else if (/[（\[<\{【\(［〈]/.test(char))
+        } else if (/[（\[<\{【\(［〈]/.test(char)) {
             eChar.classList.add('vertical-before-bracket');
-        else if (/[\)\]>\}】）］〉]/.test(char))
+        } else if (/[\)\]>\}】）］〉]/.test(char)) {
             eChar.classList.add('vertical-after-bracket');
-        else if (/[-ー―〜]/.test(char))
+        } else if (/[-ー―〜]/.test(char)) {
             eChar.classList.add('character-line');
-        else if (/[a-z]/.test(char))
+        } else if (/[a-z]/.test(char)) {
             eChar.classList.add('alphabet');
-        else if (/[１-９]/.test(char))
+        } else if (/[１-９]/.test(char)) {
             eChar.classList.add('number');
-        else if (/[っゃゅょぁぃぅぇぉァィゥェォッャュョ]/.test(char))
+        } else if (/[っゃゅょぁぃぅぇぉァィゥェォッャュョ]/.test(char)) {
             eChar.classList.add('yoin');
+        }
 
         return eChar;
     };
@@ -275,7 +277,8 @@ ElemCreator.createDirectoryElement = (function () {//{{{
     eDirLinkTemplete.classList.add('directory');
     eDirLinkTemplete.dataset.type = 'directory';
     eDirLinkTemplete.dataset.toggle = 'collapse';
-    eDirLinkTemplete.innerHTML = '<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'; // フォルダアイコン
+    eDirLinkTemplete.innerHTML =
+        '<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>'; // フォルダアイコン
 
     const eCollapseTemplate = document.createElement('div');
     const eInnerUlTemplate = document.createElement('ul');
@@ -313,31 +316,40 @@ ElemCreator.createDirectoryElement = (function () {//{{{
 /**
  * キーコードから日本語文字列を作成します
  */
-const KeyTable = {//{{{
+const KeyTable = {  // jshint ignore:line
+    //{{{
     makeString : function (buffer_string, keycode) {//{{{
         // bufferに文字なし キーコードの文字をそのまま返す
-        if (buffer_string.length === 0)
+        if (buffer_string.length === 0) {
             return this.keyTable[keycode];
-        if(buffer_string.length === 1)
+        }
+        if(buffer_string.length === 1) {
             return this.makeStringFromOnceBufferString(buffer_string, keycode);
+        }
         return this.makeStringFromMultipleBufferString(buffer_string, keycode);
     },
 
     makeStringFromOnceBufferString : function (buffer_string, keycode) {
         // bufferの文字がアルファベットでなければbufferの文字とキーコード文字を連結した文字列を返す
-        if (!this.convertable.includes(buffer_string))
+        if (!this.convertable.includes(buffer_string)) {
             return buffer_string + this.keyTable[keycode];
+        }
+
         // bufferの文字が変換可能アルファベット
         const s = this.keyTable[buffer_string]; // keytableからオブジェクト取得
         // オブジェクトにキーコードを与えて、変換文字取得
         const str =  s[keycode];
-        if (str)
+        if (str) {
             return str; // 変換できた場合 buffer文字をkeytableに与えて返ってきたオブジェクトにkeycodeを与えて得た文字を返す
+        }
+
         // 変換文字が取得できないということは、アルファベット二文字が変換可能な組み合わせではないということ
         const typestr = this.keyTable[keycode];
         // 例えばzzと打つなど同じアルファベットの連続の場合、'っｚ'と返す
-        if (buffer_string === typestr)
+        if (buffer_string === typestr) {
             return 'っ' + typestr;
+        }
+
         // 異なるアルファベットの場合、そのまま連結
         return buffer_string + typestr;
     },
@@ -350,15 +362,19 @@ const KeyTable = {//{{{
         // bufferの後ろから二文字目がアルファベット
         if (this.convertable.includes(first)) {
             // 最後の文字がアルファベットでないならそのまま連結 'sた + r'などの場合
-            if (!this.convertable.includes(second))
+            if (!this.convertable.includes(second)) {
                 return buffer_string + this.keyTable[keycode];
+            }
+
             // bufferの最後に変換可能アルファベット二文字
             const o = this.keyTable[first][second]; // 第一添字がアルファベットなら必ず第二添字のためのオブジェクトは返ってくる
             if (o) {
                 const str = o[keycode];
                 // 三文字で１文字が完成した場合
                 // sy + a →  'しゃ' など
-                if (str) return noEncode + str;
+                if (str) {
+                    return noEncode + str;
+                }
             }
         }
 
@@ -368,7 +384,8 @@ const KeyTable = {//{{{
         return noEncode + first + this.makeStringFromOnceBufferString(second, keycode);
     },//}}}
 
-    convertable : ['k','s','t','n','h','m','y','r','w','g','z','d','b','p','j','f','l','x','c','v','q'],
+    convertable :
+        ['k','s','t','n','h','m','y','r','w','g','z','d','b','p','j','f','l','x','c','v','q'],
 
     katakana : {//{{{
         'あ' : 'ア',

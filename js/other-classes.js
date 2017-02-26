@@ -1,5 +1,5 @@
 'use strict';
-/* global ColorDoMemory, BoldDoMemory, ItalicDoMemory, ElemCreator, PrintDoMemory, Char, DeleteDoMemory, LineBreakDoMemory, getSelection */
+/* global ColorDoMemory, BoldDoMemory, ItalicDoMemory, ElemCreator, PrintDoMemory, Char, DeleteDoMemory, LineBreakDoMemory, getSelection */  // jshint ignore:line
 /*
  *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
  */
@@ -10,7 +10,8 @@ console.log('dom-operation-classes.js');
  * メニューバーを担当するクラス
  *     メニューバー上のボタンによるイベントを一括して請け負います
  */
-class Menu {//{{{
+class Menu {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} sentenceContainer 対応する文章コンテナ
@@ -54,15 +55,17 @@ class Menu {//{{{
     /**
      * フォントサイズinputフォームに値を設定する、あるいは引数省略で現在のinputフォームの値を返します
      * @param {number string} [opt_newSize] inputに設定する値(数値か、文字列の'auto')
-     * @return {Menu number string} 自身のインスタンス(引数を渡した場合)、あるいは現在のinputフォームの値(引数を省略した場合。'auto'の場合は文字列で返す)
+     * @return {Menu number string} 自身のインスタンス(引数を渡した場合)、
+     *     あるいは現在のinputフォームの値(引数を省略した場合。'auto'の場合は文字列で返す)
      */
     fontSizeInput(opt_newSize) {
         if (opt_newSize === undefined) {
-            return this._fontSizeInputElem.value === 'auto' ? 'auto' : parseInt(this._fontSizeInputElem.value);
-        } else {
-            this._fontSizeInputElem.value = opt_newSize;
-            return this;
+            return this._fontSizeInputElem.value === 'auto' ?
+                'auto' : parseInt(this._fontSizeInputElem.value);
         }
+
+        this._fontSizeInputElem.value = opt_newSize;
+        return this;
     }
 
     /**
@@ -113,8 +116,12 @@ class Menu {//{{{
         if(opt_color) {
             const oldColor = eColorButton.className.match(/select-\S+/);
             const newColor = opt_color;
-            if (oldColor) eColorButton.classList.remove(oldColor[0]);
-            if (newColor === 'black') return this;
+            if (oldColor) {
+                eColorButton.classList.remove(oldColor[0]);
+            }
+            if (newColor === 'black') {
+                return this;
+            }
             eColorButton.classList.add('select-'+ newColor);
             return this;
         }
@@ -132,9 +139,12 @@ class Menu {//{{{
      */
     addColor(color, useUndo) {
         const chars = this.sentenceContainer().selectChars(true);
-        if (useUndo) this.sentenceContainer().addDo(new ColorDoMemory(chars, color));
-        for (let char of chars)
+        if (useUndo) {
+            this.sentenceContainer().addDo(new ColorDoMemory(chars, color));
+        }
+        for (let char of chars) {
             char.color(color);
+        }
         this.sentenceContainer().isChanged(true);
         return this;
     }
@@ -149,6 +159,7 @@ class Menu {//{{{
         if (opt_bl === undefined) {
             return eButton.classList.contains('active');
         }
+
         if (opt_bl) {
             eButton.classList.add('active');
         } else {
@@ -165,7 +176,9 @@ class Menu {//{{{
      */
     bold(bl, useUndo) {
         const chars = this.sentenceContainer().selectChars(true);
-        if (useUndo) this.sentenceContainer().addDo(new BoldDoMemory(chars, bl));
+        if (useUndo) {
+            this.sentenceContainer().addDo(new BoldDoMemory(chars, bl));
+        }
         for (let char of chars) {
             char.bold(bl);
         }
@@ -183,6 +196,7 @@ class Menu {//{{{
         if (opt_bl === undefined) {
             return eButton.classList.contains('active');
         }
+
         if (opt_bl) {
             eButton.classList.add('active');
         } else {
@@ -199,7 +213,9 @@ class Menu {//{{{
      */
     italic(bl, useUndo) {
         const chars = this.sentenceContainer().selectChars(true);
-        if (useUndo) this.sentenceContainer().addDo(new ItalicDoMemory(chars, bl));
+        if (useUndo) {
+            this.sentenceContainer().addDo(new ItalicDoMemory(chars, bl));
+        }
         for (let char of chars) {
             char.italic(bl);
         }
@@ -215,13 +231,17 @@ class Menu {//{{{
      */
     fontSize(size, useUndo) {
         const chars = this.sentenceContainer().selectChars(true);
-        if (useUndo) this.sentenceContainer().addDo(chars, size);
+        if (useUndo) {
+            this.sentenceContainer().addDo(chars, size);
+        }
         for (let char of chars) {
             char.fontSize(size);
         }
-        this.sentenceContainer().cordinate().checkKinsoku().changeDisplay().breakPage().printInfo().isChanged(true);
+        this.sentenceContainer()
+            .cordinate().checkKinsoku().changeDisplay().breakPage().printInfo().isChanged(true);
         return this;
     }
+
     // 'center','left','right'
     /**
      * カーソルのある段落のtext-alignを変更します
@@ -245,48 +265,54 @@ class Menu {//{{{
      */
     addEventListeners() {
         // メニューボタン
-        document.getElementById('menu_new').addEventListener('click',function (e) {  this.sentenceContainer().newFile(); }.bind(this),false);
-        document.getElementById('menu_save').addEventListener('click',function (e) { this.sentenceContainer().saveFile(); }.bind(this),false);
-        document.getElementById('menu_delete').addEventListener('click',function (e) { this.sentenceContainer().fileList().currentFile().delete(); }.bind(this),false);
-        document.getElementById('modal_fileopen_link').addEventListener('click',function (e) {
+        document.getElementById('menu_new').addEventListener('click', function (e) {
+            this.sentenceContainer().newFile();
+        }.bind(this), false);
+        document.getElementById('menu_save').addEventListener('click', function (e) {
+            this.sentenceContainer().saveFile();
+        }.bind(this), false);
+        document.getElementById('menu_delete').addEventListener('click', function (e) {
+            this.sentenceContainer().fileList().currentFile().delete();
+        }.bind(this), false);
+        document.getElementById('modal_fileopen_link').addEventListener('click', function (e) {
             const filterInputElem = this.sentenceContainer().fileList().filterInputElem();
             // モーダルが開くのはブートストラップで行われるので、その前処理だけを行う
             filterInputElem.value = '';
             filterInputElem.focus();
             this.sentenceContainer().fileList().resetList();
-        }.bind(this),false);
+        }.bind(this), false);
 
         // モーダル開閉
-        $('div.modal').on('shown.bs.modal',function (e) {
+        $('div.modal').on('shown.bs.modal', function (e) {
             this.sentenceContainer().removeKeydownEventListener();
             if (this.sentenceContainer().inputBuffer().isDisplay()) {
                 this.sentenceContainer().inputBuffer().empty().hide();
             }
         }.bind(this));
-        $('div.modal').on('hidden.bs.modal',function (e) {
+        $('div.modal').on('hidden.bs.modal', function (e) {
             if (this.sentenceContainer().command().isActive()) { return; }
             this.sentenceContainer().addKeydownEventListener();
         }.bind(this));
 
         // パレットボタン
         // 文字色ボタン
-        document.getElementById('color_btn').addEventListener('click',function (e) {
+        document.getElementById('color_btn').addEventListener('click', function (e) {
             this.addColor(this.colorButton(), true);
-        }.bind(this),false);
+        }.bind(this), false);
         // 文字色ドロップダウン
         this.addColorSelectClickEvent();
 
         // bold italic
-        document.getElementById('btn-bold').addEventListener('click',function (e) {
+        document.getElementById('btn-bold').addEventListener('click', function (e) {
             const eBtn = document.getElementById('btn-bold');
             eBtn.classList.toggle('active');
             this.bold(this.boldButton(), true);
-        }.bind(this),false);
-        document.getElementById('btn-italic').addEventListener('click',function (e) {
+        }.bind(this), false);
+        document.getElementById('btn-italic').addEventListener('click', function (e) {
             const eBtn = document.getElementById('btn-italic');
             eBtn.classList.toggle('active');
             this.italic(this.italicButton(), true);
-        }.bind(this),false);
+        }.bind(this), false);
 
         // align
         this.addAlignClickEvent();
@@ -309,7 +335,8 @@ class Menu {//{{{
         const eSelectColors = document.querySelectorAll('#color_dropdown a');
         for (let i = 0, eSelColor; (eSelColor = eSelectColors[i]); i++) {
             const color = eSelColor.dataset.color;
-            eSelColor.addEventListener('click', this._addColorCallback(eSelColor, color).bind(this), false);
+            eSelColor.addEventListener('click',
+                this._addColorCallback(eSelColor, color).bind(this), false);
         }
         return this;
     }
@@ -347,17 +374,13 @@ class Menu {//{{{
 
     /**
      * フォントサイズのドロップダウンをクリックするとフォントサイズのinputの数値が変更され、選択範囲の文字のフォントサイズが変更されるイベントを付加します
-     *     querySelectorAll()でドロップダウンの各要素を取得してループでイベントを付加しているため、htmlとcssのみ変更することで扱うフォントサイズを増やすことが可能になります
+     *     querySelectorAll()でドロップダウンの各要素を取得してループでイベントを付加しているため、
+     *     htmlとcssのみ変更することで扱うフォントサイズを増やすことが可能になります
      * @return {Menu} 自身のインスタンス
      */
     addFontSizeEvnet() {
         const eFontSizeDropdowns = document.querySelectorAll('#fontsize_dropdown a');
         for (let i = 0,eFontSize; (eFontSize = eFontSizeDropdowns[i]); i++) {
-            // eFontSize.addEventListener('click',function (e) {
-            // 	const size = parseInt(e.target.dataset.size) || 'auto';
-            // 	this.fontSizeInput(size);
-            // 	this.fontSize(size);
-            // }.bind(this),false);
             eFontSize.addEventListener('click', this._addFontCallback().bind(this), false);
         }
         return this;
@@ -376,27 +399,32 @@ class Menu {//{{{
      * @return {Menu} 自身のインスタンス
      */
     addConfigueEvent() {
-        document.getElementById('btn_conf_save').addEventListener('click',function (e) {
+        document.getElementById('btn_conf_save').addEventListener('click', function (e) {
             const strLen = parseInt(this.confStrLenElem().value || 18);
             const rowLen = parseInt(this.confRowLenElem().value || 40);
             this.sentenceContainer().strLenOnRow(strLen).rowLenOnPage(rowLen);
             $('#configue_modal').modal('hide');
         }.bind(this),false);
-        document.getElementById('btn_conf_reset').addEventListener('click',function (e) { // html上でtype="reset"にすると、元に戻すというよりinputを空にしてしまう
+
+        // html上でtype="reset"にすると、元に戻すというよりinputを空にしてしまう
+        document.getElementById('btn_conf_reset').addEventListener('click', function (e) {
             this.confStrLenElem().value = this.sentenceContainer().strLenOnRow();
             this.confRowLenElem().value = this.sentenceContainer().rowLenOnPage();
         }.bind(this),false);
+
         // inputからフォーカスから外れた際に、不正な文字が入力されていたら元に戻す
-        this.confStrLenElem().addEventListener('focusout',function (e) {
+        this.confStrLenElem().addEventListener('focusout', function (e) {
             if (!/^[0-9]+$/.test(this.confStrLenElem().value)) {
                 this.confStrLenElem().value = this.sentenceContainer().strLenOnRow();
             }
         }.bind(this),false);
-        this.confRowLenElem().addEventListener('focusout',function (e) {
+
+        this.confRowLenElem().addEventListener('focusout', function (e) {
             if (!/^[0-9]+$/.test(this.confRowLenElem().value)) {
                 this.confRowLenElem().value = this.sentenceContainer().rowLenOnPage();
             }
         }.bind(this),false);
+
         return this;
     }//}}}
 } //}}}
@@ -406,7 +434,8 @@ class Menu {//{{{
  * コマンドラインを表すクラス
  *     コマンド操作を一括して請け負います
  */
-class CommandLine {//{{{
+class CommandLine {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} sentenceContainer 対応する文章コンテナ
@@ -487,7 +516,8 @@ class CommandLine {//{{{
      */
     displayFileModal() {
         this.fileList().$modal().addClass('command-modal').modal();
-        $('.modal-backdrop.fade.in').addClass('none_modal-backdrop'); // モーダルウィンドウ表示時の半透明背景を見えなくする
+        // モーダルウィンドウ表示時の半透明背景を見えなくする
+        $('.modal-backdrop.fade.in').addClass('none_modal-backdrop');
         return this;
     }
 
@@ -555,8 +585,12 @@ class CommandLine {//{{{
      * @return {CommandLine} 自身のインスタンス
      */
     addKeyupEventListener() {
-        if (this._keyupArg) return this;
-        this._keyupArg = this.onKeyup.bind(this); // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+        if (this._keyupArg) {
+            return this;
+        }
+
+        // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+        this._keyupArg = this.onKeyup.bind(this);
         document.addEventListener('keyup',this._keyupArg);
         return this;
     }
@@ -566,8 +600,11 @@ class CommandLine {//{{{
      * @return {CommandLine} 自身のインスタンス
      */
     removeKeyupEventListener() {
-        if (!this._keyupArg) return this;
-        document.removeEventListener('keyup',this._keyupArg);
+        if (!this._keyupArg) {
+            return this;
+        }
+
+        document.removeEventListener('keyup', this._keyupArg);
         this._keyupArg = null;
         return this;
     }
@@ -585,6 +622,7 @@ class CommandLine {//{{{
             // IE以外
             keycode = e.which;
         }
+
         if (keycode === 123) { return; } // F12のみブラウザショートカットキー
         this.runKeyup(e,keycode);
         // デフォルトの動作を無効化する
@@ -601,7 +639,8 @@ class CommandLine {//{{{
             // enter
             this.runCommand();
             this.stop();
-            e.stopPropagation(); // 親要素へのイベントの伝播(バブリング)を止める。そうしなければ先にaddeventlistenerをしてしまっているので、documentにまでエンターキーが渡ってしまい改行されてしまう。
+            // 親要素へのイベントの伝播(バブリング)を止める。そうしなければ先にaddeventlistenerをしてしまっているので、documentにまでエンターキーが渡ってしまい改行されてしまう。
+            e.stopPropagation();
         } else if (keycode === 27 || this.val() === '') {
             // Esc
             // あるいは全文字削除
@@ -609,7 +648,10 @@ class CommandLine {//{{{
             e.stopPropagation();
         } else {
             // :eなどの後に途中まで引数を打てばファイルの検索ダイアログが出るようにする
-            const command = this.val().split(' ').length > 1 ? this.val().split(' ') : this.val().split('　'); // 全角スペースも区切りとして有効。ただし、半角スペースとの混在は現状不可
+            // 全角スペースも区切りとして有効。ただし、半角スペースとの混在は現状不可
+            const command =
+                this.val().split(' ').length > 1 ? this.val().split(' ') : this.val().split('　');
+
             switch (command[0]) {
                 case ':e':
                 case ':o':
@@ -653,8 +695,12 @@ class CommandLine {//{{{
      * @return {CommandLine} 自身のインスタンス
      */
     addFocusoutEventListener() {
-        if (this._focusoutArg) return this;
-        this._focusoutArg = this.onFocusout.bind(this); // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+        if (this._focusoutArg) {
+            return this;
+        }
+
+        // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+        this._focusoutArg = this.onFocusout.bind(this);
         document.addEventListener('focusout',this._focusoutArg);
         return this;
     }
@@ -664,7 +710,10 @@ class CommandLine {//{{{
      * @return {CommandLine} 自身のインスタンス
      */
     removeFocusoutEventListener() {
-        if (!this._focusoutArg) return this;
+        if (!this._focusoutArg) {
+            return this;
+        }
+
         document.removeEventListener('focusout',this._focusoutArg);
         this._focusoutArg = null;
         return this;
@@ -683,7 +732,9 @@ class CommandLine {//{{{
      */
     runCommand() {
         // 半角スペースで区切られていないようなら、全角スペースの区切りでも可
-        const command = this.val().split(' ').length > 1 ? this.val().split(' ') : this.val().split('　');
+        const command =
+            this.val().split(' ').length > 1 ? this.val().split(' ') : this.val().split('　');
+
         switch (command[0]) {
             case ':w':
             case ':save':
@@ -718,7 +769,9 @@ class CommandLine {//{{{
             case ':じゅｍｐｒ':
             case ':じゅｍｐろｗ':
             case ':ｊｒ':
-                if (command[1]) this.sentenceContainer().cursor().jumpRow(parseInt(command[1]));
+                if (command[1]) {
+                    this.sentenceContainer().cursor().jumpRow(parseInt(command[1]));
+                }
                 break;
             case ':jumpp':
             case ':jumppage':
@@ -726,7 +779,9 @@ class CommandLine {//{{{
             case ':じゅｍっｐ':
             case ':じゅｍっぱげ':
             case ':ｊｐ':
-                if (command[1]) this.sentenceContainer().cursor().jumpPage(parseInt(command[1]));
+                if (command[1]) {
+                    this.sentenceContainer().cursor().jumpPage(parseInt(command[1]));
+                }
                 break;
             case ':new':
             case ':n':
@@ -802,10 +857,12 @@ class CommandLine {//{{{
                 }
                 break;
             case ':bold':
-                this.sentenceContainer().menu().boldButton(!this.sentenceContainer().menu().boldButton());
+                this.sentenceContainer().menu()
+                    .boldButton(!this.sentenceContainer().menu().boldButton());
                 break;
             case ':italic':
-                this.sentenceContainer().menu().italicButton(!this.sentenceContainer().menu().italicButton());
+                this.sentenceContainer().menu()
+                    .italicButton(!this.sentenceContainer().menu().italicButton());
                 break;
             default:
                 break;
@@ -819,7 +876,8 @@ class CommandLine {//{{{
  * カーソルを表すクラス
  *     カーソルを起点とした操作を一括して請け負います
  */
-class Cursor {//{{{
+class Cursor {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} sentenceContainer 対応する文章コンテナのインスタンス
@@ -905,7 +963,8 @@ class Cursor {//{{{
      * 加えて、与えられた文字の前の文字に文字装飾があれば対応する装飾ボタン等をその文字に合わせて変化させます
      * また、シフトキーが押されながら(bShiftがtrue)カーソルが与えられた場合、選択範囲を拡張します
      * @param {Char} char 新しいカーソル文字
-     * @param {boolean} [bShift] シフトキーが押された状態でカーソルが与えられたかどうか。trueなら選択範囲を拡張する。falseなら解除する。省略(undefined)すると選択範囲には影響しない
+     * @param {boolean} [bShift] シフトキーが押された状態でカーソルが与えられたかどうか。
+     *     trueなら選択範囲を拡張する。falseなら解除する。省略(undefined)すると選択範囲には影響しない
      * @return {Cursor} 自身のインスタンス
      */
     addCursor(char, bShift) {
@@ -934,8 +993,9 @@ class Cursor {//{{{
     getPosMemory() {
         const eCharPoses = this.cursorLineElem().children;
         for (let i = 0,eCharPos; (eCharPos = eCharPoses[i]); i++) {
-            if (eCharPos.classList.contains('cursor-pos-memory'))
+            if (eCharPos.classList.contains('cursor-pos-memory')) {
                 return i;
+            }
         }
         return -1;
     }
@@ -950,10 +1010,15 @@ class Cursor {//{{{
         if (index === oldPos) {
             return this;
         }
+
         const eCharPoses = this.cursorLineElem().children;
-        if (eCharPoses[oldPos]) eCharPoses[oldPos].classList.remove('cursor-pos-memory');
+        if (eCharPoses[oldPos]) {
+            eCharPoses[oldPos].classList.remove('cursor-pos-memory');
+        }
         const maxIndex = eCharPoses.length - 1;
-        if (index > maxIndex) index = maxIndex; // char-posの最大数を超える数値は覚えられない
+        if (index > maxIndex) { // char-posの最大数を超える数値は覚えられない
+            index = maxIndex;
+        }
         eCharPoses[index].classList.add('cursor-pos-memory');
         return this;
     }
@@ -980,7 +1045,9 @@ class Cursor {//{{{
      */
     currentRowPos() {
         for (let row = this.getRow(),cnt = 1; row; row = row.prev(),cnt++) {
-            if (row.isPageBreak()) return cnt;
+            if (row.isPageBreak()) {
+                return cnt;
+            }
         }
         return -1;
     }
@@ -991,7 +1058,9 @@ class Cursor {//{{{
      */
     rowLenOnPage() {
         for (let row = this.getRow(),cnt = this.currentRowPos(); row; row = row.next(),cnt++) {
-            if (row.isPageLast()) return cnt;
+            if (row.isPageLast()) {
+                return cnt;
+            }
         }
         return -1;
     }
@@ -1003,7 +1072,9 @@ class Cursor {//{{{
     currentPage() {
         let cnt = 0;
         for (let row = this.getRow(); row; row = row.prev()) {
-            if (row.isPageBreak()) cnt++;
+            if (row.isPageBreak()) {
+                cnt++;
+            }
         }
         return cnt;
     }//}}}
@@ -1020,7 +1091,8 @@ class Cursor {//{{{
         for (let eOldCharPos; (eOldCharPos = eOldCharPoses[0]);) {
             eCursorLine.removeChild(eOldCharPos);
         }
-        eCursorLine.appendChild(ElemCreator.createCharPosElement(this.sentenceContainer().strLenOnRow()));
+        eCursorLine.appendChild(
+            ElemCreator.createCharPosElement(this.sentenceContainer().strLenOnRow()));
         return this;
     }
 
@@ -1034,9 +1106,12 @@ class Cursor {//{{{
     insert(chars, useUndo) {
         const cursorChar = this.getChar();
         if (typeof chars === 'string') {
-            chars = this.charsFromString(chars);
+            chars = this._charsFromString(chars);
         }
-        if (useUndo) this.sentenceContainer().addDo(new PrintDoMemory(this, chars));
+        if (useUndo) {
+            this.sentenceContainer().addDo(new PrintDoMemory(this, chars));
+        }
+
         for (let char of chars) {
             cursorChar.before(char);
         }
@@ -1052,7 +1127,7 @@ class Cursor {//{{{
      * @param {string} str 変換する文字列
      * @return {Char[]} 変換されたCharオブジェクトの配列
      */
-    charsFromString(str) {
+    _charsFromString(str) {
         const ret = [];
         const cursorChar = this.getChar();
         for (let char of str) {
@@ -1069,7 +1144,9 @@ class Cursor {//{{{
      */
     backSpace(useUndo) {
         const cursorChar = this.getChar();
-        if (!cursorChar.prev()) return this; // 文章先頭からのバックスペースは何もしない
+        if (!cursorChar.prev()) { // 文章先頭からのバックスペースは何もしない
+            return this;
+        }
 
         // 段落先頭からのバックスペースでは、前の行に段落をつなげる
         if (cursorChar.isFirst() && cursorChar.row().isFirst()) {
@@ -1079,7 +1156,8 @@ class Cursor {//{{{
                 moveRow.moveLastBefore();
             }
             newParagraph.cordinate().checkKinsoku();
-            // FIXME: 最終行が表示されている状態でbackSpace()すると、カーソル行が表示されているために表示開始行が変わらず、行数が足りているにも関わらず表示行数が少なくなってしまう
+            // FIXME: 最終行が表示されている状態でbackSpace()すると、
+            //     カーソル行が表示されているために表示開始行が変わらず、行数が足りているにも関わらず表示行数が少なくなってしまう
             this.sentenceContainer().changeDisplay().breakPage().printInfo().isChanged(true);
             return this;
         }
@@ -1087,7 +1165,9 @@ class Cursor {//{{{
         //  段落先頭以外からのバックスペース
         //  カーソルの前の位置にある文字を削除する(行頭なら行をまたいで前の文字)
         if (!(cursorChar.isFirst() && cursorChar.row().isFirst())) {
-            if (useUndo) this.sentenceContainer().addDo(new DeleteDoMemory(this, [cursorChar.prevChar()]));
+            if (useUndo) {
+                this.sentenceContainer().addDo(new DeleteDoMemory(this, [cursorChar.prevChar()]));
+            }
             cursorChar.prevChar().delete();
             this.sentenceContainer().changeDisplay().breakPage().printInfo().isChanged(true);
             return this;
@@ -1107,8 +1187,11 @@ class Cursor {//{{{
         newParagraph.firstChild().firstChild().addCursor().setPosMemory();
         // HACK:changeDisplay()を二回続けている:新しい段落がdisplayされて表示されるので、最終表示行から改行した場合にカーソル行が表示から外れる(最終表示行とカーソル行が等しいため、表示開始行を変えずに表示)
         // かといって新しい段落を非表示にしてから挿入すると、表示行が文章コンテナを埋めていない状態の時に改行すると表示開始行が毎回ひとつ後ろにずれる(カーソル行が最終表示行より後ろにあるため)という現象が起こるので、行数が十分にあっても表示行が不足してしまう
-        this.sentenceContainer().changeDisplay().changeDisplay().breakPage().printInfo().isChanged(true);
-        if (useUndo) this.sentenceContainer().addDo(new LineBreakDoMemory(this));
+        this.sentenceContainer()
+            .changeDisplay().changeDisplay().breakPage().printInfo().isChanged(true);
+        if (useUndo) {
+            this.sentenceContainer().addDo(new LineBreakDoMemory(this));
+        }
         return this;
     }//}}}
 
@@ -1122,7 +1205,10 @@ class Cursor {//{{{
      */
     moveNext(bShift) {
         const nextChar = this.getChar().next();
-        if (!nextChar) return this;
+        if (!nextChar) {
+            return this;
+        }
+
         nextChar.slideNextCursor().addCursor(bShift).setPosMemory();
         this.sentenceContainer().changeDisplay();
         return this;
@@ -1135,7 +1221,10 @@ class Cursor {//{{{
      */
     movePrev(bShift) {
         const prevChar = this.getChar().prev();
-        if (!prevChar) return this;
+        if (!prevChar) {
+            return this;
+        }
+
         prevChar.slidePrevCursor().addCursor(bShift).setPosMemory();
         this.sentenceContainer().changeDisplay();
         return this;
@@ -1171,10 +1260,14 @@ class Cursor {//{{{
      * @param {boolean} bShift シフトキーが押されているかどうか。trueなら、選択範囲を拡張する
      * @return {Cursor} 自身のインスタンス
      */
-    moveRow(row,bShift) {
+    moveRow(row, bShift) {
         const index = this.getPosMemory();
-        if (!row) return this;
-        const char = row.children(index); // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
+        if (!row) {
+            return this;
+        }
+
+        // 同じインデックスの文字がprevRowに存在しなければ、children()内でlastChild()が選択される
+        const char = row.children(index);
         char.slidePrevCursor().addCursor(bShift);
         return this;
     }
@@ -1185,7 +1278,10 @@ class Cursor {//{{{
      * @return {Cursor} 自身のインスタンス
      */
     jumpRow(num) {
-        if (typeof num !== 'number') return this;
+        if (typeof num !== 'number') {
+            return this;
+        }
+
         const row = this.sentenceContainer().row(num);
         if (row) {
             row.firstChild().addCursor().setPosMemory();
@@ -1200,7 +1296,10 @@ class Cursor {//{{{
      * @return {Cursor} 自身のインスタンス
      */
     jumpPage(num) {
-        if (typeof num !== 'number') return this;
+        if (typeof num !== 'number') {
+            return this;
+        }
+
         const row = this.sentenceContainer().pageRow(num);
         if (row) {
             row.firstChild().addCursor().setPosMemory();
@@ -1214,7 +1313,7 @@ class Cursor {//{{{
      * @return {Cursor} 自身のインスタンス
      */
     nextSearch() {
-        const next = this.nextSearchChar();
+        const next = this._nextSearchChar();
         if (!next) { return this; }
         next.addCursor().setPosMemory();
         this.sentenceContainer().changeDisplay();
@@ -1222,14 +1321,17 @@ class Cursor {//{{{
     }
 
     /**
-     * @private
      * 次の検索語句を返します
      * @return {Char} 次の検索語句の１文字目のインスタンス。見つからなければnull
      */
-    nextSearchChar() {
-        for (let char = this.getChar().nextChar() || this.sentenceContainer().firstChar(); !char.is(this.getChar()); char = char.nextChar() || this.sentenceContainer().firstChar()) {
-            if (char.hasClass('search-label')) return char;
-        }
+    _nextSearchChar() {
+        for (let char = this.getChar().nextChar() || this.sentenceContainer().firstChar();
+            !char.is(this.getChar());
+            char = char.nextChar() || this.sentenceContainer().firstChar()) {
+                if (char.hasClass('search-label')) {
+                    return char;
+                }
+            }
         return null;
     }
 
@@ -1251,9 +1353,13 @@ class Cursor {//{{{
      * @return {Char} 前の検索語句の１文字目のインスタンス。見つからなければnull
      */
     prevSearchChar() {
-        for (let char = this.getChar().prevChar() || this.sentenceContainer().lastChar(); !char.is(this.getChar()); char = char.prevChar() || this.sentenceContainer().lastChar()) {
-            if (char.hasClass('search-label')) return char;
-        }
+        for (let char = this.getChar().prevChar() || this.sentenceContainer().lastChar();
+            !char.is(this.getChar());
+            char = char.prevChar() || this.sentenceContainer().lastChar()) {
+                if (char.hasClass('search-label')) {
+                    return char;
+                }
+            }
         return null;
     }
 

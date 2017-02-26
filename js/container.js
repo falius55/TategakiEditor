@@ -1,5 +1,6 @@
 'use strict';
-/* global AbstractHierarchy, Paragraph, Cursor, InputBuffer, CommandLine, Menu, DoManager, Util, getSelection */
+/* global AbstractHierarchy, Paragraph, Cursor, InputBuffer, CommandLine, Menu, DoManager, Util, getSelection */  // jshint ignore:line
+
 
 class SearchMode {  // jshint ignore:line
     //{{{
@@ -32,9 +33,9 @@ class SearchMode {  // jshint ignore:line
         this._sentenceContainer.removeKeydownEventListener();
         if (!this._keyupArg) {
             this._keyupArg = this._onKeyup.bind(this);
-            this._elem.addEventListener('keyup',this._keyupArg,false);
-            this._elem.addEventListener('focusin',this._onFocusin.bind(this));
-            this._elem.addEventListener('focusout',this._onFocusout.bind(this));
+            this._elem.addEventListener('keyup', this._keyupArg, false);
+            this._elem.addEventListener('focusin', this._onFocusin.bind(this));
+            this._elem.addEventListener('focusout', this._onFocusout.bind(this));
         }
         return this;
     }
@@ -47,7 +48,8 @@ class SearchMode {  // jshint ignore:line
         this._sentenceContainer.addKeydownEventListener();
         this._elem.value = '';
         this._elem.classList.remove('active');
-        this._sentenceContainer.removeClassFromAllChar('search-label').removeClassFromAllChar('search-word');
+        this._sentenceContainer
+            .removeClassFromAllChar('search-label').removeClassFromAllChar('search-word');
         return this;
     }
 
@@ -64,6 +66,7 @@ class SearchMode {  // jshint ignore:line
             // IE以外
             keycode = e.which;
         }
+
         if (keycode === 13) {
             // enter
             this._elem.blur(); // enterを押しただけではフォーカスが外れない
@@ -114,15 +117,21 @@ class SelectRange {  // jshint ignore:line
     selectChars(opt_bl) {
         const ret = [];
         const selection = getSelection();
-        if (this._selectText().length === 0)
+        if (this._selectText().length === 0) {
             return ret; // rangeCount===0とすると、EOLのみ選択されることがある
+        }
 
         const selRange = selection.getRangeAt(0);
-        for (let char = this._sentenceContainer.firstChar(); char; char = char.nextChar())
-            if (char.isInRange(selRange)) ret.push(char);
+        for (let char = this._sentenceContainer.firstChar(); char; char = char.nextChar()) {
+            if (char.isInRange(selRange)) {
+                ret.push(char);
+            }
+        }
 
         selRange.detach();
-        if (opt_bl) selection.removeAllRanges(); // 選択を解除する
+        if (opt_bl) {
+            selection.removeAllRanges(); // 選択を解除する
+        }
         return ret;
     }
 
@@ -163,12 +172,13 @@ class SelectRange {  // jshint ignore:line
      * マウスで選択範囲を変更した際のイベントを与えます。選択範囲最後の文字の次の文字にカーソルを当てます
      */
     addSelectEvent() {
-        this._sentenceContainer.elem().addEventListener('mouseup',function (e) {
+        this._sentenceContainer.elem().addEventListener('mouseup', function (e) {
             const selChars = this.selectChars();
             // 選択範囲の直後にカーソルを当てる
             if (selChars.length > 0) {
                 const lastCharOnSelect = selChars[selChars.length -1];
-                const newCursor = lastCharOnSelect.hasNextSibling() ? lastCharOnSelect.next() : lastCharOnSelect;
+                const newCursor =
+                    lastCharOnSelect.hasNextSibling() ? lastCharOnSelect.next() : lastCharOnSelect;
                 newCursor.addCursor().setPosMemory();
             }
         }.bind(this),false);
@@ -213,8 +223,11 @@ class Displayer { // jshint ignore:line
     shiftRightDisplay() {
         const charPos = this._sentenceContainer.cursorRow().computeDisplayCharPos();
         const firstDisplay = this._firstDisplayRow();
-        if (!firstDisplay.prev()) return this;
-        firstDisplay.prev().display(true,charPos);
+        if (!firstDisplay.prev()) {
+            return this;
+        }
+
+        firstDisplay.prev().display(true, charPos);
         this._lastDisplayRow().display(false);
         return this;
     }
@@ -226,7 +239,10 @@ class Displayer { // jshint ignore:line
     shiftLeftDisplay() {
         const charPos = this._sentenceContainer.cursorRow().computeDisplayCharPos();
         const lastDisplay = this._lastDisplayRow();
-        if (!lastDisplay.next()) return this;
+        if (!lastDisplay.next()) {
+            return this;
+        }
+
         lastDisplay.next().display(true, charPos);
         this._firstDisplayRow().display(false);
         return this;
@@ -251,6 +267,7 @@ class Displayer { // jshint ignore:line
                     cnt++;
                     continue;
                 }
+
                 // 行の幅は子の最大のフォントによって決まると考え、最大フォントごとの行幅をキャッシュする(レンダリング頻度の削減)
                 const maxFont = row.maxFont();
                 if (cache[maxFont]) {
@@ -271,8 +288,10 @@ class Displayer { // jshint ignore:line
     /**
      * @private
      * カーソル位置を基準に、最初に表示されるべき行のインデックスを返します
-     * @param {string} [opt_pos] 表示後のカーソル位置を指定する。'center'なら、カーソル位置を中央にする。'right'なら、カーソル位置が最も右になるよう表示される。
-     *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される(現在のカーソル位置が現在表示されている画面から一行後ろにあれば一行分表示位置が後ろにずれる、といった形)
+     * @param {string} [opt_pos] 表示後のカーソル位置を指定する。
+     *     'center'なら、カーソル位置を中央にする。'right'なら、カーソル位置が最も右になるよう表示される。
+     *     省略した場合は現在の表示位置から最低限の移動でカーソル文字が表示されるように表示される
+     *     (現在のカーソル位置が現在表示されている画面から一行後ろにあれば一行分表示位置が後ろにずれる、といった形)
      * @return {number} 計算された最初に表示されるべき行のインデックス
      */
     _computeDisplayRowPos(opt_pos) {
@@ -287,6 +306,7 @@ class Displayer { // jshint ignore:line
             const ret = cursorIndex - harfRange;
             return ret >= 0 ? ret : 0;
         }
+
         if (opt_pos === 'right') {
             return cursorIndex;
         }
@@ -295,10 +315,12 @@ class Displayer { // jshint ignore:line
         if (cursorIndex < currentFirst) {
             return cursorIndex;
         }
+
         // カーソルが後ろにある
         if (cursorIndex > currentEnd) {
             return currentFirst + (cursorIndex - currentEnd);
         }
+
         // displayに囲まれた部分にdisplayでない行がある場合
         // 途中行数変化
         return currentFirst;
@@ -313,8 +335,9 @@ class Displayer { // jshint ignore:line
         let cnt = 0;
         for (let paragraph of this._sentenceContainer.paragraphs()) {
             for (let row of paragraph.rows()) {
-                if (row.isDisplay())
+                if (row.isDisplay()) {
                     return cnt;
+                }
                 cnt++;
             }
         }
@@ -322,19 +345,21 @@ class Displayer { // jshint ignore:line
     }
 
     /**
-     * @private
      * 現在表示されている行の最後の行のインデックスを返します
      * @return {number} 現在表示されている行の最後の行のインデックス。表示行がなければ-1
      */
     _lastDisplayRowPos() {
-        for (let row = this._sentenceContainer.lastRow(), index = this._sentenceContainer.countRow() -1;
-            row; row = row.prev(), index--)
-            if (row.isDisplay()) return index;
+        for (let row = this._sentenceContainer.lastRow(),
+            index = this._sentenceContainer.countRow() -1;
+            row; row = row.prev(), index--) {
+                if (row.isDisplay()) {
+                    return index;
+                }
+            }
         return -1;
     }
 
     /**
-     * @private
      * カーソル行が文書全体で何行目かを返します
      * @return {number} カーソル行の文書全体でのインデックス。文書内に段落がない、あるいはカーソル行がなければ-1
      */
@@ -343,8 +368,9 @@ class Displayer { // jshint ignore:line
         let cnt = 0;
         for (let paragraph of this.paragraphs()) {
             for (let row of paragraph.rows()) {
-                if (row.is(cursorRow))
+                if (row.is(cursorRow)) {
                     return cnt;
+                }
                 cnt++;
             }
         }
@@ -352,25 +378,30 @@ class Displayer { // jshint ignore:line
     }
 
     /**
-     * @private
      * 表示されている行のうち最初の行のインスタンスを返します
      * @return {Row} 最初の表示行のインスタンス。表示行がなければnull
      */
     _firstDisplayRow() {
-        for (let paragraph of this._sentenceContainer.paragraphs())
-            for (let row of paragraph.rows())
-            if (row.isDisplay()) return row;
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            for (let row of paragraph.rows()) {
+                if (row.isDisplay()) {
+                    return row;
+                }
+            }
+        }
         return null;
     }
 
     /**
-     * @private
      * 表示されている行のうち最後の行のインスタンスを返します
      * @return {Row} 最後の表示行のインスタンス。表示行がなければnull
      */
     _lastDisplayRow() {
-        for (let row = this._sentenceContainer.lastRow(); row; row = row.prev())
-            if (row.isDisplay()) return row;
+        for (let row = this._sentenceContainer.lastRow(); row; row = row.prev()) {
+            if (row.isDisplay()) {
+                return row;
+            }
+        }
         return null;
     }
 }//}}}
@@ -432,7 +463,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      */
     constructor(opt_data) {
         super(document.getElementById('sentence_container'));
-        if (opt_data) this.init(opt_data);
+        if (opt_data) {
+            this.init(opt_data);
+        }
         this._titleElem = document.getElementById('file_title');
         this._announceElem = document.getElementById('user_info');
         this._changedElem = document.getElementById('changed');
@@ -448,7 +481,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
         this._searchMode = new SearchMode(this);
         this._selectRange = new SelectRange(this);
 
-        if (!opt_data) this.newFile();
+        if (!opt_data) {
+            this.newFile();
+        }
     }
 
     /**
@@ -461,7 +496,10 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
         // 文書情報
         this.filename(data.filename);
         this.fileId(data.fileId);
-        this.saved(data.saved || (new Date(Date.now()).toLocaleDateString() + ' ' + new Date(Date.now()).toLocaleTimeString()).replace(/\//g,'-'));
+        this.saved(
+            data.saved ||
+                (new Date(Date.now()).toLocaleDateString() + ' ' +
+                    new Date(Date.now()).toLocaleTimeString()).replace(/\//g,'-'));
         this._strLenOnRow = data.data.conf.strLen || 40; // １行の文字数
         this._rowLenOnPage = data.data.conf.rowLen || 40; // １ページの行数
         this.menu().confStrLenElem().value = this._strLenOnRow;
@@ -516,11 +554,16 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {Row} 見つかった行のインスタンス
      */
     row(num) {
-        if (num <= 0) return this.firstRow();
+        if (num <= 0) {
+            return this.firstRow();
+        }
+
         let cnt = 0;
         for (let row = this.firstRow(); row; row = row.next()) {
             cnt++;
-            if (cnt === num) return row;
+            if (cnt === num) {
+                return row;
+            }
         }
         return this.lastRow();
     }
@@ -532,12 +575,17 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {Row} 見つかった行のインスタンス
      */
     pageRow(num) {
-        if (num <= 0) return this.firstRow();
+        if (num <= 0) {
+            return this.firstRow();
+        }
+
         let cnt = 0;
         for (let row = this.firstRow(); row; row = row.next()) {
             if (row.isPageBreak()) {
                 cnt++;
-                if (cnt === num) return row;
+                if (cnt === num) {
+                    return row;
+                }
             }
         }
         return this.lastRow();
@@ -672,8 +720,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
         const data = {};
         data.conf = this.menu().configueData();
         const paraArr = [];
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             paraArr.push(paragraph.data());
+        }
         data.text = paraArr;
 
         return JSON.stringify(data);
@@ -685,8 +734,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer string} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイル名(引数を省略した場合)
      */
     filename(opt_newFilename) {
-        if (opt_newFilename === undefined)
+        if (opt_newFilename === undefined) {
             return this._filename;
+        }
 
         this._filename = opt_newFilename;
         this._titleElem.value = opt_newFilename;
@@ -700,8 +750,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のファイルID(引数を省略した場合)
      */
     fileId(opt_newId) {
-        if (opt_newId === undefined)
+        if (opt_newId === undefined) {
             return this._fileId;
+        }
 
         const newId = opt_newId;
         this._fileId = newId;
@@ -715,8 +766,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer string} 自身のインスタンス(引数を渡した場合)、あるいは現在の最終更新日時の文字列(引数を省略した場合)
      */
     saved(opt_newSaved) {
-        if (opt_newSaved === undefined)
+        if (opt_newSaved === undefined) {
             return this._saved;
+        }
 
         const newSaved = opt_newSaved;
         this._saved = newSaved;
@@ -730,8 +782,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer boolean} 自身のインスタンス(引数を渡した場合)、あるいは現在の設定状態の真偽値(引数を省略した場合)
      */
     isChanged(opt_bl) {
-        if (opt_bl === undefined)
+        if (opt_bl === undefined) {
             return this._changedElem.classList.contains('active');
+        }
 
         if (opt_bl === true) {
             this._changedElem.classList.add('active');
@@ -749,8 +802,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在の設定上の行内文字数(引数を省略した場合)
      */
     strLenOnRow(opt_newStrLen) {
-        if (opt_newStrLen === undefined)
+        if (opt_newStrLen === undefined) {
             return this._strLenOnRow;
+        }
 
         const newStrLen = opt_newStrLen;
         this._strLenOnRow = newStrLen;
@@ -766,8 +820,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer number} 自身のインスタンス(引数を渡した場合)、あるいは現在のページ内行数(引数を省略した場合)
      */
     rowLenOnPage(opt_newRowLen) {
-        if (opt_newRowLen === undefined)
+        if (opt_newRowLen === undefined) {
             return this._rowLenOnPage;
+        }
 
         const newRowLen = opt_newRowLen;
         this._rowLenOnPage = newRowLen;
@@ -781,8 +836,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      */
     countChar() {
         let cnt = 0;
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             cnt += paragraph.countChar();
+        }
         return cnt;
     }
 
@@ -793,8 +849,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      */
     countRow() {
         let cnt = 0;
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             cnt += paragraph.childLength();
+        }
         return cnt;
     }
 
@@ -804,8 +861,11 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      */
     countPage() {
         let cnt = 0;
-        for (let row = this.firstRow(); row; row = row.next())
-            if (row.isPageBreak()) cnt++;
+        for (let row = this.firstRow(); row; row = row.next()) {
+            if (row.isPageBreak()) {
+                cnt++;
+            }
+        }
         return cnt;
     }//}}}
 
@@ -814,7 +874,8 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
     /**
      * この文書コンテナの横幅を返えます。
      *     文書コンテナは９０度回転しているため、css上は高さと同様です
-     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。
+     *     省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
      * @return {number} 自身の幅
      */
     width(opt_useCache) {
@@ -824,7 +885,8 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
     /**
      * この文書コンテナの高さを返します。
      *     文書コンテナは９０度回転しているため、css上は横幅と同様です
-     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。
+     *     省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
      * @return {number} 自身の高さ
      */
     height(opt_useCache) {
@@ -837,64 +899,11 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer} 自身のインスタンス
      */
     removeClassFromAllChar(className) {
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             paragraph.removeClassFromAllChar(className);
+        }
         return this;
     } //}}}
-
-    // selection {{{
-    // /**
-    //  * 選択範囲にある文字インスタンスを配列で返します
-    //  * @param {boolean} [opt_bl] 選択範囲を解除するならtrueを指定する
-    //  * @return {Char[]} 選択範囲内にある文字インスタンスの配列
-    //  */
-    // selectChars(opt_bl) {
-    //     const ret = [];
-    //     const selection = getSelection();
-    //     if (this.selectText().length === 0)
-    //         return ret; // rangeCount===0とすると、EOLのみ選択されることがある
-    //
-    //     const selRange = selection.getRangeAt(0);
-    //     for (let char = this.firstChar(); char; char = char.nextChar())
-    //         if (char.isInRange(selRange)) ret.push(char);
-    //
-    //     selRange.detach();
-    //     if (opt_bl) selection.removeAllRanges(); // 選択を解除する
-    //     return ret;
-    // }
-    //
-    // /**
-    //  * 選択範囲内にある文字列をローカルストレージに保存します
-    //  * @return {SentenceContainer} 自身のインスタンス
-    //  */
-    // copySelectText() {
-    //     localStorage.clipBoard = this.selectText();
-    //     return this;
-    // }
-    //
-    // // ペースト
-    // /**
-    //  * ローカルストレージに保存した文字列をカーソル位置から挿入します
-    //  * @return {SentenceContainer} 自身のインスタンス
-    //  */
-    // pasteText() {
-    //     this.cursor().insert(localStorage.clipBoard);
-    //     return this;
-    // }
-    //
-    // /**
-    //  * 選択範囲内にある文字列を返します
-    //  * @return {string} 選択範囲内の文字列
-    //  */
-    // selectText() {
-    //     const selection = getSelection();
-    //     let ret = '';
-    //     for (let i = 0, cnt = selection.rangeCount; i < cnt; i++) {
-    //         const selRange = selection.getRangeAt(i);
-    //         ret += selRange.toString();
-    //     }
-    //     return ret;
-    // }//}}}
 
     // --DOM操作関係 {{{
     /**
@@ -925,6 +934,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
             this.pushParagraph(paragraph);
             return this;
         }
+
         // paragraph
         this.lastChild().next(paragraph);
         paragraph.prev(this.lastChild());
@@ -941,7 +951,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
         return this;
     }//}}}
 
-// printInfo {{{
+    // printInfo {{{
     /**
      * 文書情報を表示します
      * @return {SentenceContainer} 自身のインスタンス
@@ -964,8 +974,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer} 自身のインスタンス
      */
     cordinate() {
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             paragraph.cordinate();
+        }
         return this;
     }
 
@@ -975,8 +986,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer} 自身のインスタンス
      */
     checkKinsoku() {
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             paragraph.checkKinsoku();
+        }
         return this;
     }//}}}
 
@@ -988,32 +1000,35 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
     breakPage() {
         const pageNum = this.rowLenOnPage();
         // page-break
-        let cnt1 = 0;
+        let cntBreak = 0;
         for (let paragraph of this.paragraphs()) {
             for (let row of paragraph.rows()) {
-                if (cnt1 === 0 || cnt1 % pageNum === 0) // １行目とpageNumの倍数行目
+                if (cntBreak === 0 || cntBreak % pageNum === 0) { // １行目とpageNumの倍数行目
                     row.addClass('page-break');
-                else
+                } else {
                     row.removeClass('page-break');
-                cnt1++;
+                }
+                cntBreak++;
             }
         }
         // page-last-row
-        let cnt2 = 0;
+        let cntLast = 0;
         const lastRow = this.countRow() -1;
         for (let paragraph of this.paragraphs()) {
             for (let row of paragraph.rows()) {
-                if ((cnt2 + 1) % pageNum === 0 || cnt2 === lastRow) // (pageNumの倍数-1)行目と最終行
+                if ((cntLast + 1) % pageNum === 0 || cntLast === lastRow) { // (pageNumの倍数-1)行目と最終行
                     row.addClass('page-last-row');
-                else
+                }
+                else {
                     row.removeClass('page-last-row');
-                cnt2++;
+                }
+                cntLast++;
             }
         }
         return this;
     }//}}}
 
-// announce {{{
+    // announce {{{
     /**
      * ユーザーへの情報を表示します
      * @param {string} str 表示する情報
@@ -1022,10 +1037,11 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      */
     announce(str, opt_color) {
         this._announceElem.textContent = str;
-        if (opt_color)
+        if (opt_color) {
             this._announceElem.style.color = opt_color;
-        else
+        } else {
             this._announceElem.style.color = '';
+        }
         return this;
     }//}}}
 
@@ -1055,7 +1071,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
             filename: this.filename(),
             json: this.data(),
             saved: Date.now()
-        },function (json) {
+        }, function (json) {
             if (json.result === 'true') {
                 this.saved(json.saved).announce('保存しました');
                 this.fileId(json.fileID);
@@ -1074,7 +1090,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer} 自身のインスタンス
      */
     newFile(filename) {
-        if (filename === undefined) filename = 'newfile';
+        if (filename === undefined) {
+            filename = 'newfile';
+        }
         this.init({
             fileId: -1,
             filename: filename,
@@ -1088,7 +1106,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
 
     // --Display関係 {{{
     changeDisplay(opt_pos) {
-        self._displayer.changeDisplay(opt_pos);
+        this._displayer.changeDisplay(opt_pos);
     } // }}}
 
     // undo redo {{{
@@ -1105,10 +1123,11 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * アンドゥします
      */
     undo() {
-        if (this._doManager.hasUndo())
+        if (this._doManager.hasUndo()) {
             this._doManager.undo();
-        else
+        } else {
             this.announce('すでに一番古い変更です');
+        }
         return this;
     }
 
@@ -1116,10 +1135,11 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * リドゥします
      */
     redo() {
-        if (this._doManager.hasRedo())
+        if (this._doManager.hasRedo()) {
             this._doManager.redo();
-        else
+        } else {
             this.announce('すでに一番新しい変更です');
+        }
         return this;
     }//}}}
 
@@ -1144,7 +1164,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      */
     runKeydown(e, keycode) {
         this.announce('');
-        if (e.ctrlKey) return this.runControlKeyDown(e,keycode);
+        if (e.ctrlKey) {
+            return this.runControlKeyDown(e,keycode);
+        }
 
         switch (keycode) {
             case 8:
@@ -1246,7 +1268,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
                 break;
             case 86:
                 // v
-                this.pasteText();
+                this._selectRange.pasteText();
                 break;
             case 188:
                 // ,
@@ -1271,12 +1293,15 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      */
     runWheel(e, isUp) {
         const mvRowNum = 4; // 一度に動かす行数
-        if (isUp)
-            for (let i = 0; i < mvRowNum; i++)
-            this._displayer.shiftRightDisplay();
-        else
-            for (let i = 0; i < mvRowNum; i++)
-            this._displayer.shiftLeftDisplay();
+        if (isUp) {
+            for (let i = 0; i < mvRowNum; i++) {
+                this._displayer.shiftRightDisplay();
+            }
+        } else {
+            for (let i = 0; i < mvRowNum; i++) {
+                this._displayer.shiftLeftDisplay();
+            }
+        }
         return this;
     }
 
@@ -1287,7 +1312,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
     addFileTitleEvent() {
         // 与えっぱなし。実行内容もここで定義
         this._titleElem.addEventListener('focusin',function (e) {
-            if (this.inputBuffer().isDisplay) this.inputBuffer().empty().hide();
+            if (this.inputBuffer().isDisplay) {
+                this.inputBuffer().empty().hide();
+            }
             this.removeKeydownEventListener();
         }.bind(this),false);
 

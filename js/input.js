@@ -1,10 +1,13 @@
 'use strict';
 /* global AbstractHierarchy, Char, Row, KeyTable, ElemCreator, Util */
 // classは巻き上げが起こらないため、Char・Rowの下に作る必要がある。ただし、SentenceContainer内で利用するのでSentenceContainerよりは上になければならない
+
+
 /**
  * 入力文字を表すクラス
  */
-class InputChar extends Char {//{{{
+class InputChar extends Char {
+    //{{{
     // constructor {{{
     /**
      * @param {object} data 文字を表すオブジェクト<br>
@@ -20,9 +23,11 @@ class InputChar extends Char {//{{{
      *	</pre>
      *	@param {number} [opt_phraseNum=-1] 文節のインデックス
      */
-    constructor(data,opt_phraseNum) {
+    constructor(data, opt_phraseNum) {
         super(data);
-        if (opt_phraseNum === undefined) opt_phraseNum = -1;
+        if (opt_phraseNum === undefined) {
+            opt_phraseNum = -1;
+        }
         this.phraseNum(opt_phraseNum);
     }//}}}
 
@@ -56,6 +61,7 @@ class InputChar extends Char {//{{{
         if (opt_newNum === undefined) {
             return this._phraseNum;
         }
+
         this.elem().dataset.phraseNum = opt_newNum;
         this._phraseNum = opt_newNum;
         return this;
@@ -82,12 +88,14 @@ class InputChar extends Char {//{{{
     }//}}}
 }//}}}
 
+
 /**
  * 入力された文字をいったん保持するバッファーを表すクラス。
  *     内部の子にInputCharのインスタンス群を持ちます。
  *     また、一度も漢字変換がされず文節番号がすべて-1の場合と、漢字変換が行われ文節が分けられている場合と２つの状態がある
  */
-class InputBuffer extends Row {//{{{
+class InputBuffer extends Row {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} container 自身の属する文章コンテナのインスタンス
@@ -139,9 +147,11 @@ class InputBuffer extends Row {//{{{
      */
     phrases(num) {
         const ret = [];
-        for (let char of this.chars())
-            if (char.isPhraseNum(num))
-            ret.push(char);
+        for (let char of this.chars()) {
+            if (char.isPhraseNum(num)) {
+                ret.push(char);
+            }
+        }
         return ret;
     }
 
@@ -151,9 +161,11 @@ class InputBuffer extends Row {//{{{
      */
     selectPhrases() {
         const ret = [];
-        for (let char of this.chars())
-            if (char.isSelect())
-            ret.push(char);
+        for (let char of this.chars()) {
+            if (char.isSelect()) {
+                ret.push(char);
+            }
+        }
         return ret;
     }//}}}
 
@@ -178,8 +190,9 @@ class InputBuffer extends Row {//{{{
         for (let view of this.convertContainer().views()) {
             const num = view.phraseNum();
             const len = view.getSelect().length(); // 選択行がなければひらがなを使って計算
-            for (let i = 0; i < len; i++, cnt++)
+            for (let i = 0; i < len; i++, cnt++) {
                 this.chars(cnt).phraseNum(num);
+            }
         }
         return this;
     }
@@ -189,9 +202,11 @@ class InputBuffer extends Row {//{{{
      * @return {number} 選択文節のインデックス。選択されていなければ-1
      */
     selectIndex() {
-        for (let char of this.chars())
-            if (char.isSelect())
-            return char.phraseNum();
+        for (let char of this.chars()) {
+            if (char.isSelect()) {
+                return char.phraseNum();
+            }
+        }
         return -1;
     }//}}}
 
@@ -334,14 +349,19 @@ class InputBuffer extends Row {//{{{
      */
     select(index) {
         const maxIndex = this.lastChar().phraseNum();
-        if (index < 0) index = maxIndex;
-        if (index > maxIndex) index = 0;
+        if (index < 0) {
+            index = maxIndex;
+        }
+        if (index > maxIndex) {
+            index = 0;
+        }
 
         for (let char of this.chars()) {
-            if (char.phraseNum() === index)
+            if (char.phraseNum() === index) {
                 char.select();
-            else
+            } else {
                 char.removeSelect();
+            }
         }
         this.convertContainer().views(index).active();
         return this;
@@ -367,13 +387,14 @@ class InputBuffer extends Row {//{{{
      * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
      * @return {InputBuffer} 自身のインスタンス
      */
-    increace(keycode,bShift) {
-        const newInputStr = this.newString(keycode,bShift);
+    increace(keycode, bShift) {
+        const newInputStr = this._newString(keycode,bShift);
 
         if (newInputStr === undefined || newInputStr.indexOf('undefined') !== -1) {
             // 未定義文字(alt,ctrl,tabなど)はreturn
             return this;
         }
+
         this.update(newInputStr);
         this.resize();
         return this;
@@ -384,7 +405,10 @@ class InputBuffer extends Row {//{{{
      * @return {InputChar} 削除した入力文字のインスタンス
      */
     decreace() {
-        if (!this.hasChar) return this;
+        if (!this.hasChar) {
+            return this;
+        }
+
         const ret = this.lastChar().remove();
         this.resize();
         if (!this.hasChar()) {
@@ -425,7 +449,7 @@ class InputBuffer extends Row {//{{{
      * @return {InputBuffer} 自身のインスタンス
      */
     toKatakanaAll() {
-        this.update(this.getKatakana());
+        this.update(this._getKatakana());
         return this;
     }
 
@@ -447,16 +471,21 @@ class InputBuffer extends Row {//{{{
      */
     insertPhrase(num, str) {
         const phrases = this.phrases(num);
-        if (phrases.length === 0) return this; // 指定された文節番号の文字が見つからなかった
+        if (phrases.length === 0) { // 指定された文節番号の文字が見つからなかった
+            return this;
+        }
         // 新しいInputCharをもともとあった文字の前に挿入していく
         for (let c of str) {
             const newChar = new InputChar(this.cursorChar().createData(c),num);
             phrases[0].before(newChar);
-            if (phrases[0].isSelect()) newChar.select(); // 選択中の文節なら入替え文字も選択
+            if (phrases[0].isSelect()) { // 選択中の文節なら入替え文字も選択
+                newChar.select();
+            }
         }
         // 古い文字を削除
-        for (let old of phrases)
+        for (let old of phrases) {
             old.remove();
+        }
         this.resize();
         return this;
     }
@@ -469,10 +498,14 @@ class InputBuffer extends Row {//{{{
      */
     insertPhraseAfter(num, str) {
         const phrases = this.phrases(num);
-        if (phrases.length === 0) return this; // 指定された文節番号の文字が見つからなかった
+        if (phrases.length === 0) { // 指定された文節番号の文字が見つからなかった
+            return this;
+        }
+
         const nextChar = phrases[phrases.length -1].next(); // 挿入用の文字。最後にはEOLがあるので、必ず存在する
-        for (let c of str)
+        for (let c of str) {
             nextChar.before(new InputChar(this.cursorChar().createData(c),-num));
+        }
         this.resize();
         return this;
     }
@@ -480,37 +513,36 @@ class InputBuffer extends Row {//{{{
     // --外からの情報取得
 
     /**
-     * @private
      * 現在の文字列にkeycodeを加えて作られる文字列を取得します。
      *     未定義のkeycodeの場合はundefinedが文字列内に含まれますので注意してください
      * @param {number} keycode 追加するキーのキーコード
      * @param {boolean} bShift シフトキーが押されていればtrue、そうでなければfalse
      * @return {string} keycodeを追加して作られた文字列
      */
-    newString(keycode,bShift) {
+    _newString(keycode,bShift) {
         const inputStr = this.text(); //もともとの文字列
         if (bShift) {
             return inputStr + KeyTable.shiftKey[keycode];
-        } else {
-            return KeyTable.makeString(inputStr,keycode); //keycodeを加えた新しい文字列
         }
+
+        return KeyTable.makeString(inputStr,keycode); //keycodeを加えた新しい文字列
     }
 
     /**
-     * @private
      * 現在の入力文字をカタカナに変換した場合の文字列を返します。
      *     変換できない文字があれば変換せずに元の文字をそのまま連結します
      * @return {string} カタカナに置き換えた文字列
      */
-    getKatakana() {
+    _getKatakana() {
         const str = this.text();
         let rtnKatakana = '';
         for (let char of str) {
             const cKatakana = KeyTable.katakana[char];
-            if (cKatakana)
+            if (cKatakana) {
                 rtnKatakana += cKatakana;
-            else
+            } else {
                 rtnKatakana += char; // 変換できなければ元の文字をそのまま連結
+            }
         }
         return rtnKatakana;
     }//}}}
@@ -573,12 +605,14 @@ class InputBuffer extends Row {//{{{
     }//}}}
 }//}}}
 
+
 /**
  * 漢字変換ビューを表すクラス。
  *     それぞれ一つの文節を担当し、複数の漢字変換候補を持ちます。
  *     また、内部には変換候補としてRowクラスのインスタンスを持ちます
  */
-class ConvertView extends AbstractHierarchy {//{{{
+class ConvertView extends AbstractHierarchy {
+    //{{{
     // 文節番号は、ConvertViewのindex()と同じ
 
     // constructor {{{
@@ -617,7 +651,7 @@ class ConvertView extends AbstractHierarchy {//{{{
     /**
      * 指定されたインデックスの変換候補を表すインスタンス、あるいは引数省略で変換候補インスタンスの配列を取得します
      * @param {number} [opt_index] 取得する変換候補のインデックス
-     * @return {Row Row[]} 指定されたインデックスの変換候補インスタンス(引数を渡した場合)、あるいは変換候補インスタンスの配列(引数を省略した場合) 
+     * @return {Row Row[]} 指定されたインデックスの変換候補インスタンス(引数を渡した場合)、あるいは変換候補インスタンスの配列(引数を省略した場合)
      */
     rows(opt_index) {
         return this.children(opt_index);
@@ -628,8 +662,11 @@ class ConvertView extends AbstractHierarchy {//{{{
      * @return {Row} 現在選択中の行のインスタンス。選択行がなければ候補最後のひらがな行のインスタンス
      */
     getSelect() {
-        for (let row of this.rows())
-            if (row.hasClass('select')) return row;
+        for (let row of this.rows()) {
+            if (row.hasClass('select')) {
+                return row;
+            }
+        }
         return this.lastChild(); // 選択行がなければひらがな行
     }//}}}
 
@@ -676,9 +713,11 @@ class ConvertView extends AbstractHierarchy {//{{{
      * @return {ConvertView} 自身のインスタンス
      */
     active() {
-        for (let view of this.container().views())
-            if (view.hasClass('active'))
-            view.removeClass('active');
+        for (let view of this.container().views()) {
+            if (view.hasClass('active')) {
+                view.removeClass('active');
+            }
+        }
         this.addClass('active');
         return this;
     }
@@ -709,12 +748,18 @@ class ConvertView extends AbstractHierarchy {//{{{
      * @return {ConvertView} 自身のインスタンス
      */
     select(index) {
-        if (index < 0) index = 0;
-        if (index >= this.childLength()) index = this.childLength() - 1;
+        if (index < 0) {
+            index = 0;
+        }
+        if (index >= this.childLength()) {
+            index = this.childLength() - 1;
+        }
 
-        for (let row of this.rows())
-            if (row.hasClass('select'))
-            row.removeClass('select');
+        for (let row of this.rows()) {
+            if (row.hasClass('select')) {
+                row.removeClass('select');
+            }
+        }
 
         const newRow = this.rows(index);
         newRow.addClass('select');
@@ -837,7 +882,9 @@ class ConvertView extends AbstractHierarchy {//{{{
      */
     replace(view) {
         this.before(view);
-        if (this.isActive()) view.active();
+        if (this.isActive()) {
+            view.active();
+        }
         return this.remove();
     }
 
@@ -846,24 +893,24 @@ class ConvertView extends AbstractHierarchy {//{{{
      * @return {ConvertView} 自身のインスタンス
      */
     toKatakana() {
-        this.container().inputBuffer().insertPhrase(this.phraseNum(),this.getKatakana());
+        this.container().inputBuffer().insertPhrase(this.phraseNum(),this._getKatakana());
         return this;
     }
 
     /**
-     * @private
      * 自身が担当する文節のカタカナを文字列で取得します
      * @return {string} カタカナに変換した場合の文字列
      */
-    getKatakana() {
+    _getKatakana() {
         const str = this.hiragana();
         let rtnKatakana = '';
         for (let char of str) {
             const cKatakana = KeyTable.katakana[char];
-            if (cKatakana)
+            if (cKatakana) {
                 rtnKatakana += cKatakana;
-            else
+            } else {
                 rtnKatakana += char; // 変換できなければ元の文字をそのまま連結
+            }
         }
         return rtnKatakana;
     }//}}}
@@ -873,7 +920,8 @@ class ConvertView extends AbstractHierarchy {//{{{
 /**
  * 変換候補一覧を束ねる漢字変換コンテナを表すクラス
  */
-class ConvertContainer extends AbstractHierarchy {//{{{
+class ConvertContainer extends AbstractHierarchy {
+    //{{{
     // constructor {{{
     /**
      * @param {InputBuffer} inputBuffer 入力元のインスタンス
@@ -907,8 +955,11 @@ class ConvertContainer extends AbstractHierarchy {//{{{
      * @return {ConvertView} 現在アクティブな変換候補一覧のインスタンス。なければnull
      */
     activeView() {
-        for (let view of this.views())
-            if (view.isActive()) return view;
+        for (let view of this.views()) {
+            if (view.isActive()) {
+                return view;
+            }
+        }
         return null;
     }//}}}
 
@@ -995,8 +1046,9 @@ class ConvertContainer extends AbstractHierarchy {//{{{
      */
     createViews(data) {
         this.empty();
-        for (let phraseData of data)
+        for (let phraseData of data) {
             this.append(new ConvertView(phraseData));
+        }
         return this;
     }
 
@@ -1011,8 +1063,9 @@ class ConvertContainer extends AbstractHierarchy {//{{{
             this.createViews(json);
             this.inputBuffer().setPhraseNum();
             // すべて変換第一候補を選択する
-            for (let view of this.views())
+            for (let view of this.views()) {
                 view.select(0);
+            }
             // 最初の文節を選択
             this.inputBuffer().select(0);
 
@@ -1034,7 +1087,9 @@ class ConvertContainer extends AbstractHierarchy {//{{{
     shiftUp() {
         const activeView = this.activeView();
 
-        if (activeView.kanaLength() === 1) return this;
+        if (activeView.kanaLength() === 1) {
+            return this;
+        }
 
         // 最終文節から
         // 最後の一字を分離して、二文節を変換し直す
@@ -1076,12 +1131,15 @@ class ConvertContainer extends AbstractHierarchy {//{{{
         const activeView = this.activeView();
         const nextView = activeView.next();
 
-        if (activeView.isLast()) return this;
+        if (activeView.isLast()) {
+            return this;
+        }
 
         // 次の文節の文字数が１文字だけなら融合して、１文節として変換する
         if (nextView.kanaLength() === 1) {
             const nextPhrase = this.inputBuffer().phrases(nextView.phraseNum())[0];
-            const sendString = activeView.hiragana() + nextView.hiragana() + ','; // 文節を区切られないよう、,を末尾に追加する
+            // 文節を区切られないよう、,を末尾に追加する
+            const sendString = activeView.hiragana() + nextView.hiragana() + ',';
             Util.get('/tategaki/Convert', function (json) {
                 const newView = new ConvertView(json[0]);
                 activeView.replace(newView);
@@ -1167,7 +1225,8 @@ class ConvertContainer extends AbstractHierarchy {//{{{
      */
     replace(num,data) {
         const oldView = this.views(num);
-        const newViews = []; // 文節番号を振り直した後でないとview.select()できない(中でinsertPhrase()をしているため)ので、いったん新しいインスタンスを入れておく
+        // 文節番号を振り直した後でないとview.select()できない(中でinsertPhrase()をしているため)ので、いったん新しいインスタンスを入れておく
+        const newViews = [];
         // viewを入れ替え、bufferにはいったんひらがなを挿入する
         for (let phraseData of data.entries()) {
             // view
@@ -1176,19 +1235,25 @@ class ConvertContainer extends AbstractHierarchy {//{{{
             oldView.before(newView);
             // input_buffer
             // setPhraseNum()は、select()する前のviewではひらがなの長さを使って文節番号を割り振る。そのため、いったんひらがなをbufferに追加する
-            if (phraseData[0] === 0) // ひとつめだけ入替えで、他はその後に追加していく
-                this.inputBuffer().insertPhrase(num,oldView.prev().hiragana()); // 古いbuffer文字はここでなくなる
-            else
-                this.inputBuffer().insertPhraseAfter(num,oldView.prev().hiragana()); // HACK:追加分の文字の順番がこの時点ではおかしくなるが、合計のひらがなの数は正しくなっているので、buffer.setPhraseNum()とnewView.select(0)で正しく文字が置き換わる
+            if (phraseData[0] === 0) { // ひとつめだけ入替えで、他はその後に追加していく
+                // 古いbuffer文字はここでなくなる
+                this.inputBuffer().insertPhrase(num,oldView.prev().hiragana());
+            } else {
+                // HACK:追加分の文字の順番がこの時点ではおかしくなるが、合計のひらがなの数は正しくなっているので、buffer.setPhraseNum()とnewView.select(0)で正しく文字が置き換わる
+                this.inputBuffer().insertPhraseAfter(num,oldView.prev().hiragana());
+            }
         }
         oldView.remove();
 
         // 文節番号の振り直し
         this.inputBuffer().setPhraseNum();
         // 最初の候補で置き換える
-        for (let newView of newViews)
+        for (let newView of newViews) {
             newView.select(0);
-        if (oldView.isActive()) newViews[0].active();
+        }
+        if (oldView.isActive()) {
+            newViews[0].active();
+        }
         return this;
     }
 

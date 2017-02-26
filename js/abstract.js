@@ -4,7 +4,7 @@
  * ヒエラルキー構造を持つ各クラスの基底クラス
  * 木構造とは異なり、枝分かれしていても同列のオブジェクト間でポインタを持ち合います
  */
-class AbstractHierarchy {
+class AbstractHierarchy {  // jshint ignore:line
     // constructor {{{
     /**
      * @param {Element} elem 自身のDOM要素
@@ -36,10 +36,10 @@ class AbstractHierarchy {
     parent(opt_newParent) {
         if (opt_newParent === undefined) { // nullが渡されることもあるのでundefinedと厳密に比較
             return this._parent;
-        } else {
-            this._parent = opt_newParent;
-            return this;
         }
+
+        this._parent = opt_newParent;
+        return this;
     }
 
     /**
@@ -50,10 +50,10 @@ class AbstractHierarchy {
     next(opt_newNext) {
         if (opt_newNext === undefined) {
             return this._next;
-        } else {
-            this._next = opt_newNext;
-            return this;
         }
+
+        this._next = opt_newNext;
+        return this;
     }
 
     /**
@@ -64,10 +64,10 @@ class AbstractHierarchy {
     prev(opt_newPrev) {
         if (opt_newPrev === undefined) {
             return this._prev;
-        } else {
-            this._prev = opt_newPrev;
-            return this;
         }
+
+        this._prev = opt_newPrev;
+        return this;
     }
 
     /**
@@ -78,9 +78,9 @@ class AbstractHierarchy {
     children(opt_index) {
         if (opt_index === undefined) {
             return Util.copyArray(this._children);
-        } else {
-            return this._children[opt_index];
         }
+
+        return this._children[opt_index];
     }
 
     /**
@@ -88,11 +88,11 @@ class AbstractHierarchy {
      * @return {AbstractHierarchy} 自身の最初の子。子がいなければnull
      */
     firstChild() {
-        if (this.hasChild()) {
-            return this._children[0];
-        } else {
+        if (!this.hasChild()) {
             return null;
         }
+
+        return this._children[0];
     }
 
     /**
@@ -100,11 +100,11 @@ class AbstractHierarchy {
      * @return {AbstractHierarchy} 自身の最後の子。子がいなければnull
      */
     lastChild() {
-        if (this.hasChild()) {
-            return this._children[this.childLength()-1];
-        } else {
+        if (!this.hasChild()) {
             return null;
         }
+
+        return this._children[this.childLength()-1];
     }//}}}
 
     // --判定 {{{
@@ -158,9 +158,9 @@ class AbstractHierarchy {
     hasNextSibling() {
         if (this.next()) {
             return this.next().parent() === this.parent();
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -170,9 +170,9 @@ class AbstractHierarchy {
     hasPrevSibling() {
         if (this.prev()) {
             return this.prev().parent() === this.parent();
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -213,6 +213,7 @@ class AbstractHierarchy {
         if (pos < 0 || pos >= this._children.length) {
             return this.pushChild(child);
         }
+
         this._children.splice(pos,0,child);
         return this;
     }
@@ -224,7 +225,8 @@ class AbstractHierarchy {
      */
     deleteChild(child) {
         const pos = child.index();
-        this._children.splice(pos,1);
+
+        this._children.splice(pos, 1);
         child.parent(null);
         return this;
     }
@@ -237,7 +239,8 @@ class AbstractHierarchy {
      */
     replaceChild(oldChild,newChild) {
         const pos = oldChild.index();
-        this._children.splice(pos,1,newChild);
+
+        this._children.splice(pos, 1, newChild);
         return this;
     }
 
@@ -281,7 +284,8 @@ class AbstractHierarchy {
      * @return {number} 自身の子の数
      */
     childLength() {
-        return this._children.length; // Rowではchildren()の意味が違うので、混同しないようchildren()をさけて直接プロパティにアクセスする
+        // Rowではchildren()の意味が違うので、混同しないようchildren()をさけて直接プロパティにアクセスする
+        return this._children.length;
     }//}}}
 
     // --Style {{{
@@ -327,31 +331,41 @@ class AbstractHierarchy {
 
     /**
      * 自身の高さを取得します
-     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。
+     *     省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
      * @return {number} 自身の高さ
      */
     height(opt_useCache) {
         // elementが不可視状態にあれば長さが０になったり、ブラウザごとに取得手段に違いがあったり直接指定されているstyleとcssでの指定の違い、cssでの指定が'auto'になっていると文字列が返ってきたりと
         // javascriptでのcss値の取得は複雑で困難であることから、jQueryの使用が適していると判断した(不可視の要素は一時的に可視状態にしてから取得するので、レンダリングが発生する可能性は高い)
         // 読み込み時には時間がかかるが、キャッシュすることで行移動などでは最低限の計算になると期待
-        if (opt_useCache === undefined) opt_useCache = true;
+        if (opt_useCache === undefined) {
+            opt_useCache = true;
+        }
+
         if (opt_useCache && this._height) {
             return this._height;
         }
+
         this._height = parseInt($(this.elem()).css('height'));
         return this._height;
     }
 
     /**
      * 自身の幅を取得します
-     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。
+     *     省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
      * @return {number} 自身の幅
      */
     width(opt_useCache) {
-        if (opt_useCache === undefined) opt_useCache = true;
+        if (opt_useCache === undefined) {
+            opt_useCache = true;
+        }
+
         if (opt_useCache && this._width) {
             return this._width;
         }
+
         this._width = parseInt($(this.elem()).css('width'));
         return this._width;
     }
@@ -422,9 +436,13 @@ class AbstractHierarchy {
      * @return {AbstractHierarchy} 自身のインスタンス
      */
     addKeydownEventListener() {
-        if (this._keydownArg) return this;
-        this._keydownArg = this.onKeydown.bind(this); // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
-        document.addEventListener('keydown',this._keydownArg);
+        if (this._keydownArg) {
+            return this;
+        }
+
+        // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+        this._keydownArg = this._onKeydown.bind(this);
+        document.addEventListener('keydown', this._keydownArg);
         return this;
     }
 
@@ -433,18 +451,20 @@ class AbstractHierarchy {
      * @return {AbstractHierarchy} 自身のインスタンス
      */
     removeKeydownEventListener() {
-        if (!this._keydownArg) return this;
-        document.removeEventListener('keydown',this._keydownArg);
+        if (!this._keydownArg) {
+            return this;
+        }
+
+        document.removeEventListener('keydown', this._keydownArg);
         this._keydownArg = null;
         return this;
     }
 
     /**
-     * @private
      * keydownイベントの前処理を行い、イベントを実行します
      * @param {object} e イベントオブジェクト
      */
-    onKeydown(e) {
+    _onKeydown(e) {
         let keycode;
         if (document.all) {
             // IE
@@ -453,14 +473,15 @@ class AbstractHierarchy {
             // IE以外
             keycode = e.which;
         }
+
         if (keycode === 123) { return; } // F12のみブラウザショートカットキー
+
         this.runKeydown(e, keycode);
         // デフォルトの動作を無効化する
         e.preventDefault();
     }
 
     /**
-     * @private
      * keydownイベントの実行内容。onkeydown()内で使用するために定義しておくが、内容はサブクラスで上書きします
      * @param {object} e イベントオブジェクト
      * @param {number} keycode 押下されたキーのキーコード
@@ -475,9 +496,13 @@ class AbstractHierarchy {
      * @return {AbstractHierarchy} 自身のインスタンス
      */
     addClickEventListener() {
-        if (this._clickArg) return this;
-        this._clickArg = this.onClick.bind(this); // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
-        this.elem().addEventListener('click',this._clickArg);
+        if (this._clickArg) {
+            return this;
+        }
+
+        // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+        this._clickArg = this._onClick.bind(this);
+        this.elem().addEventListener('click', this._clickArg);
         return this;
     }
 
@@ -486,23 +511,24 @@ class AbstractHierarchy {
      * @return {AbstractHierarchy} 自身のインスタンス
      */
     removeClickEventListener() {
-        if (!this._clickArg) return this;
-        this.elem().removeEventListener('click',this._clickArg);
+        if (!this._clickArg) {
+            return this;
+        }
+
+        this.elem().removeEventListener('click', this._clickArg);
         this._clickArg = null;
         return this;
     }
 
     /**
-     * @private
      * クリックイベントを実行します
      * @param {Event} e イベントオブジェクト
      */
-    onClick(e) {
+    _onClick(e) {
         this.runClick(e);
     }
 
     /**
-     * @private
      * clickイベントの実行内容です。onClick()内で使用するために定義しておきますが、内容はサブクラスで上書きする必要があります
      * @param {object} e イベントオブジェクト
      * @return {AbstractHierarchy} 自身のインスタンス
@@ -516,10 +542,14 @@ class AbstractHierarchy {
      * @return {AbstractHierarchy} 自身のインスタンス
      */
     addWheelEventListener() {
-        if (this._wheelArg) return this;
-        this._wheelArg = this.onWheel.bind(this); // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+        if (this._wheelArg) {
+            return this;
+        }
+
+        // removeするときと引数を同一にするためプロパティに保持する(それぞれでbindすると異なる参照になる？)
+        this._wheelArg = this._onWheel.bind(this);
         const selector = '#' + this.elem().id;
-        $('body').on('mousewheel',selector,this._wheelArg);
+        $('body').on('mousewheel', selector, this._wheelArg);
         return this;
     }
 
@@ -528,27 +558,28 @@ class AbstractHierarchy {
      * @return {AbstractHierarchy} 自身のインスタンス
      */
     removeWheelEventListener() {
-        if (!this._wheelArg) return this;
+        if (!this._wheelArg) {
+            return this;
+        }
+
         const selector = '#' + this.elem().id;
-        $('body').off('mousewheel',selector,this._wheelArg);
+        $('body').off('mousewheel', selector, this._wheelArg);
         this._wheelArg = null;
         return this;
     }
 
     /**
-     * @private
      * keydownイベントの前処理を行い、イベントを実行します
      * @param {object} e イベントオブジェクト
      * @param {number} delta ホイールの移動量
      * @param {number} deltaX
      * @param {number} deltaY
      */
-    onWheel(e,delta,deltaX,deltaY) {
+    _onWheel(e,delta,deltaX,deltaY) {
         this.runWheel(e,delta > 0);
     }
 
     /**
-     * @private
      * ホイールイベントの実行内容です。onWheel()内で使用するために定義しておきますが、内容はサブクラスで上書きする必要があります
      * @param {object} e イベントオブジェクト
      * @param {boolean} isUp ホイールが上方向に動いたならtrue、そうでなければfalse

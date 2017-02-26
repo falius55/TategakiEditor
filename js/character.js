@@ -4,7 +4,8 @@
 /**
  * 文字を表すクラス
  */
-class Char extends AbstractHierarchy {//{{{
+class Char extends AbstractHierarchy {
+    //{{{
     /**
      * @param {object} data 文字を表すオブジェクト<br>
      * <pre>
@@ -19,7 +20,8 @@ class Char extends AbstractHierarchy {//{{{
      *	</pre>
      */
     constructor(data) {
-        super(data.char ? ElemCreator.createCharElement(data) : data); // dataオブジェクトにcharプロパティがなければEOLからの呼び出しで、dataにはエレメントが入っている
+        // dataオブジェクトにcharプロパティがなければEOLからの呼び出しで、dataにはエレメントが入っている
+        super(data.char ? ElemCreator.createCharElement(data) : data);
         if (!('fontSize' in data)) {
             this._fontSize = data.fontSize;
         }
@@ -70,9 +72,9 @@ class Char extends AbstractHierarchy {//{{{
         // 段落途中のEOLならその次の文字に変更する
         if (this.isEOL() && this.row().hasNextSibling()) {
             return this.next();
-        } else {
-            return this;
         }
+
+        return this;
     }
 
     /**
@@ -84,9 +86,9 @@ class Char extends AbstractHierarchy {//{{{
         // 段落途中のEOLならその前の文字に変更する
         if (this.isEOL() && this.row().hasNextSibling()) {
             return this.prev();
-        } else {
-            return this;
         }
+
+        return this;
     }
 
     /**
@@ -96,9 +98,9 @@ class Char extends AbstractHierarchy {//{{{
     nextChar() {
         if (this.next() && this.next().isEOL()) {
             return this.next().nextChar();
-        } else {
-            return this.next();
         }
+
+        return this.next();
     }
 
     /**
@@ -108,9 +110,9 @@ class Char extends AbstractHierarchy {//{{{
     prevChar() {
         if (this.prev() && this.prev().isEOL()) {
             return this.prev().prevChar();
-        } else {
-            return this.prev();
         }
+
+        return this.prev();
     }
 
     /**
@@ -121,6 +123,7 @@ class Char extends AbstractHierarchy {//{{{
         if (this.hasNextCharOnParagraph()) {
             return this.nextChar();
         }
+
         return null;
     }
 
@@ -132,6 +135,7 @@ class Char extends AbstractHierarchy {//{{{
         if (this.hasPrevCharOnParagraph()) {
             return this.prevChar();
         }
+
         return null;
     }
 
@@ -201,6 +205,7 @@ class Char extends AbstractHierarchy {//{{{
                 charRange.detach();
                 return true;
             }
+
         charRange.detach();
         return false;
     }
@@ -242,7 +247,8 @@ class Char extends AbstractHierarchy {//{{{
     /**
      * この文字のフォントサイズを変更します。あるいは引数省略で現在のフォントサイズを取得します
      * @param {number string} [opt_fontSize] 新たに設定するフォントサイズ(数値以外では'auto'が渡せる)
-     * @return {Char number string} 自身のインスタンス(引数を渡した場合)。現在のフォントサイズ(引数を省略した場合)、フォントサイズが数値で設定されていなければ文字列の'auto'
+     * @return {Char number string} 自身のインスタンス(引数を渡した場合)。
+     *     現在のフォントサイズ(引数を省略した場合)、フォントサイズが数値で設定されていなければ文字列の'auto'
      */
     fontSize(opt_fontSize) {
         if (opt_fontSize) {
@@ -253,13 +259,14 @@ class Char extends AbstractHierarchy {//{{{
             return this;
         }
 
-        if (opt_fontSize === undefined) {
-            if (this._fontSize === undefined)
-                return 'auto';
-            if (this._fontSize === 'auto')
-                return this._fontSize;
-            return parseInt(this._fontSize);
+        if (this._fontSize === undefined) {
+            return 'auto';
         }
+
+        if (this._fontSize === 'auto') {
+            return this._fontSize;
+        }
+        return parseInt(this._fontSize);
     }
 
     /**
@@ -272,10 +279,12 @@ class Char extends AbstractHierarchy {//{{{
             this._addColor(opt_color);
             return this;
         }
+
         if (opt_color === false) {
             this._removeColor();
             return this;
         }
+
         if (opt_color === undefined) {
             const color = this.className().match(/decolation-color-(\S+)/);
             return color ? color[1] : 'black';
@@ -289,8 +298,9 @@ class Char extends AbstractHierarchy {//{{{
      * @return {Char boolean} 自身のインスタンス(引数を渡した場合)、あるいは太字になっているかどうかの真偽値(引数を省略した場合)
      */
     bold(opt_bl) {
-        if (opt_bl === undefined)
+        if (opt_bl === undefined) {
             return this.hasClass('decolation-font-bold');
+        }
 
         if (opt_bl) {
             this.addClass('decolation-font-bold');
@@ -307,8 +317,9 @@ class Char extends AbstractHierarchy {//{{{
      * @return {Char} 自身のインスタンス(引数を渡した場合)、あるいは斜体になっているかどうかの真偽値(引数を省略した場合)
      */
     italic(opt_bl) {
-        if (opt_bl === undefined)
+        if (opt_bl === undefined) {
             return this.hasClass('decolation-font-italic');
+        }
 
         if (opt_bl) {
             this.addClass('decolation-font-italic');
@@ -326,7 +337,9 @@ class Char extends AbstractHierarchy {//{{{
     _addColor(color) {
         // 同一種のクラスをすでに持っていたら外す
         this.removeColor();
-        if (color === 'decolation-color-black') return; // ブラックなら外して終わり
+        if (color === 'decolation-color-black') {
+            return; // ブラックなら外して終わり
+        }
         this.addClass('decolation-color-'+ color);
         return this;
     }
@@ -338,7 +351,9 @@ class Char extends AbstractHierarchy {//{{{
     _removeColor() {
         const regexp = new RegExp('decolation-color-\\S+');
         const rmClass = this.className().match(regexp);
-        if (rmClass) { this.removeClass(rmClass[0]); }
+        if (rmClass) {
+            this.removeClass(rmClass[0]);
+        }
         return this;
     }
 
@@ -353,15 +368,19 @@ class Char extends AbstractHierarchy {//{{{
 
         // 合致しているかの判定
         // 合致しない文字が現れたか、文字列を比較し終える前に段落の最後に達したらreturn
-        for (let i = 0,len = str.length,char = this; i < len; i++,char = char.nextCharOnParagraph()) {
-            if (!char || str.charAt(i) !== char.text()) return this;
-        }
+        for (let i = 0, len = str.length, char = this;
+            i < len; i++, char = char.nextCharOnParagraph()) {
+                if (!char || str.charAt(i) !== char.text()) {
+                    return this;
+                }
+            }
 
         // クラスの付与
         this.addClass('search-label');
-        for (let i = 0,len = str.length,char = this; i < len; char = char.nextChar(),i++) {
-            char.addClass('search-word');
-        }
+        for (let i = 0, len = str.length, char = this;
+            i < len; char = char.nextChar(),i++) {
+                char.addClass('search-word');
+            }
         return this;
     }
 
@@ -401,7 +420,10 @@ class Char extends AbstractHierarchy {//{{{
      * @return {Char} 自身のインスタンス
      */
     after(char) {
-        if (this.isEOL()) { return this; } // todo: 例外を使用したほうがいいかも EOLからのafterはできない
+        if (this.isEOL()) {
+            throw new Error('couldn\'t after from EOL');
+        }
+
         // DOM
         if (this.hasNextSibling()) {
             this.row().elem().insertBefore(char.elem(),this.next().elem());
@@ -433,15 +455,21 @@ class Char extends AbstractHierarchy {//{{{
      */
     remove() {
         // 要素と参照の削除
-        if (this.isEOL()) return this; // EOLは削除不可
+        if (this.isEOL()) {
+            throw new Error('counldn\'t remove EOL');
+        }
         const row = this.row();
         row.elem().removeChild(this.elem());
 
         // oldPrev - this - oldNext →　oldPrev - oldNext
         const oldPrev = this.prev();
         const oldNext = this.next();
-        if (oldPrev) oldPrev.next(oldNext);
-        if (oldNext) oldNext.prev(oldPrev);
+        if (oldPrev) {
+            oldPrev.next(oldNext);
+        }
+        if (oldNext) {
+            oldNext.prev(oldPrev);
+        }
         // 古い親の配列から削除
         row.deleteChar(this);
         return this;
@@ -492,10 +520,13 @@ class Char extends AbstractHierarchy {//{{{
      */
     moveLastBefore() {
         if (this.isEOL() || !this.isFirst()) { return this; } // 各行最初の文字でのみ有効
-        if (this.row().isFirst()) return this; // 段落はまたがない
+        if (this.row().isFirst()) {
+            return this; // 段落はまたがない
+        }
 
         const oldRow = this.row();
-        this.remove(); // delete()内でcordinate()を使い、cordinate()内でmoveLastBefore()を使っているので、ここでdelete()を使うと無限再帰の恐れあり
+        // delete()内でcordinate()を使い、cordinate()内でmoveLastBefore()を使っているので、ここでdelete()を使うと無限再帰の恐れあり
+        this.remove();
         oldRow.prev().append(this);
 
         // 移動した結果、空行ができたら削除する
@@ -514,7 +545,9 @@ class Char extends AbstractHierarchy {//{{{
      * @return {Char} 自身のインスタンス
      */
     moveFirstAfter() {
-        if (this.isEOL() || !this.isLast()) return this; // 各行最後の文字でのみ有効
+        if (this.isEOL() || !this.isLast()) {
+            return this; // 各行最後の文字でのみ有効
+        }
 
         const oldRow = this.row();
         // 次の行がなければ新しく作る(段落はまたがない)
@@ -599,7 +632,9 @@ class Char extends AbstractHierarchy {//{{{
         const index = this.index();
         let cnt = 0;
         for (let char of this.row().chars()) {
-            if (cnt >= index) func(char);
+            if (cnt >= index) {
+                func(char);
+            }
             cnt++;
         }
         return this;
@@ -610,7 +645,8 @@ class Char extends AbstractHierarchy {//{{{
 /**
  * 行の末端を表すクラス
  */
-class EOL extends Char {//{{{
+class EOL extends Char {
+    //{{{
     // Rowとともに要素を作ってしまうため、要素を引数に取る必要がある
     /**
      * @param {Element} elem 自身のDOM要素
@@ -657,7 +693,8 @@ class EOL extends Char {//{{{
 /**
  * 行を表すクラス
  */
-class Row extends AbstractHierarchy {//{{{
+class Row extends AbstractHierarchy {
+    //{{{
     /**
      * @param {object} data 行を表すオブジェクト<br>
      * 例
@@ -690,7 +727,9 @@ class Row extends AbstractHierarchy {//{{{
         }
         this._EOL = new EOL(this._elem.lastElementChild);
         this._EOL.appended(this);
-        if (!Array.isArray(data)) return;
+        if (!Array.isArray(data)) {
+            return;
+        }
         for (let charData of data) {
             const char = new Char(charData);
             this.append(char);
@@ -766,7 +805,8 @@ class Row extends AbstractHierarchy {//{{{
     /**
      * 指定されたインデックスの子である文字のインスタンスを取得、あるいは子のインスタンスの配列を取得します。EOLは含まれません
      * @param {number} [opt_index] 取得する子のインデックス
-     * @return {Char Char[]} 指定された子のインスタンス(引数を渡した場合。範囲外の数値ならundefined)、あるいは子のインスタンスの配列(引数を省略した場合。子がいなければ空の配列)
+     * @return {Char Char[]} 指定された子のインスタンス(引数を渡した場合。範囲外の数値ならundefined)、
+     *     あるいは子のインスタンスの配列(引数を省略した場合。子がいなければ空の配列)
      */
     chars(opt_index) { // EOLは含まれない
         return super.children(opt_index);
@@ -775,7 +815,8 @@ class Row extends AbstractHierarchy {//{{{
     /**
      * EOLを含む、指定されたインデックスの子である文字のインスタンスを取得、あるいは子のインスタンスの配列を取得します
      * @param {number} [opt_index] 取得する子のインデックス
-     * @return {Char} 指定された子のインスタンス(引数を渡した場合。範囲外のインデックスならEOL)、あるいはEOLを含む子のインスタンスの配列(引数を省略した場合。子がいなければ要素がEOLのみである配列)
+     * @return {Char} 指定された子のインスタンス(引数を渡した場合。範囲外のインデックスならEOL)、
+     *     あるいはEOLを含む子のインスタンスの配列(引数を省略した場合。子がいなければ要素がEOLのみである配列)
      */
     children(opt_index) { // EOLを含む
         if (opt_index === undefined) {
@@ -801,8 +842,11 @@ class Row extends AbstractHierarchy {//{{{
      * @return {boolean} 行内にカーソルが含まれていればtrue、そうでなければfalse
      */
     hasCursor() {
-        for (let char of this.children())
-            if (char.hasCursor()) return true;
+        for (let char of this.children()) {
+            if (char.hasCursor()) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -820,9 +864,16 @@ class Row extends AbstractHierarchy {//{{{
      * @return {Char} objが行内にあるCharおよびEOLのいずれかに一致するとtrue、そうでなければfalse
      */
     contains(obj) {
-        if (!(obj instanceof Char)) return false;
-        for (let char of this.children())
-            if (char.is(obj)) return true;
+        if (!(obj instanceof Char)) {
+            return false;
+        }
+
+        for (let char of this.children()) {
+            if (char.is(obj)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -880,8 +931,9 @@ class Row extends AbstractHierarchy {//{{{
      */
     data() {
         const data = [];
-        for (let char of this.chars())
+        for (let char of this.chars()) {
             data.push(char.data());
+        }
         return data;
     }
 
@@ -899,8 +951,9 @@ class Row extends AbstractHierarchy {//{{{
      */
     maxFont() {
         let max = 0; // 空行では０になる
-        for (let char of this.chars())
+        for (let char of this.chars()) {
             max = Math.max(max, char.fontSize() === 'auto' ? 18 : char.fontSize());
+        }
         return max;
     }
 
@@ -908,7 +961,8 @@ class Row extends AbstractHierarchy {//{{{
 
     /**
      * この行の横幅を返します。行は９０度回転しているため、ここでいう幅はcss上の高さを表します
-     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。
+     *     省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
      * @return {number} 自身の幅
      */
     width(opt_useCache) {
@@ -917,7 +971,8 @@ class Row extends AbstractHierarchy {//{{{
 
     /**
      * この行の高さを返します。行は９０度回転しているため、ここでいう高さはcss上の幅を表します
-     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
+     * @param {boolean} [opt_useCache=true] true=キャッシュを利用する、false=キャッシュを利用しない。
+     *     省略するとデフォルトでtrueになるので、キャッシュを使わず計算し直す場合には明示的にfalseを渡す必要がある
      * @return {number} 自身の高さ
      */
     height(opt_useCache) {
@@ -934,6 +989,7 @@ class Row extends AbstractHierarchy {//{{{
         // emptyElem()に加え、オブジェクト参照も切り離す
         this.emptyElem();
         const prevRow = this.prev();
+
         if (prevRow) {
             this.EOL().prev(prevRow.lastChild());
             prevRow.lastChild().next(this.EOL());
@@ -1104,8 +1160,12 @@ class Row extends AbstractHierarchy {//{{{
      * @return {Row} 自身のインスタンス
      */
     moveLastBefore() {
-        if (!this.isFirst()) { return this; } // 各段落最初の行でのみ有効
-        if (this.paragraph().isFirst()) return this; // 文章先頭では無効
+        if (!this.isFirst()) { // 各段落最初の行でのみ有効
+            return this;
+        }
+        if (this.paragraph().isFirst()) {
+            return this; // 文章先頭では無効
+        }
 
         const prevParagraph = this.paragraph().prev();
 
@@ -1130,7 +1190,9 @@ class Row extends AbstractHierarchy {//{{{
      * @return {Row} 自身のインスタンス
      */
     bringChar() {
-        if (this.isLast()) return this;
+        if (this.isLast()) {
+            return this;
+        }
         this.next().firstChild().moveLastBefore();
         return this;
     }
@@ -1141,8 +1203,9 @@ class Row extends AbstractHierarchy {//{{{
      * @return {Row} 自身のインスタンス
      */
     bringChars(num) {
-        for (let i = 0; i < num; i++)
+        for (let i = 0; i < num; i++) {
             this.bringChar();
+        }
         return this;
     }
 
@@ -1151,7 +1214,9 @@ class Row extends AbstractHierarchy {//{{{
      * @return {Row} 自身のインスタンス
      */
     takeChar() {
-        if (!this.hasChar()) return this; // lastChar()でnullが取得される可能性があるため
+        if (!this.hasChar()) { // lastChar()でnullが取得される可能性があるため
+            return this;
+        }
         this.lastChar().moveFirstAfter(); // lastChild()では毎回EOLが取得されるのでlastChar()
         return this;
     }
@@ -1162,8 +1227,9 @@ class Row extends AbstractHierarchy {//{{{
      * @return {Row} 自身のインスタンス
      */
     takeChars(num) {
-        for (let i = 0; i < num; i++)
+        for (let i = 0; i < num; i++) {
             this.takeChar();
+        }
         return this;
     }
 
@@ -1172,8 +1238,9 @@ class Row extends AbstractHierarchy {//{{{
      * @return {Row} 自身のインスタンス
      */
     createPlainContent(str) {
-        for (let c of str)
+        for (let c of str) {
             this.append(new Char(Char.createPlainCharData(c)));
+        }
         return this;
     }
 
@@ -1186,12 +1253,15 @@ class Row extends AbstractHierarchy {//{{{
      * @return {Row} 自身のインスタンス
      */
     cordinate() {
-        if (this.index() > 0 && this.isEmpty()) return this.delete(); // 空段落以外での空行は削除する
+        if (this.index() > 0 && this.isEmpty()) {
+            return this.delete(); // 空段落以外での空行は削除する
+        }
 
         const confLen = this.container().strLenOnRow();
         const len = this.charLen();
-        if (len < confLen)
+        if (len < confLen) {
             this.bringChars(confLen - len);
+        }
 
         // 多すぎる文字数は減らす
         // フォントの異なる文字が混ざっている場合、他の行と高さが異なってしまうため、その行の文字を変える必要がある
@@ -1216,13 +1286,15 @@ class Row extends AbstractHierarchy {//{{{
     checkKinsoku() {
         if (this.isEmpty()) { return this; }
         // 行頭にあるべきではないもの
-        for (let firstText = this.firstChild().text(); !this.isFirst() && /[」』）。、？]/.test(firstText); firstText = this.firstChild().text()) {
-            this.firstChild().moveLastBefore();
-        }
+        for (let firstText = this.firstChild().text();
+            !this.isFirst() && /[」』）。、？]/.test(firstText); firstText = this.firstChild().text()) {
+                this.firstChild().moveLastBefore();
+            }
         // 行末にあるべきではないもの
-        for (let lastText = this.lastChar().text(); !this.isLast() && /[「『（]/.test(lastText); lastText = this.lastChar().text()) {
-            this.lastChar().moveFirstAfter();
-        }
+        for (let lastText = this.lastChar().text();
+            !this.isLast() && /[「『（]/.test(lastText); lastText = this.lastChar().text()) {
+                this.lastChar().moveFirstAfter();
+            }
         return this;
     }
 
@@ -1266,11 +1338,13 @@ class Row extends AbstractHierarchy {//{{{
         const currentFirst = this.firstDisplayCharPos();
         const currentEnd = this.lastDisplayCharPos();
         // カーソルが前にある
-        if (cursorIndex <= currentFirst)
+        if (cursorIndex <= currentFirst) {
             return cursorIndex;
+        }
         // カーソルが後ろにある
-        if ( cursorIndex > currentEnd)
+        if ( cursorIndex > currentEnd) {
             return currentFirst + (cursorIndex - currentEnd);
+        }
         return currentFirst;
     }
 
@@ -1279,8 +1353,11 @@ class Row extends AbstractHierarchy {//{{{
      * @return {number} EOL含め最初に表示された文字のインデックス。文字が全て非表示になっていれば-1
      */
     firstDisplayCharPos() {
-        for (let char of this.children())
-            if (char.isDisplay()) return char.index();
+        for (let char of this.children()) {
+            if (char.isDisplay()) {
+                return char.index();
+            }
+        }
         return -1; // displayがひとつもない(EOLは常にdisplayなので、ここまで来たら異常)
     }
 
@@ -1289,10 +1366,14 @@ class Row extends AbstractHierarchy {//{{{
      * @return {number} EOL含め最後に表示された文字のインデックス。文字が全て非表示になっていれば-1
      */
     lastDisplayCharPos() {
-        if (!this.hasChar) return 0;
-        for (let i = this.charLen()-1,char; (char = this.chars(i)); i--)
-            if (char.isDisplay())
-            return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
+        if (!this.hasChar) {
+            return 0;
+        }
+        for (let i = this.charLen()-1,char; (char = this.chars(i)); i--) {
+            if (char.isDisplay()) {
+                return char.next().isEOL() ? i + 1 : i; // すべての文字がdisplayしていればEOLのインデックスを返す
+            }
+        }
         return -1;
     }
 
@@ -1303,7 +1384,10 @@ class Row extends AbstractHierarchy {//{{{
      * @param {Event} e イベントオブジェクト
      */
     runClick(e) {
-        if (this.container().inputBuffer().isDisplay()) return;
+        if (this.container().inputBuffer().isDisplay()) {
+            return;
+        }
+
         const clickX = e.pageX;
         const clickY = e.pageY;
         let min = Number.MAX_VALUE;
@@ -1341,7 +1425,9 @@ class Row extends AbstractHierarchy {//{{{
         const index = this.index();
         let cnt = 0;
         for (let row of this.paragraph().rows()) {
-            if (cnt >= index) func(row);
+            if (cnt >= index) {
+                func(row);
+            }
             cnt++;
         }
         return this;
@@ -1352,7 +1438,8 @@ class Row extends AbstractHierarchy {//{{{
 /**
  * 段落を表すクラス
  */
-class Paragraph extends AbstractHierarchy {//{{{
+class Paragraph extends AbstractHierarchy {
+    //{{{
     /**
      * @param {object} data 段落を表すオブジェクト<br>
      * 例
@@ -1434,8 +1521,11 @@ class Paragraph extends AbstractHierarchy {//{{{
      * @return {boolean} 段落内にカーソルが含まれていればtrue、そうでなければfalse
      */
     hasCursor() {
-        for (let row of this.rows())
-            if (row.hasCursor()) return true;
+        for (let row of this.rows()) {
+            if (row.hasCursor()) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -1446,8 +1536,12 @@ class Paragraph extends AbstractHierarchy {//{{{
      */
     contains(obj) {
         for (let row of this.rows()) {
-            if (row.is(obj)) return true;
-            if (row.contains(obj)) return true;
+            if (row.is(obj)) {
+                return true;
+            }
+            if (row.contains(obj)) {
+                return true;
+            }
         }
         return false;
     }
@@ -1469,7 +1563,7 @@ class Paragraph extends AbstractHierarchy {//{{{
      * @param {Row} row 挿入するインスタンス
      * @return {Paragraph} 自身のインスタンス
      */
-    insertRow(pos,row) {
+    insertRow(pos, row) {
         return this.insertChild(pos,row);
     }
 
@@ -1525,8 +1619,10 @@ class Paragraph extends AbstractHierarchy {//{{{
 
     /**
      * 段落にtext-alignを設定する、あるいは引数省略で現在のtext-alignの状態を取得します
-     * @param {string boolean} [opt_align] 新たに設定する'left','center','right'の文字列。'left'あるいはfalseならalignを解除する
-     * @return {Paragraph string} 自身のインスタンス(引数を渡した場合)、あるいは現在のtext-alignの状態(引数を省略した場合)
+     * @param {string boolean} [opt_align] 新たに設定する'left','center','right'の文字列。
+     *     'left'あるいはfalseならalignを解除する
+     * @return {Paragraph string} 自身のインスタンス(引数を渡した場合)、
+     *     あるいは現在のtext-alignの状態(引数を省略した場合)
      */
     align(opt_align) {
         if (opt_align === undefined) {
@@ -1535,10 +1631,13 @@ class Paragraph extends AbstractHierarchy {//{{{
         }
 
         const oldAlign = this.className().match(/decolation-textalign-\S+/);
-        if (oldAlign) this.removeClass(oldAlign[0]);
+        if (oldAlign) {
+            this.removeClass(oldAlign[0]);
+        }
 
-        if (opt_align && opt_align !== 'left')
+        if (opt_align && opt_align !== 'left') {
             this.addClass('decolation-textalign-'+ opt_align);
+        }
         return this;
     }
 
@@ -1547,8 +1646,9 @@ class Paragraph extends AbstractHierarchy {//{{{
      * @return {Paragraph} 自身のインスタンス
      */
     removeClassFromAllChar(className) {
-        for (let row of this.rows())
+        for (let row of this.rows()) {
             row.removeClassFromAllChild(className);
+        }
         return this;
     }
 
@@ -1560,9 +1660,11 @@ class Paragraph extends AbstractHierarchy {//{{{
     search(str) {
         this.removeClassFromAllChar('search-label');
         this.removeClassFromAllChar('search-word');
-        for (let row of this.rows())
-            for (let char of row.chars())
-            char.markSearchPhrase(str);
+        for (let row of this.rows()) {
+            for (let char of row.chars()) {
+                char.markSearchPhrase(str);
+            }
+        }
         return this;
     }
 
@@ -1589,7 +1691,9 @@ class Paragraph extends AbstractHierarchy {//{{{
         }
 
         // rowの前側接続
-        const oldLastRow = this.hasRow() ? this.lastChild() : (this.prev() ? this.prev().lastChild() : null); // 自段落の最終行　→　前の段落の最終行　→　null
+        // 自段落の最終行　→　前の段落の最終行　→　null
+        const oldLastRow = this.hasRow() ?
+            this.lastChild() : (this.prev() ? this.prev().lastChild() : null);
 
         this.pushRow(row);
         if (oldLastRow === null) {
@@ -1734,14 +1838,34 @@ class Paragraph extends AbstractHierarchy {//{{{
      * @return {Paragraph} 自身のインスタンス
      */
     divide(char) {
-        // 新しい段落を作成し、基準文字以降を新しい段落に移動する。基準文字の属していた行以降の同段落の行を新しい段落に移動する。新しい段落を基準文字のあった段落の直後に挿入する。cordinate()で文字の調整を行う
-        // 段落先頭から:一行目の文字が丸々新しい行に移って次の段落の一行目となる。二行目以降は行ごと次の段落へ →　基準文字のあった行は空行となりもともとの段落の唯一の行となるため、あたかも空段落が基準行の前に挿入されたようになる
-        // 行頭から:基準行の文字がまるまる新しい行に移って次の段落の一行目になる。基準行以降の行は行ごと新しい段落に移る。　→　基準行以降が新しい段落に移り、それ以前の行はもともとの段落に残るため、段落が２つに別れる。この時点では、もともとの段落の最後に空行が残っている状態なので、cordinate()で対応する
-        // 行の途中から:基準文字以降の同じ行の文字が新しい行に移って次の段落の一行目になる。それ以降は行ごと次の段落に移る。　→　基準文字以降が新しい段落になる。この時点では一行目の文字数がおかしいので、cordinate()で調整する
-        // 段落最後のEOLから: 基準文字のインデックスが同一行の他の文字より大きいため、afterEach()が一度も実行されない。次の行も存在しないのでnextRowが存在せず、nextRow.afterEach()は実行されない。ただし、新しい行はnewParagraphを作成した時点で存在している。 →　新しい段落が今いる段落の後ろに追加されるだけ
-        if (!this.contains(char)) return this;
+        /*
+         *
+         * 新しい段落を作成し、基準文字以降を新しい段落に移動する。
+         *  基準文字の属していた行以降の同段落の行を新しい段落に移動する。
+         *  新しい段落を基準文字のあった段落の直後に挿入する。cordinate()で文字の調整を行う
+         *
+         *  段落先頭から:一行目の文字が丸々新しい行に移って次の段落の一行目となる。
+         *               二行目以降は行ごと次の段落へ
+         *               →　基準文字のあった行は空行となりもともとの段落の唯一の行となるため、
+         *                   あたかも空段落が基準行の前に挿入されたようになる
+         *  行頭から:基準行の文字がまるまる新しい行に移って次の段落の一行目になる。
+         *           基準行以降の行は行ごと新しい段落に移る。
+         *           →　基準行以降が新しい段落に移り、それ以前の行はもともとの段落に残るため、段落が２つに別れる。
+         *           この時点では、もともとの段落の最後に空行が残っている状態なので、cordinate()で対応する
+         *  行の途中から:基準文字以降の同じ行の文字が新しい行に移って次の段落の一行目になる。
+         *               それ以降は行ごと次の段落に移る。
+         *               →　基準文字以降が新しい段落になる。この時点では一行目の文字数がおかしいので、cordinate()で調整する
+         *  段落最後のEOLから: 基準文字のインデックスが同一行の他の文字より大きいため、afterEach()が一度も実行されない。
+         *                     次の行も存在しないのでnextRowが存在せず、nextRow.afterEach()は実行されない。
+         *                     ただし、新しい行はnewParagraphを作成した時点で存在している。
+         *                     →　新しい段落が今いる段落の後ろに追加されるだけ
+         */
+        if (!this.contains(char)) {
+            return this;
+        }
         const paragraph = char.row().paragraph();
-        const newParagraph = Paragraph.createEmptyParagraph().align(paragraph.align()); // 作成時点で空行が含まれている 段落にテキストアラインが付与されていれば、新しい段落も同様にする
+        // 作成時点で空行が含まれている 段落にテキストアラインが付与されていれば、新しい段落も同様にする
+        const newParagraph = Paragraph.createEmptyParagraph().align(paragraph.align());
         const nextRow = char.row().hasNextSibling() ? char.row().next() : null; // この行以降を新しい段落に移動
         // 一行目
         // 基準文字以降を新しい行に移し、新しい段落に挿入する
@@ -1783,7 +1907,9 @@ class Paragraph extends AbstractHierarchy {//{{{
         // 削除行の参照は保持されているのでcordinate()はエラーが起きずに実行される
         // ただしremove()された時にparentにnullが代入されているので、内部でparagraph().container()が実行されるときにNullPointer
         for (let row of this.rows()) {
-            if (!row.paragraph()) continue; // cordinate()内で行が削除された場合の対策
+            if (!row.paragraph()) {
+                continue; // cordinate()内で行が削除された場合の対策
+            }
             row.cordinate();
         }
         return this;
@@ -1795,7 +1921,9 @@ class Paragraph extends AbstractHierarchy {//{{{
      */
     checkKinsoku() {
         for (let row of this.rows()) {
-            if (!row.paragraph()) continue;
+            if (!row.paragraph()) {
+                continue;
+            }
             row.checkKinsoku();
         }
         return this;
@@ -1807,8 +1935,9 @@ class Paragraph extends AbstractHierarchy {//{{{
      * @return {Paragraph} 自身のインスタンス
      */
     display(bDisplay) {
-        for (let row of this.rows())
+        for (let row of this.rows()) {
             row.display(bDisplay);
+        }
         return this;
     }
 
