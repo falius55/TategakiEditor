@@ -37,6 +37,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~Displayer.html">Displayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SearchMode.html">SearchMode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SelectRange.html">SelectRange</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
@@ -71,14 +74,15 @@
 /**
  * &#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x60C5;&#x5831;&#x306E;&#x3072;&#x3068;&#x3064;&#x3092;&#x6271;&#x3046;&#x30AF;&#x30E9;&#x30B9;
  */
-export class File extends AbstractHierarchy {//{{{
+export class File extends AbstractHierarchy {
+    //{{{
     // constructor {{{
     /**
      * @param {number} id &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;ID
      * @param {string} filename &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;
      */
     constructor(id, filename) {
-        super(ElemCreator.createFileElement(id,filename));
+        super(ElemCreator.createFileElement(id, filename));
         this._link = this.elem().getElementsByTagName(&apos;a&apos;)[0];
         this._id = id;
         this._name = filename;
@@ -93,9 +97,11 @@ export class File extends AbstractHierarchy {//{{{
      * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
     fileList() {
-        for (let parentDir = this.parent(); parentDir ;parentDir = parentDir.parent() )
-            if (parentDir.isRoot())
-            return parentDir;
+        for (let parentDir = this.parent(); parentDir ;parentDir = parentDir.parent() ) {
+            if (parentDir.isRoot()) {
+                return parentDir;
+            }
+        }
         return null;
     }
 
@@ -116,10 +122,10 @@ export class File extends AbstractHierarchy {//{{{
     nextFile(opt_file) {
         if (opt_file === undefined) {
             return this._nextFile;
-        } else {
-            this._nextFile = opt_file;
-            return this;
         }
+
+        this._nextFile = opt_file;
+        return this;
     }
 
     /**
@@ -131,10 +137,10 @@ export class File extends AbstractHierarchy {//{{{
     prevFile(opt_file) {
         if (opt_file === undefined) {
             return this._prevFile;
-        } else {
-            this._prevFile = opt_file;
-            return this;
         }
+
+        this._prevFile = opt_file;
+        return this;
     }//}}}
 
     // --&#x5224;&#x5B9A; {{{
@@ -224,26 +230,25 @@ export class File extends AbstractHierarchy {//{{{
         }
 
         const data = {};
-        data.user_id = sentenceContainer.userId();
         data.file_id = this.id();
         sentenceContainer.announce(&apos;&#x8AAD;&#x8FBC;&#x4E2D;&apos;);
-        Util.post(&apos;/tategaki/ReadJsonFile&apos;, data, json =&gt; sentenceContainer.init(json).isChanged(false).announce(&apos;&#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x5B8C;&#x4E86;&apos;));
+        Util.get(&apos;/tategaki/FileData&apos;,
+            json =&gt; sentenceContainer.init(json).isChanged(false).announce(&apos;&#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x5B8C;&#x4E86;&apos;),
+            data);
         return this;
     }
 
     /**
      * &#x81EA;&#x8EAB;&#x306E;&#x8981;&#x7D20;&#x53CA;&#x3073;&#x81EA;&#x8EAB;&#x3078;&#x306E;&#x53C2;&#x7167;&#x3092;&#x524A;&#x9664;&#x3057;&#x3001;&#x81EA;&#x8EAB;&#x304C;&#x8868;&#x3059;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {File} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/DeleteFile.html
+     * @see ../WEB-INF/classes/doc/DeleteServlet.html
      */
     delete() {
-        Util.post(&apos;/tategaki/DeleteFile&apos;,{
-            user_id: this.fileList().sentenceContainer().userId(),
+        Util.post(&apos;/tategaki/Delete&apos;,{
             file_id: this.id()
         },function (json) {
             if (json.result === &apos;false&apos; || json.result === false) {
                 console.log(&apos;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x524A;&#x9664;&#x30A8;&#x30E9;&#x30FC;&#x3067;&#x3059;(&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x756A;&#x53F7;&#xFF1A;&apos;+ this.id() + &apos;)&apos;);
-                console.log(&apos;json.result&apos;, json.result);
                 return;
             }
 
@@ -274,14 +279,13 @@ export class File extends AbstractHierarchy {//{{{
      * &#x81EA;&#x8EAB;&#x3092;newParentDir&#x306E;&#x4E2D;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x3001;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x3092;&#x4F5C;&#x308A;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @param {Directory} newParentDir &#x81EA;&#x8EAB;&#x306E;&#x89AA;&#x3068;&#x306A;&#x308B;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      * @return {File} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/MoveFile.html
+     * @see ../WEB-INF/classes/doc/FileListServlet.html
      */
     move(newParentDir) {
         const fileList = this.fileList();
-        Util.post(&apos;/tategaki/MoveFile&apos;,{
-            user_id: fileList.sentenceContainer().userId(),
+        Util.post(&apos;/tategaki/FileList&apos;,{
             file_id: this.id(),
-            directory_id: newParentDir.id()
+            new_parent_id: newParentDir.id()
         }, data =&gt; fileList.read());
         return this;
     }//}}}
@@ -293,7 +297,7 @@ export class File extends AbstractHierarchy {//{{{
      * @return {File} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addClickEventListener() {
-        this._clickArg = this.onClick.bind(this);
+        this._clickArg = this._onClick.bind(this);
         this.link().addEventListener(&apos;click&apos;,this._clickArg);
         return this;
     }
@@ -303,7 +307,9 @@ export class File extends AbstractHierarchy {//{{{
      * @return {File} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     removeClickEventListener() {
-        if (!this._clickArg) return this;
+        if (!this._clickArg) {
+            return this;
+        }
         this.link().removeEventListener(&apos;click&apos;,this._clickArg);
         this._clickArg = null;
         return this;
@@ -323,7 +329,8 @@ export class File extends AbstractHierarchy {//{{{
 /**
  * &#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x306E;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x60C5;&#x5831;&#x306E;&#x3072;&#x3068;&#x3064;&#x3092;&#x6271;&#x3046;&#x30AF;&#x30E9;&#x30B9;
  */
-export class Directory extends AbstractHierarchy {//{{{
+export class Directory extends AbstractHierarchy {
+    //{{{
     // constructor {{{
     /**
      * @param {number} dirId &#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;ID
@@ -369,11 +376,15 @@ export class Directory extends AbstractHierarchy {//{{{
         this._id = parseInt(dirId);
         this._name = data.directoryname;
         for (let id in data) {
-            if (id === &apos;directoryname&apos;) continue;
-            if (typeof data[id] === &apos;string&apos;)
+            if (id === &apos;directoryname&apos;) {
+                continue;
+            }
+            if (typeof data[id] === &apos;string&apos;) {
                 this.append(new File(id,data[id]));
-            if (typeof data[id] === &apos;object&apos;)
+            }
+            if (typeof data[id] === &apos;object&apos;) {
                 this.append(new Directory(id,data[id]));
+            }
         }
     }//}}}
 
@@ -399,9 +410,11 @@ export class Directory extends AbstractHierarchy {//{{{
      * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
     fileList() {
-        for (let parentDir = this.parent(); parentDir; parentDir = parentDir.parent())
-            if (parentDir.isRoot())
-            return parentDir;
+        for (let parentDir = this.parent(); parentDir; parentDir = parentDir.parent()) {
+            if (parentDir.isRoot()) {
+                return parentDir;
+            }
+        }
         return null;
     }
 
@@ -410,9 +423,12 @@ export class Directory extends AbstractHierarchy {//{{{
      * @return {File} &#x81EA;&#x5206;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;(&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3001;&#x5185;&#x90E8;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x9664;&#x304F;)&#x3002;&#x81EA;&#x5206;&#x306E;&#x5F8C;&#x65B9;&#x306B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
     findNextFile() {
-        for (let fileList = this.fileList(), nextFile = fileList.findNextFile(this); nextFile; nextFile = fileList.findNextFile(nextFile))
-            if (!this.contains(nextFile))
-            return nextFile;
+        for (let fileList = this.fileList(), nextFile = fileList.findNextFile(this);
+            nextFile; nextFile = fileList.findNextFile(nextFile)) {
+                if (!this.contains(nextFile)) {
+                    return nextFile;
+                }
+            }
         return null;
     }//}}}
 
@@ -447,9 +463,12 @@ export class Directory extends AbstractHierarchy {//{{{
      * @return {boolean} &#x5F15;&#x6570;&#x304C;&#x3053;&#x306E;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x4E2D;&#x306B;&#x3042;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
      */
     contains(fileOrDirectory) {
-        for (let fileList = this.fileList(), parents = fileOrDirectory.parent(); parents !== fileList; parents = parents.parent())
-            if (parents === this)
-            return true;
+        for (let fileList = this.fileList(), parents = fileOrDirectory.parent();
+            parents !== fileList; parents = parents.parent()) {
+                if (parents === this) {
+                    return true;
+                }
+            }
         return false;
     }//}}}
 
@@ -506,19 +525,18 @@ export class Directory extends AbstractHierarchy {//{{{
      * &#x81EA;&#x8EAB;&#x3092;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @param {boolean} [opt_bl=false] &#x81EA;&#x8EAB;&#x306E;&#x5185;&#x90E8;&#x306B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x3042;&#x308B;&#x3068;&#x304D;&#x3001;&#x5F37;&#x5236;&#x7684;&#x306B;&#x4E2D;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3054;&#x3068;&#x524A;&#x9664;&#x3059;&#x308B;&#x306A;&#x3089;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;
      * @return {Directory} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/DeleteDirectory.html
+     * @see ../WEB-INF/classes/doc/DeleteServlet.html
      */
     delete(opt_bl) {
         const bl = opt_bl || false; // &#x5F15;&#x6570;&#x7701;&#x7565;&#x306E;&#x5834;&#x5408;&#x3067;&#x3082;&#x3001;&#x660E;&#x78BA;&#x306B;false&#x3092;&#x5165;&#x308C;&#x308B;
-        console.log(&apos;delete option:&apos;, bl);
-        Util.post(&apos;/tategaki/DeleteDirectory&apos;,{
+        Util.post(&apos;/tategaki/Delete&apos;,{
             directory_id: this.id(),
             option: bl
-        },function (data) {
+        }, function (data) {
             const fileList = this.fileList();
             fileList.read();
-            if (data.result === &apos;within&apos;) {
-                alert(&apos;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x304C;&#x7A7A;&#x3067;&#x306F;&#x306A;&#x3044;&#x306E;&#x3067;&#x524A;&#x9664;&#x3067;&#x304D;&#x307E;&#x305B;&#x3093;&#x3067;&#x3057;&#x305F;&#x3002;&apos;);
+            if (data.result === &apos;false&apos;) {
+                alert(&apos;&#x524A;&#x9664;&#x3067;&#x304D;&#x307E;&#x305B;&#x3093;&#x3067;&#x3057;&#x305F;&#x3002;&apos;);
                 return;
             }
 
@@ -542,7 +560,8 @@ export class Directory extends AbstractHierarchy {//{{{
 /**
  * &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3084;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3092;&#x4E00;&#x89A7;&#x306B;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class FileList extends AbstractHierarchy {//{{{
+export class FileList extends AbstractHierarchy {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} sentenceContainer &#x81EA;&#x8EAB;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x5C55;&#x958B;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
@@ -567,16 +586,17 @@ export class FileList extends AbstractHierarchy {//{{{
      * &lt;/code&gt;
      * &lt;/pre&gt;
      */
-    constructor(sentenceContainer,opt_data) {
+    constructor(sentenceContainer, opt_data) {
         super(document.getElementById(&apos;file_list&apos;));
         this._sentenceContainer = sentenceContainer;
         this._$modal = $(&apos;#file_list_modal&apos;);
         this._filterInputElem = document.getElementById(&apos;file_list_filter&apos;);
         this.addEventListenerOnInput();
-        if (opt_data)
+        if (opt_data) {
             this.init(opt_data);
-        else
+        } else {
             this.read();
+        }
     }
 
     /**
@@ -587,11 +607,16 @@ export class FileList extends AbstractHierarchy {//{{{
     init(data) {
         this.empty();
         for (let id in data) {
-            if (id === &apos;directoryname&apos;) continue;
-            if (typeof data[id] === &apos;string&apos;)
+            if (id === &apos;directoryname&apos;) {
+                continue;
+            }
+
+            if (typeof data[id] === &apos;string&apos;) {
                 this.append(new File(id,data[id]));
-            if (typeof data[id] === &apos;object&apos;)
+            }
+            if (typeof data[id] === &apos;object&apos;) {
                 this.append(new Directory(id,data[id]));
+            }
         }
         this.chainFile();
         return this;
@@ -620,7 +645,9 @@ export class FileList extends AbstractHierarchy {//{{{
      */
     lastFile() {
         for (let file = this.firstFile(); file; file = file.nextFile()) {
-            if (file.isLastFile()) return file;
+            if (file.isLastFile()) {
+                return file;
+            }
         }
         return null;
     }
@@ -630,9 +657,11 @@ export class FileList extends AbstractHierarchy {//{{{
      * @return {File} &#x73FE;&#x5728;&#x958B;&#x304B;&#x308C;&#x3066;&#x3044;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     currentFile() {
-        for (let file = this.firstFile(); file; file = file.nextFile())
-            if (file.isOpen())
-            return file;
+        for (let file = this.firstFile(); file; file = file.nextFile()) {
+            if (file.isOpen()) {
+                return file;
+            }
+        }
         return null;
     }
 
@@ -661,9 +690,15 @@ export class FileList extends AbstractHierarchy {//{{{
     findFile(idOrName) {
         const ret = [];
         this.each(file =&gt; {
-            if (file.isDirectory()) return;
-            if (file.id() === idOrName || (typeof idOrName === &apos;string&apos; &amp;&amp; new RegExp(&apos;^&apos;+ idOrName +&apos;$&apos;,&apos;i&apos;).test(file.name())))
-                ret.push(file);
+            if (file.isDirectory()) {
+                return;
+            }
+
+            if (file.id() === idOrName ||
+                (typeof idOrName === &apos;string&apos; &amp;&amp; new RegExp(&apos;^&apos;+ idOrName +&apos;$&apos;,&apos;i&apos;)
+                    .test(file.name()))) {
+                        ret.push(file);
+                    }
         });
         return ret;
     }
@@ -677,9 +712,15 @@ export class FileList extends AbstractHierarchy {//{{{
     findDirectory(idOrName) {
         const ret = [];
         this.each(dir =&gt; {
-            if (dir.isFile()) return;
-            if (dir.id() === idOrName || (typeof idOrName === &apos;string&apos; &amp;&amp; new RegExp(&apos;^&apos;+ idOrName +&apos;$&apos;,&apos;i&apos;).test(dir.name())))
-                ret.push(dir);
+            if (dir.isFile()) {
+                return;
+            }
+
+            if (dir.id() === idOrName ||
+                (typeof idOrName === &apos;string&apos; &amp;&amp; new RegExp(&apos;^&apos;+ idOrName +&apos;$&apos;,&apos;i&apos;)
+                    .test(dir.name()))) {
+                        ret.push(dir);
+                    }
         });
         return ret;
     }//}}}
@@ -727,14 +768,19 @@ export class FileList extends AbstractHierarchy {//{{{
 
     // --&#x53C2;&#x7167;&#x64CD;&#x4F5C; {{{
     /**
-     * &#x5185;&#x90E8;&#x306E;File&#x540C;&#x58EB;&#x3092;&#x30DD;&#x30A4;&#x30F3;&#x30BF;&#x3067;&#x3064;&#x306A;&#x304E;&#x307E;&#x3059;
+     * &#x5185;&#x90E8;&#x306E;File&#x540C;&#x58EB;&#x3092;&#x53C2;&#x7167;&#x3067;&#x3064;&#x306A;&#x304E;&#x307E;&#x3059;
      * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     chainFile() {
         let prev;
         this.each(file =&gt; {
-            if (!file.isFile()) return;
-            if (prev) prev.nextFile(file);
+            if (!file.isFile()) {
+                return;
+            }
+
+            if (prev) {
+                prev.nextFile(file);
+            }
             file.prevFile(prev);
             prev = file;
         });
@@ -747,17 +793,22 @@ export class FileList extends AbstractHierarchy {//{{{
      * @return {File} &#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x5F15;&#x6570;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
     findNextFile(file) {
-        // &#x30C1;&#x30A7;&#x30C3;&#x30AF;&#x3059;&#x308B;&#x9806;&#x756A;&#x306F;&#x3001;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306A;&#x3089;&#x305D;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x30C1;&#x30A7;&#x30C3;&#x30AF;&#x3057;&#x3001;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306A;&#x3089;&#x4E0B;&#x306B;&#x6F5C;&#x3063;&#x3066;&#x6700;&#x521D;&#x306B;&#x898B;&#x3064;&#x3051;&#x305F;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x30C1;&#x30A7;&#x30C3;&#x30AF;&#x3059;&#x308B;
-        // -- &#x5168;&#x8981;&#x7D20;&#x3092;&#x9806;&#x306B;&#x63A2;&#x7D22;&#x3057;&#x3066;&#x3044;&#x304F;&#x305F;&#x3081;&#x306E;&#x9053;&#x306E;&#x308A; --
-        // &#x5F15;&#x6570;&#x304C;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306A;&#x3089;&#x3002;&#x5F15;&#x6570;&#x306E;&#x6B21;&#x3092;&#x78BA;&#x8A8D;&#x3059;&#x308B;
-        // &#x5F15;&#x6570;&#x304C;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306A;&#x3089;&#x3001;&#x305D;&#x306E;&#x6700;&#x521D;&#x306E;&#x5B50;&#x3092;&#x78BA;&#x8A8D;&#x3059;&#x308B;(FileList&#x306F;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x6271;&#x3044;)
-        // &#x7A7A;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;(firstChild()===null)&#x306A;&#x3089;&#x3001;&#x5F15;&#x6570;&#x306E;&#x6B21;&#x3092;&#x78BA;&#x8A8D;&#x3059;&#x308B;
-        // &#x5F15;&#x6570;&#x306E;&#x6B21;&#x304C;&#x540C;&#x3058;&#x968E;&#x5C64;&#x306B;&#x306A;&#x3051;&#x308C;&#x3070;(&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x5185;&#x306E;&#x6700;&#x5F8C;&#x3068;&#x5224;&#x65AD;&#x3059;&#x308B;)&#x3001;&#x89AA;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x6B21;&#x3092;&#x78BA;&#x8A8D;&#x3059;&#x308B;(&#x305D;&#x308C;&#x3067;&#x3082;&#x306A;&#x3051;&#x308C;&#x3070;&#x3001;&#x3055;&#x3089;&#x306B;&#x4E0A;&#x306E;&#x89AA;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x6B21;&#x3001;&#x3068;&#x7E70;&#x308A;&#x8FD4;&#x3059;)
-        // &#x5F15;&#x6570;&#x306E;&#x6B21;&#x306E;&#x8981;&#x7D20;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x305A;&#x89AA;&#x3092;&#x305F;&#x3069;&#x3063;&#x3066;&#x3044;&#x304F;&#x904E;&#x7A0B;&#x3067;&#x30EB;&#x30FC;&#x30C8;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;(FileList)&#x306B;&#x8FBF;&#x308A;&#x7740;&#x3044;&#x305F;&#x5834;&#x5408;&#x306F;&#x3001;&#x63A2;&#x7D22;&#x304C;&#x6700;&#x5F8C;&#x306B;&#x9054;&#x3057;&#x305F;&#x3068;&#x3057;&#x3066;null&#x3092;&#x8FD4;&#x3059;
-        // -- &#x3053;&#x3053;&#x307E;&#x3067;&#x3067;&#x78BA;&#x8A8D;&#x8981;&#x7D20;&#x3092;&#x53D6;&#x5F97; --
-        // &#x53D6;&#x5F97;&#x3057;&#x305F;&#x78BA;&#x8A8D;&#x8981;&#x7D20;&#x304C;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306A;&#x3089;&#x3001;&#x3055;&#x3089;&#x306B;&#x6F5C;&#x3063;&#x3066;&#x63A2;&#x7D22;&#x3092;&#x6B21;&#x306B;&#x9032;&#x3081;&#x308B;&#x305F;&#x3081;&#x518D;&#x5E30;&#x3059;&#x308B;
-        // &#x53D6;&#x5F97;&#x3057;&#x305F;&#x78BA;&#x8A8D;&#x8981;&#x7D20;&#x304C;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306A;&#x3089;&#x3001;&#x305D;&#x306E;&#x8981;&#x7D20;&#x304C;&#x5F15;&#x6570;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306A;&#x306E;&#x3067;&#x8FD4;&#x3059;
-        if (file.isEmpty() &amp;&amp; file.isRoot()) return null;
+        /*
+         *
+         *  &#x30C1;&#x30A7;&#x30C3;&#x30AF;&#x3059;&#x308B;&#x9806;&#x756A;&#x306F;&#x3001;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306A;&#x3089;&#x305D;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x30C1;&#x30A7;&#x30C3;&#x30AF;&#x3057;&#x3001;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306A;&#x3089;&#x4E0B;&#x306B;&#x6F5C;&#x3063;&#x3066;&#x6700;&#x521D;&#x306B;&#x898B;&#x3064;&#x3051;&#x305F;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x30C1;&#x30A7;&#x30C3;&#x30AF;&#x3059;&#x308B;
+         *  -- &#x5168;&#x8981;&#x7D20;&#x3092;&#x9806;&#x306B;&#x63A2;&#x7D22;&#x3057;&#x3066;&#x3044;&#x304F;&#x305F;&#x3081;&#x306E;&#x9053;&#x306E;&#x308A; --
+         *  &#x5F15;&#x6570;&#x304C;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306A;&#x3089;&#x3002;&#x5F15;&#x6570;&#x306E;&#x6B21;&#x3092;&#x78BA;&#x8A8D;&#x3059;&#x308B;
+         *  &#x5F15;&#x6570;&#x304C;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306A;&#x3089;&#x3001;&#x305D;&#x306E;&#x6700;&#x521D;&#x306E;&#x5B50;&#x3092;&#x78BA;&#x8A8D;&#x3059;&#x308B;(FileList&#x306F;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x6271;&#x3044;)
+         *  &#x7A7A;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;(firstChild()===null)&#x306A;&#x3089;&#x3001;&#x5F15;&#x6570;&#x306E;&#x6B21;&#x3092;&#x78BA;&#x8A8D;&#x3059;&#x308B;
+         *  &#x5F15;&#x6570;&#x306E;&#x6B21;&#x304C;&#x540C;&#x3058;&#x968E;&#x5C64;&#x306B;&#x306A;&#x3051;&#x308C;&#x3070;(&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x5185;&#x306E;&#x6700;&#x5F8C;&#x3068;&#x5224;&#x65AD;&#x3059;&#x308B;)&#x3001;&#x89AA;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x6B21;&#x3092;&#x78BA;&#x8A8D;&#x3059;&#x308B;(&#x305D;&#x308C;&#x3067;&#x3082;&#x306A;&#x3051;&#x308C;&#x3070;&#x3001;&#x3055;&#x3089;&#x306B;&#x4E0A;&#x306E;&#x89AA;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x6B21;&#x3001;&#x3068;&#x7E70;&#x308A;&#x8FD4;&#x3059;)
+         *  &#x5F15;&#x6570;&#x306E;&#x6B21;&#x306E;&#x8981;&#x7D20;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x305A;&#x89AA;&#x3092;&#x305F;&#x3069;&#x3063;&#x3066;&#x3044;&#x304F;&#x904E;&#x7A0B;&#x3067;&#x30EB;&#x30FC;&#x30C8;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;(FileList)&#x306B;&#x8FBF;&#x308A;&#x7740;&#x3044;&#x305F;&#x5834;&#x5408;&#x306F;&#x3001;&#x63A2;&#x7D22;&#x304C;&#x6700;&#x5F8C;&#x306B;&#x9054;&#x3057;&#x305F;&#x3068;&#x3057;&#x3066;null&#x3092;&#x8FD4;&#x3059;
+         *  -- &#x3053;&#x3053;&#x307E;&#x3067;&#x3067;&#x78BA;&#x8A8D;&#x8981;&#x7D20;&#x3092;&#x53D6;&#x5F97; --
+         *  &#x53D6;&#x5F97;&#x3057;&#x305F;&#x78BA;&#x8A8D;&#x8981;&#x7D20;&#x304C;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306A;&#x3089;&#x3001;&#x3055;&#x3089;&#x306B;&#x6F5C;&#x3063;&#x3066;&#x63A2;&#x7D22;&#x3092;&#x6B21;&#x306B;&#x9032;&#x3081;&#x308B;&#x305F;&#x3081;&#x518D;&#x5E30;&#x3059;&#x308B;
+         *  &#x53D6;&#x5F97;&#x3057;&#x305F;&#x78BA;&#x8A8D;&#x8981;&#x7D20;&#x304C;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306A;&#x3089;&#x3001;&#x305D;&#x306E;&#x8981;&#x7D20;&#x304C;&#x5F15;&#x6570;&#x306E;&#x6B21;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306A;&#x306E;&#x3067;&#x8FD4;&#x3059;
+         */
+        if (file.isEmpty() &amp;&amp; file.isRoot()) {
+            return null;
+        }
         let check;
         if (file.isFile()) {
             check = file.next();
@@ -766,8 +817,12 @@ export class FileList extends AbstractHierarchy {//{{{
             check = file.firstChild() || file.next();
         }
         if (!check) {
-            for (let parentDir = file.parent(); !(check = parentDir.next()); parentDir = parentDir.parent())
-                if (parentDir.isRoot()) return null;
+            for (let parentDir = file.parent();
+                !(check = parentDir.next()); parentDir = parentDir.parent()) {
+                    if (parentDir.isRoot()) {
+                        return null;
+                    }
+                }
         }
         if (check.isDirectory()) {
             return this.findNextFile(check);
@@ -784,17 +839,28 @@ export class FileList extends AbstractHierarchy {//{{{
      * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     each(func) {
-        if (this.firstChild() === null) return this; // &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3084;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x304C;&#x3072;&#x3068;&#x3064;&#x3082;&#x306A;&#x3044;&#x5834;&#x5408;
+        if (this.firstChild() === null) { // &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3084;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x304C;&#x3072;&#x3068;&#x3064;&#x3082;&#x306A;&#x3044;&#x5834;&#x5408;
+            return this;
+        }
+
         // file&#x306B;&#x5B50;&#x304C;&#x3042;&#x308C;&#x3070;&#x5B50;&#x306B;&#x9032;&#x307F;&#x3001;&#x306A;&#x3051;&#x308C;&#x3070;&#x6B21;&#x306B;&#x9032;&#x3080;(&#x5B50;&#x306E;&#x3042;&#x308B;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306A;&#x3089;&#x6700;&#x521D;&#x306E;&#x5B50;&#x3001;file&#x304B;&#x7A7A;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306A;&#x3089;&#x6B21;&#x306B;&#x9032;&#x3080;)
         // &#x6B21;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x89AA;&#x306E;&#x6B21;&#x306B;&#x9032;&#x3080;&#x3002;&#x305D;&#x308C;&#x3067;&#x3082;&#x306A;&#x3051;&#x308C;&#x3070;&#x3055;&#x3089;&#x306B;&#x89AA;&#x306E;&#x6B21;&#x3001;&#x3068;&#x7E70;&#x308A;&#x8FD4;&#x3059;
         // &#x305D;&#x306E;&#x904E;&#x7A0B;&#x3067;&#x30EB;&#x30FC;&#x30C8;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x304C;&#x898B;&#x3064;&#x304B;&#x308C;&#x3070;&#x63A2;&#x7D22;&#x7D42;&#x4E86;
-        for (let file = this.firstChild(), temp = this;; temp = file, file = file.hasChild() ? file.firstChild() : file.next()) {
-            if (!file) {
-                for (let parentDir = temp.parent(); !(file = parentDir.next()); parentDir = parentDir.parent())
-                    if (parentDir.isRoot()) return this;
+        for (let file = this.firstChild(), temp = this;; temp = file,
+            file = file.hasChild() ? file.firstChild() : file.next()) {
+                if (file) {
+                    func(file);
+                    continue;
+                }
+
+                for (let parentDir = temp.parent();
+                    !(file = parentDir.next()); parentDir = parentDir.parent()) {
+                        if (parentDir.isRoot()) {
+                            return this;
+                        }
+                    }
+                func(file);
             }
-            func(file);
-        }
         return this;
     }//}}}
 
@@ -863,8 +929,9 @@ export class FileList extends AbstractHierarchy {//{{{
         // &#x5B58;&#x5728;&#x3057;&#x306A;&#x3044;&#x30A8;&#x30EC;&#x30E1;&#x30F3;&#x30C8;&#x3092;&#x524A;&#x9664;&#x3057;&#x3088;&#x3046;&#x3068;&#x3059;&#x308B;&#x3053;&#x3068;&#x306B;&#x306A;&#x308A;&#x30A8;&#x30E9;&#x30FC;&#x304C;&#x8D77;&#x3053;&#x308B;&#x305F;&#x3081;&#x3001;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;
         const children = this.elem().children;
         let child;
-        while ((child = children[0]))
+        while ((child = children[0])) {
             this.elem().removeChild(child);
+        }
         return this;
     }
 
@@ -889,8 +956,9 @@ export class FileList extends AbstractHierarchy {//{{{
         this.emptyElem();
         const regexp = new RegExp(&apos;^&apos;+ str +&apos;.*&apos;,&apos;i&apos;);
         this.each(file =&gt; {
-            if (regexp.test(file.name()))
+            if (regexp.test(file.name())) {
                 this.elem().appendChild(file.elem());
+            }
         });
         if (this.elem().children.length === 0) {
             const li = document.createElement(&apos;li&apos;);
@@ -905,15 +973,13 @@ export class FileList extends AbstractHierarchy {//{{{
     /**
      * &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x30EA;&#x30B9;&#x30C8;&#x3092;&#x30B5;&#x30FC;&#x30D0;&#x30FC;&#x304B;&#x3089;&#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x3001;&#x5404;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x69CB;&#x7BC9;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/FileListMaker.html
+     * @see ../WEB-INF/classes/doc/FileListServlet.html
      */
     read() {
-        const userId = this.sentenceContainer().userId();
-        Util.post(&apos;/tategaki/FileListMaker&apos;,{
-            user_id: userId
-        },function (json) {
-            this.init(json);
-        }.bind(this));
+        Util.get(&apos;/tategaki/FileList&apos;,
+            function (json) {
+                this.init(json);
+            }.bind(this));
         return this;
     }
 
@@ -967,11 +1033,15 @@ export class FileList extends AbstractHierarchy {//{{{
         }
 
         if (fileLength &gt; 0) {
-            if (window.confirm(&apos;&#x540C;&#x4E00;&#x540D;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x8907;&#x6570;&#x5B58;&#x5728;&#x3057;&#x307E;&#x3059;&#x3002;\n&#x3059;&#x3079;&#x3066;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;&#x304B;&#x3002;\n&#x3053;&#x306E;&#x3046;&#x3061;&#x306E;&#x3069;&#x308C;&#x304B;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;&#x5834;&#x5408;&#x306F;&#x30AD;&#x30E3;&#x30F3;&#x30BB;&#x30EB;&#x3057;&#x3001;&#x500B;&#x5225;&#x306B;&#x524A;&#x9664;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;&apos;))
-                for (let i = 0,file; (file = files[i]); i++)
-                file.delete();
-            else
-                console.log(&apos;[&#x8907;&#x6570;&#x30D5;&#x30A1;&#x30A4;&#x30EB;]&#x524A;&#x9664;&#x3067;&#x304D;&#x307E;&#x305B;&#x3093;&#x3067;&#x3057;&#x305F;&#x3002;:&apos; + filename);
+            if (window.confirm(&apos;&#x540C;&#x4E00;&#x540D;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x8907;&#x6570;&#x5B58;&#x5728;&#x3057;&#x307E;&#x3059;&#x3002;\n&apos; +
+                &apos;&#x3059;&#x3079;&#x3066;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;&#x304B;&#x3002;\n&apos; +
+                    &apos;&#x3053;&#x306E;&#x3046;&#x3061;&#x306E;&#x3069;&#x308C;&#x304B;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;&#x5834;&#x5408;&#x306F;&#x30AD;&#x30E3;&#x30F3;&#x30BB;&#x30EB;&#x3057;&#x3001;&#x500B;&#x5225;&#x306B;&#x524A;&#x9664;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;&apos;)) {
+                        for (let i = 0,file; (file = files[i]); i++) {
+                            file.delete();
+                        }
+                    } else {
+                        console.log(&apos;[&#x8907;&#x6570;&#x30D5;&#x30A1;&#x30A4;&#x30EB;]&#x524A;&#x9664;&#x3067;&#x304D;&#x307E;&#x305B;&#x3093;&#x3067;&#x3057;&#x305F;&#x3002;:&apos; + filename);
+                    }
         }
         return this;
     }
@@ -979,18 +1049,26 @@ export class FileList extends AbstractHierarchy {//{{{
     /**
      * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x540D;&#x524D;&#x3067;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @param {string} dirname &#x65B0;&#x3057;&#x304F;&#x4F5C;&#x6210;&#x3055;&#x308C;&#x308B;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x540D;&#x524D;
+     * @param {number} [opt_parentID] &#x89AA;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;ID&#x3002;&#x6307;&#x5B9A;&#x3057;&#x306A;&#x3051;&#x308C;&#x3070;root&#x76F4;&#x4E0B;
      * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/DirectoryMaker.html
+     * @see ../WEB-INF/classes/doc/FileListServlet.html
      */
-    mkdir(dirname) {
-        if (!dirname) return this;
-        Util.post(&apos;/tategaki/DirectoryMaker&apos;,{
-            user_id: this.sentenceContainer().userId(),
-            directoryname: dirname,
+    mkdir(dirname, opt_parentID) {
+        if (!dirname) {
+            return this;
+        }
+
+        Util.post(&apos;/tategaki/FileList&apos;,{
+            name: dirname,
+            new_parent_id: opt_parentID || -1,
             saved: Date.now()
         },function (data) {
-            this.sentenceContainer().announce(&apos;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x307E;&#x3057;&#x305F;:&apos;+ dirname);
-            this.read();
+            if (data.result === &apos;true&apos;) {
+                this.sentenceContainer().announce(&apos;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x307E;&#x3057;&#x305F;:&apos;+ dirname);
+                this.read();
+            } else {
+                this.sentenceContainer().announce(&apos;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x4F5C;&#x6210;&#x30A8;&#x30E9;&#x30FC;&apos;);
+            }
         }.bind(this));
         return this;
     }
@@ -1000,11 +1078,14 @@ export class FileList extends AbstractHierarchy {//{{{
      * @param {string} dirname &#x524A;&#x9664;&#x3059;&#x308B;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x306E;&#x540D;&#x524D;
      * @param {boolean} isForce &#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x5185;&#x306B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x7B49;&#x304C;&#x3042;&#x3063;&#x3066;&#x3082;&#x5F37;&#x5236;&#x7684;&#x306B;&#x4E2D;&#x8EAB;&#x3054;&#x3068;&#x524A;&#x9664;&#x3059;&#x308B;&#x306A;&#x3089;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
      * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/DeleteDirectory.html
+     * @see ../WEB-INF/classes/doc/Delete.html
      */
-    deleteDirectory(dirname,isForce) {
+    deleteDirectory(dirname, isForce) {
         const dirs = this.findDirectory(dirname);
-        if (dirs.length === 0) return this;
+        if (dirs.length === 0) {
+            return this;
+        }
+
         dirs[0].delete(isForce);
         return this;
     }
@@ -1014,12 +1095,15 @@ export class FileList extends AbstractHierarchy {//{{{
      * @param {string} filename &#x79FB;&#x52D5;&#x3059;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;&#x3002;&#x540C;&#x540D;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x5834;&#x5408;&#x306F;&#x3001;&#x6700;&#x521D;&#x306B;&#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x308B;
      * @param {string} dirname &#x79FB;&#x52D5;&#x5148;&#x306E;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x540D;&#x3002;&#x540C;&#x540D;&#x306E;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x304C;&#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x5834;&#x5408;&#x306F;&#x3001;&#x6700;&#x521D;&#x306B;&#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x30C7;&#x30A3;&#x30EC;&#x30AF;&#x30C8;&#x30EA;&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x308B;
      * @return {FileList} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/MoveFile.html
+     * @see ../WEB-INF/classes/doc/FileListServlet.html
      */
-    moveFile(filename,dirname) {
+    moveFile(filename, dirname) {
         const files = this.findFile(filename);
         const dirs = this.findDirectory(dirname);
-        if (files.length === 0 || dirs.length === 0) return this;
+        if (files.length === 0 || dirs.length === 0) {
+            return this;
+        }
+
         files[0].move(dirs[0]);
         return this;
     }//}}}
@@ -1051,6 +1135,7 @@ export class FileList extends AbstractHierarchy {//{{{
             // IE&#x4EE5;&#x5916;
             keycode = e.which;
         }
+
         if (keycode === 123) { return; } // F12&#x306E;&#x307F;&#x30D6;&#x30E9;&#x30A6;&#x30B6;&#x30B7;&#x30E7;&#x30FC;&#x30C8;&#x30AB;&#x30C3;&#x30C8;&#x30AD;&#x30FC;
         if (keycode === 13) {
             // enter

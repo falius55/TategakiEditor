@@ -37,6 +37,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~Displayer.html">Displayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SearchMode.html">SearchMode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SelectRange.html">SelectRange</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
@@ -71,7 +74,7 @@
  * &#x30D2;&#x30A8;&#x30E9;&#x30EB;&#x30AD;&#x30FC;&#x69CB;&#x9020;&#x3092;&#x6301;&#x3064;&#x5404;&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x57FA;&#x5E95;&#x30AF;&#x30E9;&#x30B9;
  * &#x6728;&#x69CB;&#x9020;&#x3068;&#x306F;&#x7570;&#x306A;&#x308A;&#x3001;&#x679D;&#x5206;&#x304B;&#x308C;&#x3057;&#x3066;&#x3044;&#x3066;&#x3082;&#x540C;&#x5217;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x9593;&#x3067;&#x30DD;&#x30A4;&#x30F3;&#x30BF;&#x3092;&#x6301;&#x3061;&#x5408;&#x3044;&#x307E;&#x3059;
  */
-export class AbstractHierarchy {
+export class AbstractHierarchy {  // jshint ignore:line
     // constructor {{{
     /**
      * @param {Element} elem &#x81EA;&#x8EAB;&#x306E;DOM&#x8981;&#x7D20;
@@ -103,10 +106,10 @@ export class AbstractHierarchy {
     parent(opt_newParent) {
         if (opt_newParent === undefined) { // null&#x304C;&#x6E21;&#x3055;&#x308C;&#x308B;&#x3053;&#x3068;&#x3082;&#x3042;&#x308B;&#x306E;&#x3067;undefined&#x3068;&#x53B3;&#x5BC6;&#x306B;&#x6BD4;&#x8F03;
             return this._parent;
-        } else {
-            this._parent = opt_newParent;
-            return this;
         }
+
+        this._parent = opt_newParent;
+        return this;
     }
 
     /**
@@ -117,10 +120,10 @@ export class AbstractHierarchy {
     next(opt_newNext) {
         if (opt_newNext === undefined) {
             return this._next;
-        } else {
-            this._next = opt_newNext;
-            return this;
         }
+
+        this._next = opt_newNext;
+        return this;
     }
 
     /**
@@ -131,10 +134,10 @@ export class AbstractHierarchy {
     prev(opt_newPrev) {
         if (opt_newPrev === undefined) {
             return this._prev;
-        } else {
-            this._prev = opt_newPrev;
-            return this;
         }
+
+        this._prev = opt_newPrev;
+        return this;
     }
 
     /**
@@ -145,9 +148,9 @@ export class AbstractHierarchy {
     children(opt_index) {
         if (opt_index === undefined) {
             return Util.copyArray(this._children);
-        } else {
-            return this._children[opt_index];
         }
+
+        return this._children[opt_index];
     }
 
     /**
@@ -155,11 +158,11 @@ export class AbstractHierarchy {
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x521D;&#x306E;&#x5B50;&#x3002;&#x5B50;&#x304C;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
     firstChild() {
-        if (this.hasChild()) {
-            return this._children[0];
-        } else {
+        if (!this.hasChild()) {
             return null;
         }
+
+        return this._children[0];
     }
 
     /**
@@ -167,11 +170,11 @@ export class AbstractHierarchy {
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x5B50;&#x3002;&#x5B50;&#x304C;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
     lastChild() {
-        if (this.hasChild()) {
-            return this._children[this.childLength()-1];
-        } else {
+        if (!this.hasChild()) {
             return null;
         }
+
+        return this._children[this.childLength()-1];
     }//}}}
 
     // --&#x5224;&#x5B9A; {{{
@@ -225,9 +228,9 @@ export class AbstractHierarchy {
     hasNextSibling() {
         if (this.next()) {
             return this.next().parent() === this.parent();
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -237,9 +240,9 @@ export class AbstractHierarchy {
     hasPrevSibling() {
         if (this.prev()) {
             return this.prev().parent() === this.parent();
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -280,6 +283,7 @@ export class AbstractHierarchy {
         if (pos &lt; 0 || pos &gt;= this._children.length) {
             return this.pushChild(child);
         }
+
         this._children.splice(pos,0,child);
         return this;
     }
@@ -291,7 +295,8 @@ export class AbstractHierarchy {
      */
     deleteChild(child) {
         const pos = child.index();
-        this._children.splice(pos,1);
+
+        this._children.splice(pos, 1);
         child.parent(null);
         return this;
     }
@@ -304,7 +309,8 @@ export class AbstractHierarchy {
      */
     replaceChild(oldChild,newChild) {
         const pos = oldChild.index();
-        this._children.splice(pos,1,newChild);
+
+        this._children.splice(pos, 1, newChild);
         return this;
     }
 
@@ -348,7 +354,8 @@ export class AbstractHierarchy {
      * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x5B50;&#x306E;&#x6570;
      */
     childLength() {
-        return this._children.length; // Row&#x3067;&#x306F;children()&#x306E;&#x610F;&#x5473;&#x304C;&#x9055;&#x3046;&#x306E;&#x3067;&#x3001;&#x6DF7;&#x540C;&#x3057;&#x306A;&#x3044;&#x3088;&#x3046;children()&#x3092;&#x3055;&#x3051;&#x3066;&#x76F4;&#x63A5;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x30A2;&#x30AF;&#x30BB;&#x30B9;&#x3059;&#x308B;
+        // Row&#x3067;&#x306F;children()&#x306E;&#x610F;&#x5473;&#x304C;&#x9055;&#x3046;&#x306E;&#x3067;&#x3001;&#x6DF7;&#x540C;&#x3057;&#x306A;&#x3044;&#x3088;&#x3046;children()&#x3092;&#x3055;&#x3051;&#x3066;&#x76F4;&#x63A5;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x30A2;&#x30AF;&#x30BB;&#x30B9;&#x3059;&#x308B;
+        return this._children.length;
     }//}}}
 
     // --Style {{{
@@ -394,31 +401,41 @@ export class AbstractHierarchy {
 
     /**
      * &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
-     * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+     * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;
+     *     &#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
      * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;
      */
     height(opt_useCache) {
         // element&#x304C;&#x4E0D;&#x53EF;&#x8996;&#x72B6;&#x614B;&#x306B;&#x3042;&#x308C;&#x3070;&#x9577;&#x3055;&#x304C;&#xFF10;&#x306B;&#x306A;&#x3063;&#x305F;&#x308A;&#x3001;&#x30D6;&#x30E9;&#x30A6;&#x30B6;&#x3054;&#x3068;&#x306B;&#x53D6;&#x5F97;&#x624B;&#x6BB5;&#x306B;&#x9055;&#x3044;&#x304C;&#x3042;&#x3063;&#x305F;&#x308A;&#x76F4;&#x63A5;&#x6307;&#x5B9A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;style&#x3068;css&#x3067;&#x306E;&#x6307;&#x5B9A;&#x306E;&#x9055;&#x3044;&#x3001;css&#x3067;&#x306E;&#x6307;&#x5B9A;&#x304C;&apos;auto&apos;&#x306B;&#x306A;&#x3063;&#x3066;&#x3044;&#x308B;&#x3068;&#x6587;&#x5B57;&#x5217;&#x304C;&#x8FD4;&#x3063;&#x3066;&#x304D;&#x305F;&#x308A;&#x3068;
         // javascript&#x3067;&#x306E;css&#x5024;&#x306E;&#x53D6;&#x5F97;&#x306F;&#x8907;&#x96D1;&#x3067;&#x56F0;&#x96E3;&#x3067;&#x3042;&#x308B;&#x3053;&#x3068;&#x304B;&#x3089;&#x3001;jQuery&#x306E;&#x4F7F;&#x7528;&#x304C;&#x9069;&#x3057;&#x3066;&#x3044;&#x308B;&#x3068;&#x5224;&#x65AD;&#x3057;&#x305F;(&#x4E0D;&#x53EF;&#x8996;&#x306E;&#x8981;&#x7D20;&#x306F;&#x4E00;&#x6642;&#x7684;&#x306B;&#x53EF;&#x8996;&#x72B6;&#x614B;&#x306B;&#x3057;&#x3066;&#x304B;&#x3089;&#x53D6;&#x5F97;&#x3059;&#x308B;&#x306E;&#x3067;&#x3001;&#x30EC;&#x30F3;&#x30C0;&#x30EA;&#x30F3;&#x30B0;&#x304C;&#x767A;&#x751F;&#x3059;&#x308B;&#x53EF;&#x80FD;&#x6027;&#x306F;&#x9AD8;&#x3044;)
         // &#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x6642;&#x306B;&#x306F;&#x6642;&#x9593;&#x304C;&#x304B;&#x304B;&#x308B;&#x304C;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3059;&#x308B;&#x3053;&#x3068;&#x3067;&#x884C;&#x79FB;&#x52D5;&#x306A;&#x3069;&#x3067;&#x306F;&#x6700;&#x4F4E;&#x9650;&#x306E;&#x8A08;&#x7B97;&#x306B;&#x306A;&#x308B;&#x3068;&#x671F;&#x5F85;
-        if (opt_useCache === undefined) opt_useCache = true;
+        if (opt_useCache === undefined) {
+            opt_useCache = true;
+        }
+
         if (opt_useCache &amp;&amp; this._height) {
             return this._height;
         }
+
         this._height = parseInt($(this.elem()).css(&apos;height&apos;));
         return this._height;
     }
 
     /**
      * &#x81EA;&#x8EAB;&#x306E;&#x5E45;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
-     * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+     * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;
+     *     &#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
      * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x5E45;
      */
     width(opt_useCache) {
-        if (opt_useCache === undefined) opt_useCache = true;
+        if (opt_useCache === undefined) {
+            opt_useCache = true;
+        }
+
         if (opt_useCache &amp;&amp; this._width) {
             return this._width;
         }
+
         this._width = parseInt($(this.elem()).css(&apos;width&apos;));
         return this._width;
     }
@@ -489,9 +506,13 @@ export class AbstractHierarchy {
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addKeydownEventListener() {
-        if (this._keydownArg) return this;
-        this._keydownArg = this.onKeydown.bind(this); // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
-        document.addEventListener(&apos;keydown&apos;,this._keydownArg);
+        if (this._keydownArg) {
+            return this;
+        }
+
+        // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
+        this._keydownArg = this._onKeydown.bind(this);
+        document.addEventListener(&apos;keydown&apos;, this._keydownArg);
         return this;
     }
 
@@ -500,18 +521,20 @@ export class AbstractHierarchy {
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     removeKeydownEventListener() {
-        if (!this._keydownArg) return this;
-        document.removeEventListener(&apos;keydown&apos;,this._keydownArg);
+        if (!this._keydownArg) {
+            return this;
+        }
+
+        document.removeEventListener(&apos;keydown&apos;, this._keydownArg);
         this._keydownArg = null;
         return this;
     }
 
     /**
-     * @private
      * keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3044;&#x3001;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x5B9F;&#x884C;&#x3057;&#x307E;&#x3059;
      * @param {object} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
      */
-    onKeydown(e) {
+    _onKeydown(e) {
         let keycode;
         if (document.all) {
             // IE
@@ -520,20 +543,21 @@ export class AbstractHierarchy {
             // IE&#x4EE5;&#x5916;
             keycode = e.which;
         }
+
         if (keycode === 123) { return; } // F12&#x306E;&#x307F;&#x30D6;&#x30E9;&#x30A6;&#x30B6;&#x30B7;&#x30E7;&#x30FC;&#x30C8;&#x30AB;&#x30C3;&#x30C8;&#x30AD;&#x30FC;
-        this.runKeydown(e,keycode);
+
+        this.runKeydown(e, keycode);
         // &#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x306E;&#x52D5;&#x4F5C;&#x3092;&#x7121;&#x52B9;&#x5316;&#x3059;&#x308B;
         e.preventDefault();
     }
 
     /**
-     * @private
      * keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3002;onkeydown()&#x5185;&#x3067;&#x4F7F;&#x7528;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x5B9A;&#x7FA9;&#x3057;&#x3066;&#x304A;&#x304F;&#x304C;&#x3001;&#x5185;&#x5BB9;&#x306F;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x4E0A;&#x66F8;&#x304D;&#x3057;&#x307E;&#x3059;
      * @param {object} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
      * @param {number} keycode &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
-    runKeydown(e,keycode) {
+    runKeydown(e, keycode) {
         return this;
     }
 
@@ -542,9 +566,13 @@ export class AbstractHierarchy {
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addClickEventListener() {
-        if (this._clickArg) return this;
-        this._clickArg = this.onClick.bind(this); // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
-        this.elem().addEventListener(&apos;click&apos;,this._clickArg);
+        if (this._clickArg) {
+            return this;
+        }
+
+        // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
+        this._clickArg = this._onClick.bind(this);
+        this.elem().addEventListener(&apos;click&apos;, this._clickArg);
         return this;
     }
 
@@ -553,23 +581,24 @@ export class AbstractHierarchy {
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     removeClickEventListener() {
-        if (!this._clickArg) return this;
-        this.elem().removeEventListener(&apos;click&apos;,this._clickArg);
+        if (!this._clickArg) {
+            return this;
+        }
+
+        this.elem().removeEventListener(&apos;click&apos;, this._clickArg);
         this._clickArg = null;
         return this;
     }
 
     /**
-     * @private
      * &#x30AF;&#x30EA;&#x30C3;&#x30AF;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x5B9F;&#x884C;&#x3057;&#x307E;&#x3059;
      * @param {Event} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
      */
-    onClick(e) {
+    _onClick(e) {
         this.runClick(e);
     }
 
     /**
-     * @private
      * click&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3067;&#x3059;&#x3002;onClick()&#x5185;&#x3067;&#x4F7F;&#x7528;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x5B9A;&#x7FA9;&#x3057;&#x3066;&#x304A;&#x304D;&#x307E;&#x3059;&#x304C;&#x3001;&#x5185;&#x5BB9;&#x306F;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x4E0A;&#x66F8;&#x304D;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;
      * @param {object} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
@@ -583,10 +612,14 @@ export class AbstractHierarchy {
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addWheelEventListener() {
-        if (this._wheelArg) return this;
-        this._wheelArg = this.onWheel.bind(this); // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
+        if (this._wheelArg) {
+            return this;
+        }
+
+        // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
+        this._wheelArg = this._onWheel.bind(this);
         const selector = &apos;#&apos; + this.elem().id;
-        $(&apos;body&apos;).on(&apos;mousewheel&apos;,selector,this._wheelArg);
+        $(&apos;body&apos;).on(&apos;mousewheel&apos;, selector, this._wheelArg);
         return this;
     }
 
@@ -595,27 +628,28 @@ export class AbstractHierarchy {
      * @return {AbstractHierarchy} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     removeWheelEventListener() {
-        if (!this._wheelArg) return this;
+        if (!this._wheelArg) {
+            return this;
+        }
+
         const selector = &apos;#&apos; + this.elem().id;
-        $(&apos;body&apos;).off(&apos;mousewheel&apos;,selector,this._wheelArg);
+        $(&apos;body&apos;).off(&apos;mousewheel&apos;, selector, this._wheelArg);
         this._wheelArg = null;
         return this;
     }
 
     /**
-     * @private
      * keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3044;&#x3001;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x5B9F;&#x884C;&#x3057;&#x307E;&#x3059;
      * @param {object} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
      * @param {number} delta &#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x306E;&#x79FB;&#x52D5;&#x91CF;
      * @param {number} deltaX
      * @param {number} deltaY
      */
-    onWheel(e,delta,deltaX,deltaY) {
+    _onWheel(e,delta,deltaX,deltaY) {
         this.runWheel(e,delta &gt; 0);
     }
 
     /**
-     * @private
      * &#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3067;&#x3059;&#x3002;onWheel()&#x5185;&#x3067;&#x4F7F;&#x7528;&#x3059;&#x308B;&#x305F;&#x3081;&#x306B;&#x5B9A;&#x7FA9;&#x3057;&#x3066;&#x304A;&#x304D;&#x307E;&#x3059;&#x304C;&#x3001;&#x5185;&#x5BB9;&#x306F;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x4E0A;&#x66F8;&#x304D;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;
      * @param {object} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
      * @param {boolean} isUp &#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x304C;&#x4E0A;&#x65B9;&#x5411;&#x306B;&#x52D5;&#x3044;&#x305F;&#x306A;&#x3089;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false

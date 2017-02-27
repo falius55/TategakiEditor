@@ -37,6 +37,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~Displayer.html">Displayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SearchMode.html">SearchMode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SelectRange.html">SelectRange</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
@@ -138,7 +141,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span><span data-ice="signature">: {&quot;splitArray&quot;: <span>*</span>, &quot;copyArray&quot;: <span>*</span>, &quot;computeDistanceP2P&quot;: <span>*</span>, &quot;post&quot;: <span>*</span>}</span>
+          <span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span><span data-ice="signature">: {&quot;splitArray&quot;: <span>*</span>, &quot;copyArray&quot;: <span>*</span>, &quot;computeDistanceP2P&quot;: <span>*</span>, &quot;post&quot;: <span>*</span>, &quot;get&quot;: <span>*</span>, &quot;_communicate&quot;: <span>*</span>}</span>
         </p>
       </div>
       <div>
@@ -169,11 +172,11 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/js/utils.js.html#lineNumber71">source</a></span></span>
+      <span data-ice="source"><span><a href="file/js/utils.js.html#lineNumber82">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {ElemCreator} from &apos;<span><a href="file/js/utils.js.html#lineNumber71">./js/utils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {ElemCreator} from &apos;<span><a href="file/js/utils.js.html#lineNumber82">./js/utils.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>DOM&#x8981;&#x7D20;&#x3092;&#x751F;&#x6210;&#x3059;&#x308B;&#x95A2;&#x6570;&#x306E;&#x96C6;&#x307E;&#x308A;&#x3067;&#x3059;</p>
@@ -213,11 +216,11 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/js/utils.js.html#lineNumber301">source</a></span></span>
+      <span data-ice="source"><span><a href="file/js/utils.js.html#lineNumber314">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {KeyTable} from &apos;<span><a href="file/js/utils.js.html#lineNumber301">./js/utils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {KeyTable} from &apos;<span><a href="file/js/utils.js.html#lineNumber314">./js/utils.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x304B;&#x3089;&#x65E5;&#x672C;&#x8A9E;&#x6587;&#x5B57;&#x5217;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x307E;&#x3059;</p>
@@ -253,15 +256,15 @@
     
     
     
-    <span data-ice="name">Util</span><span data-ice="signature">: {&quot;splitArray&quot;: <span>*</span>, &quot;copyArray&quot;: <span>*</span>, &quot;computeDistanceP2P&quot;: <span>*</span>, &quot;post&quot;: <span>*</span>}</span>
+    <span data-ice="name">Util</span><span data-ice="signature">: {&quot;splitArray&quot;: <span>*</span>, &quot;copyArray&quot;: <span>*</span>, &quot;computeDistanceP2P&quot;: <span>*</span>, &quot;post&quot;: <span>*</span>, &quot;get&quot;: <span>*</span>, &quot;_communicate&quot;: <span>*</span>}</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/js/utils.js.html#lineNumber6">source</a></span></span>
+      <span data-ice="source"><span><a href="file/js/utils.js.html#lineNumber5">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Util} from &apos;<span><a href="file/js/utils.js.html#lineNumber6">./js/utils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Util} from &apos;<span><a href="file/js/utils.js.html#lineNumber5">./js/utils.js</a></span>&apos;</code></pre></div>
   
   
   

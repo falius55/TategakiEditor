@@ -37,6 +37,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~Displayer.html">Displayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SearchMode.html">SearchMode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SelectRange.html">SelectRange</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
@@ -66,298 +69,323 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">js/undo-redo.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+
+
 /**
  * Undo,Redo&#x3092;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;
  *     Undo&#x53EF;&#x80FD;&#x306A;&#x64CD;&#x4F5C;&#x3092;&#x884C;&#x3063;&#x305F;&#x969B;&#x306B;&#x3001;add&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x3092;&#x4F7F;&#x3063;&#x3066;DoMemory&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x64CD;&#x4F5C;&#x306B;&#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
  *     &#x305D;&#x3046;&#x3059;&#x308B;&#x3053;&#x3068;&#x3067;DoManager&#x30AF;&#x30E9;&#x30B9;&#x306E;undo&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x3001;redo&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x3067;&#x5404;&#x64CD;&#x4F5C;&#x306B;&#x5BFE;&#x3059;&#x308B;undo,redo&#x3092;&#x7D71;&#x4E00;&#x3055;&#x308C;&#x305F;&#x64CD;&#x4F5C;&#x306B;&#x3088;&#x3063;&#x3066;&#x884C;&#x3046;&#x3053;&#x3068;&#x304C;&#x53EF;&#x80FD;&#x306B;&#x306A;&#x308A;&#x307E;&#x3059;
  */
-export class DoManager {//{{{
+export class DoManager {  // jshint ignore:line
+    //{{{
     // constructor {{{
-	/**
-	 * @param {SentenceContainer} &#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 */
-	constructor(sentenceContainer) {
-		this._sentenceContainer = sentenceContainer;
-		this._undos = [];
-		this._redos = [];
-	}//}}}
+    /**
+     * @param {SentenceContainer} &#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    constructor(sentenceContainer) {
+        this._sentenceContainer = sentenceContainer;
+        this._undos = [];
+        this._redos = [];
+    }//}}}
 
-	/**
-	 * Undo&#x53EF;&#x80FD;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x691C;&#x67FB;&#x3057;&#x307E;&#x3059;
-	 * @return Undo&#x306E;&#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x306B;&#x8981;&#x7D20;&#x304C;&#x6B8B;&#x3063;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
-	 */
-	hasUndo() {
-		return this._undos.length &gt; 0;
-	}
+    /**
+     * Undo&#x53EF;&#x80FD;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x691C;&#x67FB;&#x3057;&#x307E;&#x3059;
+     * @return Undo&#x306E;&#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x306B;&#x8981;&#x7D20;&#x304C;&#x6B8B;&#x3063;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     */
+    hasUndo() {
+        return this._undos.length &gt; 0;
+    }
 
-	/**
-	 * Redo&#x53EF;&#x80FD;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x691C;&#x67FB;&#x3057;&#x307E;&#x3059;
-	 * @return Redo&#x306E;&#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x306B;&#x8981;&#x7D20;&#x304C;&#x6B8B;&#x3063;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
-	 */
-	hasRedo() {
-		return this._redos.length &gt; 0;
-	}
+    /**
+     * Redo&#x53EF;&#x80FD;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x691C;&#x67FB;&#x3057;&#x307E;&#x3059;
+     * @return Redo&#x306E;&#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x306B;&#x8981;&#x7D20;&#x304C;&#x6B8B;&#x3063;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     */
+    hasRedo() {
+        return this._redos.length &gt; 0;
+    }
 
-	/**
-	 * Undo&#x3092;&#x5B9F;&#x884C;&#x3057;&#x3001;&#x4F7F;&#x3044;&#x7D42;&#x308F;&#x3063;&#x305F;&#x30BF;&#x30B9;&#x30AF;&#x3092;Redo&#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x306B;&#x518D;&#x5EA6;&#x7A4D;&#x307F;&#x307E;&#x3059;
-	 * @return {DoManager} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 */
-	undo() {
-		const doMemory = this._undos.pop();
-		doMemory.undo();
-		this._redos.push(doMemory);
-		this._sentenceContainer.isChanged(true);
-		return this;
-	}
+    /**
+     * Undo&#x3092;&#x5B9F;&#x884C;&#x3057;&#x3001;&#x4F7F;&#x3044;&#x7D42;&#x308F;&#x3063;&#x305F;&#x30BF;&#x30B9;&#x30AF;&#x3092;Redo&#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x306B;&#x518D;&#x5EA6;&#x7A4D;&#x307F;&#x307E;&#x3059;
+     * @return {DoManager} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    undo() {
+        const doMemory = this._undos.pop();
+        doMemory.undo();
+        this._redos.push(doMemory);
+        this._sentenceContainer.isChanged(true);
+        return this;
+    }
 
-	/**
-	 * Redo&#x3092;&#x5B9F;&#x884C;&#x3057;&#x3001;&#x4F7F;&#x3044;&#x7D42;&#x308F;&#x3063;&#x305F;&#x30BF;&#x30B9;&#x30AF;&#x3092;Undo&#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x306B;&#x518D;&#x5EA6;&#x7A4D;&#x307F;&#x307E;&#x3059;
-	 * @return {DoManager} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 */
-	redo() {
-		const doMemory = this._redos.pop();
-		doMemory.redo();
-		this._undos.push(doMemory);
-		this._sentenceContainer.isChanged(true);
-		return this;
-	}
+    /**
+     * Redo&#x3092;&#x5B9F;&#x884C;&#x3057;&#x3001;&#x4F7F;&#x3044;&#x7D42;&#x308F;&#x3063;&#x305F;&#x30BF;&#x30B9;&#x30AF;&#x3092;Undo&#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x306B;&#x518D;&#x5EA6;&#x7A4D;&#x307F;&#x307E;&#x3059;
+     * @return {DoManager} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    redo() {
+        const doMemory = this._redos.pop();
+        doMemory.redo();
+        this._undos.push(doMemory);
+        this._sentenceContainer.isChanged(true);
+        return this;
+    }
 
-	/**
-	 * undo&#x53EF;&#x80FD;&#x306A;&#x65B0;&#x305F;&#x306A;&#x64CD;&#x4F5C;&#x3092;&#x884C;&#x3063;&#x305F;&#x5834;&#x5408;&#x306B;&#x3001;&#x5BFE;&#x5FDC;&#x3059;&#x308B;DoMemory&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3059;
-	 * @param {DoMemory} memory &#x8FFD;&#x52A0;&#x3059;&#x308B;DoMemory&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
-	 * @return {DoManager} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 */
-	add(memory) {
-		this._undos.push(memory);
-		this._redos = [];
-		return this;
-	}
+    /**
+     * undo&#x53EF;&#x80FD;&#x306A;&#x65B0;&#x305F;&#x306A;&#x64CD;&#x4F5C;&#x3092;&#x884C;&#x3063;&#x305F;&#x5834;&#x5408;&#x306B;&#x3001;&#x5BFE;&#x5FDC;&#x3059;&#x308B;DoMemory&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3059;
+     * @param {DoMemory} memory &#x8FFD;&#x52A0;&#x3059;&#x308B;DoMemory&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+     * @return {DoManager} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    add(memory) {
+        this._undos.push(memory);
+        this._redos = [];
+        return this;
+    }
 
-	/**
-	 * &#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x3092;&#x521D;&#x671F;&#x5316;&#x3057;&#x307E;&#x3059;
-	 * @return {DoManager} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-	 */
-	reset() {
-		this._undos = [];
-		this._redos = [];
-		return this;
-	}
+    /**
+     * &#x30B9;&#x30BF;&#x30C3;&#x30AF;&#x3092;&#x521D;&#x671F;&#x5316;&#x3057;&#x307E;&#x3059;
+     * @return {DoManager} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    reset() {
+        this._undos = [];
+        this._redos = [];
+        return this;
+    }
 }//}}}
 
 
 /**
  * Undo, Redo&#x3092;&#x8A18;&#x61B6;&#x3059;&#x308B;&#x3059;&#x3079;&#x3066;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306E;&#x57FA;&#x5E95;&#x30AF;&#x30E9;&#x30B9;
  */
-export class DoMemory {//{{{
-	constructor() {
-	}
+export class DoMemory {
+    //{{{
+    constructor() {
+    }
 
-	/**
-	 * Undo&#x3057;&#x307E;&#x3059;
-	 * &#x3053;&#x306E;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;
-	 */
-	undo() {
-		throw new Error(&apos;&#x3053;&#x306E;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&apos;);
-	}
+    /**
+     * Undo&#x3057;&#x307E;&#x3059;
+     * &#x3053;&#x306E;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;
+     */
+    undo() {
+        throw new Error(&apos;&#x3053;&#x306E;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&apos;);
+    }
 
-	/**
-	 * Redo&#x3057;&#x307E;&#x3059;
-	 * &#x3053;&#x306E;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;
-	 */
-	redo() {
-		throw new Error(&apos;&#x3053;&#x306E;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&apos;);
-	}
+    /**
+     * Redo&#x3057;&#x307E;&#x3059;
+     * &#x3053;&#x306E;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;
+     */
+    redo() {
+        throw new Error(&apos;&#x3053;&#x306E;&#x30E1;&#x30BD;&#x30C3;&#x30C9;&#x306F;&#x3001;&#x30B5;&#x30D6;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x30AA;&#x30FC;&#x30D0;&#x30FC;&#x30E9;&#x30A4;&#x30C9;&#x3059;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308A;&#x307E;&#x3059;&apos;);
+    }
 }//}}}
 
 
 /**
  * &#x6587;&#x5B57;&#x3092;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304B;&#x3089;&#x5165;&#x529B;&#x3057;&#x305F;&#x969B;&#x306E;Undo,Redo&#x3092;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;
  */
-export class PrintDoMemory extends DoMemory {//{{{
+export class PrintDoMemory extends DoMemory {  // jshint ignore:line
+    //{{{
 
-	/**
-	 * @param {Cursor} cursor &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
-	 * @param {Char[]} targets &#x5BFE;&#x8C61;&#x3068;&#x306A;&#x308B;&#x6587;&#x5B57;&#x306E;&#x914D;&#x5217;
-	 */
-	constructor(cursor, targets) {
-		super();
-		this._cursor = cursor;
-		this._memoryChar = cursor.getChar();
-		this._targets = targets;
-	}
+    /**
+     * @param {Cursor} cursor &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+     * @param {Char[]} targets &#x5BFE;&#x8C61;&#x3068;&#x306A;&#x308B;&#x6587;&#x5B57;&#x306E;&#x914D;&#x5217;
+     */
+    constructor(cursor, targets) {
+        super();
+        this._cursor = cursor;
+        this._memoryChar = cursor.getChar();
+        this._targets = targets;
+    }
 
-	undo() {
-		this._cursor.setChar(this._memoryChar);
-		for (let i = 0, len = this._targets.length; i &lt; len; i++)
-			this._cursor.backSpace();
-		return this;
-	}
-	redo() {
-		this._cursor.setChar(this._memoryChar);
-		this._cursor.insert(this._targets);
-		return this;
-	}
+    undo() {
+        this._cursor.setChar(this._memoryChar);
+        for (let i = 0, len = this._targets.length; i &lt; len; i++) {
+            this._cursor.backSpace();
+        }
+        return this;
+    }
+
+    redo() {
+        this._cursor.setChar(this._memoryChar);
+        this._cursor.insert(this._targets);
+        return this;
+    }
 }//}}}
 
 
 /**
  * &#x6587;&#x5B57;&#x3092;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304B;&#x3089;&#x524A;&#x9664;&#x3057;&#x305F;&#x969B;&#x306E;Undo,Redo&#x3092;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;
  */
-export class DeleteDoMemory extends DoMemory {//{{{
-	// TODO: backspace&#x3067;&#x6BB5;&#x843D;&#x3092;&#x3064;&#x306A;&#x3052;&#x305F;&#x969B;&#x306E;Undo,Redo&#x306F;&#x5225;&#x9014;&#x4F5C;&#x6210;&#x3059;&#x308B;&#x3053;&#x3068;
-	/**
-	 * @param {Cursor} cursor &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
-	 * @param {Char[]} targets &#x5BFE;&#x8C61;&#x3068;&#x306A;&#x308B;&#x6587;&#x5B57;&#x306E;&#x914D;&#x5217;
-	 */
-	constructor(cursor, targets) {
-		super();
-		this._cursor = cursor;
-		this._memoryChar = cursor.getChar();
-		this._targets = targets;
-	}
+export class DeleteDoMemory extends DoMemory {  // jshint ignore:line
+    //{{{
+    // TODO: backspace&#x3067;&#x6BB5;&#x843D;&#x3092;&#x3064;&#x306A;&#x3052;&#x305F;&#x969B;&#x306E;Undo,Redo&#x306F;&#x5225;&#x9014;&#x4F5C;&#x6210;&#x3059;&#x308B;&#x3053;&#x3068;
+    /**
+     * @param {Cursor} cursor &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+     * @param {Char[]} targets &#x5BFE;&#x8C61;&#x3068;&#x306A;&#x308B;&#x6587;&#x5B57;&#x306E;&#x914D;&#x5217;
+     */
+    constructor(cursor, targets) {
+        super();
+        this._cursor = cursor;
+        this._memoryChar = cursor.getChar();
+        this._targets = targets;
+    }
 
-	undo() {
-		this._cursor.setChar(this._memoryChar);
-		this._cursor.insert(this._targets);
-		return this;
-	}
-	redo() {
-		this._cursor.setChar(this._memoryChar);
-		for (let i = 0, len = this._targets.length; i &lt; len; i++)
-			this._cursor.backSpace();
-		return this;
-	}
+    undo() {
+        this._cursor.setChar(this._memoryChar);
+        this._cursor.insert(this._targets);
+        return this;
+    }
+
+    redo() {
+        this._cursor.setChar(this._memoryChar);
+        for (let i = 0, len = this._targets.length; i &lt; len; i++) {
+            this._cursor.backSpace();
+        }
+        return this;
+    }
 }//}}}
 
 
-export class LineBreakDoMemory extends DoMemory {//{{{
+export class LineBreakDoMemory extends DoMemory {  // jshint ignore:line
+    //{{{
 
-	/**
-	 * @param {Cursor} cursor &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
-	 */
-	constructor(cursor) {
-		super();
-		this._cursor = cursor;
-		this._memoryChar = cursor.getChar();
-	}
-	undo() {
-		this._cursor.setChar(this._memoryChar)
-			.backSpace();
-		return this;
-	}
-	redo() {
-		this._cursor.setChar(this._memoryChar)
-			.lineBreak();
-		return this;
-	}
+    /**
+     * @param {Cursor} cursor &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+     */
+    constructor(cursor) {
+        super();
+        this._cursor = cursor;
+        this._memoryChar = cursor.getChar();
+    }
+
+    undo() {
+        this._cursor.setChar(this._memoryChar)
+            .backSpace();
+        return this;
+    }
+
+    redo() {
+        this._cursor.setChar(this._memoryChar)
+            .lineBreak();
+        return this;
+    }
 }//}}}
 
 
-export class ColorDoMemory extends DoMemory {//{{{
-	/**
-	 * &#x3053;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x306F;&#x53E4;&#x3044;&#x6587;&#x5B57;&#x8272;&#x3082;&#x60C5;&#x5831;&#x3068;&#x3057;&#x3066;&#x5FC5;&#x8981;&#x3068;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x6587;&#x5B57;&#x8272;&#x5909;&#x66F4;&#x524D;&#x306B;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
-	 * @param {Char[]} &#x6587;&#x5B57;&#x8272;&#x3092;&#x5909;&#x66F4;&#x3057;&#x305F;Char&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
-	 * @param {string} &#x5909;&#x66F4;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x8272;
-	 */
-	constructor(targets, newColor) {
-		super();
-		this._targets = targets;
-		this._oldColors = targets.map(char =&gt; char.color());
-		this._newColor = newColor;
-	}
+export class ColorDoMemory extends DoMemory {  // jshint ignore:line
+    //{{{
+    /**
+     * &#x3053;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x306F;&#x53E4;&#x3044;&#x6587;&#x5B57;&#x8272;&#x3082;&#x60C5;&#x5831;&#x3068;&#x3057;&#x3066;&#x5FC5;&#x8981;&#x3068;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x6587;&#x5B57;&#x8272;&#x5909;&#x66F4;&#x524D;&#x306B;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+     * @param {Char[]} &#x6587;&#x5B57;&#x8272;&#x3092;&#x5909;&#x66F4;&#x3057;&#x305F;Char&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
+     * @param {string} &#x5909;&#x66F4;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x8272;
+     */
+    constructor(targets, newColor) {
+        super();
+        this._targets = targets;
+        this._oldColors = targets.map(char =&gt; char.color());
+        this._newColor = newColor;
+    }
 
-	undo() {
-		for (let entry of this._targets.entries())
-			entry[1].color(this._oldColors[entry[0]]);
-		return this;
-	}
-	redo() {
-		for (let char of this._targets)
-			char.color(this._newColor);
-		return this;
-	}
+    undo() {
+        for (let entry of this._targets.entries()) {
+            entry[1].color(this._oldColors[entry[0]]);
+        }
+        return this;
+    }
+    redo() {
+        for (let char of this._targets) {
+            char.color(this._newColor);
+        }
+        return this;
+    }
 }//}}}
 
 
-export class ItalicDoMemory extends DoMemory {//{{{
-	/**
-	 * &#x3053;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x306F;&#x53E4;&#x3044;&#x72B6;&#x614B;&#x3082;&#x60C5;&#x5831;&#x3068;&#x3057;&#x3066;&#x5FC5;&#x8981;&#x3068;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x6587;&#x5B57;&#x306E;&#x5909;&#x66F4;&#x524D;&#x306B;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
-	 * @param {Char[]} targets &#x659C;&#x4F53;&#x306B;&#x5909;&#x66F4;&#x3055;&#x308C;&#x305F;Char&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
-	 * @param {boolean} &#x5909;&#x66F4;&#x5F8C;&#x306E;&#x72B6;&#x614B;&#x3092;&#x8868;&#x3059;&#x771F;&#x507D;&#x5024;
-	 */
-	constructor(targets, blNew) {
-		super();
-		this._targets = targets;
-		this._olders = targets.map(char =&gt; char.italic());
-		this._blNew = blNew;
-	}
+export class ItalicDoMemory extends DoMemory {  // jshint ignore:line
+    //{{{
+    /**
+     * &#x3053;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x306F;&#x53E4;&#x3044;&#x72B6;&#x614B;&#x3082;&#x60C5;&#x5831;&#x3068;&#x3057;&#x3066;&#x5FC5;&#x8981;&#x3068;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x6587;&#x5B57;&#x306E;&#x5909;&#x66F4;&#x524D;&#x306B;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+     * @param {Char[]} targets &#x659C;&#x4F53;&#x306B;&#x5909;&#x66F4;&#x3055;&#x308C;&#x305F;Char&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
+     * @param {boolean} &#x5909;&#x66F4;&#x5F8C;&#x306E;&#x72B6;&#x614B;&#x3092;&#x8868;&#x3059;&#x771F;&#x507D;&#x5024;
+     */
+    constructor(targets, blNew) {
+        super();
+        this._targets = targets;
+        this._olders = targets.map(char =&gt; char.italic());
+        this._blNew = blNew;
+    }
 
-	undo() {
-		for (let entry of this._targets.entries())
-			entry[1].italic(this._olders[entry[0]]);
-		return this;
-	}
+    undo() {
+        for (let entry of this._targets.entries()) {
+            entry[1].italic(this._olders[entry[0]]);
+        }
+        return this;
+    }
 
-	redo() {
-		for (let char of this._targets)
-			char.italic(this._blNew);
-		return this;
-	}
+    redo() {
+        for (let char of this._targets) {
+            char.italic(this._blNew);
+        }
+        return this;
+    }
 }//}}}
 
 
-export class BoldDoMemory extends DoMemory {//{{{
-	/**
-	 * &#x3053;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x306F;&#x53E4;&#x3044;&#x72B6;&#x614B;&#x3082;&#x60C5;&#x5831;&#x3068;&#x3057;&#x3066;&#x5FC5;&#x8981;&#x3068;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x6587;&#x5B57;&#x306E;&#x5909;&#x66F4;&#x524D;&#x306B;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
-	 * @param {Char[]} targets &#x592A;&#x5B57;&#x306B;&#x5909;&#x66F4;&#x3055;&#x308C;&#x305F;Char&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
-	 * @param {boolean} &#x5909;&#x66F4;&#x5F8C;&#x306E;&#x72B6;&#x614B;&#x3092;&#x8868;&#x3059;&#x771F;&#x507D;&#x5024;
-	 */
-	constructor(targets, blNew) {
-		super();
-		this._targets = targets;
-		this._olders = targets.map(char =&gt; char.bold());
-		this._blNew = blNew;
-	}
+export class BoldDoMemory extends DoMemory {  // jshint ignore:line
+    //{{{
+    /**
+     * &#x3053;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x306F;&#x53E4;&#x3044;&#x72B6;&#x614B;&#x3082;&#x60C5;&#x5831;&#x3068;&#x3057;&#x3066;&#x5FC5;&#x8981;&#x3068;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x6587;&#x5B57;&#x306E;&#x5909;&#x66F4;&#x524D;&#x306B;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+     * @param {Char[]} targets &#x592A;&#x5B57;&#x306B;&#x5909;&#x66F4;&#x3055;&#x308C;&#x305F;Char&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
+     * @param {boolean} &#x5909;&#x66F4;&#x5F8C;&#x306E;&#x72B6;&#x614B;&#x3092;&#x8868;&#x3059;&#x771F;&#x507D;&#x5024;
+     */
+    constructor(targets, blNew) {
+        super();
+        this._targets = targets;
+        this._olders = targets.map(char =&gt; char.bold());
+        this._blNew = blNew;
+    }
 
-	undo() {
-		for (let entry of this._targets.entries())
-			entry[1].bold(this._olders[entry[0]]);
-		return this;
-	}
+    undo() {
+        for (let entry of this._targets.entries()) {
+            entry[1].bold(this._olders[entry[0]]);
+        }
+        return this;
+    }
 
-	redo() {
-		for (let char of this._targets)
-			char.bold(this._blNew);
-		return this;
-	}
+    redo() {
+        for (let char of this._targets) {
+            char.bold(this._blNew);
+        }
+        return this;
+    }
 }//}}}
 
 
-export class FontSizeDoMemory extends DoMemory {//{{{
-	/**
-	 * &#x3053;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x306F;&#x53E4;&#x3044;&#x72B6;&#x614B;&#x3082;&#x60C5;&#x5831;&#x3068;&#x3057;&#x3066;&#x5FC5;&#x8981;&#x3068;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x6587;&#x5B57;&#x306E;&#x5909;&#x66F4;&#x524D;&#x306B;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
-	 * @param {Char[]} targets &#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x304C;&#x5909;&#x66F4;&#x3055;&#x308C;&#x305F;Char&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
-	 * @param {number string} newSize &#x5909;&#x66F4;&#x5F8C;&#x306E;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;
-	 */
-	constructor(targets, newSize) {
-		this._targets = targets;
-		this._olders = targets.map(char =&gt; char.fontSize());
-		this._newSize = newSize;
-	}
+export class FontSizeDoMemory extends DoMemory {  // jshint ignore:line
+    //{{{
+    /**
+     * &#x3053;&#x306E;&#x30AF;&#x30E9;&#x30B9;&#x3067;&#x306F;&#x53E4;&#x3044;&#x72B6;&#x614B;&#x3082;&#x60C5;&#x5831;&#x3068;&#x3057;&#x3066;&#x5FC5;&#x8981;&#x3068;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x6587;&#x5B57;&#x306E;&#x5909;&#x66F4;&#x524D;&#x306B;&#x4F5C;&#x6210;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+     * @param {Char[]} targets &#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x304C;&#x5909;&#x66F4;&#x3055;&#x308C;&#x305F;Char&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
+     * @param {number string} newSize &#x5909;&#x66F4;&#x5F8C;&#x306E;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;
+     */
+    constructor(targets, newSize) {
+        this._targets = targets;
+        this._olders = targets.map(char =&gt; char.fontSize());
+        this._newSize = newSize;
+    }
 
-	undo() {
-		for (let entry of this._targets.entries())
-			entry[1].fontSize(this._olders[entry[0]]);
-		return this;
-	}
+    undo() {
+        for (let entry of this._targets.entries()) {
+            entry[1].fontSize(this._olders[entry[0]]);
+        }
+        return this;
+    }
 
-	redo() {
-		for (let char of this._targets)
-			char.fontSize(this._newSize);
-		return this;
-	}
+    redo() {
+        for (let char of this._targets) {
+            char.fontSize(this._newSize);
+        }
+        return this;
+    }
 
-	// TODO: align
+    // TODO: align
 }//}}}
 </code></pre>
 

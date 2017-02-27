@@ -60,6 +60,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "./js/container.js~displayer",
+    "class/js/container.js~Displayer.html",
+    "<span>Displayer</span> <span class=\"search-result-import-path\">./js/container.js</span>",
+    "class"
+  ],
+  [
     "./js/undo-redo.js~domanager",
     "class/js/undo-redo.js~DoManager.html",
     "<span>DoManager</span> <span class=\"search-result-import-path\">./js/undo-redo.js</span>",
@@ -153,6 +159,18 @@ window.esdocSearchIndex = [
     "./js/character.js~row",
     "class/js/character.js~Row.html",
     "<span>Row</span> <span class=\"search-result-import-path\">./js/character.js</span>",
+    "class"
+  ],
+  [
+    "./js/container.js~searchmode",
+    "class/js/container.js~SearchMode.html",
+    "<span>SearchMode</span> <span class=\"search-result-import-path\">./js/container.js</span>",
+    "class"
+  ],
+  [
+    "./js/container.js~selectrange",
+    "class/js/container.js~SelectRange.html",
+    "<span>SelectRange</span> <span class=\"search-result-import-path\">./js/container.js</span>",
     "class"
   ],
   [
@@ -741,6 +759,24 @@ window.esdocSearchIndex = [
     "js/abstract.js~abstracthierarchy#replacechild",
     "class/js/abstract.js~AbstractHierarchy.html#instance-method-replaceChild",
     "js/abstract.js~AbstractHierarchy#replaceChild",
+    "method"
+  ],
+  [
+    "js/abstract.js~abstracthierarchy#runclick",
+    "class/js/abstract.js~AbstractHierarchy.html#instance-method-runClick",
+    "js/abstract.js~AbstractHierarchy#runClick",
+    "method"
+  ],
+  [
+    "js/abstract.js~abstracthierarchy#runkeydown",
+    "class/js/abstract.js~AbstractHierarchy.html#instance-method-runKeydown",
+    "js/abstract.js~AbstractHierarchy#runKeydown",
+    "method"
+  ],
+  [
+    "js/abstract.js~abstracthierarchy#runwheel",
+    "class/js/abstract.js~AbstractHierarchy.html#instance-method-runWheel",
+    "js/abstract.js~AbstractHierarchy#runWheel",
     "method"
   ],
   [
@@ -1458,9 +1494,81 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "js/container.js~sentencecontainer#adddisplay",
-    "class/js/container.js~SentenceContainer.html#instance-method-addDisplay",
-    "js/container.js~SentenceContainer#addDisplay",
+    "js/container.js~displayer#changedisplay",
+    "class/js/container.js~Displayer.html#instance-method-changeDisplay",
+    "js/container.js~Displayer#changeDisplay",
+    "method"
+  ],
+  [
+    "js/container.js~displayer#constructor",
+    "class/js/container.js~Displayer.html#instance-constructor-constructor",
+    "js/container.js~Displayer#constructor",
+    "method"
+  ],
+  [
+    "js/container.js~displayer#resetdisplay",
+    "class/js/container.js~Displayer.html#instance-method-resetDisplay",
+    "js/container.js~Displayer#resetDisplay",
+    "method"
+  ],
+  [
+    "js/container.js~displayer#shiftleftdisplay",
+    "class/js/container.js~Displayer.html#instance-method-shiftLeftDisplay",
+    "js/container.js~Displayer#shiftLeftDisplay",
+    "method"
+  ],
+  [
+    "js/container.js~displayer#shiftrightdisplay",
+    "class/js/container.js~Displayer.html#instance-method-shiftRightDisplay",
+    "js/container.js~Displayer#shiftRightDisplay",
+    "method"
+  ],
+  [
+    "js/container.js~searchmode#constructor",
+    "class/js/container.js~SearchMode.html#instance-constructor-constructor",
+    "js/container.js~SearchMode#constructor",
+    "method"
+  ],
+  [
+    "js/container.js~searchmode#start",
+    "class/js/container.js~SearchMode.html#instance-method-start",
+    "js/container.js~SearchMode#start",
+    "method"
+  ],
+  [
+    "js/container.js~searchmode#stop",
+    "class/js/container.js~SearchMode.html#instance-method-stop",
+    "js/container.js~SearchMode#stop",
+    "method"
+  ],
+  [
+    "js/container.js~selectrange#addselectevent",
+    "class/js/container.js~SelectRange.html#instance-method-addSelectEvent",
+    "js/container.js~SelectRange#addSelectEvent",
+    "method"
+  ],
+  [
+    "js/container.js~selectrange#constructor",
+    "class/js/container.js~SelectRange.html#instance-constructor-constructor",
+    "js/container.js~SelectRange#constructor",
+    "method"
+  ],
+  [
+    "js/container.js~selectrange#copyselecttext",
+    "class/js/container.js~SelectRange.html#instance-method-copySelectText",
+    "js/container.js~SelectRange#copySelectText",
+    "method"
+  ],
+  [
+    "js/container.js~selectrange#pastetext",
+    "class/js/container.js~SelectRange.html#instance-method-pasteText",
+    "js/container.js~SelectRange#pasteText",
+    "method"
+  ],
+  [
+    "js/container.js~selectrange#selectchars",
+    "class/js/container.js~SelectRange.html#instance-method-selectChars",
+    "js/container.js~SelectRange#selectChars",
     "method"
   ],
   [
@@ -1482,21 +1590,9 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/container.js~sentencecontainer#addselectevent",
-    "class/js/container.js~SentenceContainer.html#instance-method-addSelectEvent",
-    "js/container.js~SentenceContainer#addSelectEvent",
-    "method"
-  ],
-  [
     "js/container.js~sentencecontainer#announce",
     "class/js/container.js~SentenceContainer.html#instance-method-announce",
     "js/container.js~SentenceContainer#announce",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#announceelem",
-    "class/js/container.js~SentenceContainer.html#instance-method-announceElem",
-    "js/container.js~SentenceContainer#announceElem",
     "method"
   ],
   [
@@ -1533,12 +1629,6 @@ window.esdocSearchIndex = [
     "js/container.js~sentencecontainer#constructor",
     "class/js/container.js~SentenceContainer.html#instance-constructor-constructor",
     "js/container.js~SentenceContainer#constructor",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#copyselecttext",
-    "class/js/container.js~SentenceContainer.html#instance-method-copySelectText",
-    "js/container.js~SentenceContainer#copySelectText",
     "method"
   ],
   [
@@ -1698,24 +1788,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/container.js~sentencecontainer#onfocusinonsearchmode",
-    "class/js/container.js~SentenceContainer.html#instance-method-onFocusinOnSearchMode",
-    "js/container.js~SentenceContainer#onFocusinOnSearchMode",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#onfocusoutonsearchmode",
-    "class/js/container.js~SentenceContainer.html#instance-method-onFocusoutOnSearchMode",
-    "js/container.js~SentenceContainer#onFocusoutOnSearchMode",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#onkeyuponsearchmode",
-    "class/js/container.js~SentenceContainer.html#instance-method-onKeyupOnSearchMode",
-    "js/container.js~SentenceContainer#onKeyupOnSearchMode",
-    "method"
-  ],
-  [
     "js/container.js~sentencecontainer#pagerow",
     "class/js/container.js~SentenceContainer.html#instance-method-pageRow",
     "js/container.js~SentenceContainer#pageRow",
@@ -1725,12 +1797,6 @@ window.esdocSearchIndex = [
     "js/container.js~sentencecontainer#paragraphs",
     "class/js/container.js~SentenceContainer.html#instance-method-paragraphs",
     "js/container.js~SentenceContainer#paragraphs",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#pastetext",
-    "class/js/container.js~SentenceContainer.html#instance-method-pasteText",
-    "js/container.js~SentenceContainer#pasteText",
     "method"
   ],
   [
@@ -1764,12 +1830,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/container.js~sentencecontainer#resetdisplay",
-    "class/js/container.js~SentenceContainer.html#instance-method-resetDisplay",
-    "js/container.js~SentenceContainer#resetDisplay",
-    "method"
-  ],
-  [
     "js/container.js~sentencecontainer#row",
     "class/js/container.js~SentenceContainer.html#instance-method-row",
     "js/container.js~SentenceContainer#row",
@@ -1794,12 +1854,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/container.js~sentencecontainer#saveasfile",
-    "class/js/container.js~SentenceContainer.html#instance-method-saveAsFile",
-    "js/container.js~SentenceContainer#saveAsFile",
-    "method"
-  ],
-  [
     "js/container.js~sentencecontainer#savefile",
     "class/js/container.js~SentenceContainer.html#instance-method-saveFile",
     "js/container.js~SentenceContainer#saveFile",
@@ -1812,75 +1866,15 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/container.js~sentencecontainer#search",
-    "class/js/container.js~SentenceContainer.html#instance-method-search",
-    "js/container.js~SentenceContainer#search",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#searchinputelem",
-    "class/js/container.js~SentenceContainer.html#instance-method-searchInputElem",
-    "js/container.js~SentenceContainer#searchInputElem",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#selectchars",
-    "class/js/container.js~SentenceContainer.html#instance-method-selectChars",
-    "js/container.js~SentenceContainer#selectChars",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#selecttext",
-    "class/js/container.js~SentenceContainer.html#instance-method-selectText",
-    "js/container.js~SentenceContainer#selectText",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#shiftleftdisplay",
-    "class/js/container.js~SentenceContainer.html#instance-method-shiftLeftDisplay",
-    "js/container.js~SentenceContainer#shiftLeftDisplay",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#shiftrightdisplay",
-    "class/js/container.js~SentenceContainer.html#instance-method-shiftRightDisplay",
-    "js/container.js~SentenceContainer#shiftRightDisplay",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#startsearchmode",
-    "class/js/container.js~SentenceContainer.html#instance-method-startSearchMode",
-    "js/container.js~SentenceContainer#startSearchMode",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#stopsearchmode",
-    "class/js/container.js~SentenceContainer.html#instance-method-stopSearchMode",
-    "js/container.js~SentenceContainer#stopSearchMode",
-    "method"
-  ],
-  [
     "js/container.js~sentencecontainer#strlenonrow",
     "class/js/container.js~SentenceContainer.html#instance-method-strLenOnRow",
     "js/container.js~SentenceContainer#strLenOnRow",
     "method"
   ],
   [
-    "js/container.js~sentencecontainer#titleelem",
-    "class/js/container.js~SentenceContainer.html#instance-method-titleElem",
-    "js/container.js~SentenceContainer#titleElem",
-    "method"
-  ],
-  [
     "js/container.js~sentencecontainer#undo",
     "class/js/container.js~SentenceContainer.html#instance-method-undo",
     "js/container.js~SentenceContainer#undo",
-    "method"
-  ],
-  [
-    "js/container.js~sentencecontainer#userid",
-    "class/js/container.js~SentenceContainer.html#instance-method-userId",
-    "js/container.js~SentenceContainer#userId",
     "method"
   ],
   [
@@ -2910,12 +2904,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "js/other-classes.js~cursor#charsfromstring",
-    "class/js/other-classes.js~Cursor.html#instance-method-charsFromString",
-    "js/other-classes.js~Cursor#charsFromString",
-    "method"
-  ],
-  [
     "js/other-classes.js~cursor#constructor",
     "class/js/other-classes.js~Cursor.html#instance-constructor-constructor",
     "js/other-classes.js~Cursor#constructor",
@@ -3208,6 +3196,12 @@ window.esdocSearchIndex = [
     "class/js/other-classes.js~Menu.html#instance-method-sentenceContainer",
     "js/other-classes.js~Menu#sentenceContainer",
     "method"
+  ],
+  [
+    "js/test/test.js",
+    "file/js/test/test.js.html",
+    "js/test/test.js",
+    "file"
   ],
   [
     "js/undo-redo.js",

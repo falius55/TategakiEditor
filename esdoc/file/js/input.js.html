@@ -37,6 +37,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~Displayer.html">Displayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SearchMode.html">SearchMode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SelectRange.html">SelectRange</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
@@ -68,10 +71,13 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
 /* global AbstractHierarchy, Char, Row, KeyTable, ElemCreator, Util */
 // class&#x306F;&#x5DFB;&#x304D;&#x4E0A;&#x3052;&#x304C;&#x8D77;&#x3053;&#x3089;&#x306A;&#x3044;&#x305F;&#x3081;&#x3001;Char&#x30FB;Row&#x306E;&#x4E0B;&#x306B;&#x4F5C;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;&#x3002;&#x305F;&#x3060;&#x3057;&#x3001;SentenceContainer&#x5185;&#x3067;&#x5229;&#x7528;&#x3059;&#x308B;&#x306E;&#x3067;SentenceContainer&#x3088;&#x308A;&#x306F;&#x4E0A;&#x306B;&#x306A;&#x3051;&#x308C;&#x3070;&#x306A;&#x3089;&#x306A;&#x3044;
+
+
 /**
  * &#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class InputChar extends Char {//{{{
+export class InputChar extends Char {
+    //{{{
     // constructor {{{
     /**
      * @param {object} data &#x6587;&#x5B57;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
@@ -87,9 +93,11 @@ export class InputChar extends Char {//{{{
      *	&lt;/pre&gt;
      *	@param {number} [opt_phraseNum=-1] &#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
      */
-    constructor(data,opt_phraseNum) {
+    constructor(data, opt_phraseNum) {
         super(data);
-        if (opt_phraseNum === undefined) opt_phraseNum = -1;
+        if (opt_phraseNum === undefined) {
+            opt_phraseNum = -1;
+        }
         this.phraseNum(opt_phraseNum);
     }//}}}
 
@@ -123,6 +131,7 @@ export class InputChar extends Char {//{{{
         if (opt_newNum === undefined) {
             return this._phraseNum;
         }
+
         this.elem().dataset.phraseNum = opt_newNum;
         this._phraseNum = opt_newNum;
         return this;
@@ -149,12 +158,14 @@ export class InputChar extends Char {//{{{
     }//}}}
 }//}}}
 
+
 /**
  * &#x5165;&#x529B;&#x3055;&#x308C;&#x305F;&#x6587;&#x5B57;&#x3092;&#x3044;&#x3063;&#x305F;&#x3093;&#x4FDD;&#x6301;&#x3059;&#x308B;&#x30D0;&#x30C3;&#x30D5;&#x30A1;&#x30FC;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;&#x3002;
  *     &#x5185;&#x90E8;&#x306E;&#x5B50;&#x306B;InputChar&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x7FA4;&#x3092;&#x6301;&#x3061;&#x307E;&#x3059;&#x3002;
  *     &#x307E;&#x305F;&#x3001;&#x4E00;&#x5EA6;&#x3082;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x304C;&#x3055;&#x308C;&#x305A;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x304C;&#x3059;&#x3079;&#x3066;-1&#x306E;&#x5834;&#x5408;&#x3068;&#x3001;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x304C;&#x884C;&#x308F;&#x308C;&#x6587;&#x7BC0;&#x304C;&#x5206;&#x3051;&#x3089;&#x308C;&#x3066;&#x3044;&#x308B;&#x5834;&#x5408;&#x3068;&#xFF12;&#x3064;&#x306E;&#x72B6;&#x614B;&#x304C;&#x3042;&#x308B;
  */
-export class InputBuffer extends Row {//{{{
+export class InputBuffer extends Row {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} container &#x81EA;&#x8EAB;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
@@ -206,9 +217,11 @@ export class InputBuffer extends Row {//{{{
      */
     phrases(num) {
         const ret = [];
-        for (let char of this.chars())
-            if (char.isPhraseNum(num))
-            ret.push(char);
+        for (let char of this.chars()) {
+            if (char.isPhraseNum(num)) {
+                ret.push(char);
+            }
+        }
         return ret;
     }
 
@@ -218,9 +231,11 @@ export class InputBuffer extends Row {//{{{
      */
     selectPhrases() {
         const ret = [];
-        for (let char of this.chars())
-            if (char.isSelect())
-            ret.push(char);
+        for (let char of this.chars()) {
+            if (char.isSelect()) {
+                ret.push(char);
+            }
+        }
         return ret;
     }//}}}
 
@@ -245,8 +260,9 @@ export class InputBuffer extends Row {//{{{
         for (let view of this.convertContainer().views()) {
             const num = view.phraseNum();
             const len = view.getSelect().length(); // &#x9078;&#x629E;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;&#x4F7F;&#x3063;&#x3066;&#x8A08;&#x7B97;
-            for (let i = 0; i &lt; len; i++, cnt++)
+            for (let i = 0; i &lt; len; i++, cnt++) {
                 this.chars(cnt).phraseNum(num);
+            }
         }
         return this;
     }
@@ -256,9 +272,11 @@ export class InputBuffer extends Row {//{{{
      * @return {number} &#x9078;&#x629E;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x9078;&#x629E;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;-1
      */
     selectIndex() {
-        for (let char of this.chars())
-            if (char.isSelect())
-            return char.phraseNum();
+        for (let char of this.chars()) {
+            if (char.isSelect()) {
+                return char.phraseNum();
+            }
+        }
         return -1;
     }//}}}
 
@@ -401,14 +419,19 @@ export class InputBuffer extends Row {//{{{
      */
     select(index) {
         const maxIndex = this.lastChar().phraseNum();
-        if (index &lt; 0) index = maxIndex;
-        if (index &gt; maxIndex) index = 0;
+        if (index &lt; 0) {
+            index = maxIndex;
+        }
+        if (index &gt; maxIndex) {
+            index = 0;
+        }
 
         for (let char of this.chars()) {
-            if (char.phraseNum() === index)
+            if (char.phraseNum() === index) {
                 char.select();
-            else
+            } else {
                 char.removeSelect();
+            }
         }
         this.convertContainer().views(index).active();
         return this;
@@ -434,13 +457,14 @@ export class InputBuffer extends Row {//{{{
      * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
      * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
-    increace(keycode,bShift) {
-        const newInputStr = this.newString(keycode,bShift);
+    increace(keycode, bShift) {
+        const newInputStr = this._newString(keycode,bShift);
 
         if (newInputStr === undefined || newInputStr.indexOf(&apos;undefined&apos;) !== -1) {
             // &#x672A;&#x5B9A;&#x7FA9;&#x6587;&#x5B57;(alt,ctrl,tab&#x306A;&#x3069;)&#x306F;return
             return this;
         }
+
         this.update(newInputStr);
         this.resize();
         return this;
@@ -451,7 +475,10 @@ export class InputBuffer extends Row {//{{{
      * @return {InputChar} &#x524A;&#x9664;&#x3057;&#x305F;&#x5165;&#x529B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     decreace() {
-        if (!this.hasChar) return this;
+        if (!this.hasChar) {
+            return this;
+        }
+
         const ret = this.lastChar().remove();
         this.resize();
         if (!this.hasChar()) {
@@ -492,14 +519,14 @@ export class InputBuffer extends Row {//{{{
      * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     toKatakanaAll() {
-        this.update(this.getKatakana());
+        this.update(this._getKatakana());
         return this;
     }
 
     /**
      * &#x5165;&#x529B;&#x6587;&#x5B57;&#x3059;&#x3079;&#x3066;&#x3092;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     convert() {
         this.convertContainer().convert(this.text());
@@ -514,16 +541,21 @@ export class InputBuffer extends Row {//{{{
      */
     insertPhrase(num, str) {
         const phrases = this.phrases(num);
-        if (phrases.length === 0) return this; // &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x6587;&#x5B57;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x304B;&#x3063;&#x305F;
+        if (phrases.length === 0) { // &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x6587;&#x5B57;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x304B;&#x3063;&#x305F;
+            return this;
+        }
         // &#x65B0;&#x3057;&#x3044;InputChar&#x3092;&#x3082;&#x3068;&#x3082;&#x3068;&#x3042;&#x3063;&#x305F;&#x6587;&#x5B57;&#x306E;&#x524D;&#x306B;&#x633F;&#x5165;&#x3057;&#x3066;&#x3044;&#x304F;
         for (let c of str) {
             const newChar = new InputChar(this.cursorChar().createData(c),num);
             phrases[0].before(newChar);
-            if (phrases[0].isSelect()) newChar.select(); // &#x9078;&#x629E;&#x4E2D;&#x306E;&#x6587;&#x7BC0;&#x306A;&#x3089;&#x5165;&#x66FF;&#x3048;&#x6587;&#x5B57;&#x3082;&#x9078;&#x629E;
+            if (phrases[0].isSelect()) { // &#x9078;&#x629E;&#x4E2D;&#x306E;&#x6587;&#x7BC0;&#x306A;&#x3089;&#x5165;&#x66FF;&#x3048;&#x6587;&#x5B57;&#x3082;&#x9078;&#x629E;
+                newChar.select();
+            }
         }
         // &#x53E4;&#x3044;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;
-        for (let old of phrases)
+        for (let old of phrases) {
             old.remove();
+        }
         this.resize();
         return this;
     }
@@ -536,10 +568,14 @@ export class InputBuffer extends Row {//{{{
      */
     insertPhraseAfter(num, str) {
         const phrases = this.phrases(num);
-        if (phrases.length === 0) return this; // &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x6587;&#x5B57;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x304B;&#x3063;&#x305F;
+        if (phrases.length === 0) { // &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x6587;&#x5B57;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x304B;&#x3063;&#x305F;
+            return this;
+        }
+
         const nextChar = phrases[phrases.length -1].next(); // &#x633F;&#x5165;&#x7528;&#x306E;&#x6587;&#x5B57;&#x3002;&#x6700;&#x5F8C;&#x306B;&#x306F;EOL&#x304C;&#x3042;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x5B58;&#x5728;&#x3059;&#x308B;
-        for (let c of str)
+        for (let c of str) {
             nextChar.before(new InputChar(this.cursorChar().createData(c),-num));
+        }
         this.resize();
         return this;
     }
@@ -547,37 +583,36 @@ export class InputBuffer extends Row {//{{{
     // --&#x5916;&#x304B;&#x3089;&#x306E;&#x60C5;&#x5831;&#x53D6;&#x5F97;
 
     /**
-     * @private
      * &#x73FE;&#x5728;&#x306E;&#x6587;&#x5B57;&#x5217;&#x306B;keycode&#x3092;&#x52A0;&#x3048;&#x3066;&#x4F5C;&#x3089;&#x308C;&#x308B;&#x6587;&#x5B57;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;&#x3002;
      *     &#x672A;&#x5B9A;&#x7FA9;&#x306E;keycode&#x306E;&#x5834;&#x5408;&#x306F;undefined&#x304C;&#x6587;&#x5B57;&#x5217;&#x5185;&#x306B;&#x542B;&#x307E;&#x308C;&#x307E;&#x3059;&#x306E;&#x3067;&#x6CE8;&#x610F;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
      * @param {number} keycode &#x8FFD;&#x52A0;&#x3059;&#x308B;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
      * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
      * @return {string} keycode&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x3066;&#x4F5C;&#x3089;&#x308C;&#x305F;&#x6587;&#x5B57;&#x5217;
      */
-    newString(keycode,bShift) {
+    _newString(keycode,bShift) {
         const inputStr = this.text(); //&#x3082;&#x3068;&#x3082;&#x3068;&#x306E;&#x6587;&#x5B57;&#x5217;
         if (bShift) {
             return inputStr + KeyTable.shiftKey[keycode];
-        } else {
-            return KeyTable.makeString(inputStr,keycode); //keycode&#x3092;&#x52A0;&#x3048;&#x305F;&#x65B0;&#x3057;&#x3044;&#x6587;&#x5B57;&#x5217;
         }
+
+        return KeyTable.makeString(inputStr,keycode); //keycode&#x3092;&#x52A0;&#x3048;&#x305F;&#x65B0;&#x3057;&#x3044;&#x6587;&#x5B57;&#x5217;
     }
 
     /**
-     * @private
      * &#x73FE;&#x5728;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x5909;&#x63DB;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x6587;&#x5B57;&#x5217;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;&#x3002;
      *     &#x5909;&#x63DB;&#x3067;&#x304D;&#x306A;&#x3044;&#x6587;&#x5B57;&#x304C;&#x3042;&#x308C;&#x3070;&#x5909;&#x63DB;&#x305B;&#x305A;&#x306B;&#x5143;&#x306E;&#x6587;&#x5B57;&#x3092;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50;&#x3057;&#x307E;&#x3059;
      * @return {string} &#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x305F;&#x6587;&#x5B57;&#x5217;
      */
-    getKatakana() {
+    _getKatakana() {
         const str = this.text();
         let rtnKatakana = &apos;&apos;;
         for (let char of str) {
             const cKatakana = KeyTable.katakana[char];
-            if (cKatakana)
+            if (cKatakana) {
                 rtnKatakana += cKatakana;
-            else
+            } else {
                 rtnKatakana += char; // &#x5909;&#x63DB;&#x3067;&#x304D;&#x306A;&#x3051;&#x308C;&#x3070;&#x5143;&#x306E;&#x6587;&#x5B57;&#x3092;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50;
+            }
         }
         return rtnKatakana;
     }//}}}
@@ -640,12 +675,14 @@ export class InputBuffer extends Row {//{{{
     }//}}}
 }//}}}
 
+
 /**
  * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30D3;&#x30E5;&#x30FC;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;&#x3002;
  *     &#x305D;&#x308C;&#x305E;&#x308C;&#x4E00;&#x3064;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x62C5;&#x5F53;&#x3057;&#x3001;&#x8907;&#x6570;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x6301;&#x3061;&#x307E;&#x3059;&#x3002;
  *     &#x307E;&#x305F;&#x3001;&#x5185;&#x90E8;&#x306B;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3068;&#x3057;&#x3066;Row&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x6301;&#x3061;&#x307E;&#x3059;
  */
-export class ConvertView extends AbstractHierarchy {//{{{
+export class ConvertView extends AbstractHierarchy {
+    //{{{
     // &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306F;&#x3001;ConvertView&#x306E;index()&#x3068;&#x540C;&#x3058;
 
     // constructor {{{
@@ -684,7 +721,7 @@ export class ConvertView extends AbstractHierarchy {//{{{
     /**
      * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
      * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
-     * @return {Row Row[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;) 
+     * @return {Row Row[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
      */
     rows(opt_index) {
         return this.children(opt_index);
@@ -695,8 +732,11 @@ export class ConvertView extends AbstractHierarchy {//{{{
      * @return {Row} &#x73FE;&#x5728;&#x9078;&#x629E;&#x4E2D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x9078;&#x629E;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x5019;&#x88DC;&#x6700;&#x5F8C;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     getSelect() {
-        for (let row of this.rows())
-            if (row.hasClass(&apos;select&apos;)) return row;
+        for (let row of this.rows()) {
+            if (row.hasClass(&apos;select&apos;)) {
+                return row;
+            }
+        }
         return this.lastChild(); // &#x9078;&#x629E;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x3072;&#x3089;&#x304C;&#x306A;&#x884C;
     }//}}}
 
@@ -743,9 +783,11 @@ export class ConvertView extends AbstractHierarchy {//{{{
      * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     active() {
-        for (let view of this.container().views())
-            if (view.hasClass(&apos;active&apos;))
-            view.removeClass(&apos;active&apos;);
+        for (let view of this.container().views()) {
+            if (view.hasClass(&apos;active&apos;)) {
+                view.removeClass(&apos;active&apos;);
+            }
+        }
         this.addClass(&apos;active&apos;);
         return this;
     }
@@ -776,12 +818,18 @@ export class ConvertView extends AbstractHierarchy {//{{{
      * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     select(index) {
-        if (index &lt; 0) index = 0;
-        if (index &gt;= this.childLength()) index = this.childLength() - 1;
+        if (index &lt; 0) {
+            index = 0;
+        }
+        if (index &gt;= this.childLength()) {
+            index = this.childLength() - 1;
+        }
 
-        for (let row of this.rows())
-            if (row.hasClass(&apos;select&apos;))
-            row.removeClass(&apos;select&apos;);
+        for (let row of this.rows()) {
+            if (row.hasClass(&apos;select&apos;)) {
+                row.removeClass(&apos;select&apos;);
+            }
+        }
 
         const newRow = this.rows(index);
         newRow.addClass(&apos;select&apos;);
@@ -904,7 +952,9 @@ export class ConvertView extends AbstractHierarchy {//{{{
      */
     replace(view) {
         this.before(view);
-        if (this.isActive()) view.active();
+        if (this.isActive()) {
+            view.active();
+        }
         return this.remove();
     }
 
@@ -913,24 +963,24 @@ export class ConvertView extends AbstractHierarchy {//{{{
      * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     toKatakana() {
-        this.container().inputBuffer().insertPhrase(this.phraseNum(),this.getKatakana());
+        this.container().inputBuffer().insertPhrase(this.phraseNum(),this._getKatakana());
         return this;
     }
 
     /**
-     * @private
      * &#x81EA;&#x8EAB;&#x304C;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x3092;&#x6587;&#x5B57;&#x5217;&#x3067;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
      * @return {string} &#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x5909;&#x63DB;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x6587;&#x5B57;&#x5217;
      */
-    getKatakana() {
+    _getKatakana() {
         const str = this.hiragana();
         let rtnKatakana = &apos;&apos;;
         for (let char of str) {
             const cKatakana = KeyTable.katakana[char];
-            if (cKatakana)
+            if (cKatakana) {
                 rtnKatakana += cKatakana;
-            else
+            } else {
                 rtnKatakana += char; // &#x5909;&#x63DB;&#x3067;&#x304D;&#x306A;&#x3051;&#x308C;&#x3070;&#x5143;&#x306E;&#x6587;&#x5B57;&#x3092;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50;
+            }
         }
         return rtnKatakana;
     }//}}}
@@ -940,7 +990,8 @@ export class ConvertView extends AbstractHierarchy {//{{{
 /**
  * &#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x675F;&#x306D;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class ConvertContainer extends AbstractHierarchy {//{{{
+export class ConvertContainer extends AbstractHierarchy {
+    //{{{
     // constructor {{{
     /**
      * @param {InputBuffer} inputBuffer &#x5165;&#x529B;&#x5143;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
@@ -974,8 +1025,11 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
      * @return {ConvertView} &#x73FE;&#x5728;&#x30A2;&#x30AF;&#x30C6;&#x30A3;&#x30D6;&#x306A;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
     activeView() {
-        for (let view of this.views())
-            if (view.isActive()) return view;
+        for (let view of this.views()) {
+            if (view.isActive()) {
+                return view;
+            }
+        }
         return null;
     }//}}}
 
@@ -1062,8 +1116,9 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
      */
     createViews(data) {
         this.empty();
-        for (let phraseData of data)
+        for (let phraseData of data) {
             this.append(new ConvertView(phraseData));
+        }
         return this;
     }
 
@@ -1071,23 +1126,24 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
      * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x3092;&#x59CB;&#x3081;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @param {string} str &#x5909;&#x63DB;&#x3059;&#x308B;&#x6587;&#x5B57;&#x5217;
      * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     convert(str) {
-        Util.post(&apos;/tategaki/KanjiProxy&apos;,{
-            sentence: str
-        },function (json) {
+        Util.get(&apos;/tategaki/Convert&apos;, function (json) {
             this.createViews(json);
             this.inputBuffer().setPhraseNum();
             // &#x3059;&#x3079;&#x3066;&#x5909;&#x63DB;&#x7B2C;&#x4E00;&#x5019;&#x88DC;&#x3092;&#x9078;&#x629E;&#x3059;&#x308B;
-            for (let view of this.views())
+            for (let view of this.views()) {
                 view.select(0);
+            }
             // &#x6700;&#x521D;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x9078;&#x629E;
             this.inputBuffer().select(0);
 
             this.reposition();
             this.addKeydownEventListener();
-        }.bind(this));
+        }.bind(this), {
+            sentence: str
+        });
         this.show();
 
         return this;
@@ -1096,23 +1152,25 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
     /**
      * &#x6587;&#x7BC0;&#x533A;&#x5207;&#x308A;&#x3092;&#x3072;&#x3068;&#x3064;&#x524D;&#x306B;&#x305A;&#x3089;&#x3057;&#x3066;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     shiftUp() {
         const activeView = this.activeView();
 
-        if (activeView.kanaLength() === 1) return this;
+        if (activeView.kanaLength() === 1) {
+            return this;
+        }
 
         // &#x6700;&#x7D42;&#x6587;&#x7BC0;&#x304B;&#x3089;
         // &#x6700;&#x5F8C;&#x306E;&#x4E00;&#x5B57;&#x3092;&#x5206;&#x96E2;&#x3057;&#x3066;&#x3001;&#x4E8C;&#x6587;&#x7BC0;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3059;
         if (activeView.isLast()) {
             const activeKana = activeView.hiragana();
             const sendString = activeKana.slice(0, -1) + &apos;,&apos; + activeKana.slice(-1);
-            Util.post(&apos;/tategaki/KanjiProxy&apos;,{
-                sentence: sendString
-            },function (json) {
+            Util.get(&apos;/tategaki/Convert&apos;, function (json) {
                 this.replace(activeView.phraseNum(),json);
-            }.bind(this));
+            }.bind(this), {
+                sentence: sendString
+            });
             return this;
         }
 
@@ -1121,15 +1179,15 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
         const nextView = activeView.next();
         const nextKana = nextView.hiragana();
         const sendString = activeKana.slice(0,-1) + &apos;,&apos; + activeKana.slice(-1) + nextKana;
-        Util.post(&apos;/tategaki/KanjiProxy&apos;,{
-            sentence: sendString
-        },function (json) {
+        Util.get(&apos;/tategaki/Convert&apos;, function (json) {
             const newFirst = new ConvertView(json[0]);
             activeView.replace(newFirst);
             newFirst.select(0);
             const newSecond = new ConvertView(json[1]);
             nextView.replace(newSecond);
             newSecond.select(0);
+        }, {
+            sentence: sendString
         });
         return this;
     }
@@ -1137,28 +1195,31 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
     /**
      * &#x6587;&#x7BC0;&#x533A;&#x5207;&#x308A;&#x3092;&#x3072;&#x3068;&#x3064;&#x4E0B;&#x306B;&#x305A;&#x3089;&#x3057;&#x3066;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     shiftDown() {
         const activeView = this.activeView();
         const nextView = activeView.next();
 
-        if (activeView.isLast()) return this;
+        if (activeView.isLast()) {
+            return this;
+        }
 
         // &#x6B21;&#x306E;&#x6587;&#x7BC0;&#x306E;&#x6587;&#x5B57;&#x6570;&#x304C;&#xFF11;&#x6587;&#x5B57;&#x3060;&#x3051;&#x306A;&#x3089;&#x878D;&#x5408;&#x3057;&#x3066;&#x3001;&#xFF11;&#x6587;&#x7BC0;&#x3068;&#x3057;&#x3066;&#x5909;&#x63DB;&#x3059;&#x308B;
         if (nextView.kanaLength() === 1) {
             const nextPhrase = this.inputBuffer().phrases(nextView.phraseNum())[0];
-            const sendString = activeView.hiragana() + nextView.hiragana() + &apos;,&apos;; // &#x6587;&#x7BC0;&#x3092;&#x533A;&#x5207;&#x3089;&#x308C;&#x306A;&#x3044;&#x3088;&#x3046;&#x3001;,&#x3092;&#x672B;&#x5C3E;&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
-            Util.post(&apos;/tategaki/KanjiProxy&apos;,{
-                sentence: sendString
-            },function (json) {
+            // &#x6587;&#x7BC0;&#x3092;&#x533A;&#x5207;&#x3089;&#x308C;&#x306A;&#x3044;&#x3088;&#x3046;&#x3001;,&#x3092;&#x672B;&#x5C3E;&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
+            const sendString = activeView.hiragana() + nextView.hiragana() + &apos;,&apos;;
+            Util.get(&apos;/tategaki/Convert&apos;, function (json) {
                 const newView = new ConvertView(json[0]);
                 activeView.replace(newView);
                 nextView.remove();
                 nextPhrase.remove();
                 newView.select(0);
                 this.inputBuffer().setPhraseNum();
-            }.bind(this));
+            }.bind(this), {
+                sentence: sendString
+            });
             return this;
         }
 
@@ -1167,15 +1228,15 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
         const activeKana = activeView.hiragana();
         const nextKana = nextView.hiragana();
         const sendString = activeKana + nextKana.slice(0,1) + &apos;,&apos; + nextKana.slice(1);
-        Util.post(&apos;/tategaki/KanjiProxy&apos;,{
-            sentence: sendString
-        },function (json) {
+        Util.get(&apos;/tategaki/Convert&apos;, function (json) {
             const newFirst = new ConvertView(json[0]);
             activeView.replace(newFirst);
             newFirst.select(0);
             const newSecond = new ConvertView(json[1]);
             nextView.replace(newSecond);
             newSecond.select(0);
+        }, {
+            sentence: sendString
         });
         return this;
     }
@@ -1184,7 +1245,7 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
      * &#x5165;&#x529B;&#x4E2D;&#x306E;&#x6587;&#x5B57;&#x304C;&#x4E8C;&#x6587;&#x5B57;&#x4EE5;&#x4E0A;&#x3042;&#x308C;&#x3070;&#x6700;&#x5F8C;&#x306E;&#xFF11;&#x97F3;&#x306E;&#x307F;&#x524A;&#x9664;&#x3057;&#x3066;&#x9078;&#x629E;&#x6587;&#x7BC0;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)&#x3002;
      *     &#x5165;&#x529B;&#x4E2D;&#x306E;&#x6587;&#x5B57;&#x304C;&#x3072;&#x3089;&#x304C;&#x306A;&#x306B;&#x3057;&#x3066;&#xFF11;&#x6587;&#x5B57;&#x3057;&#x304B;&#x306A;&#x3051;&#x308C;&#x3070;&#x5168;&#x3066;&#x7834;&#x68C4;&#x3057;&#x3066;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3057;&#x307E;&#x3059;
      * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/KanjiProxy.html
+     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     backSpace() {
         const activeView = this.activeView();
@@ -1212,11 +1273,11 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
         // &#x6700;&#x5F8C;&#x306E;&#x4E00;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3057;&#x3066;&#x3001;&#x305D;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3059;
         const phraseNum = activeView.phraseNum();
         const newString = activeView.hiragana().slice(0,-1) + &apos;,&apos;; // &#x6587;&#x7BC0;&#x3092;&#x533A;&#x5207;&#x3089;&#x308C;&#x306A;&#x3044;&#x3088;&#x3046;&#x3001;,&#x3092;&#x672B;&#x5C3E;&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
-        Util.post(&apos;/tategaki/KanjiProxy&apos;,{
-            sentence: newString
-        },function (json) {
+        Util.get(&apos;/tategaki/Convert&apos;, function (json) {
             this.replace(phraseNum,json);
-        }.bind(this));
+        }.bind(this), {
+            sentence: newString
+        });
         return this;
     }
 
@@ -1234,7 +1295,8 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
      */
     replace(num,data) {
         const oldView = this.views(num);
-        const newViews = []; // &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x632F;&#x308A;&#x76F4;&#x3057;&#x305F;&#x5F8C;&#x3067;&#x306A;&#x3044;&#x3068;view.select()&#x3067;&#x304D;&#x306A;&#x3044;(&#x4E2D;&#x3067;insertPhrase()&#x3092;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;)&#x306E;&#x3067;&#x3001;&#x3044;&#x3063;&#x305F;&#x3093;&#x65B0;&#x3057;&#x3044;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x5165;&#x308C;&#x3066;&#x304A;&#x304F;
+        // &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x632F;&#x308A;&#x76F4;&#x3057;&#x305F;&#x5F8C;&#x3067;&#x306A;&#x3044;&#x3068;view.select()&#x3067;&#x304D;&#x306A;&#x3044;(&#x4E2D;&#x3067;insertPhrase()&#x3092;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;)&#x306E;&#x3067;&#x3001;&#x3044;&#x3063;&#x305F;&#x3093;&#x65B0;&#x3057;&#x3044;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x5165;&#x308C;&#x3066;&#x304A;&#x304F;
+        const newViews = [];
         // view&#x3092;&#x5165;&#x308C;&#x66FF;&#x3048;&#x3001;buffer&#x306B;&#x306F;&#x3044;&#x3063;&#x305F;&#x3093;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;&#x633F;&#x5165;&#x3059;&#x308B;
         for (let phraseData of data.entries()) {
             // view
@@ -1243,19 +1305,25 @@ export class ConvertContainer extends AbstractHierarchy {//{{{
             oldView.before(newView);
             // input_buffer
             // setPhraseNum()&#x306F;&#x3001;select()&#x3059;&#x308B;&#x524D;&#x306E;view&#x3067;&#x306F;&#x3072;&#x3089;&#x304C;&#x306A;&#x306E;&#x9577;&#x3055;&#x3092;&#x4F7F;&#x3063;&#x3066;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x5272;&#x308A;&#x632F;&#x308B;&#x3002;&#x305D;&#x306E;&#x305F;&#x3081;&#x3001;&#x3044;&#x3063;&#x305F;&#x3093;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;buffer&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
-            if (phraseData[0] === 0) // &#x3072;&#x3068;&#x3064;&#x3081;&#x3060;&#x3051;&#x5165;&#x66FF;&#x3048;&#x3067;&#x3001;&#x4ED6;&#x306F;&#x305D;&#x306E;&#x5F8C;&#x306B;&#x8FFD;&#x52A0;&#x3057;&#x3066;&#x3044;&#x304F;
-                this.inputBuffer().insertPhrase(num,oldView.prev().hiragana()); // &#x53E4;&#x3044;buffer&#x6587;&#x5B57;&#x306F;&#x3053;&#x3053;&#x3067;&#x306A;&#x304F;&#x306A;&#x308B;
-            else
-                this.inputBuffer().insertPhraseAfter(num,oldView.prev().hiragana()); // HACK:&#x8FFD;&#x52A0;&#x5206;&#x306E;&#x6587;&#x5B57;&#x306E;&#x9806;&#x756A;&#x304C;&#x3053;&#x306E;&#x6642;&#x70B9;&#x3067;&#x306F;&#x304A;&#x304B;&#x3057;&#x304F;&#x306A;&#x308B;&#x304C;&#x3001;&#x5408;&#x8A08;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x306E;&#x6570;&#x306F;&#x6B63;&#x3057;&#x304F;&#x306A;&#x3063;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3001;buffer.setPhraseNum()&#x3068;newView.select(0)&#x3067;&#x6B63;&#x3057;&#x304F;&#x6587;&#x5B57;&#x304C;&#x7F6E;&#x304D;&#x63DB;&#x308F;&#x308B;
+            if (phraseData[0] === 0) { // &#x3072;&#x3068;&#x3064;&#x3081;&#x3060;&#x3051;&#x5165;&#x66FF;&#x3048;&#x3067;&#x3001;&#x4ED6;&#x306F;&#x305D;&#x306E;&#x5F8C;&#x306B;&#x8FFD;&#x52A0;&#x3057;&#x3066;&#x3044;&#x304F;
+                // &#x53E4;&#x3044;buffer&#x6587;&#x5B57;&#x306F;&#x3053;&#x3053;&#x3067;&#x306A;&#x304F;&#x306A;&#x308B;
+                this.inputBuffer().insertPhrase(num,oldView.prev().hiragana());
+            } else {
+                // HACK:&#x8FFD;&#x52A0;&#x5206;&#x306E;&#x6587;&#x5B57;&#x306E;&#x9806;&#x756A;&#x304C;&#x3053;&#x306E;&#x6642;&#x70B9;&#x3067;&#x306F;&#x304A;&#x304B;&#x3057;&#x304F;&#x306A;&#x308B;&#x304C;&#x3001;&#x5408;&#x8A08;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x306E;&#x6570;&#x306F;&#x6B63;&#x3057;&#x304F;&#x306A;&#x3063;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3001;buffer.setPhraseNum()&#x3068;newView.select(0)&#x3067;&#x6B63;&#x3057;&#x304F;&#x6587;&#x5B57;&#x304C;&#x7F6E;&#x304D;&#x63DB;&#x308F;&#x308B;
+                this.inputBuffer().insertPhraseAfter(num,oldView.prev().hiragana());
+            }
         }
         oldView.remove();
 
         // &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x632F;&#x308A;&#x76F4;&#x3057;
         this.inputBuffer().setPhraseNum();
         // &#x6700;&#x521D;&#x306E;&#x5019;&#x88DC;&#x3067;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x308B;
-        for (let newView of newViews)
+        for (let newView of newViews) {
             newView.select(0);
-        if (oldView.isActive()) newViews[0].active();
+        }
+        if (oldView.isActive()) {
+            newViews[0].active();
+        }
         return this;
     }
 

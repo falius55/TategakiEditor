@@ -37,6 +37,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~Displayer.html">Displayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SearchMode.html">SearchMode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SelectRange.html">SelectRange</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
@@ -66,18 +69,18 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">js/other-classes.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
-/* global ColorDoMemory, BoldDoMemory, ItalicDoMemory, ElemCreator, PrintDoMemory, Char, DeleteDoMemory, LineBreakDoMemory, getSelection */
+/* global ColorDoMemory, BoldDoMemory, ItalicDoMemory, ElemCreator, PrintDoMemory, Char, DeleteDoMemory, LineBreakDoMemory, getSelection */  // jshint ignore:line
 /*
  *	jQyery&#x306E;&#x4F7F;&#x7528;&#x7B87;&#x6240;:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap&#x95A2;&#x4FC2;
  */
-console.log(&apos;dom-operation-classes.js&apos;);
 
 // Class
 /**
  * &#x30E1;&#x30CB;&#x30E5;&#x30FC;&#x30D0;&#x30FC;&#x3092;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;
  *     &#x30E1;&#x30CB;&#x30E5;&#x30FC;&#x30D0;&#x30FC;&#x4E0A;&#x306E;&#x30DC;&#x30BF;&#x30F3;&#x306B;&#x3088;&#x308B;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4E00;&#x62EC;&#x3057;&#x3066;&#x8ACB;&#x3051;&#x8CA0;&#x3044;&#x307E;&#x3059;
  */
-export class Menu {//{{{
+export class Menu {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} sentenceContainer &#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;
@@ -121,15 +124,17 @@ export class Menu {//{{{
     /**
      * &#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306B;&#x5024;&#x3092;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;&#x5024;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
      * @param {number string} [opt_newSize] input&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x5024;(&#x6570;&#x5024;&#x304B;&#x3001;&#x6587;&#x5B57;&#x5217;&#x306E;&apos;auto&apos;)
-     * @return {Menu number string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;&#x5024;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&apos;auto&apos;&#x306E;&#x5834;&#x5408;&#x306F;&#x6587;&#x5B57;&#x5217;&#x3067;&#x8FD4;&#x3059;)
+     * @return {Menu number string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;
+     *     &#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;&#x5024;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x3002;&apos;auto&apos;&#x306E;&#x5834;&#x5408;&#x306F;&#x6587;&#x5B57;&#x5217;&#x3067;&#x8FD4;&#x3059;)
      */
     fontSizeInput(opt_newSize) {
         if (opt_newSize === undefined) {
-            return this._fontSizeInputElem.value === &apos;auto&apos; ? &apos;auto&apos; : parseInt(this._fontSizeInputElem.value);
-        } else {
-            this._fontSizeInputElem.value = opt_newSize;
-            return this;
+            return this._fontSizeInputElem.value === &apos;auto&apos; ?
+                &apos;auto&apos; : parseInt(this._fontSizeInputElem.value);
         }
+
+        this._fontSizeInputElem.value = opt_newSize;
+        return this;
     }
 
     /**
@@ -180,8 +185,12 @@ export class Menu {//{{{
         if(opt_color) {
             const oldColor = eColorButton.className.match(/select-\S+/);
             const newColor = opt_color;
-            if (oldColor) eColorButton.classList.remove(oldColor[0]);
-            if (newColor === &apos;black&apos;) return this;
+            if (oldColor) {
+                eColorButton.classList.remove(oldColor[0]);
+            }
+            if (newColor === &apos;black&apos;) {
+                return this;
+            }
             eColorButton.classList.add(&apos;select-&apos;+ newColor);
             return this;
         }
@@ -199,9 +208,12 @@ export class Menu {//{{{
      */
     addColor(color, useUndo) {
         const chars = this.sentenceContainer().selectChars(true);
-        if (useUndo) this.sentenceContainer().addDo(new ColorDoMemory(chars, color));
-        for (let char of chars)
+        if (useUndo) {
+            this.sentenceContainer().addDo(new ColorDoMemory(chars, color));
+        }
+        for (let char of chars) {
             char.color(color);
+        }
         this.sentenceContainer().isChanged(true);
         return this;
     }
@@ -216,6 +228,7 @@ export class Menu {//{{{
         if (opt_bl === undefined) {
             return eButton.classList.contains(&apos;active&apos;);
         }
+
         if (opt_bl) {
             eButton.classList.add(&apos;active&apos;);
         } else {
@@ -232,7 +245,9 @@ export class Menu {//{{{
      */
     bold(bl, useUndo) {
         const chars = this.sentenceContainer().selectChars(true);
-        if (useUndo) this.sentenceContainer().addDo(new BoldDoMemory(chars, bl));
+        if (useUndo) {
+            this.sentenceContainer().addDo(new BoldDoMemory(chars, bl));
+        }
         for (let char of chars) {
             char.bold(bl);
         }
@@ -250,6 +265,7 @@ export class Menu {//{{{
         if (opt_bl === undefined) {
             return eButton.classList.contains(&apos;active&apos;);
         }
+
         if (opt_bl) {
             eButton.classList.add(&apos;active&apos;);
         } else {
@@ -266,7 +282,9 @@ export class Menu {//{{{
      */
     italic(bl, useUndo) {
         const chars = this.sentenceContainer().selectChars(true);
-        if (useUndo) this.sentenceContainer().addDo(new ItalicDoMemory(chars, bl));
+        if (useUndo) {
+            this.sentenceContainer().addDo(new ItalicDoMemory(chars, bl));
+        }
         for (let char of chars) {
             char.italic(bl);
         }
@@ -282,13 +300,17 @@ export class Menu {//{{{
      */
     fontSize(size, useUndo) {
         const chars = this.sentenceContainer().selectChars(true);
-        if (useUndo) this.sentenceContainer().addDo(chars, size);
+        if (useUndo) {
+            this.sentenceContainer().addDo(chars, size);
+        }
         for (let char of chars) {
             char.fontSize(size);
         }
-        this.sentenceContainer().cordinate().checkKinsoku().changeDisplay().breakPage().printInfo().isChanged(true);
+        this.sentenceContainer()
+            .cordinate().checkKinsoku().changeDisplay().breakPage().printInfo().isChanged(true);
         return this;
     }
+
     // &apos;center&apos;,&apos;left&apos;,&apos;right&apos;
     /**
      * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x3042;&#x308B;&#x6BB5;&#x843D;&#x306E;text-align&#x3092;&#x5909;&#x66F4;&#x3057;&#x307E;&#x3059;
@@ -312,48 +334,54 @@ export class Menu {//{{{
      */
     addEventListeners() {
         // &#x30E1;&#x30CB;&#x30E5;&#x30FC;&#x30DC;&#x30BF;&#x30F3;
-        document.getElementById(&apos;menu_new&apos;).addEventListener(&apos;click&apos;,function (e) {  this.sentenceContainer().newFile(); }.bind(this),false);
-        document.getElementById(&apos;menu_save&apos;).addEventListener(&apos;click&apos;,function (e) { this.sentenceContainer().saveFile(); }.bind(this),false);
-        document.getElementById(&apos;menu_delete&apos;).addEventListener(&apos;click&apos;,function (e) { this.sentenceContainer().fileList().currentFile().delete(); }.bind(this),false);
-        document.getElementById(&apos;modal_fileopen_link&apos;).addEventListener(&apos;click&apos;,function (e) {
+        document.getElementById(&apos;menu_new&apos;).addEventListener(&apos;click&apos;, function (e) {
+            this.sentenceContainer().newFile();
+        }.bind(this), false);
+        document.getElementById(&apos;menu_save&apos;).addEventListener(&apos;click&apos;, function (e) {
+            this.sentenceContainer().saveFile();
+        }.bind(this), false);
+        document.getElementById(&apos;menu_delete&apos;).addEventListener(&apos;click&apos;, function (e) {
+            this.sentenceContainer().fileList().currentFile().delete();
+        }.bind(this), false);
+        document.getElementById(&apos;modal_fileopen_link&apos;).addEventListener(&apos;click&apos;, function (e) {
             const filterInputElem = this.sentenceContainer().fileList().filterInputElem();
             // &#x30E2;&#x30FC;&#x30C0;&#x30EB;&#x304C;&#x958B;&#x304F;&#x306E;&#x306F;&#x30D6;&#x30FC;&#x30C8;&#x30B9;&#x30C8;&#x30E9;&#x30C3;&#x30D7;&#x3067;&#x884C;&#x308F;&#x308C;&#x308B;&#x306E;&#x3067;&#x3001;&#x305D;&#x306E;&#x524D;&#x51E6;&#x7406;&#x3060;&#x3051;&#x3092;&#x884C;&#x3046;
             filterInputElem.value = &apos;&apos;;
             filterInputElem.focus();
             this.sentenceContainer().fileList().resetList();
-        }.bind(this),false);
+        }.bind(this), false);
 
         // &#x30E2;&#x30FC;&#x30C0;&#x30EB;&#x958B;&#x9589;
-        $(&apos;div.modal&apos;).on(&apos;shown.bs.modal&apos;,function (e) {
+        $(&apos;div.modal&apos;).on(&apos;shown.bs.modal&apos;, function (e) {
             this.sentenceContainer().removeKeydownEventListener();
             if (this.sentenceContainer().inputBuffer().isDisplay()) {
                 this.sentenceContainer().inputBuffer().empty().hide();
             }
         }.bind(this));
-        $(&apos;div.modal&apos;).on(&apos;hidden.bs.modal&apos;,function (e) {
+        $(&apos;div.modal&apos;).on(&apos;hidden.bs.modal&apos;, function (e) {
             if (this.sentenceContainer().command().isActive()) { return; }
             this.sentenceContainer().addKeydownEventListener();
         }.bind(this));
 
         // &#x30D1;&#x30EC;&#x30C3;&#x30C8;&#x30DC;&#x30BF;&#x30F3;
         // &#x6587;&#x5B57;&#x8272;&#x30DC;&#x30BF;&#x30F3;
-        document.getElementById(&apos;color_btn&apos;).addEventListener(&apos;click&apos;,function (e) {
+        document.getElementById(&apos;color_btn&apos;).addEventListener(&apos;click&apos;, function (e) {
             this.addColor(this.colorButton(), true);
-        }.bind(this),false);
+        }.bind(this), false);
         // &#x6587;&#x5B57;&#x8272;&#x30C9;&#x30ED;&#x30C3;&#x30D7;&#x30C0;&#x30A6;&#x30F3;
         this.addColorSelectClickEvent();
 
         // bold italic
-        document.getElementById(&apos;btn-bold&apos;).addEventListener(&apos;click&apos;,function (e) {
+        document.getElementById(&apos;btn-bold&apos;).addEventListener(&apos;click&apos;, function (e) {
             const eBtn = document.getElementById(&apos;btn-bold&apos;);
             eBtn.classList.toggle(&apos;active&apos;);
             this.bold(this.boldButton(), true);
-        }.bind(this),false);
-        document.getElementById(&apos;btn-italic&apos;).addEventListener(&apos;click&apos;,function (e) {
+        }.bind(this), false);
+        document.getElementById(&apos;btn-italic&apos;).addEventListener(&apos;click&apos;, function (e) {
             const eBtn = document.getElementById(&apos;btn-italic&apos;);
             eBtn.classList.toggle(&apos;active&apos;);
             this.italic(this.italicButton(), true);
-        }.bind(this),false);
+        }.bind(this), false);
 
         // align
         this.addAlignClickEvent();
@@ -376,7 +404,8 @@ export class Menu {//{{{
         const eSelectColors = document.querySelectorAll(&apos;#color_dropdown a&apos;);
         for (let i = 0, eSelColor; (eSelColor = eSelectColors[i]); i++) {
             const color = eSelColor.dataset.color;
-            eSelColor.addEventListener(&apos;click&apos;, this._addColorCallback(eSelColor, color).bind(this), false);
+            eSelColor.addEventListener(&apos;click&apos;,
+                this._addColorCallback(eSelColor, color).bind(this), false);
         }
         return this;
     }
@@ -414,17 +443,13 @@ export class Menu {//{{{
 
     /**
      * &#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x306E;&#x30C9;&#x30ED;&#x30C3;&#x30D7;&#x30C0;&#x30A6;&#x30F3;&#x3092;&#x30AF;&#x30EA;&#x30C3;&#x30AF;&#x3059;&#x308B;&#x3068;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x306E;input&#x306E;&#x6570;&#x5024;&#x304C;&#x5909;&#x66F4;&#x3055;&#x308C;&#x3001;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306E;&#x6587;&#x5B57;&#x306E;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x304C;&#x5909;&#x66F4;&#x3055;&#x308C;&#x308B;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4ED8;&#x52A0;&#x3057;&#x307E;&#x3059;
-     *     querySelectorAll()&#x3067;&#x30C9;&#x30ED;&#x30C3;&#x30D7;&#x30C0;&#x30A6;&#x30F3;&#x306E;&#x5404;&#x8981;&#x7D20;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x3066;&#x30EB;&#x30FC;&#x30D7;&#x3067;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4ED8;&#x52A0;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x3001;html&#x3068;css&#x306E;&#x307F;&#x5909;&#x66F4;&#x3059;&#x308B;&#x3053;&#x3068;&#x3067;&#x6271;&#x3046;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x3092;&#x5897;&#x3084;&#x3059;&#x3053;&#x3068;&#x304C;&#x53EF;&#x80FD;&#x306B;&#x306A;&#x308A;&#x307E;&#x3059;
+     *     querySelectorAll()&#x3067;&#x30C9;&#x30ED;&#x30C3;&#x30D7;&#x30C0;&#x30A6;&#x30F3;&#x306E;&#x5404;&#x8981;&#x7D20;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x3066;&#x30EB;&#x30FC;&#x30D7;&#x3067;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4ED8;&#x52A0;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x3001;
+     *     html&#x3068;css&#x306E;&#x307F;&#x5909;&#x66F4;&#x3059;&#x308B;&#x3053;&#x3068;&#x3067;&#x6271;&#x3046;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30B5;&#x30A4;&#x30BA;&#x3092;&#x5897;&#x3084;&#x3059;&#x3053;&#x3068;&#x304C;&#x53EF;&#x80FD;&#x306B;&#x306A;&#x308A;&#x307E;&#x3059;
      * @return {Menu} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addFontSizeEvnet() {
         const eFontSizeDropdowns = document.querySelectorAll(&apos;#fontsize_dropdown a&apos;);
         for (let i = 0,eFontSize; (eFontSize = eFontSizeDropdowns[i]); i++) {
-            // eFontSize.addEventListener(&apos;click&apos;,function (e) {
-            // 	const size = parseInt(e.target.dataset.size) || &apos;auto&apos;;
-            // 	this.fontSizeInput(size);
-            // 	this.fontSize(size);
-            // }.bind(this),false);
             eFontSize.addEventListener(&apos;click&apos;, this._addFontCallback().bind(this), false);
         }
         return this;
@@ -443,27 +468,32 @@ export class Menu {//{{{
      * @return {Menu} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addConfigueEvent() {
-        document.getElementById(&apos;btn_conf_save&apos;).addEventListener(&apos;click&apos;,function (e) {
+        document.getElementById(&apos;btn_conf_save&apos;).addEventListener(&apos;click&apos;, function (e) {
             const strLen = parseInt(this.confStrLenElem().value || 18);
             const rowLen = parseInt(this.confRowLenElem().value || 40);
             this.sentenceContainer().strLenOnRow(strLen).rowLenOnPage(rowLen);
             $(&apos;#configue_modal&apos;).modal(&apos;hide&apos;);
         }.bind(this),false);
-        document.getElementById(&apos;btn_conf_reset&apos;).addEventListener(&apos;click&apos;,function (e) { // html&#x4E0A;&#x3067;type=&quot;reset&quot;&#x306B;&#x3059;&#x308B;&#x3068;&#x3001;&#x5143;&#x306B;&#x623B;&#x3059;&#x3068;&#x3044;&#x3046;&#x3088;&#x308A;input&#x3092;&#x7A7A;&#x306B;&#x3057;&#x3066;&#x3057;&#x307E;&#x3046;
+
+        // html&#x4E0A;&#x3067;type=&quot;reset&quot;&#x306B;&#x3059;&#x308B;&#x3068;&#x3001;&#x5143;&#x306B;&#x623B;&#x3059;&#x3068;&#x3044;&#x3046;&#x3088;&#x308A;input&#x3092;&#x7A7A;&#x306B;&#x3057;&#x3066;&#x3057;&#x307E;&#x3046;
+        document.getElementById(&apos;btn_conf_reset&apos;).addEventListener(&apos;click&apos;, function (e) {
             this.confStrLenElem().value = this.sentenceContainer().strLenOnRow();
             this.confRowLenElem().value = this.sentenceContainer().rowLenOnPage();
         }.bind(this),false);
+
         // input&#x304B;&#x3089;&#x30D5;&#x30A9;&#x30FC;&#x30AB;&#x30B9;&#x304B;&#x3089;&#x5916;&#x308C;&#x305F;&#x969B;&#x306B;&#x3001;&#x4E0D;&#x6B63;&#x306A;&#x6587;&#x5B57;&#x304C;&#x5165;&#x529B;&#x3055;&#x308C;&#x3066;&#x3044;&#x305F;&#x3089;&#x5143;&#x306B;&#x623B;&#x3059;
-        this.confStrLenElem().addEventListener(&apos;focusout&apos;,function (e) {
+        this.confStrLenElem().addEventListener(&apos;focusout&apos;, function (e) {
             if (!/^[0-9]+$/.test(this.confStrLenElem().value)) {
                 this.confStrLenElem().value = this.sentenceContainer().strLenOnRow();
             }
         }.bind(this),false);
-        this.confRowLenElem().addEventListener(&apos;focusout&apos;,function (e) {
+
+        this.confRowLenElem().addEventListener(&apos;focusout&apos;, function (e) {
             if (!/^[0-9]+$/.test(this.confRowLenElem().value)) {
                 this.confRowLenElem().value = this.sentenceContainer().rowLenOnPage();
             }
         }.bind(this),false);
+
         return this;
     }//}}}
 } //}}}
@@ -473,7 +503,8 @@ export class Menu {//{{{
  * &#x30B3;&#x30DE;&#x30F3;&#x30C9;&#x30E9;&#x30A4;&#x30F3;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  *     &#x30B3;&#x30DE;&#x30F3;&#x30C9;&#x64CD;&#x4F5C;&#x3092;&#x4E00;&#x62EC;&#x3057;&#x3066;&#x8ACB;&#x3051;&#x8CA0;&#x3044;&#x307E;&#x3059;
  */
-export class CommandLine {//{{{
+export class CommandLine {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} sentenceContainer &#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;
@@ -554,7 +585,8 @@ export class CommandLine {//{{{
      */
     displayFileModal() {
         this.fileList().$modal().addClass(&apos;command-modal&apos;).modal();
-        $(&apos;.modal-backdrop.fade.in&apos;).addClass(&apos;none_modal-backdrop&apos;); // &#x30E2;&#x30FC;&#x30C0;&#x30EB;&#x30A6;&#x30A3;&#x30F3;&#x30C9;&#x30A6;&#x8868;&#x793A;&#x6642;&#x306E;&#x534A;&#x900F;&#x660E;&#x80CC;&#x666F;&#x3092;&#x898B;&#x3048;&#x306A;&#x304F;&#x3059;&#x308B;
+        // &#x30E2;&#x30FC;&#x30C0;&#x30EB;&#x30A6;&#x30A3;&#x30F3;&#x30C9;&#x30A6;&#x8868;&#x793A;&#x6642;&#x306E;&#x534A;&#x900F;&#x660E;&#x80CC;&#x666F;&#x3092;&#x898B;&#x3048;&#x306A;&#x304F;&#x3059;&#x308B;
+        $(&apos;.modal-backdrop.fade.in&apos;).addClass(&apos;none_modal-backdrop&apos;);
         return this;
     }
 
@@ -622,8 +654,12 @@ export class CommandLine {//{{{
      * @return {CommandLine} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addKeyupEventListener() {
-        if (this._keyupArg) return this;
-        this._keyupArg = this.onKeyup.bind(this); // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
+        if (this._keyupArg) {
+            return this;
+        }
+
+        // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
+        this._keyupArg = this.onKeyup.bind(this);
         document.addEventListener(&apos;keyup&apos;,this._keyupArg);
         return this;
     }
@@ -633,8 +669,11 @@ export class CommandLine {//{{{
      * @return {CommandLine} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     removeKeyupEventListener() {
-        if (!this._keyupArg) return this;
-        document.removeEventListener(&apos;keyup&apos;,this._keyupArg);
+        if (!this._keyupArg) {
+            return this;
+        }
+
+        document.removeEventListener(&apos;keyup&apos;, this._keyupArg);
         this._keyupArg = null;
         return this;
     }
@@ -652,6 +691,7 @@ export class CommandLine {//{{{
             // IE&#x4EE5;&#x5916;
             keycode = e.which;
         }
+
         if (keycode === 123) { return; } // F12&#x306E;&#x307F;&#x30D6;&#x30E9;&#x30A6;&#x30B6;&#x30B7;&#x30E7;&#x30FC;&#x30C8;&#x30AB;&#x30C3;&#x30C8;&#x30AD;&#x30FC;
         this.runKeyup(e,keycode);
         // &#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x306E;&#x52D5;&#x4F5C;&#x3092;&#x7121;&#x52B9;&#x5316;&#x3059;&#x308B;
@@ -668,7 +708,8 @@ export class CommandLine {//{{{
             // enter
             this.runCommand();
             this.stop();
-            e.stopPropagation(); // &#x89AA;&#x8981;&#x7D20;&#x3078;&#x306E;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x4F1D;&#x64AD;(&#x30D0;&#x30D6;&#x30EA;&#x30F3;&#x30B0;)&#x3092;&#x6B62;&#x3081;&#x308B;&#x3002;&#x305D;&#x3046;&#x3057;&#x306A;&#x3051;&#x308C;&#x3070;&#x5148;&#x306B;addeventlistener&#x3092;&#x3057;&#x3066;&#x3057;&#x307E;&#x3063;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3001;document&#x306B;&#x307E;&#x3067;&#x30A8;&#x30F3;&#x30BF;&#x30FC;&#x30AD;&#x30FC;&#x304C;&#x6E21;&#x3063;&#x3066;&#x3057;&#x307E;&#x3044;&#x6539;&#x884C;&#x3055;&#x308C;&#x3066;&#x3057;&#x307E;&#x3046;&#x3002;
+            // &#x89AA;&#x8981;&#x7D20;&#x3078;&#x306E;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x4F1D;&#x64AD;(&#x30D0;&#x30D6;&#x30EA;&#x30F3;&#x30B0;)&#x3092;&#x6B62;&#x3081;&#x308B;&#x3002;&#x305D;&#x3046;&#x3057;&#x306A;&#x3051;&#x308C;&#x3070;&#x5148;&#x306B;addeventlistener&#x3092;&#x3057;&#x3066;&#x3057;&#x307E;&#x3063;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3001;document&#x306B;&#x307E;&#x3067;&#x30A8;&#x30F3;&#x30BF;&#x30FC;&#x30AD;&#x30FC;&#x304C;&#x6E21;&#x3063;&#x3066;&#x3057;&#x307E;&#x3044;&#x6539;&#x884C;&#x3055;&#x308C;&#x3066;&#x3057;&#x307E;&#x3046;&#x3002;
+            e.stopPropagation();
         } else if (keycode === 27 || this.val() === &apos;&apos;) {
             // Esc
             // &#x3042;&#x308B;&#x3044;&#x306F;&#x5168;&#x6587;&#x5B57;&#x524A;&#x9664;
@@ -676,7 +717,10 @@ export class CommandLine {//{{{
             e.stopPropagation();
         } else {
             // :e&#x306A;&#x3069;&#x306E;&#x5F8C;&#x306B;&#x9014;&#x4E2D;&#x307E;&#x3067;&#x5F15;&#x6570;&#x3092;&#x6253;&#x3066;&#x3070;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x691C;&#x7D22;&#x30C0;&#x30A4;&#x30A2;&#x30ED;&#x30B0;&#x304C;&#x51FA;&#x308B;&#x3088;&#x3046;&#x306B;&#x3059;&#x308B;
-            const command = this.val().split(&apos; &apos;).length &gt; 1 ? this.val().split(&apos; &apos;) : this.val().split(&apos;&#x3000;&apos;); // &#x5168;&#x89D2;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x3082;&#x533A;&#x5207;&#x308A;&#x3068;&#x3057;&#x3066;&#x6709;&#x52B9;&#x3002;&#x305F;&#x3060;&#x3057;&#x3001;&#x534A;&#x89D2;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x3068;&#x306E;&#x6DF7;&#x5728;&#x306F;&#x73FE;&#x72B6;&#x4E0D;&#x53EF;
+            // &#x5168;&#x89D2;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x3082;&#x533A;&#x5207;&#x308A;&#x3068;&#x3057;&#x3066;&#x6709;&#x52B9;&#x3002;&#x305F;&#x3060;&#x3057;&#x3001;&#x534A;&#x89D2;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x3068;&#x306E;&#x6DF7;&#x5728;&#x306F;&#x73FE;&#x72B6;&#x4E0D;&#x53EF;
+            const command =
+                this.val().split(&apos; &apos;).length &gt; 1 ? this.val().split(&apos; &apos;) : this.val().split(&apos;&#x3000;&apos;);
+
             switch (command[0]) {
                 case &apos;:e&apos;:
                 case &apos;:o&apos;:
@@ -720,8 +764,12 @@ export class CommandLine {//{{{
      * @return {CommandLine} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addFocusoutEventListener() {
-        if (this._focusoutArg) return this;
-        this._focusoutArg = this.onFocusout.bind(this); // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
+        if (this._focusoutArg) {
+            return this;
+        }
+
+        // remove&#x3059;&#x308B;&#x3068;&#x304D;&#x3068;&#x5F15;&#x6570;&#x3092;&#x540C;&#x4E00;&#x306B;&#x3059;&#x308B;&#x305F;&#x3081;&#x30D7;&#x30ED;&#x30D1;&#x30C6;&#x30A3;&#x306B;&#x4FDD;&#x6301;&#x3059;&#x308B;(&#x305D;&#x308C;&#x305E;&#x308C;&#x3067;bind&#x3059;&#x308B;&#x3068;&#x7570;&#x306A;&#x308B;&#x53C2;&#x7167;&#x306B;&#x306A;&#x308B;&#xFF1F;)
+        this._focusoutArg = this.onFocusout.bind(this);
         document.addEventListener(&apos;focusout&apos;,this._focusoutArg);
         return this;
     }
@@ -731,7 +779,10 @@ export class CommandLine {//{{{
      * @return {CommandLine} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     removeFocusoutEventListener() {
-        if (!this._focusoutArg) return this;
+        if (!this._focusoutArg) {
+            return this;
+        }
+
         document.removeEventListener(&apos;focusout&apos;,this._focusoutArg);
         this._focusoutArg = null;
         return this;
@@ -750,7 +801,9 @@ export class CommandLine {//{{{
      */
     runCommand() {
         // &#x534A;&#x89D2;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x3067;&#x533A;&#x5207;&#x3089;&#x308C;&#x3066;&#x3044;&#x306A;&#x3044;&#x3088;&#x3046;&#x306A;&#x3089;&#x3001;&#x5168;&#x89D2;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x306E;&#x533A;&#x5207;&#x308A;&#x3067;&#x3082;&#x53EF;
-        const command = this.val().split(&apos; &apos;).length &gt; 1 ? this.val().split(&apos; &apos;) : this.val().split(&apos;&#x3000;&apos;);
+        const command =
+            this.val().split(&apos; &apos;).length &gt; 1 ? this.val().split(&apos; &apos;) : this.val().split(&apos;&#x3000;&apos;);
+
         switch (command[0]) {
             case &apos;:w&apos;:
             case &apos;:save&apos;:
@@ -759,7 +812,7 @@ export class CommandLine {//{{{
             case &apos;:&#x3055;&#x30F4;&#x3047;&apos;:
             case &apos;:&#xFF53;&apos;:
                 if (command[1]) {
-                    this.sentenceContainer().saveAsFile(command[1]);
+                    this.sentenceContainer().fileId(-1).filename(command[1]).saveFile();
                 } else {
                     this.sentenceContainer().saveFile();
                 }
@@ -785,7 +838,9 @@ export class CommandLine {//{{{
             case &apos;:&#x3058;&#x3085;&#xFF4D;&#xFF50;&#xFF52;&apos;:
             case &apos;:&#x3058;&#x3085;&#xFF4D;&#xFF50;&#x308D;&#xFF57;&apos;:
             case &apos;:&#xFF4A;&#xFF52;&apos;:
-                if (command[1]) this.sentenceContainer().cursor().jumpRow(parseInt(command[1]));
+                if (command[1]) {
+                    this.sentenceContainer().cursor().jumpRow(parseInt(command[1]));
+                }
                 break;
             case &apos;:jumpp&apos;:
             case &apos;:jumppage&apos;:
@@ -793,7 +848,9 @@ export class CommandLine {//{{{
             case &apos;:&#x3058;&#x3085;&#xFF4D;&#x3063;&#xFF50;&apos;:
             case &apos;:&#x3058;&#x3085;&#xFF4D;&#x3063;&#x3071;&#x3052;&apos;:
             case &apos;:&#xFF4A;&#xFF50;&apos;:
-                if (command[1]) this.sentenceContainer().cursor().jumpPage(parseInt(command[1]));
+                if (command[1]) {
+                    this.sentenceContainer().cursor().jumpPage(parseInt(command[1]));
+                }
                 break;
             case &apos;:new&apos;:
             case &apos;:n&apos;:
@@ -869,10 +926,12 @@ export class CommandLine {//{{{
                 }
                 break;
             case &apos;:bold&apos;:
-                this.sentenceContainer().menu().boldButton(!this.sentenceContainer().menu().boldButton());
+                this.sentenceContainer().menu()
+                    .boldButton(!this.sentenceContainer().menu().boldButton());
                 break;
             case &apos;:italic&apos;:
-                this.sentenceContainer().menu().italicButton(!this.sentenceContainer().menu().italicButton());
+                this.sentenceContainer().menu()
+                    .italicButton(!this.sentenceContainer().menu().italicButton());
                 break;
             default:
                 break;
@@ -886,7 +945,8 @@ export class CommandLine {//{{{
  * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  *     &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x8D77;&#x70B9;&#x3068;&#x3057;&#x305F;&#x64CD;&#x4F5C;&#x3092;&#x4E00;&#x62EC;&#x3057;&#x3066;&#x8ACB;&#x3051;&#x8CA0;&#x3044;&#x307E;&#x3059;
  */
-export class Cursor {//{{{
+export class Cursor {  // jshint ignore:line
+    //{{{
     // constructor {{{
     /**
      * @param {SentenceContainer} sentenceContainer &#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
@@ -972,7 +1032,8 @@ export class Cursor {//{{{
      * &#x52A0;&#x3048;&#x3066;&#x3001;&#x4E0E;&#x3048;&#x3089;&#x308C;&#x305F;&#x6587;&#x5B57;&#x306E;&#x524D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x6587;&#x5B57;&#x88C5;&#x98FE;&#x304C;&#x3042;&#x308C;&#x3070;&#x5BFE;&#x5FDC;&#x3059;&#x308B;&#x88C5;&#x98FE;&#x30DC;&#x30BF;&#x30F3;&#x7B49;&#x3092;&#x305D;&#x306E;&#x6587;&#x5B57;&#x306B;&#x5408;&#x308F;&#x305B;&#x3066;&#x5909;&#x5316;&#x3055;&#x305B;&#x307E;&#x3059;
      * &#x307E;&#x305F;&#x3001;&#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x306A;&#x304C;&#x3089;(bShift&#x304C;true)&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x4E0E;&#x3048;&#x3089;&#x308C;&#x305F;&#x5834;&#x5408;&#x3001;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3057;&#x307E;&#x3059;
      * @param {Char} char &#x65B0;&#x3057;&#x3044;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;
-     * @param {boolean} [bShift] &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x305F;&#x72B6;&#x614B;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x4E0E;&#x3048;&#x3089;&#x308C;&#x305F;&#x304B;&#x3069;&#x3046;&#x304B;&#x3002;true&#x306A;&#x3089;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;&#x3002;false&#x306A;&#x3089;&#x89E3;&#x9664;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;(undefined)&#x3059;&#x308B;&#x3068;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306B;&#x306F;&#x5F71;&#x97FF;&#x3057;&#x306A;&#x3044;
+     * @param {boolean} [bShift] &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x305F;&#x72B6;&#x614B;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x4E0E;&#x3048;&#x3089;&#x308C;&#x305F;&#x304B;&#x3069;&#x3046;&#x304B;&#x3002;
+     *     true&#x306A;&#x3089;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;&#x3002;false&#x306A;&#x3089;&#x89E3;&#x9664;&#x3059;&#x308B;&#x3002;&#x7701;&#x7565;(undefined)&#x3059;&#x308B;&#x3068;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306B;&#x306F;&#x5F71;&#x97FF;&#x3057;&#x306A;&#x3044;
      * @return {Cursor} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     addCursor(char, bShift) {
@@ -1001,8 +1062,9 @@ export class Cursor {//{{{
     getPosMemory() {
         const eCharPoses = this.cursorLineElem().children;
         for (let i = 0,eCharPos; (eCharPos = eCharPoses[i]); i++) {
-            if (eCharPos.classList.contains(&apos;cursor-pos-memory&apos;))
+            if (eCharPos.classList.contains(&apos;cursor-pos-memory&apos;)) {
                 return i;
+            }
         }
         return -1;
     }
@@ -1017,10 +1079,15 @@ export class Cursor {//{{{
         if (index === oldPos) {
             return this;
         }
+
         const eCharPoses = this.cursorLineElem().children;
-        if (eCharPoses[oldPos]) eCharPoses[oldPos].classList.remove(&apos;cursor-pos-memory&apos;);
+        if (eCharPoses[oldPos]) {
+            eCharPoses[oldPos].classList.remove(&apos;cursor-pos-memory&apos;);
+        }
         const maxIndex = eCharPoses.length - 1;
-        if (index &gt; maxIndex) index = maxIndex; // char-pos&#x306E;&#x6700;&#x5927;&#x6570;&#x3092;&#x8D85;&#x3048;&#x308B;&#x6570;&#x5024;&#x306F;&#x899A;&#x3048;&#x3089;&#x308C;&#x306A;&#x3044;
+        if (index &gt; maxIndex) { // char-pos&#x306E;&#x6700;&#x5927;&#x6570;&#x3092;&#x8D85;&#x3048;&#x308B;&#x6570;&#x5024;&#x306F;&#x899A;&#x3048;&#x3089;&#x308C;&#x306A;&#x3044;
+            index = maxIndex;
+        }
         eCharPoses[index].classList.add(&apos;cursor-pos-memory&apos;);
         return this;
     }
@@ -1047,7 +1114,9 @@ export class Cursor {//{{{
      */
     currentRowPos() {
         for (let row = this.getRow(),cnt = 1; row; row = row.prev(),cnt++) {
-            if (row.isPageBreak()) return cnt;
+            if (row.isPageBreak()) {
+                return cnt;
+            }
         }
         return -1;
     }
@@ -1058,7 +1127,9 @@ export class Cursor {//{{{
      */
     rowLenOnPage() {
         for (let row = this.getRow(),cnt = this.currentRowPos(); row; row = row.next(),cnt++) {
-            if (row.isPageLast()) return cnt;
+            if (row.isPageLast()) {
+                return cnt;
+            }
         }
         return -1;
     }
@@ -1070,7 +1141,9 @@ export class Cursor {//{{{
     currentPage() {
         let cnt = 0;
         for (let row = this.getRow(); row; row = row.prev()) {
-            if (row.isPageBreak()) cnt++;
+            if (row.isPageBreak()) {
+                cnt++;
+            }
         }
         return cnt;
     }//}}}
@@ -1087,7 +1160,8 @@ export class Cursor {//{{{
         for (let eOldCharPos; (eOldCharPos = eOldCharPoses[0]);) {
             eCursorLine.removeChild(eOldCharPos);
         }
-        eCursorLine.appendChild(ElemCreator.createCharPosElement(this.sentenceContainer().strLenOnRow()));
+        eCursorLine.appendChild(
+            ElemCreator.createCharPosElement(this.sentenceContainer().strLenOnRow()));
         return this;
     }
 
@@ -1101,9 +1175,12 @@ export class Cursor {//{{{
     insert(chars, useUndo) {
         const cursorChar = this.getChar();
         if (typeof chars === &apos;string&apos;) {
-            chars = this.charsFromString(chars);
+            chars = this._charsFromString(chars);
         }
-        if (useUndo) this.sentenceContainer().addDo(new PrintDoMemory(this, chars));
+        if (useUndo) {
+            this.sentenceContainer().addDo(new PrintDoMemory(this, chars));
+        }
+
         for (let char of chars) {
             cursorChar.before(char);
         }
@@ -1119,7 +1196,7 @@ export class Cursor {//{{{
      * @param {string} str &#x5909;&#x63DB;&#x3059;&#x308B;&#x6587;&#x5B57;&#x5217;
      * @return {Char[]} &#x5909;&#x63DB;&#x3055;&#x308C;&#x305F;Char&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&#x306E;&#x914D;&#x5217;
      */
-    charsFromString(str) {
+    _charsFromString(str) {
         const ret = [];
         const cursorChar = this.getChar();
         for (let char of str) {
@@ -1136,7 +1213,9 @@ export class Cursor {//{{{
      */
     backSpace(useUndo) {
         const cursorChar = this.getChar();
-        if (!cursorChar.prev()) return this; // &#x6587;&#x7AE0;&#x5148;&#x982D;&#x304B;&#x3089;&#x306E;&#x30D0;&#x30C3;&#x30AF;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x306F;&#x4F55;&#x3082;&#x3057;&#x306A;&#x3044;
+        if (!cursorChar.prev()) { // &#x6587;&#x7AE0;&#x5148;&#x982D;&#x304B;&#x3089;&#x306E;&#x30D0;&#x30C3;&#x30AF;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x306F;&#x4F55;&#x3082;&#x3057;&#x306A;&#x3044;
+            return this;
+        }
 
         // &#x6BB5;&#x843D;&#x5148;&#x982D;&#x304B;&#x3089;&#x306E;&#x30D0;&#x30C3;&#x30AF;&#x30B9;&#x30DA;&#x30FC;&#x30B9;&#x3067;&#x306F;&#x3001;&#x524D;&#x306E;&#x884C;&#x306B;&#x6BB5;&#x843D;&#x3092;&#x3064;&#x306A;&#x3052;&#x308B;
         if (cursorChar.isFirst() &amp;&amp; cursorChar.row().isFirst()) {
@@ -1146,7 +1225,8 @@ export class Cursor {//{{{
                 moveRow.moveLastBefore();
             }
             newParagraph.cordinate().checkKinsoku();
-            // FIXME: &#x6700;&#x7D42;&#x884C;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x72B6;&#x614B;&#x3067;backSpace()&#x3059;&#x308B;&#x3068;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x306B;&#x8868;&#x793A;&#x958B;&#x59CB;&#x884C;&#x304C;&#x5909;&#x308F;&#x3089;&#x305A;&#x3001;&#x884C;&#x6570;&#x304C;&#x8DB3;&#x308A;&#x3066;&#x3044;&#x308B;&#x306B;&#x3082;&#x95A2;&#x308F;&#x3089;&#x305A;&#x8868;&#x793A;&#x884C;&#x6570;&#x304C;&#x5C11;&#x306A;&#x304F;&#x306A;&#x3063;&#x3066;&#x3057;&#x307E;&#x3046;
+            // FIXME: &#x6700;&#x7D42;&#x884C;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x72B6;&#x614B;&#x3067;backSpace()&#x3059;&#x308B;&#x3068;&#x3001;
+            //     &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x306B;&#x8868;&#x793A;&#x958B;&#x59CB;&#x884C;&#x304C;&#x5909;&#x308F;&#x3089;&#x305A;&#x3001;&#x884C;&#x6570;&#x304C;&#x8DB3;&#x308A;&#x3066;&#x3044;&#x308B;&#x306B;&#x3082;&#x95A2;&#x308F;&#x3089;&#x305A;&#x8868;&#x793A;&#x884C;&#x6570;&#x304C;&#x5C11;&#x306A;&#x304F;&#x306A;&#x3063;&#x3066;&#x3057;&#x307E;&#x3046;
             this.sentenceContainer().changeDisplay().breakPage().printInfo().isChanged(true);
             return this;
         }
@@ -1154,7 +1234,9 @@ export class Cursor {//{{{
         //  &#x6BB5;&#x843D;&#x5148;&#x982D;&#x4EE5;&#x5916;&#x304B;&#x3089;&#x306E;&#x30D0;&#x30C3;&#x30AF;&#x30B9;&#x30DA;&#x30FC;&#x30B9;
         //  &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x524D;&#x306E;&#x4F4D;&#x7F6E;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3059;&#x308B;(&#x884C;&#x982D;&#x306A;&#x3089;&#x884C;&#x3092;&#x307E;&#x305F;&#x3044;&#x3067;&#x524D;&#x306E;&#x6587;&#x5B57;)
         if (!(cursorChar.isFirst() &amp;&amp; cursorChar.row().isFirst())) {
-            if (useUndo) this.sentenceContainer().addDo(new DeleteDoMemory(this, [cursorChar.prevChar()]));
+            if (useUndo) {
+                this.sentenceContainer().addDo(new DeleteDoMemory(this, [cursorChar.prevChar()]));
+            }
             cursorChar.prevChar().delete();
             this.sentenceContainer().changeDisplay().breakPage().printInfo().isChanged(true);
             return this;
@@ -1174,8 +1256,11 @@ export class Cursor {//{{{
         newParagraph.firstChild().firstChild().addCursor().setPosMemory();
         // HACK:changeDisplay()&#x3092;&#x4E8C;&#x56DE;&#x7D9A;&#x3051;&#x3066;&#x3044;&#x308B;:&#x65B0;&#x3057;&#x3044;&#x6BB5;&#x843D;&#x304C;display&#x3055;&#x308C;&#x3066;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x306E;&#x3067;&#x3001;&#x6700;&#x7D42;&#x8868;&#x793A;&#x884C;&#x304B;&#x3089;&#x6539;&#x884C;&#x3057;&#x305F;&#x5834;&#x5408;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x8868;&#x793A;&#x304B;&#x3089;&#x5916;&#x308C;&#x308B;(&#x6700;&#x7D42;&#x8868;&#x793A;&#x884C;&#x3068;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x7B49;&#x3057;&#x3044;&#x305F;&#x3081;&#x3001;&#x8868;&#x793A;&#x958B;&#x59CB;&#x884C;&#x3092;&#x5909;&#x3048;&#x305A;&#x306B;&#x8868;&#x793A;)
         // &#x304B;&#x3068;&#x3044;&#x3063;&#x3066;&#x65B0;&#x3057;&#x3044;&#x6BB5;&#x843D;&#x3092;&#x975E;&#x8868;&#x793A;&#x306B;&#x3057;&#x3066;&#x304B;&#x3089;&#x633F;&#x5165;&#x3059;&#x308B;&#x3068;&#x3001;&#x8868;&#x793A;&#x884C;&#x304C;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x57CB;&#x3081;&#x3066;&#x3044;&#x306A;&#x3044;&#x72B6;&#x614B;&#x306E;&#x6642;&#x306B;&#x6539;&#x884C;&#x3059;&#x308B;&#x3068;&#x8868;&#x793A;&#x958B;&#x59CB;&#x884C;&#x304C;&#x6BCE;&#x56DE;&#x3072;&#x3068;&#x3064;&#x5F8C;&#x308D;&#x306B;&#x305A;&#x308C;&#x308B;(&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x6700;&#x7D42;&#x8868;&#x793A;&#x884C;&#x3088;&#x308A;&#x5F8C;&#x308D;&#x306B;&#x3042;&#x308B;&#x305F;&#x3081;)&#x3068;&#x3044;&#x3046;&#x73FE;&#x8C61;&#x304C;&#x8D77;&#x3053;&#x308B;&#x306E;&#x3067;&#x3001;&#x884C;&#x6570;&#x304C;&#x5341;&#x5206;&#x306B;&#x3042;&#x3063;&#x3066;&#x3082;&#x8868;&#x793A;&#x884C;&#x304C;&#x4E0D;&#x8DB3;&#x3057;&#x3066;&#x3057;&#x307E;&#x3046;
-        this.sentenceContainer().changeDisplay().changeDisplay().breakPage().printInfo().isChanged(true);
-        if (useUndo) this.sentenceContainer().addDo(new LineBreakDoMemory(this));
+        this.sentenceContainer()
+            .changeDisplay().changeDisplay().breakPage().printInfo().isChanged(true);
+        if (useUndo) {
+            this.sentenceContainer().addDo(new LineBreakDoMemory(this));
+        }
         return this;
     }//}}}
 
@@ -1189,7 +1274,10 @@ export class Cursor {//{{{
      */
     moveNext(bShift) {
         const nextChar = this.getChar().next();
-        if (!nextChar) return this;
+        if (!nextChar) {
+            return this;
+        }
+
         nextChar.slideNextCursor().addCursor(bShift).setPosMemory();
         this.sentenceContainer().changeDisplay();
         return this;
@@ -1202,7 +1290,10 @@ export class Cursor {//{{{
      */
     movePrev(bShift) {
         const prevChar = this.getChar().prev();
-        if (!prevChar) return this;
+        if (!prevChar) {
+            return this;
+        }
+
         prevChar.slidePrevCursor().addCursor(bShift).setPosMemory();
         this.sentenceContainer().changeDisplay();
         return this;
@@ -1238,10 +1329,14 @@ export class Cursor {//{{{
      * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3002;true&#x306A;&#x3089;&#x3001;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x62E1;&#x5F35;&#x3059;&#x308B;
      * @return {Cursor} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
-    moveRow(row,bShift) {
+    moveRow(row, bShift) {
         const index = this.getPosMemory();
-        if (!row) return this;
-        const char = row.children(index); // &#x540C;&#x3058;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x6587;&#x5B57;&#x304C;prevRow&#x306B;&#x5B58;&#x5728;&#x3057;&#x306A;&#x3051;&#x308C;&#x3070;&#x3001;children()&#x5185;&#x3067;lastChild()&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x308B;
+        if (!row) {
+            return this;
+        }
+
+        // &#x540C;&#x3058;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x6587;&#x5B57;&#x304C;prevRow&#x306B;&#x5B58;&#x5728;&#x3057;&#x306A;&#x3051;&#x308C;&#x3070;&#x3001;children()&#x5185;&#x3067;lastChild()&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x308B;
+        const char = row.children(index);
         char.slidePrevCursor().addCursor(bShift);
         return this;
     }
@@ -1252,7 +1347,10 @@ export class Cursor {//{{{
      * @return {Cursor} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     jumpRow(num) {
-        if (typeof num !== &apos;number&apos;) return this;
+        if (typeof num !== &apos;number&apos;) {
+            return this;
+        }
+
         const row = this.sentenceContainer().row(num);
         if (row) {
             row.firstChild().addCursor().setPosMemory();
@@ -1267,7 +1365,10 @@ export class Cursor {//{{{
      * @return {Cursor} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     jumpPage(num) {
-        if (typeof num !== &apos;number&apos;) return this;
+        if (typeof num !== &apos;number&apos;) {
+            return this;
+        }
+
         const row = this.sentenceContainer().pageRow(num);
         if (row) {
             row.firstChild().addCursor().setPosMemory();
@@ -1281,7 +1382,7 @@ export class Cursor {//{{{
      * @return {Cursor} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     nextSearch() {
-        const next = this.nextSearchChar();
+        const next = this._nextSearchChar();
         if (!next) { return this; }
         next.addCursor().setPosMemory();
         this.sentenceContainer().changeDisplay();
@@ -1289,14 +1390,17 @@ export class Cursor {//{{{
     }
 
     /**
-     * @private
      * &#x6B21;&#x306E;&#x691C;&#x7D22;&#x8A9E;&#x53E5;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
      * @return {Char} &#x6B21;&#x306E;&#x691C;&#x7D22;&#x8A9E;&#x53E5;&#x306E;&#xFF11;&#x6587;&#x5B57;&#x76EE;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
-    nextSearchChar() {
-        for (let char = this.getChar().nextChar() || this.sentenceContainer().firstChar(); !char.is(this.getChar()); char = char.nextChar() || this.sentenceContainer().firstChar()) {
-            if (char.hasClass(&apos;search-label&apos;)) return char;
-        }
+    _nextSearchChar() {
+        for (let char = this.getChar().nextChar() || this.sentenceContainer().firstChar();
+            !char.is(this.getChar());
+            char = char.nextChar() || this.sentenceContainer().firstChar()) {
+                if (char.hasClass(&apos;search-label&apos;)) {
+                    return char;
+                }
+            }
         return null;
     }
 
@@ -1318,9 +1422,13 @@ export class Cursor {//{{{
      * @return {Char} &#x524D;&#x306E;&#x691C;&#x7D22;&#x8A9E;&#x53E5;&#x306E;&#xFF11;&#x6587;&#x5B57;&#x76EE;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x3051;&#x308C;&#x3070;null
      */
     prevSearchChar() {
-        for (let char = this.getChar().prevChar() || this.sentenceContainer().lastChar(); !char.is(this.getChar()); char = char.prevChar() || this.sentenceContainer().lastChar()) {
-            if (char.hasClass(&apos;search-label&apos;)) return char;
-        }
+        for (let char = this.getChar().prevChar() || this.sentenceContainer().lastChar();
+            !char.is(this.getChar());
+            char = char.prevChar() || this.sentenceContainer().lastChar()) {
+                if (char.hasClass(&apos;search-label&apos;)) {
+                    return char;
+                }
+            }
         return null;
     }
 
