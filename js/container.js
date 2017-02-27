@@ -256,7 +256,7 @@ class Displayer { // jshint ignore:line
      * @return {SentenceContainer} 自身のインスタンス
      */
     _addDisplay(firstRow, firstChar) {
-        const dispWidth = this.width();
+        const dispWidth = this._sentenceContainer.width();
         const cache = {};
         let cnt = 0; // 総行数をカウントする
         let sum = 0; // 表示行の幅合計
