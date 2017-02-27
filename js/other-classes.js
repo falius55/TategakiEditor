@@ -1,10 +1,6 @@
 'use strict';
 /* global ColorDoMemory, BoldDoMemory, ItalicDoMemory, ElemCreator, PrintDoMemory, Char, DeleteDoMemory, LineBreakDoMemory, getSelection */  // jshint ignore:line
-/*
- *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
- */
 
-// Class
 /**
  * メニューバーを担当するクラス
  *     メニューバー上のボタンによるイベントを一括して請け負います
@@ -870,7 +866,6 @@ class CommandLine {  // jshint ignore:line
 }//}}}
 
 
-// 段落最後のEOL以外のEOLにカーソルは止まらない(EOLは基本、文字挿入のために存在)
 /**
  * カーソルを表すクラス
  *     カーソルを起点とした操作を一括して請け負います

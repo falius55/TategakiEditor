@@ -79,7 +79,7 @@ const Util = {  // jshint ignore:line
 /**
  * DOM要素を生成する関数の集まりです
  */
-var ElemCreator = {};//{{{
+const ElemCreator = {};//{{{
 
 ElemCreator.createCharElement = (function () {//{{{
     const eCharTemplate = document.createElement('span');

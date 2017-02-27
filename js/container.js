@@ -2,6 +2,9 @@
 /* global AbstractHierarchy, Paragraph, Cursor, InputBuffer, CommandLine, Menu, DoManager, Util, getSelection */  // jshint ignore:line
 
 
+/**
+ * 語句検索モードを担当するクラス
+ */
 class SearchMode {  // jshint ignore:line
     //{{{
     constructor(sentenceContainer) {
@@ -101,6 +104,9 @@ class SearchMode {  // jshint ignore:line
 }//}}}
 
 
+/**
+ * 文書内の文字選択を担当するクラス
+ */
 class SelectRange {  // jshint ignore:line
     //{{{
 
@@ -186,6 +192,9 @@ class SelectRange {  // jshint ignore:line
 }//}}}
 
 
+/**
+ * 文字や行の表示および非表示を担当するクラス
+ */
 class Displayer { // jshint ignore:line
     //{{{
     constructor(sentenceContainer) {
