@@ -8,7 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.DirectoryStream;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.DirectoryIteratorException;
 import java.nio.file.attribute.PosixFilePermissions;
 
 import javax.servlet.ServletContext;
@@ -68,6 +70,19 @@ public class UserDirectory {
             return false;
         } finally {
             Files.setPosixFilePermissions(Paths.get(mUserPath), PosixFilePermissions.fromString("r--------"));
+        }
+    }
+
+    public void destroy() throws IOException {
+        Path dirPath = Paths.get(mUserPath);
+        Files.setPosixFilePermissions(dirPath, PosixFilePermissions.fromString("rwx------"));
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath)) {
+            for (Path file : stream) {
+                Files.delete(file);
+            }
+        } catch (DirectoryIteratorException e) {
+            throw new IOException(e);
         }
     }
 }
