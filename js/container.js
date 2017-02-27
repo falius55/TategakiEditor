@@ -286,7 +286,6 @@ class Displayer { // jshint ignore:line
     }
 
     /**
-     * @private
      * カーソル位置を基準に、最初に表示されるべき行のインデックスを返します
      * @param {string} [opt_pos] 表示後のカーソル位置を指定する。
      *     'center'なら、カーソル位置を中央にする。'right'なら、カーソル位置が最も右になるよう表示される。
@@ -327,7 +326,6 @@ class Displayer { // jshint ignore:line
     }
 
     /**
-     * @private
      * 現在表示されている行の最初の行のインデックスを返します
      * @return {number} 現在表示されている行の最初の行のインデックス。表示行がなければ-1
      */
@@ -469,8 +467,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
         this._titleElem = document.getElementById('file_title');
         this._announceElem = document.getElementById('user_info');
         this._changedElem = document.getElementById('changed');
-        this.addFileTitleEvent();
-        this.addSelectEvent();
+
         this._cursor = new Cursor(this);
         this._inputBuffer = new InputBuffer(this);
         this._fileList = new FileList(this);
@@ -480,6 +477,9 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
         this._displayer = new Displayer(this);
         this._searchMode = new SearchMode(this);
         this._selectRange = new SelectRange(this);
+
+        this.addFileTitleEvent();
+        this._selectRange.addSelectEvent();
 
         if (!opt_data) {
             this.newFile();
