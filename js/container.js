@@ -364,7 +364,7 @@ class Displayer { // jshint ignore:line
     _cursorRowPos() {
         const cursorRow = this._sentenceContainer.cursorRow();
         let cnt = 0;
-        for (let paragraph of this.paragraphs()) {
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
             for (let row of paragraph.rows()) {
                 if (row.is(cursorRow)) {
                     return cnt;
