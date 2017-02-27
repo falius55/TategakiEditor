@@ -6,7 +6,7 @@ html,body {
  */
 	.navbar-default {
 		height: 40px;
-		z-index: 30;
+		z-index: 100;
 	}
 	#user_info {
 		width: 400px;
@@ -28,6 +28,13 @@ html,body {
 	ul.nav.navbar-nav div.input-group-btn {
 		width: auto;
 	}
+    #palette {
+        /* .navbar-defaultより小さくしなければファイルのドロップダウンメニューがこの下に隠れてしまう。
+         * ドロップダウンメニューのz-indexより小さな値を設定しても隠れる。
+         * 原因は不明。
+         */
+        z-index: 80;
+    }
 
 	/*
 	 * command line
