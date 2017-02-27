@@ -153,7 +153,6 @@ class File extends AbstractHierarchy {
      * @return {File} 自身のインスタンス
      */
     open() {
-        console.log('file open:', this._id);
         const sentenceContainer = this.fileList().sentenceContainer();
         if (sentenceContainer.isChanged()) {
             sentenceContainer.announce('最後の変更が保存されていません');
@@ -180,7 +179,6 @@ class File extends AbstractHierarchy {
         },function (json) {
             if (json.result === 'false' || json.result === false) {
                 console.log('ファイル削除エラーです(ファイル番号：'+ this.id() + ')');
-                console.log('json.result', json.result);
                 return;
             }
 
@@ -461,7 +459,6 @@ class Directory extends AbstractHierarchy {
      */
     delete(opt_bl) {
         const bl = opt_bl || false; // 引数省略の場合でも、明確にfalseを入れる
-        console.log('delete option:', bl);
         Util.post('/tategaki/Delete',{
             directory_id: this.id(),
             option: bl

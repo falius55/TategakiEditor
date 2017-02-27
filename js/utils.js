@@ -1,5 +1,4 @@
 'use strict';
-console.log('utils.js');
 // 	要素の再利用のため、要素作成のみクロージャで行う
 
 
@@ -36,7 +35,6 @@ const Util = {  // jshint ignore:line
     },
 
     post: function (url, data, callback) {
-        console.log('post send:', data);
         this._communicate(url, callback, 'POST', data);
     },
 
@@ -67,15 +65,12 @@ const Util = {  // jshint ignore:line
         xhr.addEventListener('load', function (e) {
             if (xhr.response) {
                 callback(xhr.response);
-                console.log('success', xhr.response, e);
             } else {
-                console.log('unsuccess', xhr.response, e);
             }
         });
         xhr.addEventListener('abort', function (e) {
             console.log('abort', e);
         });
-        console.log('send data:', sendData);
         xhr.send(sendData);
     }
 };//}}}

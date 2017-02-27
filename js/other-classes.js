@@ -3,7 +3,6 @@
 /*
  *	jQyeryの使用箇所:width(),height(),addwheelEventlistener(),removeWheelEventListener(),bootstrap関係
  */
-console.log('dom-operation-classes.js');
 
 // Class
 /**

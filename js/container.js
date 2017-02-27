@@ -1219,7 +1219,6 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * @return {SentenceContainer} 自身のインスタンス
      */
     runControlKeyDown(e,keycode) {
-        console.log('keycode', keycode);
         switch (keycode) {
             case 67:
                 // c
