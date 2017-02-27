@@ -1,4 +1,4 @@
-package test;
+package test.junit;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -12,6 +12,9 @@ import sql.DatabaseColumn;
 import sql.SQLDatabase;
 import sql.PreparedDatabase;
 import java.sql.ResultSet;
+
+import test.column.TestColumn;
+import test.column.FailedColumn;
 
 import java.util.List;
 import java.util.ArrayList;

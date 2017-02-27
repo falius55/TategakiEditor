@@ -266,7 +266,6 @@ public class PreparedDatabase implements SQLDatabase {
                 = table.getMethod(DatabaseColumn.tableNameMethod);
             return (String) method.invoke(null);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
             throw new IllegalArgumentException("not found static tableName method\n"
                     + "require public 'static' String " + DatabaseColumn.tableNameMethod + "() in " + table.getName());
         }
