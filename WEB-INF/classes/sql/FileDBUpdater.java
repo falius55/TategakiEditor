@@ -109,4 +109,8 @@ public class FileDBUpdater {
         int result = mDatabase.update(FileTable.class, values, whereClause, fileID, mUserID);
         return result == 1;
     }
+
+    public void destroy() throws SQLException {
+        mDatabase.delete(FileTable.class, FileTable.USER_ID, mUserID);
+    }
 }
