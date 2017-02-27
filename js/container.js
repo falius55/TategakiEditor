@@ -1116,6 +1116,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
     // --Display関係 {{{
     changeDisplay(opt_pos) {
         this._displayer.changeDisplay(opt_pos);
+        return this;
     } // }}}
 
     // undo redo {{{
