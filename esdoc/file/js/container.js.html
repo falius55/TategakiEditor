@@ -37,6 +37,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~Displayer.html">Displayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SearchMode.html">SearchMode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SelectRange.html">SelectRange</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
@@ -66,15 +69,428 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">js/container.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
-/* global AbstractHierarchy, Paragraph, Cursor, InputBuffer, CommandLine, Menu, DoManager, Util, getSelection */
+/* global AbstractHierarchy, Paragraph, Cursor, InputBuffer, CommandLine, Menu, DoManager, Util, getSelection */  // jshint ignore:line
+
+
+/**
+ * &#x8A9E;&#x53E5;&#x691C;&#x7D22;&#x30E2;&#x30FC;&#x30C9;&#x3092;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;
+ */
+export class SearchMode {  // jshint ignore:line
+    //{{{
+    constructor(sentenceContainer) {
+        this._elem = document.getElementById(&apos;search&apos;);
+        this._sentenceContainer = sentenceContainer;
+    }
+
+    /**
+     * &#x6E21;&#x3055;&#x308C;&#x305F;&#x6587;&#x5B57;&#x5217;&#x3092;&#x672C;&#x6587;&#x5185;&#x304B;&#x3089;&#x63A2;&#x3057;&#x3001;&#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x6587;&#x5B57;&#x5217;&#x306B;search-word&#x30AF;&#x30E9;&#x30B9;&#x3092;&#x4ED8;&#x4E0E;&#x3057;&#x307E;&#x3059;&#x3002;
+     *     &#x3055;&#x3089;&#x306B;&#x3001;&#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x6587;&#x5B57;&#x5217;&#x306E;&#x5148;&#x982D;&#x6587;&#x5B57;&#x306B;search-label&#x30AF;&#x30E9;&#x30B9;&#x3092;&#x4ED8;&#x4E0E;&#x3057;&#x307E;&#x3059;
+     *  @param {string} str &#x691C;&#x7D22;&#x6587;&#x5B57;&#x5217;
+     *  @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    _search(str) {
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            paragraph.search(str);
+        }
+        return this;
+    }
+
+    /**
+     * &#x6587;&#x66F8;&#x5185;&#x8A9E;&#x53E5;&#x691C;&#x7D22;&#x3092;&#x59CB;&#x3081;&#x307E;&#x3059;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    start() {
+        this._elem.classList.add(&apos;active&apos;);
+        this._elem.focus();
+        this._elem.value = &apos;/&apos;;
+        this._sentenceContainer.removeKeydownEventListener();
+        if (!this._keyupArg) {
+            this._keyupArg = this._onKeyup.bind(this);
+            this._elem.addEventListener(&apos;keyup&apos;, this._keyupArg, false);
+            this._elem.addEventListener(&apos;focusin&apos;, this._onFocusin.bind(this));
+            this._elem.addEventListener(&apos;focusout&apos;, this._onFocusout.bind(this));
+        }
+        return this;
+    }
+
+    /**
+     * &#x6587;&#x66F8;&#x5185;&#x8A9E;&#x53E5;&#x691C;&#x7D22;&#x3092;&#x5B8C;&#x5168;&#x306B;&#x7D42;&#x4E86;&#x3057;&#x307E;&#x3059;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    stop() {
+        this._sentenceContainer.addKeydownEventListener();
+        this._elem.value = &apos;&apos;;
+        this._elem.classList.remove(&apos;active&apos;);
+        this._sentenceContainer
+            .removeClassFromAllChar(&apos;search-label&apos;).removeClassFromAllChar(&apos;search-word&apos;);
+        return this;
+    }
+
+    /**
+     * &#x8A9E;&#x53E5;&#x691C;&#x7D22;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;keyup&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3067;&#x3059;
+     * @param {Event} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+     */
+    _onKeyup(e) {
+        let keycode;
+        if (document.all) {
+            // IE
+            keycode = e.keyCode;
+        } else {
+            // IE&#x4EE5;&#x5916;
+            keycode = e.which;
+        }
+
+        if (keycode === 13) {
+            // enter
+            this._elem.blur(); // enter&#x3092;&#x62BC;&#x3057;&#x305F;&#x3060;&#x3051;&#x3067;&#x306F;&#x30D5;&#x30A9;&#x30FC;&#x30AB;&#x30B9;&#x304C;&#x5916;&#x308C;&#x306A;&#x3044;
+            return;
+        }
+
+        // &#x4E2D;&#x8EAB;&#x304C;&#x7A7A;&#x306B;&#x306A;&#x308C;&#x3070;search&#x30E2;&#x30FC;&#x30C9;&#x3092;&#x5B8C;&#x5168;&#x306B;&#x7D42;&#x4E86;&#x3059;&#x308B;
+        if (this._elem.value === &apos;&apos;) {
+            this._elem.blur();
+            this.stop();
+            return;
+        }
+
+        this._search(this._elem.value.slice(1));
+    }
+
+    /**
+     * &#x8A9E;&#x53E5;&#x691C;&#x7D22;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x304B;&#x3089;&#x30D5;&#x30A9;&#x30FC;&#x30AB;&#x30B9;&#x304C;&#x5916;&#x308C;&#x305F;&#x969B;&#x306E;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3067;&#x3059;&#x3002;
+     *     &#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x672C;&#x4F53;&#x306B;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x623B;&#x3057;&#x307E;&#x3059;
+     */
+    _onFocusout() {
+        this._sentenceContainer.addKeydownEventListener();
+    }
+
+    /**
+     * &#x8A9E;&#x53E5;&#x691C;&#x7D22;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306B;&#x30D5;&#x30A9;&#x30FC;&#x30AB;&#x30B9;&#x304C;&#x3042;&#x305F;&#x3063;&#x305F;&#x969B;&#x306E;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3067;&#x3059;&#x3002;
+     *     &#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x672C;&#x4F53;&#x306E;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x5916;&#x3057;&#x307E;&#x3059;
+     */
+    _onFocusin() {
+        this._sentenceContainer.removeKeydownEventListener();
+    }
+}//}}}
+
+
+/**
+ * &#x6587;&#x66F8;&#x5185;&#x306E;&#x6587;&#x5B57;&#x9078;&#x629E;&#x3092;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;
+ */
+export class SelectRange {  // jshint ignore:line
+    //{{{
+
+    constructor(sentenceContainer) {
+        this._sentenceContainer = sentenceContainer;
+        this._cursor = sentenceContainer.cursor();
+    }
+
+    /**
+     * &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x914D;&#x5217;&#x3067;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @param {boolean} [opt_bl] &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;&#x306A;&#x3089;true&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;
+     * @return {Char[]} &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
+     */
+    selectChars(opt_bl) {
+        const ret = [];
+        const selection = getSelection();
+        if (this._selectText().length === 0) {
+            return ret; // rangeCount===0&#x3068;&#x3059;&#x308B;&#x3068;&#x3001;EOL&#x306E;&#x307F;&#x9078;&#x629E;&#x3055;&#x308C;&#x308B;&#x3053;&#x3068;&#x304C;&#x3042;&#x308B;
+        }
+
+        const selRange = selection.getRangeAt(0);
+        for (let char = this._sentenceContainer.firstChar(); char; char = char.nextChar()) {
+            if (char.isInRange(selRange)) {
+                ret.push(char);
+            }
+        }
+
+        selRange.detach();
+        if (opt_bl) {
+            selection.removeAllRanges(); // &#x9078;&#x629E;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;
+        }
+        return ret;
+    }
+
+    /**
+     * &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x5217;&#x3092;&#x30ED;&#x30FC;&#x30AB;&#x30EB;&#x30B9;&#x30C8;&#x30EC;&#x30FC;&#x30B8;&#x306B;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3059;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    copySelectText() {
+        localStorage.clipBoard = this._selectText();
+        return this;
+    }
+
+    // &#x30DA;&#x30FC;&#x30B9;&#x30C8;
+    /**
+     * &#x30ED;&#x30FC;&#x30AB;&#x30EB;&#x30B9;&#x30C8;&#x30EC;&#x30FC;&#x30B8;&#x306B;&#x4FDD;&#x5B58;&#x3057;&#x305F;&#x6587;&#x5B57;&#x5217;&#x3092;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x633F;&#x5165;&#x3057;&#x307E;&#x3059;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    pasteText() {
+        this._cursor.insert(localStorage.clipBoard);
+        return this;
+    }
+
+    /**
+     * &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x5217;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {string} &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306E;&#x6587;&#x5B57;&#x5217;
+     */
+    _selectText() {
+        const selection = getSelection();
+        let ret = &apos;&apos;;
+        for (let i = 0, cnt = selection.rangeCount; i &lt; cnt; i++) {
+            const selRange = selection.getRangeAt(i);
+            ret += selRange.toString();
+        }
+        return ret;
+    }
+
+    /**
+     * &#x30DE;&#x30A6;&#x30B9;&#x3067;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x5909;&#x66F4;&#x3057;&#x305F;&#x969B;&#x306E;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4E0E;&#x3048;&#x307E;&#x3059;&#x3002;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x306E;&#x6B21;&#x306E;&#x6587;&#x5B57;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x5F53;&#x3066;&#x307E;&#x3059;
+     */
+    addSelectEvent() {
+        this._sentenceContainer.elem().addEventListener(&apos;mouseup&apos;, function (e) {
+            const selChars = this.selectChars();
+            // &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306E;&#x76F4;&#x5F8C;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x5F53;&#x3066;&#x308B;
+            if (selChars.length &gt; 0) {
+                const lastCharOnSelect = selChars[selChars.length -1];
+                const newCursor =
+                    lastCharOnSelect.hasNextSibling() ? lastCharOnSelect.next() : lastCharOnSelect;
+                newCursor.addCursor().setPosMemory();
+            }
+        }.bind(this),false);
+    }
+}//}}}
+
+
+/**
+ * &#x6587;&#x5B57;&#x3084;&#x884C;&#x306E;&#x8868;&#x793A;&#x304A;&#x3088;&#x3073;&#x975E;&#x8868;&#x793A;&#x3092;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x30AF;&#x30E9;&#x30B9;
+ */
+export class Displayer { // jshint ignore:line
+    //{{{
+    constructor(sentenceContainer) {
+        this._sentenceContainer = sentenceContainer;
+    }
+
+    /**
+     * &#x6587;&#x66F8;&#x3092;&#xFF11;&#x884C;&#x76EE;&#x306E;&#xFF11;&#x6587;&#x5B57;&#x76EE;&#x304B;&#x3089;&#x8868;&#x793A;&#x3057;&#x307E;&#x3059;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    resetDisplay() {
+        this._addDisplay(0,0);
+        return this;
+    }
+
+    // strPos: &apos;center&apos;,&apos;right&apos;
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x57FA;&#x6E96;&#x3068;&#x3057;&#x3066;&#x6587;&#x66F8;&#x3092;&#x8868;&#x793A;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;
+     * @param {string} [opt_pos] &#x8868;&#x793A;&#x5F8C;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&apos;center&apos;&#x3068;&apos;right&apos;&#x306B;&#x5BFE;&#x5FDC;&#x3002;
+     *     &#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x6700;&#x4F4E;&#x9650;&#x306E;&#x79FB;&#x52D5;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    changeDisplay(opt_pos) {
+        const cursorChar = this._sentenceContainer.cursorChar();
+        const rowPos = this._computeDisplayRowPos(opt_pos);
+        const charPos = cursorChar.row().computeDisplayCharPos();
+        this._addDisplay(rowPos, charPos);
+        return this;
+    }
+
+    /**
+     * &#x8868;&#x793A;&#x3092;&#x4E00;&#x884C;&#x5206;&#x53F3;&#x306B;&#x52D5;&#x304B;&#x3057;&#x307E;&#x3059;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    shiftRightDisplay() {
+        const charPos = this._sentenceContainer.cursorRow().computeDisplayCharPos();
+        const firstDisplay = this._firstDisplayRow();
+        if (!firstDisplay.prev()) {
+            return this;
+        }
+
+        firstDisplay.prev().display(true, charPos);
+        this._lastDisplayRow().display(false);
+        return this;
+    }
+
+    /**
+     * &#x8868;&#x793A;&#x3092;&#x4E00;&#x884C;&#x5206;&#x5DE6;&#x306B;&#x52D5;&#x304B;&#x3057;&#x307E;&#x3059;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    shiftLeftDisplay() {
+        const charPos = this._sentenceContainer.cursorRow().computeDisplayCharPos();
+        const lastDisplay = this._lastDisplayRow();
+        if (!lastDisplay.next()) {
+            return this;
+        }
+
+        lastDisplay.next().display(true, charPos);
+        this._firstDisplayRow().display(false);
+        return this;
+    }
+
+    /**
+     * firstRow&#x884C;&#x76EE;&#x4EE5;&#x964D;&#x3092;&#x8868;&#x793A;&#x3057;&#x307E;&#x3059;&#x3002;
+     *     &#x6587;&#x5B57;&#x306F;firstChar&#x6587;&#x5B57;&#x76EE;&#x4EE5;&#x964D;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x307E;&#x3059;
+     * @param {number} firstRow &#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x6700;&#x521D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     * @param {number} firstChar &#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x6700;&#x521D;&#x306E;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    _addDisplay(firstRow, firstChar) {
+        const dispWidth = this._sentenceContainer.width();
+        const cache = {};
+        let cnt = 0; // &#x7DCF;&#x884C;&#x6570;&#x3092;&#x30AB;&#x30A6;&#x30F3;&#x30C8;&#x3059;&#x308B;
+        let sum = 0; // &#x8868;&#x793A;&#x884C;&#x306E;&#x5E45;&#x5408;&#x8A08;
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            for (let row of paragraph.rows()) {
+                if (cnt &lt; firstRow) {
+                    row.display(false);
+                    cnt++;
+                    continue;
+                }
+
+                // &#x884C;&#x306E;&#x5E45;&#x306F;&#x5B50;&#x306E;&#x6700;&#x5927;&#x306E;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x306B;&#x3088;&#x3063;&#x3066;&#x6C7A;&#x307E;&#x308B;&#x3068;&#x8003;&#x3048;&#x3001;&#x6700;&#x5927;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x3054;&#x3068;&#x306E;&#x884C;&#x5E45;&#x3092;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3059;&#x308B;(&#x30EC;&#x30F3;&#x30C0;&#x30EA;&#x30F3;&#x30B0;&#x983B;&#x5EA6;&#x306E;&#x524A;&#x6E1B;)
+                const maxFont = row.maxFont();
+                if (cache[maxFont]) {
+                    const rowWidth = cache[maxFont];
+                    sum += rowWidth + 2; // 2&#x306F;&#x30DC;&#x30FC;&#x30C0;&#x30FC;&#x306E;&#x5E45;
+                } else {
+                    cache[maxFont] = row.width();
+                    const rowWidth = cache[maxFont];
+                    sum += rowWidth + 2; // 2&#x306F;&#x30DC;&#x30FC;&#x30C0;&#x30FC;&#x306E;&#x5E45;
+                }
+                row.display((sum &lt; dispWidth), firstChar);
+                cnt++;
+            }
+        }
+        return this;
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x57FA;&#x6E96;&#x306B;&#x3001;&#x6700;&#x521D;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3079;&#x304D;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @param {string} [opt_pos] &#x8868;&#x793A;&#x5F8C;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;
+     *     &apos;center&apos;&#x306A;&#x3089;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x4E2D;&#x592E;&#x306B;&#x3059;&#x308B;&#x3002;&apos;right&apos;&#x306A;&#x3089;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304C;&#x6700;&#x3082;&#x53F3;&#x306B;&#x306A;&#x308B;&#x3088;&#x3046;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3002;
+     *     &#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x6700;&#x4F4E;&#x9650;&#x306E;&#x79FB;&#x52D5;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;
+     *     (&#x73FE;&#x5728;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304C;&#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x753B;&#x9762;&#x304B;&#x3089;&#x4E00;&#x884C;&#x5F8C;&#x308D;&#x306B;&#x3042;&#x308C;&#x3070;&#x4E00;&#x884C;&#x5206;&#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x304C;&#x5F8C;&#x308D;&#x306B;&#x305A;&#x308C;&#x308B;&#x3001;&#x3068;&#x3044;&#x3063;&#x305F;&#x5F62;)
+     * @return {number} &#x8A08;&#x7B97;&#x3055;&#x308C;&#x305F;&#x6700;&#x521D;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3079;&#x304D;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     */
+    _computeDisplayRowPos(opt_pos) {
+        const currentFirst = this._firstDisplayRowPos();
+        const cursorIndex = this._cursorRowPos();
+        const currentEnd = this._lastDisplayRowPos();
+
+        // &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x4E2D;&#x592E;&#x306B;&#x3059;&#x308B;
+        // HACK:&#x8A08;&#x7B97;&#x524D;&#x306E;display&#x306E;&#x6570;&#x3092;&#x57FA;&#x6E96;&#x306B;&#x3059;&#x308B;&#x306E;&#x3067;&#x3001;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x306E;&#x5927;&#x304D;&#x3055;&#x306A;&#x3069;&#x306B;&#x3088;&#x3063;&#x3066;&#x305A;&#x308C;&#x3082;&#x3042;&#x308A;&#x3046;&#x308B;
+        if (opt_pos === &apos;center&apos;) {
+            const harfRange = (currentEnd - currentFirst) / 2;
+            const ret = cursorIndex - harfRange;
+            return ret &gt;= 0 ? ret : 0;
+        }
+
+        if (opt_pos === &apos;right&apos;) {
+            return cursorIndex;
+        }
+
+        // &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x524D;&#x306B;&#x3042;&#x308B;
+        if (cursorIndex &lt; currentFirst) {
+            return cursorIndex;
+        }
+
+        // &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x5F8C;&#x308D;&#x306B;&#x3042;&#x308B;
+        if (cursorIndex &gt; currentEnd) {
+            return currentFirst + (cursorIndex - currentEnd);
+        }
+
+        // display&#x306B;&#x56F2;&#x307E;&#x308C;&#x305F;&#x90E8;&#x5206;&#x306B;display&#x3067;&#x306A;&#x3044;&#x884C;&#x304C;&#x3042;&#x308B;&#x5834;&#x5408;
+        // &#x9014;&#x4E2D;&#x884C;&#x6570;&#x5909;&#x5316;
+        return currentFirst;
+    }
+
+    /**
+     * &#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x6700;&#x521D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x6700;&#x521D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x8868;&#x793A;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;-1
+     */
+    _firstDisplayRowPos() {
+        let cnt = 0;
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            for (let row of paragraph.rows()) {
+                if (row.isDisplay()) {
+                    return cnt;
+                }
+                cnt++;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * &#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x8868;&#x793A;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;-1
+     */
+    _lastDisplayRowPos() {
+        for (let row = this._sentenceContainer.lastRow(),
+            index = this._sentenceContainer.countRow() -1;
+            row; row = row.prev(), index--) {
+                if (row.isDisplay()) {
+                    return index;
+                }
+            }
+        return -1;
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x6587;&#x66F8;&#x5168;&#x4F53;&#x3067;&#x4F55;&#x884C;&#x76EE;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x306E;&#x6587;&#x66F8;&#x5168;&#x4F53;&#x3067;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x6587;&#x66F8;&#x5185;&#x306B;&#x6BB5;&#x843D;&#x304C;&#x306A;&#x3044;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;-1
+     */
+    _cursorRowPos() {
+        const cursorRow = this._sentenceContainer.cursorRow();
+        let cnt = 0;
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            for (let row of paragraph.rows()) {
+                if (row.is(cursorRow)) {
+                    return cnt;
+                }
+                cnt++;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * &#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x3046;&#x3061;&#x6700;&#x521D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {Row} &#x6700;&#x521D;&#x306E;&#x8868;&#x793A;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x8868;&#x793A;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;null
+     */
+    _firstDisplayRow() {
+        for (let paragraph of this._sentenceContainer.paragraphs()) {
+            for (let row of paragraph.rows()) {
+                if (row.isDisplay()) {
+                    return row;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * &#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x3046;&#x3061;&#x6700;&#x5F8C;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {Row} &#x6700;&#x5F8C;&#x306E;&#x8868;&#x793A;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x8868;&#x793A;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;null
+     */
+    _lastDisplayRow() {
+        for (let row = this._sentenceContainer.lastRow(); row; row = row.prev()) {
+            if (row.isDisplay()) {
+                return row;
+            }
+        }
+        return null;
+    }
+}//}}}
+
+
 /**
  * &#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
  */
-export class SentenceContainer extends AbstractHierarchy {
+export class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
 
     // constructor {{{
     /**
-     * @param {number} userId &#x30E6;&#x30FC;&#x30B6;&#x30FC;ID
      * @param {object} [opt_data] &#x6587;&#x66F8;&#x60C5;&#x5831;&#x306E;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
      * &lt;pre&gt;
      * {
@@ -122,24 +538,31 @@ export class SentenceContainer extends AbstractHierarchy {
      * }
      * &lt;/pre&gt;
      */
-    constructor(userId,opt_data) {
+    constructor(opt_data) {
         super(document.getElementById(&apos;sentence_container&apos;));
-        if (opt_data) this.init(opt_data);
-        this._userId = userId;
+        if (opt_data) {
+            this.init(opt_data);
+        }
         this._titleElem = document.getElementById(&apos;file_title&apos;);
-        this._searchInputElem = document.getElementById(&apos;search&apos;);
         this._announceElem = document.getElementById(&apos;user_info&apos;);
         this._changedElem = document.getElementById(&apos;changed&apos;);
-        this.addFileTitleEvent();
-        this.addSelectEvent();
+
         this._cursor = new Cursor(this);
         this._inputBuffer = new InputBuffer(this);
         this._fileList = new FileList(this);
         this._command = new CommandLine(this);
         this._menu = new Menu(this);
         this._doManager = new DoManager(this);
+        this._displayer = new Displayer(this);
+        this._searchMode = new SearchMode(this);
+        this._selectRange = new SelectRange(this);
 
-        if (!opt_data) this.newFile();
+        this.addFileTitleEvent();
+        this._selectRange.addSelectEvent();
+
+        if (!opt_data) {
+            this.newFile();
+        }
     }
 
     /**
@@ -152,7 +575,10 @@ export class SentenceContainer extends AbstractHierarchy {
         // &#x6587;&#x66F8;&#x60C5;&#x5831;
         this.filename(data.filename);
         this.fileId(data.fileId);
-        this.saved(data.saved || (new Date(Date.now()).toLocaleDateString() + &apos; &apos; + new Date(Date.now()).toLocaleTimeString()).replace(/\//g,&apos;-&apos;));
+        this.saved(
+            data.saved ||
+                (new Date(Date.now()).toLocaleDateString() + &apos; &apos; +
+                    new Date(Date.now()).toLocaleTimeString()).replace(/\//g,&apos;-&apos;));
         this._strLenOnRow = data.data.conf.strLen || 40; // &#xFF11;&#x884C;&#x306E;&#x6587;&#x5B57;&#x6570;
         this._rowLenOnPage = data.data.conf.rowLen || 40; // &#xFF11;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x884C;&#x6570;
         this.menu().confStrLenElem().value = this._strLenOnRow;
@@ -163,7 +589,8 @@ export class SentenceContainer extends AbstractHierarchy {
         }
 
         this.cursor().init();
-        this.cordinate().resetDisplay();
+        this.cordinate();
+        this._displayer.resetDisplay();
         this.breakPage().printInfo();
         this.addKeydownEventListener();
         this.addWheelEventListener();
@@ -206,11 +633,16 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {Row} &#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     row(num) {
-        if (num &lt;= 0) return this.firstRow();
+        if (num &lt;= 0) {
+            return this.firstRow();
+        }
+
         let cnt = 0;
         for (let row = this.firstRow(); row; row = row.next()) {
             cnt++;
-            if (cnt === num) return row;
+            if (cnt === num) {
+                return row;
+            }
         }
         return this.lastRow();
     }
@@ -222,12 +654,17 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {Row} &#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     pageRow(num) {
-        if (num &lt;= 0) return this.firstRow();
+        if (num &lt;= 0) {
+            return this.firstRow();
+        }
+
         let cnt = 0;
         for (let row = this.firstRow(); row; row = row.next()) {
             if (row.isPageBreak()) {
                 cnt++;
-                if (cnt === num) return row;
+                if (cnt === num) {
+                    return row;
+                }
             }
         }
         return this.lastRow();
@@ -306,30 +743,6 @@ export class SentenceContainer extends AbstractHierarchy {
     }
 
     /**
-     * &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;Input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;DOM&#x8981;&#x7D20;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {Element} &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;DOM&#x8981;&#x7D20;
-     */
-    titleElem() {
-        return this._titleElem;
-    }
-
-    /**
-     * &#x6587;&#x66F8;&#x5185;&#x8A9E;&#x53E5;&#x691C;&#x7D22;&#x3067;&#x4F7F;&#x7528;&#x3059;&#x308B;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;DOM&#x8981;&#x7D20;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {Element} &#x8A9E;&#x53E5;&#x691C;&#x7D22;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;DOM&#x8981;&#x7D20;
-     */
-    searchInputElem() {
-        return this._searchInputElem;
-    }
-
-    /**
-     * &#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x3078;&#x306E;&#x60C5;&#x5831;&#x3092;&#x8868;&#x793A;&#x3059;&#x308B;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;DOM&#x8981;&#x7D20;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {Element} &#x60C5;&#x5831;&#x8868;&#x793A;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;DOM&#x8981;&#x7D20;
-     */
-    announceElem() {
-        return this._announceElem;
-    }
-
-    /**
      * &#x3053;&#x306E;&#x6587;&#x66F8;&#x3092;&#x64CD;&#x4F5C;&#x3059;&#x308B;Menu&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
      * @return {Menu} &#x30E1;&#x30CB;&#x30E5;&#x30FC;&#x30D0;&#x30FC;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
@@ -386,19 +799,12 @@ export class SentenceContainer extends AbstractHierarchy {
         const data = {};
         data.conf = this.menu().configueData();
         const paraArr = [];
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             paraArr.push(paragraph.data());
+        }
         data.text = paraArr;
 
         return JSON.stringify(data);
-    }
-
-    /**
-     * &#x30E6;&#x30FC;&#x30B6;&#x30FC;ID&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {number} &#x30E6;&#x30FC;&#x30B6;&#x30FC;ID
-     */
-    userId() {
-        return this._userId;
     }
 
     /**
@@ -407,12 +813,13 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
      */
     filename(opt_newFilename) {
-        if (opt_newFilename === undefined)
+        if (opt_newFilename === undefined) {
             return this._filename;
+        }
 
         this._filename = opt_newFilename;
-        this.titleElem().value = opt_newFilename;
-        this.titleElem().dataset.filename = opt_newFilename;
+        this._titleElem.value = opt_newFilename;
+        this._titleElem.dataset.filename = opt_newFilename;
         return this;
     }
 
@@ -422,12 +829,13 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer number} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;ID(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
      */
     fileId(opt_newId) {
-        if (opt_newId === undefined)
+        if (opt_newId === undefined) {
             return this._fileId;
+        }
 
         const newId = opt_newId;
         this._fileId = newId;
-        this.titleElem().dataset.fileId = newId;
+        this._titleElem.dataset.fileId = newId;
         return this;
     }
 
@@ -437,8 +845,9 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer string} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x6700;&#x7D42;&#x66F4;&#x65B0;&#x65E5;&#x6642;&#x306E;&#x6587;&#x5B57;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
      */
     saved(opt_newSaved) {
-        if (opt_newSaved === undefined)
+        if (opt_newSaved === undefined) {
             return this._saved;
+        }
 
         const newSaved = opt_newSaved;
         this._saved = newSaved;
@@ -452,8 +861,9 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer boolean} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8A2D;&#x5B9A;&#x72B6;&#x614B;&#x306E;&#x771F;&#x507D;&#x5024;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
      */
     isChanged(opt_bl) {
-        if (opt_bl === undefined)
+        if (opt_bl === undefined) {
             return this._changedElem.classList.contains(&apos;active&apos;);
+        }
 
         if (opt_bl === true) {
             this._changedElem.classList.add(&apos;active&apos;);
@@ -471,8 +881,9 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer number} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8A2D;&#x5B9A;&#x4E0A;&#x306E;&#x884C;&#x5185;&#x6587;&#x5B57;&#x6570;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
      */
     strLenOnRow(opt_newStrLen) {
-        if (opt_newStrLen === undefined)
+        if (opt_newStrLen === undefined) {
             return this._strLenOnRow;
+        }
 
         const newStrLen = opt_newStrLen;
         this._strLenOnRow = newStrLen;
@@ -488,8 +899,9 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer number} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x30DA;&#x30FC;&#x30B8;&#x5185;&#x884C;&#x6570;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
      */
     rowLenOnPage(opt_newRowLen) {
-        if (opt_newRowLen === undefined)
+        if (opt_newRowLen === undefined) {
             return this._rowLenOnPage;
+        }
 
         const newRowLen = opt_newRowLen;
         this._rowLenOnPage = newRowLen;
@@ -503,8 +915,9 @@ export class SentenceContainer extends AbstractHierarchy {
      */
     countChar() {
         let cnt = 0;
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             cnt += paragraph.countChar();
+        }
         return cnt;
     }
 
@@ -515,8 +928,9 @@ export class SentenceContainer extends AbstractHierarchy {
      */
     countRow() {
         let cnt = 0;
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             cnt += paragraph.childLength();
+        }
         return cnt;
     }
 
@@ -526,8 +940,11 @@ export class SentenceContainer extends AbstractHierarchy {
      */
     countPage() {
         let cnt = 0;
-        for (let row = this.firstRow(); row; row = row.next())
-            if (row.isPageBreak()) cnt++;
+        for (let row = this.firstRow(); row; row = row.next()) {
+            if (row.isPageBreak()) {
+                cnt++;
+            }
+        }
         return cnt;
     }//}}}
 
@@ -536,7 +953,8 @@ export class SentenceContainer extends AbstractHierarchy {
     /**
      * &#x3053;&#x306E;&#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x6A2A;&#x5E45;&#x3092;&#x8FD4;&#x3048;&#x307E;&#x3059;&#x3002;
      *     &#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306F;&#xFF19;&#xFF10;&#x5EA6;&#x56DE;&#x8EE2;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x3001;css&#x4E0A;&#x306F;&#x9AD8;&#x3055;&#x3068;&#x540C;&#x69D8;&#x3067;&#x3059;
-     * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+     * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;
+     *     &#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
      * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x5E45;
      */
     width(opt_useCache) {
@@ -546,7 +964,8 @@ export class SentenceContainer extends AbstractHierarchy {
     /**
      * &#x3053;&#x306E;&#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x9AD8;&#x3055;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;&#x3002;
      *     &#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306F;&#xFF19;&#xFF10;&#x5EA6;&#x56DE;&#x8EE2;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;&#x3001;css&#x4E0A;&#x306F;&#x6A2A;&#x5E45;&#x3068;&#x540C;&#x69D8;&#x3067;&#x3059;
-     * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;&#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
+     * @param {boolean} [opt_useCache=true] true=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3059;&#x308B;&#x3001;false=&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x5229;&#x7528;&#x3057;&#x306A;&#x3044;&#x3002;
+     *     &#x7701;&#x7565;&#x3059;&#x308B;&#x3068;&#x30C7;&#x30D5;&#x30A9;&#x30EB;&#x30C8;&#x3067;true&#x306B;&#x306A;&#x308B;&#x306E;&#x3067;&#x3001;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3092;&#x4F7F;&#x308F;&#x305A;&#x8A08;&#x7B97;&#x3057;&#x76F4;&#x3059;&#x5834;&#x5408;&#x306B;&#x306F;&#x660E;&#x793A;&#x7684;&#x306B;false&#x3092;&#x6E21;&#x3059;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;
      * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;
      */
     height(opt_useCache) {
@@ -559,106 +978,11 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     removeClassFromAllChar(className) {
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             paragraph.removeClassFromAllChar(className);
-        return this;
-    }
-
-    /**
-     * &#x6E21;&#x3055;&#x308C;&#x305F;&#x6587;&#x5B57;&#x5217;&#x3092;&#x672C;&#x6587;&#x5185;&#x304B;&#x3089;&#x63A2;&#x3057;&#x3001;&#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x6587;&#x5B57;&#x5217;&#x306B;search-word&#x30AF;&#x30E9;&#x30B9;&#x3092;&#x4ED8;&#x4E0E;&#x3057;&#x307E;&#x3059;&#x3002;
-     *     &#x3055;&#x3089;&#x306B;&#x3001;&#x898B;&#x3064;&#x304B;&#x3063;&#x305F;&#x6587;&#x5B57;&#x5217;&#x306E;&#x5148;&#x982D;&#x6587;&#x5B57;&#x306B;search-label&#x30AF;&#x30E9;&#x30B9;&#x3092;&#x4ED8;&#x4E0E;&#x3057;&#x307E;&#x3059;
-     *  @param {string} str &#x691C;&#x7D22;&#x6587;&#x5B57;&#x5217;
-     *  @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    search(str) {
-        for (let paragraph of this.paragraphs())
-            paragraph.search(str);
-        return this;
-    }
-
-    /**
-     * &#x6587;&#x66F8;&#x5185;&#x8A9E;&#x53E5;&#x691C;&#x7D22;&#x3092;&#x59CB;&#x3081;&#x307E;&#x3059;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    startSearchMode() {
-        this.searchInputElem().classList.add(&apos;active&apos;);
-        this.searchInputElem().focus();
-        this.searchInputElem().value = &apos;/&apos;;
-        this.removeKeydownEventListener();
-        if (!this._keyupOnSearchArg) {
-            this._keyupOnSearchArg = this.onKeyupOnSearchMode.bind(this);
-            this.searchInputElem().addEventListener(&apos;keyup&apos;,this._keyupOnSearchArg,false);
-            this.searchInputElem().addEventListener(&apos;focusin&apos;,this.onFocusinOnSearchMode.bind(this));
-            this.searchInputElem().addEventListener(&apos;focusout&apos;,this.onFocusoutOnSearchMode.bind(this));
         }
         return this;
-    }
-
-    /**
-     * &#x6587;&#x66F8;&#x5185;&#x8A9E;&#x53E5;&#x691C;&#x7D22;&#x3092;&#x5B8C;&#x5168;&#x306B;&#x7D42;&#x4E86;&#x3057;&#x307E;&#x3059;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    stopSearchMode() {
-        this.addKeydownEventListener();
-        this.searchInputElem().value = &apos;&apos;;
-        this.searchInputElem().classList.remove(&apos;active&apos;);
-        this.removeClassFromAllChar(&apos;search-label&apos;).removeClassFromAllChar(&apos;search-word&apos;);
-        return this;
-    }//}}}
-
-    // selection {{{
-    /**
-     * &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x914D;&#x5217;&#x3067;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @param {boolean} [opt_bl] &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;&#x306A;&#x3089;true&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;
-     * @return {Char[]} &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
-     */
-    selectChars(opt_bl) {
-        const ret = [];
-        const selection = getSelection();
-        if (this.selectText().length === 0)
-            return ret; // rangeCount===0&#x3068;&#x3059;&#x308B;&#x3068;&#x3001;EOL&#x306E;&#x307F;&#x9078;&#x629E;&#x3055;&#x308C;&#x308B;&#x3053;&#x3068;&#x304C;&#x3042;&#x308B;
-
-        const selRange = selection.getRangeAt(0);
-        for (let char = this.firstChar(); char; char = char.nextChar())
-            if (char.isInRange(selRange)) ret.push(char);
-
-        selRange.detach();
-        if (opt_bl) selection.removeAllRanges(); // &#x9078;&#x629E;&#x3092;&#x89E3;&#x9664;&#x3059;&#x308B;
-        return ret;
-    }
-
-    /**
-     * &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x5217;&#x3092;&#x30ED;&#x30FC;&#x30AB;&#x30EB;&#x30B9;&#x30C8;&#x30EC;&#x30FC;&#x30B8;&#x306B;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3059;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    copySelectText() {
-        localStorage.clipBoard = this.selectText();
-        return this;
-    }
-
-    // &#x30DA;&#x30FC;&#x30B9;&#x30C8;
-    /**
-     * &#x30ED;&#x30FC;&#x30AB;&#x30EB;&#x30B9;&#x30C8;&#x30EC;&#x30FC;&#x30B8;&#x306B;&#x4FDD;&#x5B58;&#x3057;&#x305F;&#x6587;&#x5B57;&#x5217;&#x3092;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x633F;&#x5165;&#x3057;&#x307E;&#x3059;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    pasteText() {
-        this.cursor().insert(localStorage.clipBoard);
-        return this;
-    }
-
-    /**
-     * &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306B;&#x3042;&#x308B;&#x6587;&#x5B57;&#x5217;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {string} &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x5185;&#x306E;&#x6587;&#x5B57;&#x5217;
-     */
-    selectText() {
-        const selection = getSelection();
-        let ret = &apos;&apos;;
-        for (let i = 0,cnt = selection.rangeCount; i &lt; cnt; i++) {
-            const selRange = selection.getRangeAt(i);
-            ret += selRange.toString();
-        }
-        return ret;
-    }//}}}
+    } //}}}
 
     // --DOM&#x64CD;&#x4F5C;&#x95A2;&#x4FC2; {{{
     /**
@@ -673,7 +997,7 @@ export class SentenceContainer extends AbstractHierarchy {
         if (this.inputBuffer().isDisplay()) {
             this.inputBuffer().empty().hide();
         }
-        this.stopSearchMode();
+        this._searchMode.stop();
         return this;
     }
 
@@ -689,6 +1013,7 @@ export class SentenceContainer extends AbstractHierarchy {
             this.pushParagraph(paragraph);
             return this;
         }
+
         // paragraph
         this.lastChild().next(paragraph);
         paragraph.prev(this.lastChild());
@@ -705,7 +1030,7 @@ export class SentenceContainer extends AbstractHierarchy {
         return this;
     }//}}}
 
-// printInfo {{{
+    // printInfo {{{
     /**
      * &#x6587;&#x66F8;&#x60C5;&#x5831;&#x3092;&#x8868;&#x793A;&#x3057;&#x307E;&#x3059;
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
@@ -728,8 +1053,9 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     cordinate() {
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             paragraph.cordinate();
+        }
         return this;
     }
 
@@ -739,8 +1065,9 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     checkKinsoku() {
-        for (let paragraph of this.paragraphs())
+        for (let paragraph of this.paragraphs()) {
             paragraph.checkKinsoku();
+        }
         return this;
     }//}}}
 
@@ -752,44 +1079,48 @@ export class SentenceContainer extends AbstractHierarchy {
     breakPage() {
         const pageNum = this.rowLenOnPage();
         // page-break
-        let cnt1 = 0;
+        let cntBreak = 0;
         for (let paragraph of this.paragraphs()) {
             for (let row of paragraph.rows()) {
-                if (cnt1 === 0 || cnt1 % pageNum === 0) // &#xFF11;&#x884C;&#x76EE;&#x3068;pageNum&#x306E;&#x500D;&#x6570;&#x884C;&#x76EE;
+                if (cntBreak === 0 || cntBreak % pageNum === 0) { // &#xFF11;&#x884C;&#x76EE;&#x3068;pageNum&#x306E;&#x500D;&#x6570;&#x884C;&#x76EE;
                     row.addClass(&apos;page-break&apos;);
-                else
+                } else {
                     row.removeClass(&apos;page-break&apos;);
-                cnt1++;
+                }
+                cntBreak++;
             }
         }
         // page-last-row
-        let cnt2 = 0;
+        let cntLast = 0;
         const lastRow = this.countRow() -1;
         for (let paragraph of this.paragraphs()) {
             for (let row of paragraph.rows()) {
-                if ((cnt2 + 1) % pageNum === 0 || cnt2 === lastRow) // (pageNum&#x306E;&#x500D;&#x6570;-1)&#x884C;&#x76EE;&#x3068;&#x6700;&#x7D42;&#x884C;
+                if ((cntLast + 1) % pageNum === 0 || cntLast === lastRow) { // (pageNum&#x306E;&#x500D;&#x6570;-1)&#x884C;&#x76EE;&#x3068;&#x6700;&#x7D42;&#x884C;
                     row.addClass(&apos;page-last-row&apos;);
-                else
+                }
+                else {
                     row.removeClass(&apos;page-last-row&apos;);
-                cnt2++;
+                }
+                cntLast++;
             }
         }
         return this;
     }//}}}
 
-// announce {{{
+    // announce {{{
     /**
      * &#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x3078;&#x306E;&#x60C5;&#x5831;&#x3092;&#x8868;&#x793A;&#x3057;&#x307E;&#x3059;
      * @param {string} str &#x8868;&#x793A;&#x3059;&#x308B;&#x60C5;&#x5831;
      * @param {string} [opt_color=&apos;black&apos;] &#x9ED2;&#x6587;&#x5B57;&#x4EE5;&#x5916;&#x306E;&#x6587;&#x5B57;&#x8272;&#x3067;&#x8868;&#x793A;&#x3059;&#x308B;&#x5834;&#x5408;&#x306B;&#x8272;&#x540D;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
-    announce(str,opt_color) {
-        this.announceElem().textContent = str;
-        if (opt_color)
-            this.announceElem().style.color = opt_color;
-        else
-            this.announceElem().style.color = &apos;&apos;;
+    announce(str, opt_color) {
+        this._announceElem.textContent = str;
+        if (opt_color) {
+            this._announceElem.style.color = opt_color;
+        } else {
+            this._announceElem.style.color = &apos;&apos;;
+        }
         return this;
     }//}}}
 
@@ -810,46 +1141,24 @@ export class SentenceContainer extends AbstractHierarchy {
      * &#x73FE;&#x5728;&#x958B;&#x3044;&#x3066;&#x3044;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x4E0A;&#x66F8;&#x304D;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3059;&#x3002;
      *     newFile()&#x3055;&#x308C;&#x3066;&#x521D;&#x3081;&#x3066;&#x306E;&#x4FDD;&#x5B58;&#x306A;&#x3089;&#x540D;&#x524D;&#x3092;&#x3064;&#x3051;&#x3066;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3059;&#x3002;(&#x3068;&#x3082;&#x306B;&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/WriteJsonFile.html
+     * @see ../WEB-INF/classes/doc/FileDataServlet.html
      */
     saveFile() {
-        if (this.fileId() === -1) {
-            this.saveAsFile(this.filename());
-            return this;
-        }
-
         this.announce(&apos;&#x4FDD;&#x5B58;&#x4E2D;&apos;);
-        Util.post(&apos;/tategaki/WriteJsonFile&apos;,{
-            user_id: this.userId(),
+        Util.post(&apos;/tategaki/FileData&apos;,{
             file_id: this.fileId(),
             filename: this.filename(),
             json: this.data(),
             saved: Date.now()
-        },function (json) {
-            this.saved(json.strDate).announce(&apos;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3057;&#x305F;&apos;);
-            this.fileList().read();
-            this.isChanged(false);
-        }.bind(this));
-        return this;
-    }
-
-    /**
-     * &#x73FE;&#x5728;&#x958B;&#x3044;&#x3066;&#x3044;&#x308B;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x3092;&#x540D;&#x524D;&#x3092;&#x3064;&#x3051;&#x3066;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
-     * @param {string} filename &#x65B0;&#x3057;&#x3044;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x306E;&#x540D;&#x524D;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/FileMaker.html
-     * @see ../WEB-INF/classes/doc/WriteJsonFile.html
-     */
-    saveAsFile(filename) {
-        Util.post(&apos;/tategaki/FileMaker&apos;,{
-            user_id: this.userId(),
-            filename: filename,
-            saved: Date.now()
-        },function (data) {
-            this.filename(data.filename).fileId(data.newFileId);
-            const file = new File(data.newFileId,data.filename);
-            this.fileList().append(file).chainFile();
-            this.saveFile();
+        }, function (json) {
+            if (json.result === &apos;true&apos;) {
+                this.saved(json.saved).announce(&apos;&#x4FDD;&#x5B58;&#x3057;&#x307E;&#x3057;&#x305F;&apos;);
+                this.fileId(json.fileID);
+                this.fileList().read();
+                this.isChanged(false);
+            } else {
+                this.announce(&apos;&#x4FDD;&#x5B58;&#x30A8;&#x30E9;&#x30FC;&apos;);
+            }
         }.bind(this));
         return this;
     }
@@ -860,7 +1169,9 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     newFile(filename) {
-        if (filename === undefined) filename = &apos;newfile&apos;;
+        if (filename === undefined) {
+            filename = &apos;newfile&apos;;
+        }
         this.init({
             fileId: -1,
             filename: filename,
@@ -873,196 +1184,9 @@ export class SentenceContainer extends AbstractHierarchy {
     }//}}}
 
     // --Display&#x95A2;&#x4FC2; {{{
-    /**
-     * &#x6587;&#x66F8;&#x3092;&#xFF11;&#x884C;&#x76EE;&#x306E;&#xFF11;&#x6587;&#x5B57;&#x76EE;&#x304B;&#x3089;&#x8868;&#x793A;&#x3057;&#x307E;&#x3059;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    resetDisplay() {
-        this.addDisplay(0,0);
-        return this;
-    }
-
-    // strPos: &apos;center&apos;,&apos;right&apos;
-    /**
-     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x57FA;&#x6E96;&#x3068;&#x3057;&#x3066;&#x6587;&#x66F8;&#x3092;&#x8868;&#x793A;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;
-     * @param {string} [opt_pos] &#x8868;&#x793A;&#x5F8C;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&apos;center&apos;&#x3068;&apos;right&apos;&#x306B;&#x5BFE;&#x5FDC;&#x3002;
-     *     &#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x6700;&#x4F4E;&#x9650;&#x306E;&#x79FB;&#x52D5;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
     changeDisplay(opt_pos) {
-        const cursorChar = this.cursorChar();
-        const rowPos = this.computeDisplayRowPos(opt_pos);
-        const charPos = cursorChar.row().computeDisplayCharPos();
-        this.addDisplay(rowPos,charPos);
-        return this;
-    }
-
-    /**
-     * firstRow&#x884C;&#x76EE;&#x4EE5;&#x964D;&#x3092;&#x8868;&#x793A;&#x3057;&#x307E;&#x3059;&#x3002;
-     *     &#x6587;&#x5B57;&#x306F;firstChar&#x6587;&#x5B57;&#x76EE;&#x4EE5;&#x964D;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x307E;&#x3059;
-     * @param {number} firstRow &#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x6700;&#x521D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
-     * @param {number} firstChar &#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x6700;&#x521D;&#x306E;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    addDisplay(firstRow,firstChar) {
-        const dispWidth = this.width();
-        const cache = {};
-        let cnt = 0; // &#x7DCF;&#x884C;&#x6570;&#x3092;&#x30AB;&#x30A6;&#x30F3;&#x30C8;&#x3059;&#x308B;
-        let sum = 0; // &#x8868;&#x793A;&#x884C;&#x306E;&#x5E45;&#x5408;&#x8A08;
-        for (let paragraph of this.paragraphs()) {
-            for (let row of paragraph.rows()) {
-                if (cnt &lt; firstRow) {
-                    row.display(false);
-                    cnt++;
-                    continue;
-                }
-                // &#x884C;&#x306E;&#x5E45;&#x306F;&#x5B50;&#x306E;&#x6700;&#x5927;&#x306E;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x306B;&#x3088;&#x3063;&#x3066;&#x6C7A;&#x307E;&#x308B;&#x3068;&#x8003;&#x3048;&#x3001;&#x6700;&#x5927;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x3054;&#x3068;&#x306E;&#x884C;&#x5E45;&#x3092;&#x30AD;&#x30E3;&#x30C3;&#x30B7;&#x30E5;&#x3059;&#x308B;(&#x30EC;&#x30F3;&#x30C0;&#x30EA;&#x30F3;&#x30B0;&#x983B;&#x5EA6;&#x306E;&#x524A;&#x6E1B;)
-                const maxFont = row.maxFont();
-                if (cache[maxFont]) {
-                    const rowWidth = cache[maxFont];
-                    sum += rowWidth + 2; // 2&#x306F;&#x30DC;&#x30FC;&#x30C0;&#x30FC;&#x306E;&#x5E45;
-                } else {
-                    cache[maxFont] = row.width();
-                    const rowWidth = cache[maxFont];
-                    sum += rowWidth + 2; // 2&#x306F;&#x30DC;&#x30FC;&#x30C0;&#x30FC;&#x306E;&#x5E45;
-                }
-                row.display((sum &lt; dispWidth),firstChar);
-                cnt++;
-            }
-        }
-        return this;
-    }
-
-    /**
-     * @private
-     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x57FA;&#x6E96;&#x306B;&#x3001;&#x6700;&#x521D;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3079;&#x304D;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @param {string} [opt_pos] &#x8868;&#x793A;&#x5F8C;&#x306E;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x6307;&#x5B9A;&#x3059;&#x308B;&#x3002;&apos;center&apos;&#x306A;&#x3089;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x4E2D;&#x592E;&#x306B;&#x3059;&#x308B;&#x3002;&apos;right&apos;&#x306A;&#x3089;&#x3001;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304C;&#x6700;&#x3082;&#x53F3;&#x306B;&#x306A;&#x308B;&#x3088;&#x3046;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3002;
-     *     &#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;&#x306F;&#x73FE;&#x5728;&#x306E;&#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x6700;&#x4F4E;&#x9650;&#x306E;&#x79FB;&#x52D5;&#x3067;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;&#x304C;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3088;&#x3046;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;
-     * @return {number} &#x8A08;&#x7B97;&#x3055;&#x308C;&#x305F;&#x6700;&#x521D;&#x306B;&#x8868;&#x793A;&#x3055;&#x308C;&#x308B;&#x3079;&#x304D;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
-     */
-    computeDisplayRowPos(opt_pos) {
-        const currentFirst = this.firstDisplayRowPos();
-        const cursorIndex = this.cursorRowPos();
-        const currentEnd = this.lastDisplayRowPos();
-
-        // &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x3092;&#x4E2D;&#x592E;&#x306B;&#x3059;&#x308B;
-        // HACK:&#x8A08;&#x7B97;&#x524D;&#x306E;display&#x306E;&#x6570;&#x3092;&#x57FA;&#x6E96;&#x306B;&#x3059;&#x308B;&#x306E;&#x3067;&#x3001;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x306E;&#x5927;&#x304D;&#x3055;&#x306A;&#x3069;&#x306B;&#x3088;&#x3063;&#x3066;&#x305A;&#x308C;&#x3082;&#x3042;&#x308A;&#x3046;&#x308B;
-        if (opt_pos === &apos;center&apos;) {
-            const harfRange = (currentEnd - currentFirst)/2;
-            const ret = cursorIndex - harfRange;
-            return ret &gt;= 0 ? ret : 0;
-        }
-        if (opt_pos === &apos;right&apos;) {
-            return cursorIndex;
-        }
-
-        // &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x524D;&#x306B;&#x3042;&#x308B;
-        if (cursorIndex &lt; currentFirst) {
-            return cursorIndex;
-        }
-        // &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x304C;&#x5F8C;&#x308D;&#x306B;&#x3042;&#x308B;
-        if (cursorIndex &gt; currentEnd) {
-            return currentFirst + (cursorIndex - currentEnd);
-        }
-        // display&#x306B;&#x56F2;&#x307E;&#x308C;&#x305F;&#x90E8;&#x5206;&#x306B;display&#x3067;&#x306A;&#x3044;&#x884C;&#x304C;&#x3042;&#x308B;&#x5834;&#x5408;
-        // &#x9014;&#x4E2D;&#x884C;&#x6570;&#x5909;&#x5316;
-        return currentFirst;
-    }
-
-    /**
-     * @private
-     * &#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x6700;&#x521D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {number} &#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x6700;&#x521D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x8868;&#x793A;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;-1
-     */
-    firstDisplayRowPos() {
-        let cnt = 0;
-        for (let paragraph of this.paragraphs()) {
-            for (let row of paragraph.rows()) {
-                if (row.isDisplay())
-                    return cnt;
-                cnt++;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * @private
-     * &#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {number} &#x73FE;&#x5728;&#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x6700;&#x5F8C;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x8868;&#x793A;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;-1
-     */
-    lastDisplayRowPos() {
-        for (let row = this.lastRow(),cnt = this.countRow() -1; row; row = row.prev(),cnt--)
-            if (row.isDisplay()) return cnt;
-        return -1;
-    }
-
-    /**
-     * @private
-     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x306E;&#x6587;&#x66F8;&#x5168;&#x4F53;&#x3067;&#x4F55;&#x884C;&#x76EE;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {number} &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x306E;&#x6587;&#x66F8;&#x5168;&#x4F53;&#x3067;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x6587;&#x66F8;&#x5185;&#x306B;&#x6BB5;&#x843D;&#x304C;&#x306A;&#x3044;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;-1
-     */
-    cursorRowPos() {
-        const cursorRow = this.cursor().getChar().row();
-        let cnt = 0;
-        for (let paragraph of this.paragraphs()) {
-            for (let row of paragraph.rows()) {
-                if (row.is(cursorRow))
-                    return cnt;
-                cnt++;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * @private
-     * &#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x3046;&#x3061;&#x6700;&#x521D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {Row} &#x6700;&#x521D;&#x306E;&#x8868;&#x793A;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x8868;&#x793A;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;null
-     */
-    firstDisplayRow() {
-        for (let paragraph of this.paragraphs())
-            for (let row of paragraph.rows())
-            if (row.isDisplay()) return row;
-        return null;
-    }
-
-    /**
-     * @private
-     * &#x8868;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x884C;&#x306E;&#x3046;&#x3061;&#x6700;&#x5F8C;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
-     * @return {Row} &#x6700;&#x5F8C;&#x306E;&#x8868;&#x793A;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x8868;&#x793A;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;null
-     */
-    lastDisplayRow() {
-        for (let row = this.lastRow(); row; row = row.prev())
-            if (row.isDisplay()) return row;
-        return null;
-    }
-
-    /**
-     * &#x8868;&#x793A;&#x3092;&#x4E00;&#x884C;&#x5206;&#x53F3;&#x306B;&#x52D5;&#x304B;&#x3057;&#x307E;&#x3059;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    shiftRightDisplay() {
-        const charPos = this.cursorRow().computeDisplayCharPos();
-        const firstDisplay = this.firstDisplayRow();
-        if (!firstDisplay.prev()) return this;
-        firstDisplay.prev().display(true,charPos);
-        this.lastDisplayRow().display(false);
-        return this;
-    }
-
-    /**
-     * &#x8868;&#x793A;&#x3092;&#x4E00;&#x884C;&#x5206;&#x5DE6;&#x306B;&#x52D5;&#x304B;&#x3057;&#x307E;&#x3059;
-     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     */
-    shiftLeftDisplay() {
-        const charPos = this.cursorRow().computeDisplayCharPos();
-        const lastDisplay = this.lastDisplayRow();
-        if (!lastDisplay.next()) return this;
-        lastDisplay.next().display(true,charPos);
-        this.firstDisplayRow().display(false);
-        return this;
-    } //}}}
+        this._displayer.changeDisplay(opt_pos);
+    } // }}}
 
     // undo redo {{{
     /**
@@ -1078,10 +1202,11 @@ export class SentenceContainer extends AbstractHierarchy {
      * &#x30A2;&#x30F3;&#x30C9;&#x30A5;&#x3057;&#x307E;&#x3059;
      */
     undo() {
-        if (this._doManager.hasUndo())
+        if (this._doManager.hasUndo()) {
             this._doManager.undo();
-        else
+        } else {
             this.announce(&apos;&#x3059;&#x3067;&#x306B;&#x4E00;&#x756A;&#x53E4;&#x3044;&#x5909;&#x66F4;&#x3067;&#x3059;&apos;);
+        }
         return this;
     }
 
@@ -1089,10 +1214,11 @@ export class SentenceContainer extends AbstractHierarchy {
      * &#x30EA;&#x30C9;&#x30A5;&#x3057;&#x307E;&#x3059;
      */
     redo() {
-        if (this._doManager.hasRedo())
+        if (this._doManager.hasRedo()) {
             this._doManager.redo();
-        else
+        } else {
             this.announce(&apos;&#x3059;&#x3067;&#x306B;&#x4E00;&#x756A;&#x65B0;&#x3057;&#x3044;&#x5909;&#x66F4;&#x3067;&#x3059;&apos;);
+        }
         return this;
     }//}}}
 
@@ -1115,9 +1241,11 @@ export class SentenceContainer extends AbstractHierarchy {
      * @param {number} keycode &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
-    runKeydown(e,keycode) {
+    runKeydown(e, keycode) {
         this.announce(&apos;&apos;);
-        if (e.ctrlKey) return this.runControlKeyDown(e,keycode);
+        if (e.ctrlKey) {
+            return this.runControlKeyDown(e,keycode);
+        }
 
         switch (keycode) {
             case 8:
@@ -1155,10 +1283,10 @@ export class SentenceContainer extends AbstractHierarchy {
                 break;
             case 191:
                 // /
-                this.startSearchMode();
+                this._searchMode.start();
                 break;
             default:
-                this.inputBuffer().tryTransfer(keycode,e.shiftKey);
+                this.inputBuffer().tryTransfer(keycode, e.shiftKey);
                 break;
         }
         return this;
@@ -1170,11 +1298,10 @@ export class SentenceContainer extends AbstractHierarchy {
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
     runControlKeyDown(e,keycode) {
-        console.log(&apos;keycode&apos;, keycode);
         switch (keycode) {
             case 67:
                 // c
-                this.copySelectText();
+                this._selectRange.copySelectText();
                 break;
             case 18:
             case 70:
@@ -1219,7 +1346,7 @@ export class SentenceContainer extends AbstractHierarchy {
                 break;
             case 86:
                 // v
-                this.pasteText();
+                this._selectRange.pasteText();
                 break;
             case 188:
                 // ,
@@ -1242,61 +1369,18 @@ export class SentenceContainer extends AbstractHierarchy {
      * @param {boolean} isUp &#x4E0A;&#x65B9;&#x5411;&#x306B;&#x30DB;&#x30A4;&#x30FC;&#x30EB;&#x304C;&#x52D5;&#x304B;&#x3055;&#x308C;&#x305F;&#x306A;&#x3089;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
      * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
      */
-    runWheel(e,isUp) {
+    runWheel(e, isUp) {
         const mvRowNum = 4; // &#x4E00;&#x5EA6;&#x306B;&#x52D5;&#x304B;&#x3059;&#x884C;&#x6570;
-        if (isUp)
-            for (let i = 0; i &lt; mvRowNum; i++)
-            this.shiftRightDisplay();
-        else
-            for (let i = 0; i &lt; mvRowNum; i++)
-            this.shiftLeftDisplay();
-        return this;
-    }
-
-    // &#x8A9E;&#x53E5;&#x691C;&#x7D22;
-    /**
-     * &#x8A9E;&#x53E5;&#x691C;&#x7D22;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306E;keyup&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3067;&#x3059;
-     * @param {Event} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
-     */
-    onKeyupOnSearchMode(e) {
-        let keycode;
-        if (document.all) {
-            // IE
-            keycode = e.keyCode;
+        if (isUp) {
+            for (let i = 0; i &lt; mvRowNum; i++) {
+                this._displayer.shiftRightDisplay();
+            }
         } else {
-            // IE&#x4EE5;&#x5916;
-            keycode = e.which;
+            for (let i = 0; i &lt; mvRowNum; i++) {
+                this._displayer.shiftLeftDisplay();
+            }
         }
-        if (keycode === 13) {
-            // enter
-            this.searchInputElem().blur(); // enter&#x3092;&#x62BC;&#x3057;&#x305F;&#x3060;&#x3051;&#x3067;&#x306F;&#x30D5;&#x30A9;&#x30FC;&#x30AB;&#x30B9;&#x304C;&#x5916;&#x308C;&#x306A;&#x3044;
-            return;
-        }
-
-        // &#x4E2D;&#x8EAB;&#x304C;&#x7A7A;&#x306B;&#x306A;&#x308C;&#x3070;search&#x30E2;&#x30FC;&#x30C9;&#x3092;&#x5B8C;&#x5168;&#x306B;&#x7D42;&#x4E86;&#x3059;&#x308B;
-        if (this.searchInputElem().value === &apos;&apos;) {
-            this.searchInputElem().blur();
-            this.stopSearchMode();
-            return;
-        }
-
-        this.search(this.searchInputElem().value.slice(1));
-    }
-
-    /**
-     * &#x8A9E;&#x53E5;&#x691C;&#x7D22;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x304B;&#x3089;&#x30D5;&#x30A9;&#x30FC;&#x30AB;&#x30B9;&#x304C;&#x5916;&#x308C;&#x305F;&#x969B;&#x306E;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3067;&#x3059;&#x3002;
-     *     &#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x672C;&#x4F53;&#x306B;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x623B;&#x3057;&#x307E;&#x3059;
-     */
-    onFocusoutOnSearchMode() {
-        this.addKeydownEventListener();
-    }
-
-    /**
-     * &#x8A9E;&#x53E5;&#x691C;&#x7D22;input&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x306B;&#x30D5;&#x30A9;&#x30FC;&#x30AB;&#x30B9;&#x304C;&#x3042;&#x305F;&#x3063;&#x305F;&#x969B;&#x306E;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3067;&#x3059;&#x3002;
-     *     &#x6587;&#x66F8;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x672C;&#x4F53;&#x306E;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x5916;&#x3057;&#x307E;&#x3059;
-     */
-    onFocusinOnSearchMode() {
-        this.removeKeydownEventListener();
+        return this;
     }
 
     // &#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;input
@@ -1305,35 +1389,22 @@ export class SentenceContainer extends AbstractHierarchy {
      */
     addFileTitleEvent() {
         // &#x4E0E;&#x3048;&#x3063;&#x3071;&#x306A;&#x3057;&#x3002;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3082;&#x3053;&#x3053;&#x3067;&#x5B9A;&#x7FA9;
-        this.titleElem().addEventListener(&apos;focusin&apos;,function (e) {
-            if (this.inputBuffer().isDisplay) this.inputBuffer().empty().hide();
+        this._titleElem.addEventListener(&apos;focusin&apos;,function (e) {
+            if (this.inputBuffer().isDisplay) {
+                this.inputBuffer().empty().hide();
+            }
             this.removeKeydownEventListener();
         }.bind(this),false);
 
-        this.titleElem().addEventListener(&apos;focusout&apos;,function (e) {
-            if (this.titleElem().value === &apos;&apos;) {
+        this._titleElem.addEventListener(&apos;focusout&apos;,function (e) {
+            if (this._titleElem.value === &apos;&apos;) {
                 this.announce(&apos;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x540D;&#x304C;&#x5165;&#x529B;&#x3055;&#x308C;&#x3066;&#x3044;&#x307E;&#x305B;&#x3093;&apos;,&apos;red&apos;);
-                this.titleElem().value = this.titleElem().dataset.filename;
+                this._titleElem.value = this._titleElem.dataset.filename;
             }
             this.addKeydownEventListener();
         }.bind(this),false);
     }
 
-    // selection
-    /**
-     * &#x30DE;&#x30A6;&#x30B9;&#x3067;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x3092;&#x5909;&#x66F4;&#x3057;&#x305F;&#x969B;&#x306E;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x3092;&#x4E0E;&#x3048;&#x307E;&#x3059;&#x3002;&#x9078;&#x629E;&#x7BC4;&#x56F2;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x306E;&#x6B21;&#x306E;&#x6587;&#x5B57;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x5F53;&#x3066;&#x307E;&#x3059;
-     */
-    addSelectEvent() {
-        this.elem().addEventListener(&apos;mouseup&apos;,function (e) {
-            const selChars = this.selectChars();
-            // &#x9078;&#x629E;&#x7BC4;&#x56F2;&#x306E;&#x76F4;&#x5F8C;&#x306B;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x3092;&#x5F53;&#x3066;&#x308B;
-            if (selChars.length &gt; 0) {
-                const lastCharOnSelect = selChars[selChars.length -1];
-                const newCursor = lastCharOnSelect.hasNextSibling() ? lastCharOnSelect.next() : lastCharOnSelect;
-                newCursor.addCursor().setPosMemory();
-            }
-        }.bind(this),false);
-    }
     //}}}
 }
 </code></pre>
