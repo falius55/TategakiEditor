@@ -83,6 +83,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Withdraw</servlet-name>
+        <servlet-class>servlet.WithdrawServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>Withdraw</servlet-name>
+    <url-pattern>/Withdraw</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Convert</servlet-name>
         <servlet-class>servlet.JapaneseConvertServlet</servlet-class>
     </servlet>

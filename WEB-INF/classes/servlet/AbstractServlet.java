@@ -119,6 +119,7 @@ abstract public class AbstractServlet extends HttpServlet  {
             if (request.getRequestURL().toString().contains("localhost") &&
                     request.getParameter("userID") != null) {
                 id = Long.parseLong(request.getParameter("userID"));
+                log("for test id:" + id);
             }
 
             log("userID:" + id);
