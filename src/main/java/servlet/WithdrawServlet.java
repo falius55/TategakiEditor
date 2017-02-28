@@ -21,8 +21,10 @@ public class WithdrawServlet extends AbstractServlet {
         SQLDatabase db = getDatabase();
         db.delete(UserTable.class, UserTable.ID, userID);
 
-        getFileDBUpdater(userID).destroy();
+        // rootIDを取得するためにデータベースを利用しているため、
+        // データベースのデータ削除よりも前にディレクトリを削除する必要がある
         getDataDirectoryManager().getUserDirectory(userID).destroy();
+        getFileDBUpdater(userID).destroy();
 
         response.sendRedirect(REDIRECT_LOGOUT_SERVLET);
 

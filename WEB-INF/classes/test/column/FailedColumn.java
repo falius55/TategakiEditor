@@ -1,4 +1,4 @@
-package test;
+package test.column;
 
 import java.util.Map;
 import java.util.HashMap;
