@@ -3,6 +3,7 @@ package test.util;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.MalformedURLException;
+import java.net.ConnectException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.InputStream;
@@ -31,6 +32,10 @@ public class PostConnector {
         try (OutputStream os = uc.getOutputStream(); PrintStream ps = new PrintStream(os)) {
             String sendData = createSendString(data);
             ps.print(sendData);
+        } catch (ConnectException e) {
+            System.err.println("url:" + mUrl);
+            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
 
         try (InputStream is = uc.getInputStream();

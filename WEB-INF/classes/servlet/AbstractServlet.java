@@ -80,12 +80,10 @@ abstract public class AbstractServlet extends HttpServlet  {
     }
 
     protected String onPost(long userID, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-        log("onPost");
         return null;
     }
 
     protected String onGet(long userID, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-        log("onGet");
         return null;
     }
 
@@ -107,6 +105,7 @@ abstract public class AbstractServlet extends HttpServlet  {
             log("method type:" + request.getMethod());
             java.util.Map<?, ?> parameters = request.getParameterMap();
             log("parameters: " + parameters);
+            log("request url:" + request.getRequestURI());
 
             request.setCharacterEncoding("UTF-8");
             response.setContentType("application/json; charset=UTF-8");
@@ -114,7 +113,15 @@ abstract public class AbstractServlet extends HttpServlet  {
             HttpSession session = request.getSession(true);
 
             Object attrID = session.getAttribute(SESSION_USER_ID);
-            int id = attrID == null ? -1 : Integer.parseInt(attrID.toString());
+            long id = attrID == null ? -1 : Long.parseLong(attrID.toString());
+
+            // テストのためのコード。localhostからの通信の場合に限って、ユーザーID直接指定を許可する
+            if (request.getRequestURL().toString().contains("localhost") &&
+                    request.getParameter("userID") != null) {
+                id = Long.parseLong(request.getParameter("userID"));
+            }
+
+            log("userID:" + id);
 
             String ret;
             switch (methodType) {
@@ -128,8 +135,7 @@ abstract public class AbstractServlet extends HttpServlet  {
                     throw new ServletException();
             }
 
-            log("return value from " + getClass().getName());
-            log(ret);
+            log("return value from " + getClass().getName() + " -> " + ret);
 
             if (ret != null) {
                 try (PrintWriter out = response.getWriter()) {
