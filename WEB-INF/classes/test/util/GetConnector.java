@@ -1,11 +1,7 @@
 package test.util;
 
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.MalformedURLException;
-import java.net.ConnectException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
@@ -13,39 +9,30 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PostConnector implements Connector {
-    private final URL mUrl;
+public class GetConnector implements Connector {
+    private final String mStrUrl;
 
-    public PostConnector(String url) {
+    public GetConnector(String url) {
         // url: http://localhost:8080/tategaki/...
-        try {
-            mUrl = new URL(url);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("url:" + url, e);
-        }
+        mStrUrl = url;
     }
 
     public String send(Map<?, ?> data) throws IOException {
-        URLConnection uc = mUrl.openConnection();
-        uc.setDoOutput(true);  // POST可能にする
-
-        try (OutputStream os = uc.getOutputStream(); PrintStream ps = new PrintStream(os)) {
+        URL url;
+        try {
             String sendData = createSendString(data);
-            ps.print(sendData);
-        } catch (ConnectException e) {
-            System.err.println("url:" + mUrl);
-            e.printStackTrace();
-            throw new IllegalStateException(e);
+            url = new URL(sendData.isEmpty() ?
+                    mStrUrl : String.join("?", mStrUrl, sendData));
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("url:" + mStrUrl, e);
         }
 
-        try (InputStream is = uc.getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+        try (InputStream is = url.openStream(); BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-
             return sb.toString();
         }
     }
