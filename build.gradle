@@ -1,0 +1,25 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+
+version = 1.0
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+description = 'TategakiEditor Project'
+
+configurations {
+        extraLib
+    }
+
+repositories {
+        mavenCentral()
+    }
+
+dependencies {
+        testCompile 'junit:junit:4.11'
+        compile group:"org.apache.struts", name:"struts2-core", version:"2.3.16.3"
+        providedCompile "javax.servlet:javax.servlet-api:3.1.0"
+    }
