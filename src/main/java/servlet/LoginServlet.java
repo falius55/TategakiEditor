@@ -31,8 +31,8 @@ public class LoginServlet extends AbstractServlet {
     private static final String PARAM_USER_NAME = "username";
     private static final String PARAM_PASSWORD = "password";
 
-    private static final String REDIRECT_PAGE_IF_SUCCESS_LOGIN = "/tategaki/tategaki.jsp";
-    private static final String REDIRECT_PAGE_IF_FAILED_LOGIN = "/tategaki/loginpage.jsp";
+    private static final String REDIRECT_PAGE_IF_SUCCESS_LOGIN = "/tategaki-editor/index.jsp";
+    private static final String REDIRECT_PAGE_IF_FAILED_LOGIN = "/tategaki-editor/loginpage.jsp";
 
     @Override
     protected String onPost(long userID, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {

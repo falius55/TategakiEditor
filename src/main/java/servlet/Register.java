@@ -35,8 +35,8 @@ public class Register extends AbstractServlet {
     private static final String PARAM_PASSWORD = "password";
 
     private static final String SESSION_REGISTERED = "registered";
-    private static final String REDIRECT_LOGIN_PAGE = "/tategaki/loginpage.jsp";
-    private static final String REDIRECT_REGISTERE_PAGE = "/tategaki/register.jsp";
+    private static final String REDIRECT_LOGIN_PAGE = "/tategaki-editor/loginpage.jsp";
+    private static final String REDIRECT_REGISTERE_PAGE = "/tategaki-editor/register.jsp";
 
     @Override
 	public String onPost(long userID, HttpServletRequest request, HttpServletResponse response)

@@ -28,6 +28,7 @@ abstract public class AbstractServlet extends HttpServlet  {
     private static final String INIT_PARAM_DATABASE_NAME = "database-name";
     private static final String INIT_PARAM_DATABASE_USER = "database-user";
     private static final String INIT_PARAM_DATABASE_PASSWPRD = "database-password";
+    private static final String INIT_PARAM_PROJECT_ROOT = "project-root";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";  // 外部使用：FileDBUpdater
 
@@ -40,6 +41,7 @@ abstract public class AbstractServlet extends HttpServlet  {
 
     @Override
     public void init() throws ServletException {
+        super.init();
         log(getClass().getName() + " init()");
         ServletConfig config = getServletConfig();
         ServletContext context = config.getServletContext();
@@ -51,14 +53,16 @@ abstract public class AbstractServlet extends HttpServlet  {
         try {
             mDatabase = new PreparedDatabase(dbName, user, password);
         } catch (SQLException e) {
-            log(e.getMessage());
+            throw new IllegalStateException(e);
         }
 
-        mDataDirectoryManager = new DataDirectoryManager(context, mDatabase);
+        String projectRootPath = context.getInitParameter(INIT_PARAM_PROJECT_ROOT);
+        mDataDirectoryManager = new DataDirectoryManager(projectRootPath, mDatabase);
     }
 
     @Override
     public void destroy() {
+        super.destroy();
         log(getClass().getName() + " destroy()");
         try {
             mDatabase.close();

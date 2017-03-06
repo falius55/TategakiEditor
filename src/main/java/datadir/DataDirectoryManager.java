@@ -4,24 +4,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
-
 import sql.SQLDatabase;
 import sql.FileTable;
 
 public class DataDirectoryManager {
-    private final ServletContext mContext;
     private final SQLDatabase mDatabase;
+    private final String mProjectRootPath;
 
-    public DataDirectoryManager(ServletContext context, SQLDatabase db) {
-        mContext = context;
+    public DataDirectoryManager(String projectRootPath, SQLDatabase db) {
+        mProjectRootPath = projectRootPath;
         mDatabase = db;
     }
 
     public UserDirectory getUserDirectory(long userID) throws IOException {
         try {
             long rootID = rootFromUserID(userID);
-            return new UserDirectory(mContext, userID, rootID);
+            return new UserDirectory(mProjectRootPath, userID, rootID);
         } catch (SQLException e) {
             throw new IOException(e);
         }

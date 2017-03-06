@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import servlet.AbstractServlet;
 import sql.SQLDatabase;
 import sql.UserTable;
 

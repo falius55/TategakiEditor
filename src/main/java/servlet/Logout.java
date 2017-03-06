@@ -22,6 +22,6 @@ public class Logout extends HttpServlet {
         HttpSession session = request.getSession(true);
         session.invalidate(); // セッションを破棄する
 
-        response.sendRedirect("/tategaki/loginpage.jsp");
+        response.sendRedirect("/tategaki-editor/loginpage.jsp");
     }
 }

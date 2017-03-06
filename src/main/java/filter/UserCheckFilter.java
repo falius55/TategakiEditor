@@ -17,7 +17,7 @@ import servlet.AbstractServlet;
  * アクセスしたクライアントのセッションを確認し、セッションがまだ始まっていないか、ログインがされていなければログインページに飛ばすフィルター
  */
 public class UserCheckFilter implements Filter {
-    private static String REDIRECT_PAGE_IF_FALIED = "/tategaki/loginpage.jsp";
+    private static String REDIRECT_PAGE_IF_FALIED = "/tategaki-editor/loginpage.jsp";
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {

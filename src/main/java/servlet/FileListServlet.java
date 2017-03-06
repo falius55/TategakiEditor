@@ -67,7 +67,7 @@ public class FileListServlet extends AbstractServlet {
         String whereClause = FileTable.USER_ID + "=? and " + FileTable.TYPE + "=?";
         ResultSet rs = db.selectAllColumns(FileTable.class, whereClause, userID, FileTable.FileType.ROOT.toString());
         if (!rs.next()) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("userId:" + userID);
         }
         long rootID = rs.getLong(FileTable.ID.toString());
         return createDirJson(userID, rootID);

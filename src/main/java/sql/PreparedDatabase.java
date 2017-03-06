@@ -18,10 +18,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import sql.SQLDatabase;
-import sql.DatabaseColumn;
-import sql.SQLs;
-
 public class PreparedDatabase implements SQLDatabase {
     private final String mDBName;
 	private final Deque<Entry> mEntries = new ArrayDeque<Entry>();

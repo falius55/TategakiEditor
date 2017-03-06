@@ -9,8 +9,6 @@ import java.util.OptionalDouble;
 import java.util.OptionalLong;
 import java.util.Map;
 
-import sql.DatabaseColumn;
-
 /**
  *
  * <p>

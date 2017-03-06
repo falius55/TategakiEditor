@@ -3,8 +3,6 @@ package sql;
 import java.util.Map;
 import java.sql.Timestamp;
 
-import sql.DatabaseColumn;
-
 public class SQLs {
 
     /**

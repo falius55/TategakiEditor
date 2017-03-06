@@ -20,10 +20,10 @@ public class UserDirectory {
     private final long mRootID;
     private final String mUserPath;
 
-    public UserDirectory(ServletContext context, long userID, long rootID) throws IOException {
+    public UserDirectory(String projectRootPath, long userID, long rootID) throws IOException {
         mUserID = userID;
         mRootID = rootID;
-        mUserPath = context.getRealPath(String.format("data/%d/", mRootID));  // ルートディレクトリ/pathとなる
+        mUserPath = String.format("%s/data/%d/", projectRootPath, mRootID);  // ルートディレクトリ/pathとなる
         init();
     }
 
