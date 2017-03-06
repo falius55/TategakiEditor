@@ -1,0 +1,53 @@
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'jetty'
+
+version = 1.0
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+description = 'TategakiEditor Project'
+
+buildscript {
+    repositories {
+            jcenter()
+        }
+    dependencies {
+            classpath 'com.bmuschko:gradle-tomcat-plugin:2.0'
+        }
+    }
+
+apply plugin: 'com.bmuschko.tomcat'
+
+configurations {
+        extraLib
+    }
+
+repositories {
+        mavenCentral()
+    }
+
+dependencies {
+        testCompile 'junit:junit:4.11'
+        compile group:"org.apache.struts", name:"struts2-core", version:"2.3.16.3"
+        providedCompile 'javax:javaee-web-api:6.0'
+        compile 'mysql:mysql-connector-java:6.0.5'
+
+        def tomcatVersion = '7.0.52'
+        tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+        tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+                exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+            }
+    }
+
+tomcat {
+        httpPort = 8100
+
+        jasper {
+            validateXml = true
+            webXmlFragment = file("$webAppDir/WEB-INF/web.xml")
+            }
+    }
