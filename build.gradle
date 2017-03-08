@@ -51,3 +51,46 @@ tomcat {
             webXmlFragment = file("$webAppDir/WEB-INF/web.xml")
             }
     }
+
+task esdoc << {
+    def esdocCommand = "esdoc -c ${projectDir}/esdoc.json"
+
+    FileCollection jsFiles = fileTree('src/main/webapp/js') {
+        include '**/*.js'
+        exclude 'test/'
+        }
+
+        try {
+            jsFiles.findAll { it.isFile() }.each { file ->
+                // println '----' + file.getName()
+                def pattern = /(^\s*class\s[A-Z].*$)|(^\s*const\s[A-Z].*$)/
+                def lines = file.readLines()
+                file.eachLine { line, lineNum ->  // lineNum is starting at line 1
+                    if (line ==~ pattern) {
+                        lines[lineNum - 1] = 'export ' + line
+                        // println lineNum + ' ' + lines[lineNum - 1]
+                        }
+                    }
+                    file.text = lines.join('\n')
+                }
+
+                def sout = new StringBuffer()
+                def serr = new StringBuffer()
+                def proc = esdocCommand.execute()
+                // proc.consumeProessOutput(sout, serr)
+                proc.waitFor()
+                // println "sout : $sout"
+                // println "serr : $serr"
+                println "result : ${proc.text}"
+            } finally {
+                    jsFiles.findAll { it.isFile() }.each { file ->
+                        def pattern = /export\s/
+                        def lines = file.readLines()
+                        file.eachLine { line, lineNum ->
+                            lines[lineNum - 1] = line.replaceAll(pattern, '')
+                        }
+                        file.text = lines.join('\n')
+                    }
+                }
+
+    }
