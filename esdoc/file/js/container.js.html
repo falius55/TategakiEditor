@@ -1145,7 +1145,7 @@ export class SentenceContainer extends AbstractHierarchy {  // jshint ignore:lin
      */
     saveFile() {
         this.announce(&apos;&#x4FDD;&#x5B58;&#x4E2D;&apos;);
-        Util.post(&apos;/tategaki/FileData&apos;,{
+        Util.post(&apos;/tategaki-editor/FileData&apos;,{
             file_id: this.fileId(),
             filename: this.filename(),
             json: this.data(),
@@ -1186,6 +1186,7 @@ export class SentenceContainer extends AbstractHierarchy {  // jshint ignore:lin
     // --Display&#x95A2;&#x4FC2; {{{
     changeDisplay(opt_pos) {
         this._displayer.changeDisplay(opt_pos);
+        return this;
     } // }}}
 
     // undo redo {{{
@@ -1406,8 +1407,7 @@ export class SentenceContainer extends AbstractHierarchy {  // jshint ignore:lin
     }
 
     //}}}
-}
-</code></pre>
+}</code></pre>
 
 </div>
 

@@ -51,3 +51,66 @@ tomcat {
             webXmlFragment = file("$webAppDir/WEB-INF/web.xml")
             }
     }
+
+task esdoc << {
+    // 前処理
+
+    // esdocディレクトリを空にする
+    def docDir = file 'esdoc'
+    docDir.eachFile { file ->
+        if (file.isFile()) {
+            file.delete()
+            } else {
+                file.deleteDir()
+            }
+        }
+
+
+    // classやesdocに載せる変数(UtilやKeyTable)前にexportキーワードを付加する
+    FileCollection jsFiles = fileTree('src/main/webapp/js') {
+        include '**/*.js'
+        exclude 'test/'
+        }
+
+        def pattern = /(?:^\s*class\s[A-Z].*$)|(?:^\s*const\s[A-Z].*$)/
+        jsFiles.findAll { it.isFile() }.each { file ->
+            def newLines = file.readLines().collect { line ->
+                line ==~ pattern ? 'export ' + line : line
+                }
+
+            file.text = newLines.join '\n'
+            }
+    }
+
+esdoc << {
+    // esdocコマンドの実行
+    def cmd = "esdoc -c ${projectDir}/esdoc.json"
+    def workingDir = file '.'
+
+    def proc = cmd.execute null, workingDir
+    proc.waitForProcessOutput System.out, System.out
+    }
+
+esdoc << {
+    // 後処理
+    // 最初に付加したexportキーワードを除去する
+    FileCollection jsFiles = fileTree('src/main/webapp/js') {
+        include '**/*.js'
+        exclude 'test/'
+        }
+
+    def pattern = /export\s/
+    jsFiles.findAll { it.isFile() }.each { file ->
+        def newLines = file.readLines().collect { line ->
+            line.replaceAll pattern, ''
+            }
+
+        // 最終行は空行にする(git diffで出てくる'\No newline at end of file'への対策)
+        def lastLine = newLines.last()
+        if (lastLine != '') {
+                newLines.push ''
+            }
+
+        file.text = newLines.join '\n'
+        }
+    }
