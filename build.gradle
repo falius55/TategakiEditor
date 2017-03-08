@@ -73,9 +73,10 @@ task esdoc << {
 esdoc << {
     // esdocコマンドの実行
     def cmd = "esdoc -c ${projectDir}/esdoc.json"
+    def workingDir = file('.')
 
     println "run esdoc"
-    def proc = cmd.execute()
+    def proc = cmd.execute(null, workingDir)
     proc.waitFor()
     println proc.text
     }
