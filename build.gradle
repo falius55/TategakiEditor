@@ -53,44 +53,46 @@ tomcat {
     }
 
 task esdoc << {
-    def esdocCommand = "esdoc -c ${projectDir}/esdoc.json"
-
+    // classやesdocに載せる変数(UtilやKeyTable)前にexportキーワードを付加する
     FileCollection jsFiles = fileTree('src/main/webapp/js') {
         include '**/*.js'
         exclude 'test/'
         }
 
-        try {
-            jsFiles.findAll { it.isFile() }.each { file ->
-                // println '----' + file.getName()
-                def pattern = /(^\s*class\s[A-Z].*$)|(^\s*const\s[A-Z].*$)/
-                def lines = file.readLines()
-                file.eachLine { line, lineNum ->  // lineNum is starting at line 1
-                    if (line ==~ pattern) {
-                        lines[lineNum - 1] = 'export ' + line
-                        // println lineNum + ' ' + lines[lineNum - 1]
-                        }
-                    }
-                    file.text = lines.join('\n')
-                }
-
-                def sout = new StringBuffer()
-                def serr = new StringBuffer()
-                def proc = esdocCommand.execute()
-                // proc.consumeProessOutput(sout, serr)
-                proc.waitFor()
-                // println "sout : $sout"
-                // println "serr : $serr"
-                println "result : ${proc.text}"
-            } finally {
-                    jsFiles.findAll { it.isFile() }.each { file ->
-                        def pattern = /export\s/
-                        def lines = file.readLines()
-                        file.eachLine { line, lineNum ->
-                            lines[lineNum - 1] = line.replaceAll(pattern, '')
-                        }
-                        file.text = lines.join('\n')
+        jsFiles.findAll { it.isFile() }.each { file ->
+            def pattern = /(?:^\s*class\s[A-Z].*$)|(?:^\s*const\s[A-Z].*$)/
+            def lines = file.readLines()
+            file.eachLine { line, lineNum ->  // lineNum is starting at line 1
+                if (line ==~ pattern) {
+                    lines[lineNum - 1] = 'export ' + line
                     }
                 }
+                file.text = lines.join('\n')
+            }
+    }
 
+esdoc << {
+    // esdocコマンドの実行
+    def esdocCommand = "esdoc -c ${projectDir}/esdoc.json"
+
+    def proc = esdocCommand.execute()
+    proc.waitFor()
+    println "result : ${proc.text}"
+    }
+
+esdoc << {
+    // 最初に付加したexportキーワードを除去する
+    FileCollection jsFiles = fileTree('src/main/webapp/js') {
+        include '**/*.js'
+        exclude 'test/'
+        }
+
+        jsFiles.findAll { it.isFile() }.each { file ->
+            def pattern = /export\s/
+            def lines = file.readLines()
+            file.eachLine { line, lineNum ->
+                lines[lineNum - 1] = line.replaceAll(pattern, '')
+            }
+            file.text = lines.join('\n')
+        }
     }
