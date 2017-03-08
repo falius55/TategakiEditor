@@ -48,8 +48,34 @@ tomcat {
 
         jasper {
             validateXml = true
-            webXmlFragment = file("$webAppDir/WEB-INF/web.xml")
+            webXmlFragment = file "$webAppDir/WEB-INF/web.xml"
             }
+    }
+
+task addInitParamProjectRootToWebxml << {
+    def rootNode = new XmlSlurper(false, false).parse "$webAppDir/WEB-INF/web.xml"
+    def contextParams = rootNode.children().findAll { it.name() == 'context-param' }
+    def projectRoot = contextParams.findAll { it.'param-name'.text() == 'project-root' }
+    def newNode = {
+                'context-param' {
+                    mkp.comment '自動生成'
+                    'param-name'("project-root")
+                    'param-value'("${projectDir}")
+                }
+        }
+    if (projectRoot.size() == 0) {
+        println 'no project-root name of param-name in context-param'
+            rootNode.appendNode newNode
+    } else if (projectRoot.'param-value'.text() == '') {
+        println 'project-root exist, but no param-value including empty'
+        projectRoot.replaceNode newNode
+    } else {
+        println 'other'
+        return
+    }
+
+    println 'copy xml'
+    file('./copy.xml').text =  groovy.xml.XmlUtil.serialize(rootNode)
     }
 
 task esdoc << {
