@@ -53,46 +53,53 @@ tomcat {
     }
 
 task esdoc << {
+    // 前処理
     // classやesdocに載せる変数(UtilやKeyTable)前にexportキーワードを付加する
     FileCollection jsFiles = fileTree('src/main/webapp/js') {
         include '**/*.js'
         exclude 'test/'
         }
 
+        def pattern = /(?:^\s*class\s[A-Z].*$)|(?:^\s*const\s[A-Z].*$)/
         jsFiles.findAll { it.isFile() }.each { file ->
-            def pattern = /(?:^\s*class\s[A-Z].*$)|(?:^\s*const\s[A-Z].*$)/
-            def lines = file.readLines()
-            file.eachLine { line, lineNum ->  // lineNum is starting at line 1
-                if (line ==~ pattern) {
-                    lines[lineNum - 1] = 'export ' + line
-                    }
+            def newLines = file.readLines().collect { line ->
+                line ==~ pattern ? 'export ' + line : line
                 }
-                file.text = lines.join('\n')
+
+                file.text = newLines.join('\n')
             }
     }
 
 esdoc << {
     // esdocコマンドの実行
-    def esdocCommand = "esdoc -c ${projectDir}/esdoc.json"
+    def cmd = "esdoc -c ${projectDir}/esdoc.json"
 
-    def proc = esdocCommand.execute()
+    println "run esdoc"
+    def proc = cmd.execute()
     proc.waitFor()
-    println "result : ${proc.text}"
+    println proc.text
     }
 
 esdoc << {
+    // 後処理
     // 最初に付加したexportキーワードを除去する
     FileCollection jsFiles = fileTree('src/main/webapp/js') {
         include '**/*.js'
         exclude 'test/'
         }
 
+        def pattern = /export\s/
         jsFiles.findAll { it.isFile() }.each { file ->
-            def pattern = /export\s/
-            def lines = file.readLines()
-            file.eachLine { line, lineNum ->
-                lines[lineNum - 1] = line.replaceAll(pattern, '')
-            }
-            file.text = lines.join('\n')
+            def newLines = file.readLines().collect { line ->
+                line.replaceAll(pattern, '')
+                }
+
+            // 最終行は空行にする(git diffで出てくる'\No newline at end of file'への対策)
+            def lastLine = newLines.last()
+            if (lastLine != '') {
+                    newLines.push('')
+                }
+
+            file.text = newLines.join('\n')
         }
     }
