@@ -1129,7 +1129,7 @@ export class ConvertContainer extends AbstractHierarchy {
      * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
      */
     convert(str) {
-        Util.get(&apos;/tategaki/Convert&apos;, function (json) {
+        Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
             this.createViews(json);
             this.inputBuffer().setPhraseNum();
             // &#x3059;&#x3079;&#x3066;&#x5909;&#x63DB;&#x7B2C;&#x4E00;&#x5019;&#x88DC;&#x3092;&#x9078;&#x629E;&#x3059;&#x308B;
@@ -1166,7 +1166,7 @@ export class ConvertContainer extends AbstractHierarchy {
         if (activeView.isLast()) {
             const activeKana = activeView.hiragana();
             const sendString = activeKana.slice(0, -1) + &apos;,&apos; + activeKana.slice(-1);
-            Util.get(&apos;/tategaki/Convert&apos;, function (json) {
+            Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
                 this.replace(activeView.phraseNum(),json);
             }.bind(this), {
                 sentence: sendString
@@ -1179,7 +1179,7 @@ export class ConvertContainer extends AbstractHierarchy {
         const nextView = activeView.next();
         const nextKana = nextView.hiragana();
         const sendString = activeKana.slice(0,-1) + &apos;,&apos; + activeKana.slice(-1) + nextKana;
-        Util.get(&apos;/tategaki/Convert&apos;, function (json) {
+        Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
             const newFirst = new ConvertView(json[0]);
             activeView.replace(newFirst);
             newFirst.select(0);
@@ -1210,7 +1210,7 @@ export class ConvertContainer extends AbstractHierarchy {
             const nextPhrase = this.inputBuffer().phrases(nextView.phraseNum())[0];
             // &#x6587;&#x7BC0;&#x3092;&#x533A;&#x5207;&#x3089;&#x308C;&#x306A;&#x3044;&#x3088;&#x3046;&#x3001;,&#x3092;&#x672B;&#x5C3E;&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
             const sendString = activeView.hiragana() + nextView.hiragana() + &apos;,&apos;;
-            Util.get(&apos;/tategaki/Convert&apos;, function (json) {
+            Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
                 const newView = new ConvertView(json[0]);
                 activeView.replace(newView);
                 nextView.remove();
@@ -1228,7 +1228,7 @@ export class ConvertContainer extends AbstractHierarchy {
         const activeKana = activeView.hiragana();
         const nextKana = nextView.hiragana();
         const sendString = activeKana + nextKana.slice(0,1) + &apos;,&apos; + nextKana.slice(1);
-        Util.get(&apos;/tategaki/Convert&apos;, function (json) {
+        Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
             const newFirst = new ConvertView(json[0]);
             activeView.replace(newFirst);
             newFirst.select(0);
@@ -1273,7 +1273,7 @@ export class ConvertContainer extends AbstractHierarchy {
         // &#x6700;&#x5F8C;&#x306E;&#x4E00;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3057;&#x3066;&#x3001;&#x305D;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3059;
         const phraseNum = activeView.phraseNum();
         const newString = activeView.hiragana().slice(0,-1) + &apos;,&apos;; // &#x6587;&#x7BC0;&#x3092;&#x533A;&#x5207;&#x3089;&#x308C;&#x306A;&#x3044;&#x3088;&#x3046;&#x3001;,&#x3092;&#x672B;&#x5C3E;&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
-        Util.get(&apos;/tategaki/Convert&apos;, function (json) {
+        Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
             this.replace(phraseNum,json);
         }.bind(this), {
             sentence: newString
@@ -1404,8 +1404,7 @@ export class ConvertContainer extends AbstractHierarchy {
                 break;
         }
     }//}}}
-}//}}}
-</code></pre>
+}//}}}</code></pre>
 
 </div>
 

@@ -71,6 +71,87 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
 
 function startTest() {
+    sleep(500);
+
+    const eReport = document.createElement(&apos;div&apos;);
+    eReport.id = &apos;test_report&apos;;
+    eReport.style.position = &apos;fixed&apos;;
+    eReport.style.zindex = 1000;
+    eReport.style.bottom = &apos;0px&apos;;
+    eReport.style.left = &apos;0px&apos;;
+    eReport.style.width = &apos;100%&apos;;
+    eReport.style.height = &apos;100px&apos;;
+    eReport.style.backgroundColor = &apos;grey&apos;;
+
+    const p = document.createElement(&apos;p&apos;);
+    p.id = &apos;test_message&apos;;
+    eReport.appendChild(p);
+    document.body.appendChild(eReport);
+
+    click(&apos;btn_open_file&apos;, &apos;push file button!&apos;);
+}
+
+function sleep(millis) {
+    let cnt = 0;
+    const interval = setInterval(function () {
+        console.log(cnt);
+        cnt++;
+        if (cnt === 5) {
+            clearInterval(interval);
+            console.log(&apos;end&apos;);
+        }
+    key(&apos;sentence_container&apos;, 65, false, &apos;key &quot;&#x3042;&quot;&apos;);
+    }, millis);
+}
+
+function click(id, msg) {
+    const clickElem = document.getElementById(id);
+    console.log(clickElem);
+
+    if (document.all) {
+        clickElem.fireEvent(&apos;onclick&apos;);
+    } else {
+        console.log(&apos;click&apos;);
+        const event = document.createEvent(&apos;MouseEvents&apos;);
+        event.initEvent(&apos;click&apos;, false, true);
+        clickElem.dispatchEvent(event);
+    }
+
+    message(msg);
+}
+
+function test_click() {
+    click(&apos;btn_open_file&apos;, &apos;push file button!&apos;);
+}
+
+function test_key() {
+    key(&apos;sentence_container&apos;, 65, false, &apos;key auto&apos;);
+    return &apos;end test_key&apos;;
+}
+
+function key(id, key_code, with_shift, msg) {
+    const type = &apos;keydown&apos;;
+    const elem = document.getElementById(id);
+    console.log(elem);
+    if (document.createEventObject) {
+        const f_event = document.createEventObject();
+        f_event.keyCode = key_code;
+        f_event.shiftKey = with_shift;
+        elem.fireEvent(&apos;on&apos; + type, f_event);
+    } else {
+        const f_event = document.createEvent(&apos;Event&apos;);
+        f_event.initEvent(type, true, false);
+        f_event.keyCode = key_code;
+        f_event.shiftKey = with_shift;
+        elem.dispatchEvent(f_event);
+        console.log(f_event);
+    }
+    message(msg);
+}
+
+function message(msg) {
+    const eMsg = document.getElementById(&apos;test_message&apos;);
+    eMsg.textContent = msg;
 }
 </code></pre>
 

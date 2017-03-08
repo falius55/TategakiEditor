@@ -124,7 +124,7 @@ export const Util = {  // jshint ignore:line
         }
 
         if (methodType === &apos;GET&apos;) {
-            url += &apos;?&apos; + sendData;  // GET&#x901A;&#x4FE1;&#x3067;&#x306F;send&#x306E;&#x5F15;&#x6570;&#x306F;&#x7121;&#x8996;&#x3055;&#x308C;&#x308B;&#x306E;&#x3067;url&#x306B;&#x30C7;&#x30FC;&#x30BF;&#x3092;&#x8FFD;&#x52A0;&#x3059;&#x308B;
+            url += sendData !== &apos;&apos; ? &apos;?&apos; + sendData : &apos;&apos;;  // GET&#x901A;&#x4FE1;&#x3067;&#x306F;send&#x306E;&#x5F15;&#x6570;&#x306F;&#x7121;&#x8996;&#x3055;&#x308C;&#x308B;&#x306E;&#x3067;url&#x306B;&#x30C7;&#x30FC;&#x30BF;&#x3092;&#x8FFD;&#x52A0;&#x3059;&#x308B;
         }
 
         const xhr = new XMLHttpRequest();
@@ -142,6 +142,15 @@ export const Util = {  // jshint ignore:line
             console.log(&apos;abort&apos;, e);
         });
         xhr.send(sendData);
+    },
+
+    log: function (msg) {
+        try {
+            throw new Error(msg);
+        } catch(e) {
+            console.log(msg);
+            console.log(&apos;from &apos;, e.stack);
+        }
     }
 };//}}}
 
@@ -692,8 +701,7 @@ export const KeyTable = {  // jshint ignore:line
         &apos;v&apos;: { &apos;65&apos;: &apos;&#x30F4;&#x30A1;&apos;, &apos;73&apos;: &apos;&#x30F4;&#x30A3;&apos;, &apos;85&apos;: &apos;&#x30F4;&apos;, &apos;69&apos;: &apos;&#x30F4;&#x30A7;&apos;, &apos;79&apos;: &apos;&#x30F4;&#x30A9;&apos; },
         &apos;q&apos;: { &apos;65&apos;: &apos;&#x304F;&#x3041;&apos;, &apos;73&apos;: &apos;&#x304F;&#x3043;&apos;, &apos;85&apos;: &apos;&#x304F;&apos;, &apos;69&apos;: &apos;&#x304F;&#x3047;&apos;, &apos;79&apos;: &apos;&#x304F;&#x3049;&apos; }//}}}
     }//}}}
-};//}}}
-</code></pre>
+};//}}}</code></pre>
 
 </div>
 
