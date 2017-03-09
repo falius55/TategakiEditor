@@ -41,9 +41,9 @@ public class ServletTest {
             mProperties.load(is);
         }
 
-        String dbName = mProperties.getProperty("database_name");
-        String user = mProperties.getProperty("user_name");
-        String pass = mProperties.getProperty("password");
+        String dbName = mProperties.getProperty("test-database-name");
+        String user = mProperties.getProperty("test-database-user");
+        String pass = mProperties.getProperty("test-database-password");
 
         mDB = new PreparedDatabase(dbName, user, pass);
     }
