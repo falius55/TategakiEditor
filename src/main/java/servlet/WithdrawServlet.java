@@ -13,7 +13,7 @@ import sql.UserTable;
 public class WithdrawServlet extends AbstractServlet {
     private static final long serialVersionUID = 1L;
 
-    private static final String REDIRECT_LOGOUT_SERVLET = "/tategaki/Logout";
+    private static final String REDIRECT_LOGOUT_SERVLET = "/tategaki-editor/Logout";
 
     @Override
 	public String onPost(long userID, HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
