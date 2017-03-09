@@ -53,7 +53,7 @@ tomcat {
     }
 
 task addInitParamProjectRootToWebxml << {
-    def rootNode = new XmlSlurper(false, false).parse "$webAppDir/WEB-INF/web.xml"
+    def rootNode = new XmlSlurper(false, false).parse tomcat.jasper.webXmlFragment
     def contextParams = rootNode.children().findAll { it.name() == 'context-param' }
     def projectRoot = contextParams.findAll { it.'param-name'.text() == 'project-root' }
     def newNode = {
@@ -70,13 +70,17 @@ task addInitParamProjectRootToWebxml << {
         println 'project-root exist, but no param-value including empty'
         projectRoot.replaceNode newNode
     } else {
-        println 'other'
+        println 'exist project-root'
         return
     }
 
     println 'copy xml'
-    file('./copy.xml').text =  groovy.xml.XmlUtil.serialize(rootNode)
+    // 通常ではインデントの深さが２なので４にする
+    def xmlString = groovy.xml.XmlUtil.serialize(rootNode).replaceAll(/  /, '    ')
+    file(tomcat.jasper.webXmlFragment).text =  xmlString
     }
+
+tomcatRunWar.dependsOn addInitParamProjectRootToWebxml
 
 task esdoc << {
     // 前処理
