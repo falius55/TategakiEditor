@@ -3,9 +3,10 @@ package test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import sql.SQLs;
 import sql.DatabaseColumn;
@@ -16,31 +17,49 @@ import java.sql.ResultSet;
 import test.column.TestColumn;
 import test.column.FailedColumn;
 
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.EnumMap;
+import java.util.Properties;
 
 import java.sql.SQLException;
 
 public class DatabaseTest {
-	private static final String DATABASE_NAME = "test";
-	private static final String USER = "sampleuser";
-	private static final String PASSWORD = "digk473";
-
+    private static Properties mProperties;
     private SQLDatabase mDB = null;
+
+    @BeforeClass
+    public static void setupProp() throws IOException {
+        mProperties = new Properties();
+        String propertiesPath = "build/resources/test/test.properties";
+        try (InputStream is = new FileInputStream(propertiesPath)) {
+            mProperties.load(is);
+        }
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void failedDB() throws SQLException {
-        SQLDatabase db = new PreparedDatabase(DATABASE_NAME, USER, PASSWORD);
+        String dbName = mProperties.getProperty("dbtest-database-name");
+        String user = mProperties.getProperty("dbtest-database-user");
+        String pass = mProperties.getProperty("dbtest-database-password");
+
+        SQLDatabase db = new PreparedDatabase(dbName, user, pass);
         // FailedColumnにはstaticなtableNameメソッドを定義していないためIllegalArgumentException
         db.create(FailedColumn.class);
         db.close();
     }
 
     private void setupDB() throws SQLException {
-        mDB = new PreparedDatabase(DATABASE_NAME, USER, PASSWORD);
+        String dbName = mProperties.getProperty("dbtest-database-name");
+        String user = mProperties.getProperty("dbtest-database-user");
+        String pass = mProperties.getProperty("dbtest-database-password");
+
+        mDB = new PreparedDatabase(dbName, user, pass);
         mDB.create(TestColumn.class);
         assertTrue(mDB.isExistTable(TestColumn.class));
     }

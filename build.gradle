@@ -88,7 +88,30 @@ def addInitParam(rootNode, paramName, paramValue) {
     }
 }
 
+task copyPropToTest << {
+    File initFile = file('init.properties')
+    Properties initProp = new Properties();
+    new FileInputStream(initFile).withCloseable {
+            initProp.load(it)
+        }
+
+    Properties testProp = new Properties()
+    for (paramName in [
+        'test-database-name', 'test-database-user', 'test-database-password',
+        'dbtest-database-name', 'dbtest-database-user', 'dbtest-database-password'
+        ]) {
+        def value = initProp.getProperty(paramName)
+        testProp.setProperty(paramName, value)
+        }
+
+    File testPropFile = file('src/test/resources/test.properties')
+    new FileWriter(testPropFile).withCloseable {
+        testProp.store(it, null)
+        }
+    }
+
 tomcatRunWar.dependsOn addInitParamToWebXml
+test.dependsOn copyPropToTest
 
 task esdoc << {
     // 前処理
