@@ -232,7 +232,7 @@ export class File extends AbstractHierarchy {
         const data = {};
         data.file_id = this.id();
         sentenceContainer.announce(&apos;&#x8AAD;&#x8FBC;&#x4E2D;&apos;);
-        Util.get(&apos;/tategaki/FileData&apos;,
+        Util.get(&apos;/tategaki-editor/FileData&apos;,
             json =&gt; sentenceContainer.init(json).isChanged(false).announce(&apos;&#x8AAD;&#x307F;&#x8FBC;&#x307F;&#x5B8C;&#x4E86;&apos;),
             data);
         return this;
@@ -244,7 +244,7 @@ export class File extends AbstractHierarchy {
      * @see ../WEB-INF/classes/doc/DeleteServlet.html
      */
     delete() {
-        Util.post(&apos;/tategaki/Delete&apos;,{
+        Util.post(&apos;/tategaki-editor/Delete&apos;,{
             file_id: this.id()
         },function (json) {
             if (json.result === &apos;false&apos; || json.result === false) {
@@ -283,7 +283,7 @@ export class File extends AbstractHierarchy {
      */
     move(newParentDir) {
         const fileList = this.fileList();
-        Util.post(&apos;/tategaki/FileList&apos;,{
+        Util.post(&apos;/tategaki-editor/FileList&apos;,{
             file_id: this.id(),
             new_parent_id: newParentDir.id()
         }, data =&gt; fileList.read());
@@ -529,7 +529,7 @@ export class Directory extends AbstractHierarchy {
      */
     delete(opt_bl) {
         const bl = opt_bl || false; // &#x5F15;&#x6570;&#x7701;&#x7565;&#x306E;&#x5834;&#x5408;&#x3067;&#x3082;&#x3001;&#x660E;&#x78BA;&#x306B;false&#x3092;&#x5165;&#x308C;&#x308B;
-        Util.post(&apos;/tategaki/Delete&apos;,{
+        Util.post(&apos;/tategaki-editor/Delete&apos;,{
             directory_id: this.id(),
             option: bl
         }, function (data) {
@@ -976,7 +976,7 @@ export class FileList extends AbstractHierarchy {  // jshint ignore:line
      * @see ../WEB-INF/classes/doc/FileListServlet.html
      */
     read() {
-        Util.get(&apos;/tategaki/FileList&apos;,
+        Util.get(&apos;/tategaki-editor/FileList&apos;,
             function (json) {
                 this.init(json);
             }.bind(this));
@@ -1058,7 +1058,7 @@ export class FileList extends AbstractHierarchy {  // jshint ignore:line
             return this;
         }
 
-        Util.post(&apos;/tategaki/FileList&apos;,{
+        Util.post(&apos;/tategaki-editor/FileList&apos;,{
             name: dirname,
             new_parent_id: opt_parentID || -1,
             saved: Date.now()
@@ -1151,9 +1151,7 @@ export class FileList extends AbstractHierarchy {  // jshint ignore:line
             this.filter(this.filterInputElem().value);
         }
     }//}}}
-}//}}}
-
-</code></pre>
+}//}}}</code></pre>
 
 </div>
 
