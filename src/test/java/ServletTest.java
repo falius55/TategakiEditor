@@ -36,7 +36,7 @@ public class ServletTest {
     @BeforeClass
     public static void setupDB() throws SQLException, IOException {
         mProperties = new Properties();
-        String propertiesPath = "./test.properties";
+        String propertiesPath = "build/resources/test/test.properties";
         try (InputStream is = new FileInputStream(propertiesPath)) {
             mProperties.load(is);
         }
@@ -54,7 +54,7 @@ public class ServletTest {
     }
 
     private long register() throws IOException, SQLException {
-        String url = "http://localhost:8000/tategaki/Register";
+        String url = "http://localhost:8100/tategaki-editor/Register";
 
         Map<String, String> data = new HashMap<>();
         data.put("username", "test_user");
@@ -83,7 +83,7 @@ public class ServletTest {
     }
 
     private void withdraw(long id) throws IOException, SQLException {
-        String url = "http://localhost:8000/tategaki/Withdraw";
+        String url = "http://localhost:8100/tategaki-editor/Withdraw";
 
         Map<String, Long> data = new HashMap<>();
         data.put("userID", id);

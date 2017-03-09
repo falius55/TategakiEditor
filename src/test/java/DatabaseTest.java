@@ -87,14 +87,14 @@ public class DatabaseTest {
         assertThat(rs.getString(TestColumn.PASSWORD.toString()), is("pass"));
         assertThat(rs.getInt(TestColumn.SCORE.toString()), is(80));
         assertThat(rs.getString(TestColumn.SEX.toString()), is("male"));
-        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2017-02-21 17:07:42.0"));
+        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2017-02-21 17:07:42"));
 
         assertTrue(rs.next());
         assertThat(rs.getString(TestColumn.NAME.toString()), is("name2"));
         assertThat(rs.getString(TestColumn.PASSWORD.toString()), is("pass2"));
         assertThat(rs.getInt(TestColumn.SCORE.toString()), is(45));
         assertThat(rs.getString(TestColumn.SEX.toString()), is("female"));
-        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2014-12-01 14:16:02.0"));
+        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2014-12-01 14:16:02"));
 
         rs = mDB.selectAllColumns(TestColumn.class, TestColumn.ID, 1);
         assertTrue(rs.next());
@@ -115,7 +115,7 @@ public class DatabaseTest {
         assertThat(rs.getString(TestColumn.PASSWORD.toString()), is("changed"));
         assertThat(rs.getInt(TestColumn.SCORE.toString()), is(62));
         assertThat(rs.getString(TestColumn.SEX.toString()), is("female"));
-        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2014-12-01 14:16:02.0"));
+        assertThat(rs.getString(TestColumn.SAVED.toString()), is("2014-12-01 14:16:02"));
     }
 
     private void checkSumMaxMinDB() throws SQLException {

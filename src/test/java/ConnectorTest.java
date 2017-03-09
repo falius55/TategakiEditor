@@ -17,7 +17,7 @@ public class ConnectorTest {
     public void testPost() throws IOException {
         System.out.println("testPost");
 
-        String url = "http://localhost:8000/tategaki/Login";
+        String url = "http://localhost:8100/tategaki-editor/Login";
         Map<String, String> data = new HashMap<>();
         data.put("username", "sampleuser");
         data.put("password", "pass");
@@ -31,7 +31,7 @@ public class ConnectorTest {
     public void testGet() throws IOException {
         System.out.println("testGet");
 
-        String url = "http://localhost:8000/tategaki/FileList";
+        String url = "http://localhost:8100/tategaki-editor/FileList";
         Map<String, Long> data = new HashMap<>();
         data.put("userID", 1L);
 
