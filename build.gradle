@@ -34,6 +34,7 @@ dependencies {
         compile group:"org.apache.struts", name:"struts2-core", version:"2.3.16.3"
         providedCompile 'javax:javaee-web-api:6.0'
         compile 'mysql:mysql-connector-java:6.0.5'
+        testCompile 'mysql:mysql-connector-java:6.0.5'
 
         def tomcatVersion = '7.0.52'
         tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
