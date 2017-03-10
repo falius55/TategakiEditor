@@ -15,6 +15,10 @@
         <param-name>project-root</param-name>
         <param-value>/home/black-ubuntu/web/tategaki-editor</param-value>
     </context-param>
+    <listener>
+        <display-name>CommonProcessor</display-name>
+        <listener-class>servlet.CommonProcessor</listener-class>
+    </listener>
     <filter>
         <filter-name>UserCheckFilter</filter-name>
         <filter-class>filter.UserCheckFilter</filter-class>
