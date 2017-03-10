@@ -3,6 +3,10 @@ package datadir;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermissions;
 
 import sql.SQLDatabase;
 import sql.FileTable;
@@ -14,6 +18,15 @@ public class DataDirectoryManager {
     public DataDirectoryManager(String projectRootPath, SQLDatabase db) {
         mProjectRootPath = projectRootPath;
         mDatabase = db;
+        init();
+    }
+
+    private void init() {
+        Path path = Paths.get(mProjectRootPath, "data");
+        if (Files.notExists(path)) {
+            Files.createDirectories(path,
+                    PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
+        }
     }
 
     public UserDirectory getUserDirectory(long userID) throws IOException {
