@@ -1,0 +1,186 @@
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'jetty'
+
+version = 1.0
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+description = 'TategakiEditor Project'
+
+buildscript {
+    repositories {
+            jcenter()
+        }
+    dependencies {
+            classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.5'
+        }
+    }
+
+apply plugin: 'com.bmuschko.tomcat'
+
+configurations {
+        extraLib
+    }
+
+repositories {
+        mavenCentral()
+    }
+
+dependencies {
+        testCompile 'junit:junit:4.11'
+        compile group:"org.apache.struts", name:"struts2-core", version:"2.3.16.3"
+        providedCompile 'javax:javaee-web-api:6.0'
+        compile 'mysql:mysql-connector-java:6.0.5'
+        testCompile 'mysql:mysql-connector-java:6.0.5'
+
+        def tomcatVersion = '7.0.59'
+        tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+    }
+
+tomcat {
+        httpPort = 8100
+
+        jasper {
+            validateXml = true
+            webXmlFragment = file "$webAppDir/WEB-INF/web.xml"
+            }
+    }
+
+task addInitParamToWebXml << {
+    def rootNode = new XmlSlurper(false, false).parse tomcat.jasper.webXmlFragment
+    File initFile = file('init.properties')
+    Properties property = new Properties();
+    new FileInputStream(initFile).withCloseable {
+            property.load(it)
+        }
+
+    for (paramName in ['database-name', 'database-user', 'database-password']) {
+        addInitParam(rootNode, paramName, property.getProperty(paramName))
+        }
+    addInitParam(rootNode, 'project-root', projectDir)
+
+    // 通常ではインデントの深さが２なので４にする
+    def xmlString = groovy.xml.XmlUtil.serialize(rootNode).replaceAll(/  /, '    ')
+    file(tomcat.jasper.webXmlFragment).text =  xmlString
+    }
+
+def addInitParam(rootNode, paramName, paramValue) {
+    def contextParams = rootNode.children().findAll { it.name() == 'context-param' }
+    def param = contextParams.find { it.'param-name'.text() == paramName }
+    def node = {
+        'context-param' {
+            'param-name'("${paramName}")
+            'param-value'("${paramValue}")
+        }
+    }
+
+    if (param.isEmpty()) {
+        rootNode.appendNode node
+    } else {
+        param.replaceNode node
+    }
+}
+
+task copyPropToTest << {
+    File initFile = file('init.properties')
+    Properties initProp = new Properties();
+    new FileInputStream(initFile).withCloseable {
+            initProp.load(it)
+        }
+
+    Properties testProp = new Properties()
+    for (paramName in [
+        'test-database-name', 'test-database-user', 'test-database-password',
+        'dbtest-database-name', 'dbtest-database-user', 'dbtest-database-password'
+        ]) {
+        def value = initProp.getProperty(paramName)
+        testProp.setProperty(paramName, value)
+        }
+
+    File testPropFile = file('src/test/resources/test.properties')
+    new FileWriter(testPropFile).withCloseable {
+        testProp.store(it, null)
+        }
+    }
+
+tomcatRunWar.dependsOn addInitParamToWebXml
+test.dependsOn copyPropToTest
+
+task esdoc << {
+    // 前処理
+
+    // esdocディレクトリを空にする
+    def docDir = file 'doc/esdoc'
+    docDir.eachFile { file ->
+        if (file.isFile()) {
+            file.delete()
+            } else {
+                file.deleteDir()
+            }
+        }
+
+
+    // classやesdocに載せる変数(UtilやKeyTable)前にexportキーワードを付加する
+    FileCollection jsFiles = fileTree('src/main/webapp/js') {
+        include '**/*.js'
+        exclude 'test/'
+        }
+
+        def pattern = /(?:^\s*class\s[A-Z].*$)|(?:^\s*const\s[A-Z].*$)/
+        jsFiles.findAll { it.isFile() }.each { file ->
+            def newLines = file.readLines().collect { line ->
+                line ==~ pattern ? 'export ' + line : line
+                }
+
+            file.text = newLines.join '\n'
+            }
+    }
+
+javadoc {
+    destinationDir = file "${projectDir}/doc/javadoc"
+    options.links("http://docs.oracle.com/javase/jp/8/docs/api")
+    options.links("https://tomcat.apache.org/tomcat-8.0-doc/servletapi")
+    }
+
+esdoc << {
+    // esdocコマンドの実行
+    def cmd = "esdoc -c ${projectDir}/doc/esdoc.json"
+    def workingDir = file '.'
+
+    def proc = cmd.execute null, workingDir
+    proc.waitForProcessOutput System.out, System.out
+    }
+
+esdoc << {
+    // 後処理
+    // 最初に付加したexportキーワードを除去する
+    FileCollection jsFiles = fileTree('src/main/webapp/js') {
+        include '**/*.js'
+        exclude 'test/'
+        }
+
+    def pattern = /export\s/
+    jsFiles.findAll { it.isFile() }.each { file ->
+        def newLines = file.readLines().collect { line ->
+            line.replaceAll pattern, ''
+            }
+
+        // 最終行は空行にする(git diffで出てくる'\No newline at end of file'への対策)
+        def lastLine = newLines.last()
+        if (lastLine != '') {
+                newLines.push ''
+            }
+
+        file.text = newLines.join '\n'
+        }
+    }
+
+task doc {
+        dependsOn javadoc, esdoc
+    }
+

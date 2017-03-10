@@ -1,0 +1,4 @@
+{
+	"source":"./src/main/webapp/js",
+	"destination":"./doc/esdoc"
+}

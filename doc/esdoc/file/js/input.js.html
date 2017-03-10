@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">js/input.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/abstract.js~AbstractHierarchy.html">AbstractHierarchy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Char.html">Char</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~EOL.html">EOL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Paragraph.html">Paragraph</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/character.js~Row.html">Row</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~Displayer.html">Displayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SearchMode.html">SearchMode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SelectRange.html">SelectRange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/container.js~SentenceContainer.html">SentenceContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~Directory.html">Directory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~File.html">File</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/filelist.js~FileList.html">FileList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/input.js~ConvertContainer.html">ConvertContainer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/input.js~ConvertView.html">ConvertView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/input.js~InputBuffer.html">InputBuffer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/input.js~InputChar.html">InputChar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/other-classes.js~CommandLine.html">CommandLine</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/other-classes.js~Cursor.html">Cursor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/other-classes.js~Menu.html">Menu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~BoldDoMemory.html">BoldDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~ColorDoMemory.html">ColorDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~DeleteDoMemory.html">DeleteDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~DoManager.html">DoManager</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~DoMemory.html">DoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~FontSizeDoMemory.html">FontSizeDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~ItalicDoMemory.html">ItalicDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~LineBreakDoMemory.html">LineBreakDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/js/undo-redo.js~PrintDoMemory.html">PrintDoMemory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ElemCreator">ElemCreator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KeyTable">KeyTable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">js/input.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+/* global AbstractHierarchy, Char, Row, KeyTable, ElemCreator, Util */
+// class&#x306F;&#x5DFB;&#x304D;&#x4E0A;&#x3052;&#x304C;&#x8D77;&#x3053;&#x3089;&#x306A;&#x3044;&#x305F;&#x3081;&#x3001;Char&#x30FB;Row&#x306E;&#x4E0B;&#x306B;&#x4F5C;&#x308B;&#x5FC5;&#x8981;&#x304C;&#x3042;&#x308B;&#x3002;&#x305F;&#x3060;&#x3057;&#x3001;SentenceContainer&#x5185;&#x3067;&#x5229;&#x7528;&#x3059;&#x308B;&#x306E;&#x3067;SentenceContainer&#x3088;&#x308A;&#x306F;&#x4E0A;&#x306B;&#x306A;&#x3051;&#x308C;&#x3070;&#x306A;&#x3089;&#x306A;&#x3044;
+
+
+/**
+ * &#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
+ */
+export class InputChar extends Char {
+    //{{{
+    // constructor {{{
+    /**
+     * @param {object} data &#x6587;&#x5B57;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
+     * &#x4F8B;
+     * &lt;pre&gt;
+     * &lt;code&gt;
+     *	{
+     *		&quot;char&quot;:&quot;&#x3042;&quot;,
+     *		&quot;decolation&quot;:[&quot;decolation-color-blue&quot;]
+     *		&quot;fontSize&quot;: &quot;auto&quot;
+     *	}
+     *	&lt;/code&gt;
+     *	&lt;/pre&gt;
+     *	@param {number} [opt_phraseNum=-1] &#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     */
+    constructor(data, opt_phraseNum) {
+        super(data);
+        if (opt_phraseNum === undefined) {
+            opt_phraseNum = -1;
+        }
+        this.phraseNum(opt_phraseNum);
+    }//}}}
+
+    // --&#x5224;&#x5B9A; {{{
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x304C;num&#x3067;&#x3042;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @param {number} num &#x5224;&#x5B9A;&#x3059;&#x308B;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     * @return {boolean} &#x81EA;&#x8EAB;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x304C;num&#x3067;&#x3042;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     */
+    isPhraseNum(num) {
+        return num === this.phraseNum();
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8868;&#x3057;&#x307E;&#x3059;
+     * @return {boolean} &#x81EA;&#x8EAB;&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false&#x3002;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x304C;&#x4E00;&#x5EA6;&#x3082;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;false
+     */
+    isSelect() {
+        return this.hasClass(&apos;select-phrase&apos;);
+    }//}}}
+
+    // --Status {{{
+
+    /**
+     * &#x3053;&#x306E;&#x6587;&#x5B57;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;opt_newNum&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @param {number} [opt_newNum] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x756A;&#x53F7;(&#xFF10;&#x59CB;&#x307E;&#x308A;)
+     * @return {InputChar number} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x73FE;&#x5728;&#x306E;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
+     */
+    phraseNum(opt_newNum) {
+        if (opt_newNum === undefined) {
+            return this._phraseNum;
+        }
+
+        this.elem().dataset.phraseNum = opt_newNum;
+        this._phraseNum = opt_newNum;
+        return this;
+    }//}}}
+
+    // --Style {{{
+
+    /**
+     * &#x3053;&#x306E;&#x6587;&#x5B57;&#x3092;&#x9078;&#x629E;&#x72B6;&#x614B;&#x306B;&#x3057;&#x307E;&#x3059;
+     * @return {InputChar} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    select() {
+        this.addClass(&apos;select-phrase&apos;);
+        return this;
+    }
+
+    /**
+     * &#x3053;&#x306E;&#x6587;&#x5B57;&#x3092;&#x975E;&#x9078;&#x629E;&#x72B6;&#x614B;&#x306B;&#x3057;&#x307E;&#x3059;
+     * @return {InputChar} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    removeSelect() {
+        this.removeClass(&apos;select-phrase&apos;);
+        return this;
+    }//}}}
+}//}}}
+
+
+/**
+ * &#x5165;&#x529B;&#x3055;&#x308C;&#x305F;&#x6587;&#x5B57;&#x3092;&#x3044;&#x3063;&#x305F;&#x3093;&#x4FDD;&#x6301;&#x3059;&#x308B;&#x30D0;&#x30C3;&#x30D5;&#x30A1;&#x30FC;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;&#x3002;
+ *     &#x5185;&#x90E8;&#x306E;&#x5B50;&#x306B;InputChar&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x7FA4;&#x3092;&#x6301;&#x3061;&#x307E;&#x3059;&#x3002;
+ *     &#x307E;&#x305F;&#x3001;&#x4E00;&#x5EA6;&#x3082;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x304C;&#x3055;&#x308C;&#x305A;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x304C;&#x3059;&#x3079;&#x3066;-1&#x306E;&#x5834;&#x5408;&#x3068;&#x3001;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x304C;&#x884C;&#x308F;&#x308C;&#x6587;&#x7BC0;&#x304C;&#x5206;&#x3051;&#x3089;&#x308C;&#x3066;&#x3044;&#x308B;&#x5834;&#x5408;&#x3068;&#xFF12;&#x3064;&#x306E;&#x72B6;&#x614B;&#x304C;&#x3042;&#x308B;
+ */
+export class InputBuffer extends Row {  // jshint ignore:line
+    //{{{
+    // constructor {{{
+    /**
+     * @param {SentenceContainer} container &#x81EA;&#x8EAB;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    constructor(container) {
+        super(document.getElementById(&apos;input_buffer&apos;));
+        this._container = container;
+        this._convertContainer = new ConvertContainer(this);
+    }//}}}
+
+    // --&#x53C2;&#x7167;&#x53D6;&#x5F97; {{{
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @return {SentenceContainer} &#x81EA;&#x8EAB;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6587;&#x7AE0;&#x30B3;&#x30F3;&#x30C6;&#x30CA;
+     */
+    container() {
+        return this._container;
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @return {Cursor} &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    cursor() {
+        return this.container().cursor();
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306E;&#x3042;&#x308B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @return {Char} &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    cursorChar() {
+        return this.cursor().getChar();
+    }
+
+    /**
+     * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertContainer} &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    convertContainer() {
+        return this._convertContainer;
+    }
+
+    /**
+     * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x914D;&#x5217;&#x306B;&#x3057;&#x3066;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @param {number} num &#x96C6;&#x3081;&#x308B;&#x5165;&#x529B;&#x6587;&#x5B57;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;
+     * @return {InputChar[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;
+     */
+    phrases(num) {
+        const ret = [];
+        for (let char of this.chars()) {
+            if (char.isPhraseNum(num)) {
+                ret.push(char);
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * &#x9078;&#x629E;&#x4E2D;&#x306E;&#x6587;&#x7BC0;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {InputChar[]} &#x9078;&#x629E;&#x4E2D;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3002;&#x9078;&#x629E;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;&#x7A7A;&#x306E;&#x914D;&#x5217;
+     */
+    selectPhrases() {
+        const ret = [];
+        for (let char of this.chars()) {
+            if (char.isSelect()) {
+                ret.push(char);
+            }
+        }
+        return ret;
+    }//}}}
+
+    // --&#x5224;&#x5B9A; {{{
+
+    /**
+     * &#x81EA;&#x8EAB;&#x304C;&#x53EF;&#x8996;&#x5316;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;(&#x6587;&#x5B57;&#x5165;&#x529B;&#x4E2D;)&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {boolean} &#x81EA;&#x8EAB;&#x304C;&#x53EF;&#x8996;&#x5316;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     */
+    isDisplay() {
+        return this.elem().style.display === &apos;block&apos;;
+    }//}}}
+
+    // --Status {{{
+
+    /**
+     * &#x5404;&#x5165;&#x529B;&#x6587;&#x5B57;&#x306B;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x3075;&#x308A;&#x307E;&#x3059;&#x3002;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x7FA4;&#x3092;&#x4F5C;&#x6210;&#x3057;&#x305F;&#x5F8C;&#x3067;&#x4F7F;&#x7528;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    setPhraseNum() {
+        let cnt = 0;
+        for (let view of this.convertContainer().views()) {
+            const num = view.phraseNum();
+            const len = view.getSelect().length(); // &#x9078;&#x629E;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;&#x4F7F;&#x3063;&#x3066;&#x8A08;&#x7B97;
+            for (let i = 0; i &lt; len; i++, cnt++) {
+                this.chars(cnt).phraseNum(num);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * &#x9078;&#x629E;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x9078;&#x629E;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x9078;&#x629E;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3051;&#x308C;&#x3070;-1
+     */
+    selectIndex() {
+        for (let char of this.chars()) {
+            if (char.isSelect()) {
+                return char.phraseNum();
+            }
+        }
+        return -1;
+    }//}}}
+
+    // --Style {{{
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x5E45;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;&#x3002;&#x6587;&#x7AE0;&#x5185;&#x306E;Row&#x3068;&#x7570;&#x306A;&#x308A;&#x56DE;&#x8EE2;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3044;&#x305F;&#x3081;&#x3001;css&#x4E0A;&#x306E;&#x5E45;&#x3068;&#x4E00;&#x81F4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x5E45;
+     */
+    width() {
+        return super.super.width();
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;&#x3002;&#x6587;&#x7AE0;&#x5185;&#x306E;Row&#x3068;&#x7570;&#x306A;&#x308A;&#x56DE;&#x8EE2;&#x3055;&#x308C;&#x3066;&#x3044;&#x306A;&#x3044;&#x305F;&#x3081;&#x3001;css&#x4E0A;&#x306E;&#x9AD8;&#x3055;&#x3068;&#x4E00;&#x81F4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;
+     */
+    height() {
+        return super.super.height();
+    }
+
+    /**
+     * @private
+     * &#x5185;&#x90E8;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x5143;&#x306B;&#x3001;&#x9069;&#x5207;&#x306A;&#x5E45;&#x3092;&#x8A08;&#x7B97;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x8A08;&#x7B97;&#x3055;&#x308C;&#x305F;&#x5E45;&#x306E;&#x30D4;&#x30AF;&#x30BB;&#x30EB;&#x6570;
+     */
+    newWidth() {
+        const cache = {};
+        let width = 0;
+        for (let char of this.chars()) {
+            const size = char.fontSize();
+            if (cache[size]) {
+                width = Math.max(width,cache[size]);
+            } else {
+                cache[size] = char.width();
+                width = Math.max(width,char.width());
+            }
+        }
+        return width + 5; // 5px&#x4F59;&#x88D5;&#x3092;&#x3082;&#x305F;&#x305B;&#x308B;
+    }
+
+    /**
+     * @private
+     * &#x5185;&#x90E8;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x5143;&#x306B;&#x3001;&#x9069;&#x5207;&#x306A;&#x9AD8;&#x3055;&#x3092;&#x8A08;&#x7B97;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x8A08;&#x7B97;&#x3055;&#x308C;&#x305F;&#x9AD8;&#x3055;&#x306E;&#x30D4;&#x30AF;&#x30BB;&#x30EB;&#x6570;
+     */
+    newHeight() {
+        const cache = {};
+        let height = 0;
+        for (let char of this.chars()) {
+            const size = char.fontSize();
+            if (cache[size]) {
+                height += cache[size];
+            } else {
+                cache[size] = char.height();
+                height += cache[size];
+            }
+        }
+        return height + 5; // 5px&#x4F59;&#x88D5;&#x3092;&#x3082;&#x305F;&#x305B;&#x308B;
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;X&#x5EA7;&#x6A19;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;X&#x5EA7;&#x6A19;
+     */
+    cursorX() {
+        return this.cursorChar().x();
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;Y&#x5EA7;&#x6A19;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;Y&#x5EA7;&#x6A19;
+     */
+    cursorY() {
+        return this.cursorChar().y();
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x9AD8;&#x3055;&#x3084;&#x5E45;&#x3092;&#x5185;&#x90E8;&#x306E;&#x5404;&#x5165;&#x529B;&#x6587;&#x5B57;&#x306B;&#x5408;&#x308F;&#x305B;&#x3066;&#x8ABF;&#x6574;&#x3057;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    resize() {
+        const style = this.elem().style;
+        style.width = this.newWidth() + &apos;px&apos;;
+        style.height = this.newHeight() + &apos;px&apos;;
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x3092;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x306B;&#x5408;&#x308F;&#x305B;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    move() {
+        this.elem().style.left = this.cursorX() + &apos;px&apos;;
+        this.elem().style.top = this.cursorY() + &apos;px&apos;;
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x3092;&#x8868;&#x793A;&#x3057;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    show() {
+        this.elem().style.display = &apos;block&apos;;
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x3092;&#x975E;&#x8868;&#x793A;&#x306B;&#x3057;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    hide() {
+        this.elem().style.display = &apos;none&apos;;
+        this.removeKeydownEventListener();
+        return this;
+    }//}}}
+
+    // &#x9078;&#x629E; {{{
+
+    /**
+     * &#x9078;&#x629E;&#x6587;&#x7BC0;&#x3092;&#x6B21;&#x306E;&#x6587;&#x7BC0;&#x306B;&#x5909;&#x66F4;&#x3057;&#x307E;&#x3059;&#x3002;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x7BC0;&#x304B;&#x3089;&#x5B9F;&#x884C;&#x3055;&#x308C;&#x308C;&#x3070;&#x3001;&#x6700;&#x521D;&#x306E;&#x6587;&#x7BC0;&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    selectNext() {
+        return this.select(this.selectIndex() + 1);
+    }
+
+    /**
+     * &#x9078;&#x629E;&#x6587;&#x7BC0;&#x3092;&#x524D;&#x306E;&#x6587;&#x7BC0;&#x306B;&#x5909;&#x66F4;&#x3057;&#x307E;&#x3059;&#x3002;&#x6700;&#x521D;&#x306E;&#x6587;&#x7BC0;&#x304B;&#x3089;&#x5B9F;&#x884C;&#x3055;&#x308C;&#x308C;&#x3070;&#x3001;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x7BC0;&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    selectPrev() {
+        return this.select(this.selectIndex() - 1);
+    }
+
+    /**
+     * &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x304C;index&#x306E;&#x6587;&#x5B57;&#x3092;&#x9078;&#x629E;&#x3057;&#x307E;&#x3059;&#x3002;&#x5F15;&#x6570;&#x304C;&#x8CA0;&#x306B;&#x306A;&#x308C;&#x3070;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x3001;&#x6700;&#x5927;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x8D8A;&#x3048;&#x308C;&#x3070;&#x6700;&#x521D;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x9078;&#x629E;&#x3057;&#x307E;&#x3059;
+     * @param {number} index &#x9078;&#x629E;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3002;&#x8CA0;&#x306E;&#x6570;&#x306A;&#x3089;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x7BC0;&#x3001;&#x7BC4;&#x56F2;&#x3088;&#x308A;&#x5927;&#x304D;&#x306A;&#x6570;&#x306A;&#x3089;&#x6700;&#x521D;&#x306E;&#x6587;&#x7BC0;&#x304C;&#x9078;&#x629E;&#x3055;&#x308C;&#x308B;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    select(index) {
+        const maxIndex = this.lastChar().phraseNum();
+        if (index &lt; 0) {
+            index = maxIndex;
+        }
+        if (index &gt; maxIndex) {
+            index = 0;
+        }
+
+        for (let char of this.chars()) {
+            if (char.phraseNum() === index) {
+                char.select();
+            } else {
+                char.removeSelect();
+            }
+        }
+        this.convertContainer().views(index).active();
+        return this;
+    }//}}}
+
+    // --&#x6587;&#x5B57;&#x64CD;&#x4F5C; {{{
+
+    /**
+     * &#x81EA;&#x8EAB;&#x3092;&#x7A7A;&#x306B;&#x3057;&#x3066;&#x3001;&#x6587;&#x5B57;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3057;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    empty() {
+        super.empty();
+        if (this.convertContainer().isActive()) {
+            this.convertContainer().empty().hide();
+        }
+        return this;
+    }
+
+    /**
+     * keycode&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x65B0;&#x305F;&#x306A;&#x6587;&#x5B57;&#x5217;&#x3067;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x307E;&#x3059;
+     * @param {number} keycode &#x8FFD;&#x52A0;&#x3059;&#x308B;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
+     * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    increace(keycode, bShift) {
+        const newInputStr = this._newString(keycode,bShift);
+
+        if (newInputStr === undefined || newInputStr.indexOf(&apos;undefined&apos;) !== -1) {
+            // &#x672A;&#x5B9A;&#x7FA9;&#x6587;&#x5B57;(alt,ctrl,tab&#x306A;&#x3069;)&#x306F;return
+            return this;
+        }
+
+        this.update(newInputStr);
+        this.resize();
+        return this;
+    }
+
+    /**
+     * buffer&#x306E;&#x6700;&#x5F8C;&#x306E;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;&#x3002;&#x5185;&#x90E8;&#x306B;&#x6587;&#x5B57;&#x304C;&#x306A;&#x304F;&#x306A;&#x308C;&#x3070;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3057;&#x307E;&#x3059;
+     * @return {InputChar} &#x524A;&#x9664;&#x3057;&#x305F;&#x5165;&#x529B;&#x6587;&#x5B57;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    decreace() {
+        if (!this.hasChar) {
+            return this;
+        }
+
+        const ret = this.lastChar().remove();
+        this.resize();
+        if (!this.hasChar()) {
+            this.hide();
+            this.container().addKeydownEventListener();
+        }
+        return ret;
+    }
+
+    /**
+     * &#x5185;&#x90E8;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;str&#x3067;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x307E;&#x3059;
+     * @param {string} str &#x7F6E;&#x304D;&#x63DB;&#x3048;&#x308B;&#x6587;&#x5B57;&#x5217;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    update(str) {
+        this.empty();
+        for (let char of str) {
+            this.append(new InputChar(this.cursorChar().createData(char)));
+        }
+        this.show();
+        return this;
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306B;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3057;&#x3001;&#x5F8C;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3063;&#x3066;&#x5165;&#x529B;&#x72B6;&#x614B;&#x3092;&#x7D42;&#x4E86;&#x3057;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    print() {
+        this.cursor().insert(this.text(), true);
+        this.empty().hide();
+        this.container().addKeydownEventListener();
+        this.container().changeDisplay();
+        return this;
+    }
+
+    /**
+     * &#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x3059;&#x3079;&#x3066;&#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    toKatakanaAll() {
+        this.update(this._getKatakana());
+        return this;
+    }
+
+    /**
+     * &#x5165;&#x529B;&#x6587;&#x5B57;&#x3059;&#x3079;&#x3066;&#x3092;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
+     */
+    convert() {
+        this.convertContainer().convert(this.text());
+        return this;
+    }
+
+    /**
+     * &#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x304C;num&#x3067;&#x3042;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;str&#x3067;&#x5165;&#x308C;&#x66FF;&#x3048;&#x307E;&#x3059;
+     * @param {number} num &#x5165;&#x308C;&#x66FF;&#x3048;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     * @param {string} str &#x5165;&#x308C;&#x66FF;&#x3048;&#x308B;&#x6587;&#x5B57;&#x5217;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    insertPhrase(num, str) {
+        const phrases = this.phrases(num);
+        if (phrases.length === 0) { // &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x6587;&#x5B57;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x304B;&#x3063;&#x305F;
+            return this;
+        }
+        // &#x65B0;&#x3057;&#x3044;InputChar&#x3092;&#x3082;&#x3068;&#x3082;&#x3068;&#x3042;&#x3063;&#x305F;&#x6587;&#x5B57;&#x306E;&#x524D;&#x306B;&#x633F;&#x5165;&#x3057;&#x3066;&#x3044;&#x304F;
+        for (let c of str) {
+            const newChar = new InputChar(this.cursorChar().createData(c),num);
+            phrases[0].before(newChar);
+            if (phrases[0].isSelect()) { // &#x9078;&#x629E;&#x4E2D;&#x306E;&#x6587;&#x7BC0;&#x306A;&#x3089;&#x5165;&#x66FF;&#x3048;&#x6587;&#x5B57;&#x3082;&#x9078;&#x629E;
+                newChar.select();
+            }
+        }
+        // &#x53E4;&#x3044;&#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;
+        for (let old of phrases) {
+            old.remove();
+        }
+        this.resize();
+        return this;
+    }
+
+    /**
+     * &#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x304C;num&#x3067;&#x3042;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x5F8C;&#x308D;&#x306B;str&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3059;&#x3002;&#x8FFD;&#x52A0;&#x3057;&#x305F;&#x6587;&#x5B57;&#x306E;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306F;&#x8CA0;&#x306E;&#x5024;&#x306B;&#x306A;&#x308A;&#x307E;&#x3059;
+     * @param {number} num &#x633F;&#x5165;&#x4F4D;&#x7F6E;&#x306E;&#x6307;&#x5B9A;
+     * @param {string} str &#x633F;&#x5165;&#x3059;&#x308B;&#x6587;&#x5B57;&#x5217;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    insertPhraseAfter(num, str) {
+        const phrases = this.phrases(num);
+        if (phrases.length === 0) { // &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x6587;&#x5B57;&#x304C;&#x898B;&#x3064;&#x304B;&#x3089;&#x306A;&#x304B;&#x3063;&#x305F;
+            return this;
+        }
+
+        const nextChar = phrases[phrases.length -1].next(); // &#x633F;&#x5165;&#x7528;&#x306E;&#x6587;&#x5B57;&#x3002;&#x6700;&#x5F8C;&#x306B;&#x306F;EOL&#x304C;&#x3042;&#x308B;&#x306E;&#x3067;&#x3001;&#x5FC5;&#x305A;&#x5B58;&#x5728;&#x3059;&#x308B;
+        for (let c of str) {
+            nextChar.before(new InputChar(this.cursorChar().createData(c),-num));
+        }
+        this.resize();
+        return this;
+    }
+
+    // --&#x5916;&#x304B;&#x3089;&#x306E;&#x60C5;&#x5831;&#x53D6;&#x5F97;
+
+    /**
+     * &#x73FE;&#x5728;&#x306E;&#x6587;&#x5B57;&#x5217;&#x306B;keycode&#x3092;&#x52A0;&#x3048;&#x3066;&#x4F5C;&#x3089;&#x308C;&#x308B;&#x6587;&#x5B57;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;&#x3002;
+     *     &#x672A;&#x5B9A;&#x7FA9;&#x306E;keycode&#x306E;&#x5834;&#x5408;&#x306F;undefined&#x304C;&#x6587;&#x5B57;&#x5217;&#x5185;&#x306B;&#x542B;&#x307E;&#x308C;&#x307E;&#x3059;&#x306E;&#x3067;&#x6CE8;&#x610F;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;
+     * @param {number} keycode &#x8FFD;&#x52A0;&#x3059;&#x308B;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
+     * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     * @return {string} keycode&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x3066;&#x4F5C;&#x3089;&#x308C;&#x305F;&#x6587;&#x5B57;&#x5217;
+     */
+    _newString(keycode,bShift) {
+        const inputStr = this.text(); //&#x3082;&#x3068;&#x3082;&#x3068;&#x306E;&#x6587;&#x5B57;&#x5217;
+        if (bShift) {
+            return inputStr + KeyTable.shiftKey[keycode];
+        }
+
+        return KeyTable.makeString(inputStr,keycode); //keycode&#x3092;&#x52A0;&#x3048;&#x305F;&#x65B0;&#x3057;&#x3044;&#x6587;&#x5B57;&#x5217;
+    }
+
+    /**
+     * &#x73FE;&#x5728;&#x306E;&#x5165;&#x529B;&#x6587;&#x5B57;&#x3092;&#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x5909;&#x63DB;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x6587;&#x5B57;&#x5217;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;&#x3002;
+     *     &#x5909;&#x63DB;&#x3067;&#x304D;&#x306A;&#x3044;&#x6587;&#x5B57;&#x304C;&#x3042;&#x308C;&#x3070;&#x5909;&#x63DB;&#x305B;&#x305A;&#x306B;&#x5143;&#x306E;&#x6587;&#x5B57;&#x3092;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50;&#x3057;&#x307E;&#x3059;
+     * @return {string} &#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x305F;&#x6587;&#x5B57;&#x5217;
+     */
+    _getKatakana() {
+        const str = this.text();
+        let rtnKatakana = &apos;&apos;;
+        for (let char of str) {
+            const cKatakana = KeyTable.katakana[char];
+            if (cKatakana) {
+                rtnKatakana += cKatakana;
+            } else {
+                rtnKatakana += char; // &#x5909;&#x63DB;&#x3067;&#x304D;&#x306A;&#x3051;&#x308C;&#x3070;&#x5143;&#x306E;&#x6587;&#x5B57;&#x3092;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50;
+            }
+        }
+        return rtnKatakana;
+    }//}}}
+
+    // --&#x30A4;&#x30D9;&#x30F3;&#x30C8; {{{
+
+    /**
+     * keyevent&#x304C;SentenceContainer&#x304B;&#x3089;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x5224;&#x5B9A;&#x3057;&#x3066;&#x524D;&#x51E6;&#x7406;&#x3092;&#x884C;&#x3044;&#x307E;&#x3059;(&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;&#x3092;increace()&#x3057;&#x3066;&#x5165;&#x529B;&#x6587;&#x5B57;&#x304C;&#x3067;&#x304D;&#x308C;&#x3070;&#x5165;&#x529B;&#x30E2;&#x30FC;&#x30C9;&#x306B;&#x79FB;&#x884C;&#x3057;&#x307E;&#x3059;)
+     * @param {number} keycode &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
+     * @param {boolean} bShift &#x30B7;&#x30D5;&#x30C8;&#x30AD;&#x30FC;&#x304C;&#x62BC;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    tryTransfer(keycode,bShift) {
+        this.increace(keycode,bShift);
+        if (this.hasChar()) {
+            this.addKeydownEventListener();
+            this.move();
+        }
+        return this;
+    }
+
+    /**
+     * &#x5165;&#x529B;&#x6642;&#x306E;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30EA;&#x30B9;&#x30CA;&#x30FC;&#x3092;&#x4ED8;&#x52A0;&#x3057;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    addKeydownEventListener() {
+        this.container().removeKeydownEventListener();
+        this.convertContainer().removeKeydownEventListener();
+        super.addKeydownEventListener();
+        return this;
+    }
+
+    /**
+     * &#x5165;&#x529B;&#x6642;&#x306E;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3067;&#x3059;
+     * @param {Event} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+     * @param {number} keycode &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
+     */
+    runKeydown(e,keycode) {
+        switch (keycode) {
+            case 8:
+                // backspace
+                this.decreace();
+                break;
+            case 13:
+                // enter
+                this.print();
+                break;
+            case 32:
+                // space
+                this.convert();
+                break;
+            case 118:
+                // F7
+                this.toKatakanaAll();
+                break;
+            default:
+                this.increace(keycode,e.shiftKey);
+                break;
+        }
+    }//}}}
+}//}}}
+
+
+/**
+ * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30D3;&#x30E5;&#x30FC;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;&#x3002;
+ *     &#x305D;&#x308C;&#x305E;&#x308C;&#x4E00;&#x3064;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x62C5;&#x5F53;&#x3057;&#x3001;&#x8907;&#x6570;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x6301;&#x3061;&#x307E;&#x3059;&#x3002;
+ *     &#x307E;&#x305F;&#x3001;&#x5185;&#x90E8;&#x306B;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3068;&#x3057;&#x3066;Row&#x30AF;&#x30E9;&#x30B9;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x6301;&#x3061;&#x307E;&#x3059;
+ */
+export class ConvertView extends AbstractHierarchy {
+    //{{{
+    // &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306F;&#x3001;ConvertView&#x306E;index()&#x3068;&#x540C;&#x3058;
+
+    // constructor {{{
+    /**
+     * @param {object} data &#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
+     * &#x4F8B;
+     * &lt;pre&gt;
+     * &lt;code&gt;
+     * [[&#x3072;&#x3089;&#x304C;&#x306A;],[&#x5E73;&#x4EEE;&#x540D;,&#x30D2;&#x30E9;&#x30AC;&#x30CA;,&#x5E73;&#x8CC0;&#x306A;,&#x5E73;&#x304C;&#x306A;,HIRAGANA]]
+     *	&lt;/code&gt;
+     *	&lt;/pre&gt;
+     */
+    constructor(data) {
+        super(ElemCreator.createConvertViewElement());
+        data[1].push(data[0]); // &#x672B;&#x5C3E;&#x306B;&#x660E;&#x78BA;&#x306B;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;&#x5165;&#x308C;&#x308B;
+        for (let str of data[1]) {
+            const row = Row.createEmptyRow();
+            row.createPlainContent(str);
+            this.append(row);
+        }
+        this.removeClass(&apos;paragraph&apos;);
+        this.addClass(&apos;convert-view&apos;);
+    }//}}}
+
+    // --&#x53C2;&#x7167;&#x53D6;&#x5F97; {{{
+
+    /**
+     * &#x81EA;&#x5206;&#x306E;&#x5C5E;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x73FE;&#x5728;&#x5C5E;&#x3057;&#x3066;&#x3044;&#x308B;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @param {ConvertContainer} [opt_newContainer] &#x65B0;&#x305F;&#x306B;&#x8A2D;&#x5B9A;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     * @return {ConvertView ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x6240;&#x5C5E;&#x3059;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
+     */
+    container(opt_newContainer) {
+        return this.parent(opt_newContainer);
+    }
+
+    /**
+     * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     * @return {Row Row[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
+     */
+    rows(opt_index) {
+        return this.children(opt_index);
+    }
+
+    /**
+     * &#x73FE;&#x5728;&#x9078;&#x629E;&#x4E2D;&#x306E;&#x884C;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @return {Row} &#x73FE;&#x5728;&#x9078;&#x629E;&#x4E2D;&#x306E;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x9078;&#x629E;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x5019;&#x88DC;&#x6700;&#x5F8C;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x884C;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    getSelect() {
+        for (let row of this.rows()) {
+            if (row.hasClass(&apos;select&apos;)) {
+                return row;
+            }
+        }
+        return this.lastChild(); // &#x9078;&#x629E;&#x884C;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x3072;&#x3089;&#x304C;&#x306A;&#x884C;
+    }//}}}
+
+    // --&#x5224;&#x5B9A; {{{
+
+    /**
+     * &#x3053;&#x306E;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x304C;&#x53EF;&#x8996;&#x5316;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {boolean} &#x53EF;&#x8996;&#x5316;&#x3055;&#x308C;&#x3066;&#x3044;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     */
+    isActive() {
+        return this.hasClass(&apos;active&apos;);
+    }//}}}
+
+    // --Status {{{
+
+    /**
+     * &#x3053;&#x306E;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x304C;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;&#x6587;&#x5B57;&#x5217;&#x3067;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {string} &#x62C5;&#x5F53;&#x6587;&#x7BC0;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;
+     */
+    hiragana() {
+        return this.lastChild().text(); // &#x6700;&#x7D42;&#x884C;&#x306F;&#x5FC5;&#x305A;&#x3072;&#x3089;&#x304C;&#x306A;
+    }
+
+    /**
+     * &#x3072;&#x3089;&#x304C;&#x306A;&#x3067;&#x306E;&#x6587;&#x5B57;&#x6570;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x3072;&#x3089;&#x304C;&#x306A;&#x3067;&#x306E;&#x6587;&#x5B57;&#x6570;
+     */
+    kanaLength() {
+        return this.hiragana().length;
+    }
+
+    /**
+     * &#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x62C5;&#x5F53;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;(&#xFF10;&#x59CB;&#x307E;&#x308A;)
+     */
+    phraseNum() {
+        return this.index();
+    }//}}}
+
+    // --Style {{{
+
+    /**
+     * &#x3053;&#x306E;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x53EF;&#x8996;&#x5316;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    active() {
+        for (let view of this.container().views()) {
+            if (view.hasClass(&apos;active&apos;)) {
+                view.removeClass(&apos;active&apos;);
+            }
+        }
+        this.addClass(&apos;active&apos;);
+        return this;
+    }
+
+    /**
+     * &#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x9078;&#x629E;&#x3092;&#x3072;&#x3068;&#x3064;&#x5DE6;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    selectLeft() {
+        const index = this.getSelect().index() + 1;
+        this.select(index);
+        return this;
+    }
+
+    /**
+     * &#x5909;&#x63DB;&#x5019;&#x88DC;&#x306E;&#x9078;&#x629E;&#x3092;&#x3072;&#x3068;&#x3064;&#x53F3;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    selectRight() {
+        const index = this.getSelect().index() - 1;
+        this.select(index);
+        return this;
+    }
+
+    /**
+     * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x9078;&#x629E;&#x3057;&#x307E;&#x3059;
+     * @param {number} index &#x9078;&#x629E;&#x3059;&#x308B;&#x5019;&#x88DC;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    select(index) {
+        if (index &lt; 0) {
+            index = 0;
+        }
+        if (index &gt;= this.childLength()) {
+            index = this.childLength() - 1;
+        }
+
+        for (let row of this.rows()) {
+            if (row.hasClass(&apos;select&apos;)) {
+                row.removeClass(&apos;select&apos;);
+            }
+        }
+
+        const newRow = this.rows(index);
+        newRow.addClass(&apos;select&apos;);
+        this.container().inputBuffer().insertPhrase(this.phraseNum(),newRow.text());
+        return this;
+    }//}}}
+
+    // --DOM&#x64CD;&#x4F5C; {{{
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3059;
+     * @param {Row} row &#x8FFD;&#x52A0;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    append(row) {
+        // DOM
+        this.elem().appendChild(row.elem());
+        // &#x30DD;&#x30A4;&#x30F3;&#x30BF;&#x8ABF;&#x6574;
+        // view
+        if (this.hasChild()) {
+            this.lastChild().next(row);
+            row.prev(this.lastChild());
+        }
+        // parent
+        row.parent(this);
+        this.pushChild(row);
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x76F4;&#x524D;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x633F;&#x5165;&#x3057;&#x307E;&#x3059;
+     * @param {ConvertView} view &#x633F;&#x5165;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    before(view) {
+        // DOM
+        this.container().elem().insertBefore(view.elem(),this.elem());
+
+        // &#x53C2;&#x7167;&#x8ABF;&#x6574;
+        // oldPrev - view - this
+
+        // view
+        const oldPrev = this.prev();
+        if (oldPrev) {
+            oldPrev.next(view);
+        }
+        view.prev(oldPrev);
+        view.next(this);
+        this.prev(view);
+        // paretn
+        view.container(this.container());
+        const pos = this.index();
+        this.container().insertChild(pos,view);
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x76F4;&#x5F8C;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x633F;&#x5165;&#x3057;&#x307E;&#x3059;
+     * @param {ConvertView} view &#x633F;&#x5165;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    after(view) {
+        // DOM
+        if (this.hasNextSibling()) {
+            this.container().elem().insertBefore(view.elem(),this.next().elem());
+        } else {
+            this.container().elem().appendChild(view.elem());
+        }
+
+        // &#x53C2;&#x7167;&#x8ABF;&#x6574;
+        // this - view - oldNext
+
+        // view
+        const oldNext = this.next();
+        this.next(view);
+        view.prev(this);
+        view.next(oldNext);
+        if (oldNext) {
+            oldNext.prev(view);
+        }
+        // parent
+        view.container(this.container());
+        const pos = this.index() + 1;
+        this.container().insertChild(pos,view);
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x3092;&#x524A;&#x9664;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    remove() {
+        // DOM
+        this.container().elem().removeChild(this.elem());
+
+        // &#x53C2;&#x7167;&#x8ABF;&#x6574;
+        // oldPrev - this - oldNext &#x2192;&#x3000;oldPrev - oldNext
+
+        // view
+        const oldPrev = this.prev();
+        const oldNext = this.next();
+        if (oldPrev) {
+            oldPrev.next(oldNext);
+        }
+        if (oldNext) {
+            oldNext.prev(oldPrev);
+        }
+        this.prev(null);
+        this.next(null);
+        // parent
+        this.container().deleteChild(this);
+        this.container(null);
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x3092;view&#x3068;&#x5165;&#x308C;&#x66FF;&#x3048;&#x307E;&#x3059;
+     * @param {ConvertView} view &#x5165;&#x308C;&#x66FF;&#x3048;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    replace(view) {
+        this.before(view);
+        if (this.isActive()) {
+            view.active();
+        }
+        return this.remove();
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x304C;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x3092;&#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x5909;&#x63DB;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertView} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    toKatakana() {
+        this.container().inputBuffer().insertPhrase(this.phraseNum(),this._getKatakana());
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x304C;&#x62C5;&#x5F53;&#x3059;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x3092;&#x6587;&#x5B57;&#x5217;&#x3067;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @return {string} &#x30AB;&#x30BF;&#x30AB;&#x30CA;&#x306B;&#x5909;&#x63DB;&#x3057;&#x305F;&#x5834;&#x5408;&#x306E;&#x6587;&#x5B57;&#x5217;
+     */
+    _getKatakana() {
+        const str = this.hiragana();
+        let rtnKatakana = &apos;&apos;;
+        for (let char of str) {
+            const cKatakana = KeyTable.katakana[char];
+            if (cKatakana) {
+                rtnKatakana += cKatakana;
+            } else {
+                rtnKatakana += char; // &#x5909;&#x63DB;&#x3067;&#x304D;&#x306A;&#x3051;&#x308C;&#x3070;&#x5143;&#x306E;&#x6587;&#x5B57;&#x3092;&#x305D;&#x306E;&#x307E;&#x307E;&#x9023;&#x7D50;
+            }
+        }
+        return rtnKatakana;
+    }//}}}
+}//}}}
+
+
+/**
+ * &#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x675F;&#x306D;&#x308B;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x30B3;&#x30F3;&#x30C6;&#x30CA;&#x3092;&#x8868;&#x3059;&#x30AF;&#x30E9;&#x30B9;
+ */
+export class ConvertContainer extends AbstractHierarchy {
+    //{{{
+    // constructor {{{
+    /**
+     * @param {InputBuffer} inputBuffer &#x5165;&#x529B;&#x5143;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    constructor(inputBuffer) {
+        super(document.getElementById(&apos;convert_container&apos;));
+        this._inputBuffer = inputBuffer;
+    }//}}}
+
+    // --&#x53C2;&#x7167;&#x53D6;&#x5F97; {{{
+
+    /**
+     * &#x5165;&#x529B;&#x5143;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @return {InputBuffer} &#x5165;&#x529B;&#x5143;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    inputBuffer() {
+        return this._inputBuffer;
+    }
+
+    /**
+     * &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5F15;&#x6570;&#x7701;&#x7565;&#x3067;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x914D;&#x5217;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @param {number} [opt_index] &#x53D6;&#x5F97;&#x3059;&#x308B;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     * @return {ConvertView ConvertView[]} &#x6307;&#x5B9A;&#x3055;&#x308C;&#x305F;&#x5019;&#x88DC;&#x4E00;&#x89A7;(&#x5F15;&#x6570;&#x3092;&#x6E21;&#x3057;&#x305F;&#x5834;&#x5408;)&#x3001;&#x3042;&#x308B;&#x3044;&#x306F;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x914D;&#x5217;(&#x5F15;&#x6570;&#x3092;&#x7701;&#x7565;&#x3057;&#x305F;&#x5834;&#x5408;)
+     */
+    views(opt_index) {
+        return super.children(opt_index);
+    }
+
+    /**
+     * &#x73FE;&#x5728;&#x30A2;&#x30AF;&#x30C6;&#x30A3;&#x30D6;&#x306B;&#x306A;&#x3063;&#x3066;&#x3044;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertView} &#x73FE;&#x5728;&#x30A2;&#x30AF;&#x30C6;&#x30A3;&#x30D6;&#x306A;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3002;&#x306A;&#x3051;&#x308C;&#x3070;null
+     */
+    activeView() {
+        for (let view of this.views()) {
+            if (view.isActive()) {
+                return view;
+            }
+        }
+        return null;
+    }//}}}
+
+    // --&#x5224;&#x5B9A; {{{
+
+    /**
+     * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x304C;&#x884C;&#x308F;&#x308C;&#x3066;&#x3044;&#x308B;&#x3068;&#x3053;&#x308D;&#x304B;&#x3069;&#x3046;&#x304B;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {boolean} &#x5019;&#x88DC;&#x4E00;&#x89A7;&#x304C;&#x3072;&#x3068;&#x3064;&#x3067;&#x3082;&#x5185;&#x90E8;&#x306B;&#x3042;&#x308C;&#x3070;true&#x3001;&#x305D;&#x3046;&#x3067;&#x306A;&#x3051;&#x308C;&#x3070;false
+     */
+    isActive() {
+        return this.childLength() &gt; 0;
+    }//}}}
+
+    // --Style {{{
+
+    /**
+     * &#x8868;&#x793A;&#x4F4D;&#x7F6E;&#x3092;&#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x6A2A;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    reposition() {
+        const x = this.cursorX();
+        const y = this.cursorY();
+        this.elem().style.top = y + &apos;px&apos;;
+        this.elem().style.left = (x - this.width()) + &apos;px&apos;;
+        return this;
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;X&#x5EA7;&#x6A19;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;X&#x5EA7;&#x6A19;
+     */
+    cursorX() {
+        return this.inputBuffer().cursorX();
+    }
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;Y&#x5EA7;&#x6A19;&#x3092;&#x8FD4;&#x3057;&#x307E;&#x3059;
+     * @return {number} &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x306E;Y&#x5EA7;&#x6A19;
+     */
+    cursorY() {
+        return this.inputBuffer().cursorY();
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x3092;&#x8868;&#x793A;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    show() {
+        this.elem().style.display = &apos;block&apos;;
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x3092;&#x975E;&#x8868;&#x793A;&#x306B;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    hide() {
+        this.elem().style.display = &apos;none&apos;;
+        this.removeKeydownEventListener();
+        return this;
+    }//}}}
+
+    // --DOM&#x64CD;&#x4F5C; {{{
+
+    /**
+     * &#x30AB;&#x30FC;&#x30BD;&#x30EB;&#x4F4D;&#x7F6E;&#x304B;&#x3089;&#x6587;&#x5B57;&#x3092;&#x633F;&#x5165;&#x3057;&#x3066;&#x3001;&#x5185;&#x90E8;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x7834;&#x68C4;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    print() {
+        this.inputBuffer().print();
+        return this;
+    }
+
+    /**
+     * &#x5185;&#x90E8;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x7FA4;&#x3092;&#x69CB;&#x7BC9;&#x3057;&#x307E;&#x3059;
+     * @param {object} data &#x6587;&#x7BC0;&#x5206;&#x3051;&#x53CA;&#x3073;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x793A;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
+     * &lt;pre&gt;
+     * &lt;code&gt;
+     *  // data&#x5F62;&#x5F0F;&#x4F8B;
+     * [[&#x3072;&#x3089;&#x304C;&#x306A;,[&#x6F22;&#x5B57;&#xFF11;,&#x6F22;&#x5B57;&#xFF12;,&#x6F22;&#x5B57;&#xFF13;]],[&#x3072;&#x3089;&#x304C;&#x306A;&#xFF12;,[&#x6F22;&#x5B57;&#xFF14;,&#x6F22;&#x5B57;&#xFF15;]],[[&#x3072;&#x3089;&#x304C;&#x306A;&#xFF13;,[&#x6F22;&#x5B57;&#xFF16;,&#x6F22;&#x5B57;&#xFF17;]]]]
+     * &lt;/code&gt;
+     * &lt;/pre&gt;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    createViews(data) {
+        this.empty();
+        for (let phraseData of data) {
+            this.append(new ConvertView(phraseData));
+        }
+        return this;
+    }
+
+    /**
+     * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x3092;&#x59CB;&#x3081;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
+     * @param {string} str &#x5909;&#x63DB;&#x3059;&#x308B;&#x6587;&#x5B57;&#x5217;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
+     */
+    convert(str) {
+        Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
+            this.createViews(json);
+            this.inputBuffer().setPhraseNum();
+            // &#x3059;&#x3079;&#x3066;&#x5909;&#x63DB;&#x7B2C;&#x4E00;&#x5019;&#x88DC;&#x3092;&#x9078;&#x629E;&#x3059;&#x308B;
+            for (let view of this.views()) {
+                view.select(0);
+            }
+            // &#x6700;&#x521D;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x9078;&#x629E;
+            this.inputBuffer().select(0);
+
+            this.reposition();
+            this.addKeydownEventListener();
+        }.bind(this), {
+            sentence: str
+        });
+        this.show();
+
+        return this;
+    }
+
+    /**
+     * &#x6587;&#x7BC0;&#x533A;&#x5207;&#x308A;&#x3092;&#x3072;&#x3068;&#x3064;&#x524D;&#x306B;&#x305A;&#x3089;&#x3057;&#x3066;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
+     */
+    shiftUp() {
+        const activeView = this.activeView();
+
+        if (activeView.kanaLength() === 1) {
+            return this;
+        }
+
+        // &#x6700;&#x7D42;&#x6587;&#x7BC0;&#x304B;&#x3089;
+        // &#x6700;&#x5F8C;&#x306E;&#x4E00;&#x5B57;&#x3092;&#x5206;&#x96E2;&#x3057;&#x3066;&#x3001;&#x4E8C;&#x6587;&#x7BC0;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3059;
+        if (activeView.isLast()) {
+            const activeKana = activeView.hiragana();
+            const sendString = activeKana.slice(0, -1) + &apos;,&apos; + activeKana.slice(-1);
+            Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
+                this.replace(activeView.phraseNum(),json);
+            }.bind(this), {
+                sentence: sendString
+            });
+            return this;
+        }
+
+        // &#x9078;&#x629E;&#x6587;&#x5B57;&#x5217;&#x304B;&#x3089;&#x6700;&#x5F8C;&#x306E;&#x4E00;&#x6587;&#x5B57;&#x3092;&#x53D6;&#x308A;&#x9664;&#x304D;&#x3001;&#x305D;&#x306E;&#x6B21;&#x306E;&#x6587;&#x7BC0;&#x306E;&#x982D;&#x306B;&#x3064;&#x306A;&#x3052;&#x3066;&#x305D;&#x308C;&#x305E;&#x308C;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3059;
+        const activeKana = activeView.hiragana();
+        const nextView = activeView.next();
+        const nextKana = nextView.hiragana();
+        const sendString = activeKana.slice(0,-1) + &apos;,&apos; + activeKana.slice(-1) + nextKana;
+        Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
+            const newFirst = new ConvertView(json[0]);
+            activeView.replace(newFirst);
+            newFirst.select(0);
+            const newSecond = new ConvertView(json[1]);
+            nextView.replace(newSecond);
+            newSecond.select(0);
+        }, {
+            sentence: sendString
+        });
+        return this;
+    }
+
+    /**
+     * &#x6587;&#x7BC0;&#x533A;&#x5207;&#x308A;&#x3092;&#x3072;&#x3068;&#x3064;&#x4E0B;&#x306B;&#x305A;&#x3089;&#x3057;&#x3066;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
+     */
+    shiftDown() {
+        const activeView = this.activeView();
+        const nextView = activeView.next();
+
+        if (activeView.isLast()) {
+            return this;
+        }
+
+        // &#x6B21;&#x306E;&#x6587;&#x7BC0;&#x306E;&#x6587;&#x5B57;&#x6570;&#x304C;&#xFF11;&#x6587;&#x5B57;&#x3060;&#x3051;&#x306A;&#x3089;&#x878D;&#x5408;&#x3057;&#x3066;&#x3001;&#xFF11;&#x6587;&#x7BC0;&#x3068;&#x3057;&#x3066;&#x5909;&#x63DB;&#x3059;&#x308B;
+        if (nextView.kanaLength() === 1) {
+            const nextPhrase = this.inputBuffer().phrases(nextView.phraseNum())[0];
+            // &#x6587;&#x7BC0;&#x3092;&#x533A;&#x5207;&#x3089;&#x308C;&#x306A;&#x3044;&#x3088;&#x3046;&#x3001;,&#x3092;&#x672B;&#x5C3E;&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
+            const sendString = activeView.hiragana() + nextView.hiragana() + &apos;,&apos;;
+            Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
+                const newView = new ConvertView(json[0]);
+                activeView.replace(newView);
+                nextView.remove();
+                nextPhrase.remove();
+                newView.select(0);
+                this.inputBuffer().setPhraseNum();
+            }.bind(this), {
+                sentence: sendString
+            });
+            return this;
+        }
+
+        // &#x6B21;&#x306E;&#x6587;&#x7BC0;&#x304C;&#x4E8C;&#x6587;&#x5B57;&#x4EE5;&#x4E0A;
+        // &#x6B21;&#x306E;&#x6587;&#x7BC0;&#x306E;&#xFF11;&#x6587;&#x5B57;&#x76EE;&#x3092;&#x9078;&#x629E;&#x6587;&#x7BC0;&#x306B;&#x79FB;&#x52D5;&#x3057;&#x3066;&#x3001;&#x305D;&#x308C;&#x305E;&#x308C;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3059;
+        const activeKana = activeView.hiragana();
+        const nextKana = nextView.hiragana();
+        const sendString = activeKana + nextKana.slice(0,1) + &apos;,&apos; + nextKana.slice(1);
+        Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
+            const newFirst = new ConvertView(json[0]);
+            activeView.replace(newFirst);
+            newFirst.select(0);
+            const newSecond = new ConvertView(json[1]);
+            nextView.replace(newSecond);
+            newSecond.select(0);
+        }, {
+            sentence: sendString
+        });
+        return this;
+    }
+
+    /**
+     * &#x5165;&#x529B;&#x4E2D;&#x306E;&#x6587;&#x5B57;&#x304C;&#x4E8C;&#x6587;&#x5B57;&#x4EE5;&#x4E0A;&#x3042;&#x308C;&#x3070;&#x6700;&#x5F8C;&#x306E;&#xFF11;&#x97F3;&#x306E;&#x307F;&#x524A;&#x9664;&#x3057;&#x3066;&#x9078;&#x629E;&#x6587;&#x7BC0;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)&#x3002;
+     *     &#x5165;&#x529B;&#x4E2D;&#x306E;&#x6587;&#x5B57;&#x304C;&#x3072;&#x3089;&#x304C;&#x306A;&#x306B;&#x3057;&#x3066;&#xFF11;&#x6587;&#x5B57;&#x3057;&#x304B;&#x306A;&#x3051;&#x308C;&#x3070;&#x5168;&#x3066;&#x7834;&#x68C4;&#x3057;&#x3066;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3057;&#x307E;&#x3059;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
+     */
+    backSpace() {
+        const activeView = this.activeView();
+        // buffer&#x6587;&#x5B57;&#x304C;&#x3072;&#x3089;&#x304C;&#x306A;&#x306B;&#x3057;&#x3066;&#x4E00;&#x6587;&#x5B57;&#x3057;&#x304B;&#x306A;&#x3044;
+        // &#x6587;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3057;&#x3066;input&#x7D42;&#x4E86;
+        if (activeView.isOnlyChild() &amp;&amp; activeView.kanaLength() === 1) {
+            this.empty();
+            this.inputBuffer().decreace();
+            return this;
+        }
+
+        // &#x6587;&#x7BC0;&#x304C;&#x3072;&#x3089;&#x304C;&#x306A;&#x306B;&#x3057;&#x3066;&#x4E00;&#x6587;&#x5B57;&#x3057;&#x304B;&#x306A;&#x3044;
+        // &#x305D;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x524A;&#x9664;&#x3057;&#x3066;&#x3072;&#x3068;&#x3064;&#x524D;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x9078;&#x629E;&#x3059;&#x308B;
+        if (activeView.kanaLength() === 1) {
+            const phraseNum = activeView.phraseNum();
+            const phraseChar = this.inputBuffer().phrases(phraseNum)[0];
+            phraseChar.remove();
+            activeView.remove();
+            this.inputBuffer().setPhraseNum()
+                .select(phraseNum &gt; 0 ? phraseNum - 1 : phraseNum); // &#x4E00;&#x3064;&#x524D;&#x306E;&#x6587;&#x7BC0;&#x304C;&#x306A;&#x3051;&#x308C;&#x3070;&#x3001;&#x4E00;&#x3064;&#x6B21;&#x306E;&#x6587;&#x7BC0;
+            return this;
+        }
+
+        // &#x6587;&#x7BC0;&#x306B;&#x3072;&#x3089;&#x304C;&#x306A;&#x306B;&#x3057;&#x3066;&#x4E8C;&#x6587;&#x5B57;&#x4EE5;&#x4E0A;&#x3042;&#x308B;
+        // &#x6700;&#x5F8C;&#x306E;&#x4E00;&#x5B57;&#x3092;&#x524A;&#x9664;&#x3057;&#x3066;&#x3001;&#x305D;&#x306E;&#x6587;&#x7BC0;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3059;
+        const phraseNum = activeView.phraseNum();
+        const newString = activeView.hiragana().slice(0,-1) + &apos;,&apos;; // &#x6587;&#x7BC0;&#x3092;&#x533A;&#x5207;&#x3089;&#x308C;&#x306A;&#x3044;&#x3088;&#x3046;&#x3001;,&#x3092;&#x672B;&#x5C3E;&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
+        Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
+            this.replace(phraseNum,json);
+        }.bind(this), {
+            sentence: newString
+        });
+        return this;
+    }
+
+    /**
+     * &#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;&#x304C;num&#x306E;&#x6587;&#x7BC0;&#x306E;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x3001;&#x65B0;&#x305F;&#x306A;data&#x3067;&#x5165;&#x308C;&#x66FF;&#x3048;&#x307E;&#x3059;
+     * @param {number} num &#x5165;&#x308C;&#x66FF;&#x3048;&#x308B;&#x6587;&#x7BC0;&#x306E;&#x30A4;&#x30F3;&#x30C7;&#x30C3;&#x30AF;&#x30B9;
+     * @param {object} data &#x5909;&#x63DB;&#x5019;&#x88DC;&#x3092;&#x8868;&#x3059;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;&lt;br&gt;
+     * &#x4F8B;
+     * &lt;pre&gt;
+     * &lt;code&gt;
+     * [[&#x3072;&#x3089;&#x304C;&#x306A;],[&#x5E73;&#x4EEE;&#x540D;,&#x30D2;&#x30E9;&#x30AC;&#x30CA;,&#x5E73;&#x8CC0;&#x306A;,&#x5E73;&#x304C;&#x306A;,HIRAGANA]]
+     *	&lt;/code&gt;
+     *	&lt;/pre&gt;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    replace(num,data) {
+        const oldView = this.views(num);
+        // &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x632F;&#x308A;&#x76F4;&#x3057;&#x305F;&#x5F8C;&#x3067;&#x306A;&#x3044;&#x3068;view.select()&#x3067;&#x304D;&#x306A;&#x3044;(&#x4E2D;&#x3067;insertPhrase()&#x3092;&#x3057;&#x3066;&#x3044;&#x308B;&#x305F;&#x3081;)&#x306E;&#x3067;&#x3001;&#x3044;&#x3063;&#x305F;&#x3093;&#x65B0;&#x3057;&#x3044;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;&#x3092;&#x5165;&#x308C;&#x3066;&#x304A;&#x304F;
+        const newViews = [];
+        // view&#x3092;&#x5165;&#x308C;&#x66FF;&#x3048;&#x3001;buffer&#x306B;&#x306F;&#x3044;&#x3063;&#x305F;&#x3093;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;&#x633F;&#x5165;&#x3059;&#x308B;
+        for (let phraseData of data.entries()) {
+            // view
+            const newView = new ConvertView(phraseData[1]);
+            newViews.push(newView);
+            oldView.before(newView);
+            // input_buffer
+            // setPhraseNum()&#x306F;&#x3001;select()&#x3059;&#x308B;&#x524D;&#x306E;view&#x3067;&#x306F;&#x3072;&#x3089;&#x304C;&#x306A;&#x306E;&#x9577;&#x3055;&#x3092;&#x4F7F;&#x3063;&#x3066;&#x6587;&#x7BC0;&#x756A;&#x53F7;&#x3092;&#x5272;&#x308A;&#x632F;&#x308B;&#x3002;&#x305D;&#x306E;&#x305F;&#x3081;&#x3001;&#x3044;&#x3063;&#x305F;&#x3093;&#x3072;&#x3089;&#x304C;&#x306A;&#x3092;buffer&#x306B;&#x8FFD;&#x52A0;&#x3059;&#x308B;
+            if (phraseData[0] === 0) { // &#x3072;&#x3068;&#x3064;&#x3081;&#x3060;&#x3051;&#x5165;&#x66FF;&#x3048;&#x3067;&#x3001;&#x4ED6;&#x306F;&#x305D;&#x306E;&#x5F8C;&#x306B;&#x8FFD;&#x52A0;&#x3057;&#x3066;&#x3044;&#x304F;
+                // &#x53E4;&#x3044;buffer&#x6587;&#x5B57;&#x306F;&#x3053;&#x3053;&#x3067;&#x306A;&#x304F;&#x306A;&#x308B;
+                this.inputBuffer().insertPhrase(num,oldView.prev().hiragana());
+            } else {
+                // HACK:&#x8FFD;&#x52A0;&#x5206;&#x306E;&#x6587;&#x5B57;&#x306E;&#x9806;&#x756A;&#x304C;&#x3053;&#x306E;&#x6642;&#x70B9;&#x3067;&#x306F;&#x304A;&#x304B;&#x3057;&#x304F;&#x306A;&#x308B;&#x304C;&#x3001;&#x5408;&#x8A08;&#x306E;&#x3072;&#x3089;&#x304C;&#x306A;&#x306E;&#x6570;&#x306F;&#x6B63;&#x3057;&#x304F;&#x306A;&#x3063;&#x3066;&#x3044;&#x308B;&#x306E;&#x3067;&#x3001;buffer.setPhraseNum()&#x3068;newView.select(0)&#x3067;&#x6B63;&#x3057;&#x304F;&#x6587;&#x5B57;&#x304C;&#x7F6E;&#x304D;&#x63DB;&#x308F;&#x308B;
+                this.inputBuffer().insertPhraseAfter(num,oldView.prev().hiragana());
+            }
+        }
+        oldView.remove();
+
+        // &#x6587;&#x7BC0;&#x756A;&#x53F7;&#x306E;&#x632F;&#x308A;&#x76F4;&#x3057;
+        this.inputBuffer().setPhraseNum();
+        // &#x6700;&#x521D;&#x306E;&#x5019;&#x88DC;&#x3067;&#x7F6E;&#x304D;&#x63DB;&#x3048;&#x308B;
+        for (let newView of newViews) {
+            newView.select(0);
+        }
+        if (oldView.isActive()) {
+            newViews[0].active();
+        }
+        return this;
+    }
+
+    /**
+     * &#x81EA;&#x8EAB;&#x306E;&#x6700;&#x5F8C;&#x306B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x3092;&#x8FFD;&#x52A0;&#x3057;&#x307E;&#x3059;
+     * @param {ConvertContainer} view &#x8FFD;&#x52A0;&#x3059;&#x308B;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x4E00;&#x89A7;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    append(view) {
+        this.elem().appendChild(view.elem());
+        if (this.hasChild()) {
+            this.lastChild().next(view);
+            view.prev(this.lastChild());
+        }
+        view.container(this);
+        this.pushChild(view);
+        return this;
+    }//}}}
+
+    // --&#x30A4;&#x30D9;&#x30F3;&#x30C8; {{{
+
+    /**
+     * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x4E2D;&#x306E;keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30EA;&#x30B9;&#x30CA;&#x30FC;&#x3092;&#x4ED8;&#x52A0;&#x3057;&#x307E;&#x3059;&#x3002;&#x91CD;&#x306D;&#x304C;&#x3051;&#x306F;&#x7121;&#x52B9;&#x3068;&#x306A;&#x308A;&#x307E;&#x3059;
+     * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
+     */
+    addKeydownEventListener() {
+        this.inputBuffer().removeKeydownEventListener()
+            .container().removeKeydownEventListener();
+        super.addKeydownEventListener();
+        return this;
+    }
+
+    /**
+     * keydown&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x306E;&#x5B9F;&#x884C;&#x5185;&#x5BB9;&#x3067;&#x3059;
+     * @param {Event} e &#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x30AA;&#x30D6;&#x30B8;&#x30A7;&#x30AF;&#x30C8;
+     * @param {number} keycode &#x62BC;&#x4E0B;&#x3055;&#x308C;&#x305F;&#x30AD;&#x30FC;&#x306E;&#x30AD;&#x30FC;&#x30B3;&#x30FC;&#x30C9;
+     */
+    runKeydown(e,keycode) {
+        switch (keycode) {
+            case 8:
+                this.backSpace();
+                break;
+            case 13:
+                // Enter
+                this.print();
+                break;
+            case 32:
+            case 37:
+                // space
+                // Left
+                this.activeView().selectLeft();
+                break;
+            case 38:
+                // Up
+                if (e.shiftKey) {
+                    this.shiftUp();
+                } else {
+                    this.inputBuffer().selectPrev();
+                }
+                break;
+            case 39:
+                // Right
+                this.activeView().selectRight();
+                break;
+            case 40:
+                // Down
+                if (e.shiftKey) {
+                    this.shiftDown();
+                } else {
+                    this.inputBuffer().selectNext();
+                }
+                break;
+            case 118:
+                // F7
+                this.activeView().toKatakana();
+                break;
+            default:
+                break;
+        }
+    }//}}}
+}//}}}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
