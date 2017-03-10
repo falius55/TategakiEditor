@@ -115,7 +115,7 @@ task esdoc << {
     // 前処理
 
     // esdocディレクトリを空にする
-    def docDir = file 'esdoc'
+    def docDir = file 'doc/esdoc'
     docDir.eachFile { file ->
         if (file.isFile()) {
             file.delete()
@@ -141,9 +141,15 @@ task esdoc << {
             }
     }
 
+javadoc {
+    destinationDir = file "${projectDir}/doc/javadoc"
+    options.links("http://docs.oracle.com/javase/jp/8/docs/api")
+    options.links("https://tomcat.apache.org/tomcat-8.0-doc/servletapi")
+    }
+
 esdoc << {
     // esdocコマンドの実行
-    def cmd = "esdoc -c ${projectDir}/esdoc.json"
+    def cmd = "esdoc -c ${projectDir}/doc/esdoc.json"
     def workingDir = file '.'
 
     def proc = cmd.execute null, workingDir
@@ -173,3 +179,8 @@ esdoc << {
         file.text = newLines.join '\n'
         }
     }
+
+task doc {
+        dependsOn javadoc, esdoc
+    }
+

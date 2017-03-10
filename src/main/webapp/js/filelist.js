@@ -171,7 +171,7 @@ class File extends AbstractHierarchy {
     /**
      * 自身の要素及び自身への参照を削除し、自身が表すファイルを削除します(非同期通信)
      * @return {File} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/DeleteServlet.html
+     * @see ../javadoc/servlet/DeleteServlet.html
      */
     delete() {
         Util.post('/tategaki-editor/Delete',{
@@ -209,7 +209,7 @@ class File extends AbstractHierarchy {
      * 自身をnewParentDirの中に移動し、ファイルリストを作り直します(非同期通信)
      * @param {Directory} newParentDir 自身の親となるディレクトリのインスタンス
      * @return {File} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/FileListServlet.html
+     * @see ../javadoc/servlet/FileListServlet.html
      */
     move(newParentDir) {
         const fileList = this.fileList();
@@ -455,7 +455,7 @@ class Directory extends AbstractHierarchy {
      * 自身を削除します(非同期通信)
      * @param {boolean} [opt_bl=false] 自身の内部にファイルがあるとき、強制的に中のファイルごと削除するならtrue、そうでなければfalseを指定する
      * @return {Directory} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/DeleteServlet.html
+     * @see ../javadoc/servlet/DeleteServlet.html
      */
     delete(opt_bl) {
         const bl = opt_bl || false; // 引数省略の場合でも、明確にfalseを入れる
@@ -903,7 +903,7 @@ class FileList extends AbstractHierarchy {  // jshint ignore:line
     /**
      * ファイルリストをサーバーから読み込み、各インスタンスを構築し直します(非同期通信)
      * @return {FileList} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/FileListServlet.html
+     * @see ../javadoc/FileListServlet.html
      */
     read() {
         Util.get('/tategaki-editor/FileList',
@@ -947,7 +947,7 @@ class FileList extends AbstractHierarchy {  // jshint ignore:line
      * 名前で指定されたファイルを削除します(非同期通信)。同名のファイルが複数見つかった場合は確認します
      * @param {string} filename 削除するファイルの名前
      * @return {FileList} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/DeleteFile.html
+     * @see ../javadoc/servlet/DeleteServlet.html
      */
     deleteFile(filename) {
         const files = this.findFile(filename);
@@ -981,7 +981,7 @@ class FileList extends AbstractHierarchy {  // jshint ignore:line
      * @param {string} dirname 新しく作成されるディレクトリの名前
      * @param {number} [opt_parentID] 親ディレクトリのID。指定しなければroot直下
      * @return {FileList} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/FileListServlet.html
+     * @see ../javadoc/servlet/FileListServlet.html
      */
     mkdir(dirname, opt_parentID) {
         if (!dirname) {
@@ -1008,7 +1008,7 @@ class FileList extends AbstractHierarchy {  // jshint ignore:line
      * @param {string} dirname 削除するディレクトリの名前
      * @param {boolean} isForce ディレクトリ内にファイル等があっても強制的に中身ごと削除するならtrue、そうでなければfalse
      * @return {FileList} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/Delete.html
+     * @see ../javadoc/servlet/DeleteServlet.html
      */
     deleteDirectory(dirname, isForce) {
         const dirs = this.findDirectory(dirname);
@@ -1025,7 +1025,7 @@ class FileList extends AbstractHierarchy {  // jshint ignore:line
      * @param {string} filename 移動するファイル名。同名のファイルが見つかった場合は、最初に見つかったファイルが選択される
      * @param {string} dirname 移動先のディレクトリ名。同名のディレクトリが見つかった場合は、最初に見つかったディレクトリが選択される
      * @return {FileList} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/FileListServlet.html
+     * @see ../javadoc/servlet/FileListServlet.html
      */
     moveFile(filename, dirname) {
         const files = this.findFile(filename);
@@ -1082,4 +1082,3 @@ class FileList extends AbstractHierarchy {  // jshint ignore:line
         }
     }//}}}
 }//}}}
-

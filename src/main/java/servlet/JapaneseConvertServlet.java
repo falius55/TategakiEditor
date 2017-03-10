@@ -46,7 +46,7 @@ public class JapaneseConvertServlet extends AbstractServlet {
 
 	/**
 	 * 漢字変換候補を返します
-	 * @param str 変換する文字列
+	 * @param sentence 変換する文字列
 	 * @return 通信で得た漢字変換候補のJSON文字列
 	 *     取得に失敗すると空文字列
 	 */

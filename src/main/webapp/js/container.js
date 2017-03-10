@@ -1059,7 +1059,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * 指定されたファイルを開きます(非同期通信)
      * @param {number} fileId 開くファイルのID
      * @return {SentenceContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/ReadJsonFile.html
+     * @see ../javadoc/servlet/FileDataServlet.html
      */
     readFile(fileId) {
         const file = this.fileList().findFile(fileId)[0];
@@ -1071,7 +1071,7 @@ class SentenceContainer extends AbstractHierarchy {  // jshint ignore:line
      * 現在開いているファイルを上書き保存します。
      *     newFile()されて初めての保存なら名前をつけて保存します。(ともに非同期通信)
      * @return {SentenceContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/FileDataServlet.html
+     * @see ../javadoc/servlet/FileDataServlet.html
      */
     saveFile() {
         this.announce('保存中');

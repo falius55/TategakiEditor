@@ -456,7 +456,7 @@ class InputBuffer extends Row {  // jshint ignore:line
     /**
      * 入力文字すべてを漢字変換します(非同期通信)
      * @return {InputBuffer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     convert() {
         this.convertContainer().convert(this.text());
@@ -1056,7 +1056,7 @@ class ConvertContainer extends AbstractHierarchy {
      * 漢字変換を始めます(非同期通信)
      * @param {string} str 変換する文字列
      * @return {ConvertContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     convert(str) {
         Util.get('/tategaki-editor/Convert', function (json) {
@@ -1082,7 +1082,7 @@ class ConvertContainer extends AbstractHierarchy {
     /**
      * 文節区切りをひとつ前にずらして変換し直します(非同期通信)
      * @return {ConvertContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     shiftUp() {
         const activeView = this.activeView();
@@ -1125,7 +1125,7 @@ class ConvertContainer extends AbstractHierarchy {
     /**
      * 文節区切りをひとつ下にずらして変換し直します(非同期通信)
      * @return {ConvertContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     shiftDown() {
         const activeView = this.activeView();
@@ -1175,7 +1175,7 @@ class ConvertContainer extends AbstractHierarchy {
      * 入力中の文字が二文字以上あれば最後の１音のみ削除して選択文節を変換し直します(非同期通信)。
      *     入力中の文字がひらがなにして１文字しかなければ全て破棄して入力を終了します
      * @return {ConvertContainer} 自身のインスタンス
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     backSpace() {
         const activeView = this.activeView();
