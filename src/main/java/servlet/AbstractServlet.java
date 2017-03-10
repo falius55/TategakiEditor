@@ -25,10 +25,10 @@ abstract public class AbstractServlet extends HttpServlet  {
     protected static final String SESSION_USER_ID = "userid";
     protected static final String SESSION_USER_NAME = "username";
 
-    private static final String INIT_PARAM_DATABASE_NAME = "database-name";
-    private static final String INIT_PARAM_DATABASE_USER = "database-user";
-    private static final String INIT_PARAM_DATABASE_PASSWPRD = "database-password";
-    private static final String INIT_PARAM_PROJECT_ROOT = "project-root";
+    static final String INIT_PARAM_DATABASE_NAME = "database-name";
+    static final String INIT_PARAM_DATABASE_USER = "database-user";
+    static final String INIT_PARAM_DATABASE_PASSWPRD = "database-password";
+    static final String INIT_PARAM_PROJECT_ROOT = "project-root";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";  // 外部使用：FileDBUpdater
 
