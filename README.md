@@ -1,26 +1,24 @@
 # TategakiEditor
-ブラウザから縦書きで表示し、サーバーにテキストファイルを保存、編集できるプログラムです。
-また、ショートカットキーや簡易的なコマンドモード(後述)もあり、MSワードでは上下にページがスクロールするのに対し、このプログラムでは。左右にページがスクロールします。
+ブラウザから縦書きで表示し、サーバーにテキストを保存、編集できるプログラムです。
+また、ショートカットキーや簡易的なコマンドもあり、MSワードでは上下にページがスクロールするのに対し、このプログラムでは。左右にページがスクロールします。
 
 ## Requirements
-java8、TomcatとMySQLを利用します。
+MySQLを利用
 
 ## Installation
 1. MySQLの情報を設定
-     WEB-INF/classes/AbstractServlet.java内のprivate static finalフィールドのDATABASE_NAME,USER,PASSWORDをそれぞれMySQLで使用するデータベース名、ユーザー名、パスワードに書き換える
+     init.propertiesファイルのdatabase-name, database-user, database-passwordをそれぞれ使用するデータベース名、ユーザー名、パスワードに書き換える
 
-     また、MySQL用のJDBCドライバを取得してクラスパスを通しておく
+2. cloneしたディレクトリから以下のコマンドの実行してtomcatサーバーを起動
+    ```
+    $ cd tategaki-editor
+    $ ./gradlew tRW
+    ```
 
-2. tategakiディレクトリを作成し、Tomcatのディレクトリ/conf/Catalina/localhost/tategaki.xmlを作成し、以下を記述
+3. webブラウザからURLにhttp://localhost:8100/tategaki-editorを指定してアクセス
+    ※localhost、8100の部分は設定や利用方法により異なる
 
-     `<Context path="/tategaki"
-     docBase="tategakiディレクトリを作成したディレクトリのパス/tategaki" />`
-
-3. tategakiディレクトリにソースコードを配置し、WEB-INF/classes/にある各JavaファイルをTomcatのディレクトリ/lib/servlet-api.jarとソースコード内WEB-INF/classesの２箇所にクラスパスを通してコンパイル
-
-4. Tomcatを起動し、webブラウザからURLにhttp://localhost:8080/tategakiを指定してアクセス　※localhost、8080の部分は設定や利用方法により異なる
-
-5. ログイン画面下部にある新規登録からアカウントを作成して利用してください
+4. ログイン画面下部にある新規登録からアカウントを作成して利用してください
 
 ## Usage
 * ショートカットキー
@@ -31,8 +29,8 @@ java8、TomcatとMySQLを利用します。
        * \<CTL-H\>  カーソル移動[Left]
        * \<CTL-D\>  カーソルの前にある文字を１文字削除[BackSpace]
        * \<CTL-S\>  ファイルを上書き保存
-       * \<CTL-I\>  同じディレクトリ内の次のファイルを開く
-       * \<CTL-O\>  同じディレクトリ内の前のファイルを開く
+       * \<CTL-I\>  次のファイルを開く
+       * \<CTL-O\>  前のファイルを開く
        * \<CTL-F\>  「ファイルを開く」ダイアログを開く
        * \<CTL-,\>  次の検索語句に進む
        * \<CTL-.\>  前の検索語句に進む
@@ -40,7 +38,7 @@ java8、TomcatとMySQLを利用します。
        * \<CTL-C\>  選択範囲をコピー
        * \<CTL-V\>  ペースト
 
-* コマンドモード（「：」キーで開始）
+* コマンド（「：」キーで開始）
        * \<:(w|s|save)\>                            ファイルを上書き保存
        * \<:(w|s|save) ファイル名\>                  名前をつけて保存
        * \<:(o|open|e|n(ew)?)\>                    「newfile」という名前でファイルを新規作成する
