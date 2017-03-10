@@ -15,7 +15,7 @@ buildscript {
             jcenter()
         }
     dependencies {
-            classpath 'com.bmuschko:gradle-tomcat-plugin:2.0'
+            classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.5'
         }
     }
 
@@ -36,12 +36,10 @@ dependencies {
         compile 'mysql:mysql-connector-java:6.0.5'
         testCompile 'mysql:mysql-connector-java:6.0.5'
 
-        def tomcatVersion = '7.0.52'
+        def tomcatVersion = '7.0.59'
         tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
-        tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
-                exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
-            }
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
     }
 
 tomcat {

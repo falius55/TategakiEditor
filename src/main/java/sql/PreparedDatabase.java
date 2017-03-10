@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PreparedDatabase implements SQLDatabase {
+    private static final boolean USE_SSL = false;
     private final String mDBName;
 	private final Deque<Entry> mEntries = new ArrayDeque<Entry>();
 	private final Connection mConnection;
@@ -27,10 +28,10 @@ public class PreparedDatabase implements SQLDatabase {
         mDBName = dbName;
         try {
             // JDBCドライバをロードする
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 
             // Drivermanagerに接続(データベースへの接続)
-            String url = "jdbc:mysql://localhost/"+ dbName;
+            String url = String.format("jdbc:mysql://localhost/%s?useSSL=%b", dbName, USE_SSL);
             mConnection = DriverManager.getConnection(url,user,password);
 
         } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e) {
