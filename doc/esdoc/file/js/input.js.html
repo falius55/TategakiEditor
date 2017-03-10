@@ -526,7 +526,7 @@ export class InputBuffer extends Row {  // jshint ignore:line
     /**
      * &#x5165;&#x529B;&#x6587;&#x5B57;&#x3059;&#x3079;&#x3066;&#x3092;&#x6F22;&#x5B57;&#x5909;&#x63DB;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {InputBuffer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     convert() {
         this.convertContainer().convert(this.text());
@@ -1126,7 +1126,7 @@ export class ConvertContainer extends AbstractHierarchy {
      * &#x6F22;&#x5B57;&#x5909;&#x63DB;&#x3092;&#x59CB;&#x3081;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @param {string} str &#x5909;&#x63DB;&#x3059;&#x308B;&#x6587;&#x5B57;&#x5217;
      * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     convert(str) {
         Util.get(&apos;/tategaki-editor/Convert&apos;, function (json) {
@@ -1152,7 +1152,7 @@ export class ConvertContainer extends AbstractHierarchy {
     /**
      * &#x6587;&#x7BC0;&#x533A;&#x5207;&#x308A;&#x3092;&#x3072;&#x3068;&#x3064;&#x524D;&#x306B;&#x305A;&#x3089;&#x3057;&#x3066;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     shiftUp() {
         const activeView = this.activeView();
@@ -1195,7 +1195,7 @@ export class ConvertContainer extends AbstractHierarchy {
     /**
      * &#x6587;&#x7BC0;&#x533A;&#x5207;&#x308A;&#x3092;&#x3072;&#x3068;&#x3064;&#x4E0B;&#x306B;&#x305A;&#x3089;&#x3057;&#x3066;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)
      * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     shiftDown() {
         const activeView = this.activeView();
@@ -1245,7 +1245,7 @@ export class ConvertContainer extends AbstractHierarchy {
      * &#x5165;&#x529B;&#x4E2D;&#x306E;&#x6587;&#x5B57;&#x304C;&#x4E8C;&#x6587;&#x5B57;&#x4EE5;&#x4E0A;&#x3042;&#x308C;&#x3070;&#x6700;&#x5F8C;&#x306E;&#xFF11;&#x97F3;&#x306E;&#x307F;&#x524A;&#x9664;&#x3057;&#x3066;&#x9078;&#x629E;&#x6587;&#x7BC0;&#x3092;&#x5909;&#x63DB;&#x3057;&#x76F4;&#x3057;&#x307E;&#x3059;(&#x975E;&#x540C;&#x671F;&#x901A;&#x4FE1;)&#x3002;
      *     &#x5165;&#x529B;&#x4E2D;&#x306E;&#x6587;&#x5B57;&#x304C;&#x3072;&#x3089;&#x304C;&#x306A;&#x306B;&#x3057;&#x3066;&#xFF11;&#x6587;&#x5B57;&#x3057;&#x304B;&#x306A;&#x3051;&#x308C;&#x3070;&#x5168;&#x3066;&#x7834;&#x68C4;&#x3057;&#x3066;&#x5165;&#x529B;&#x3092;&#x7D42;&#x4E86;&#x3057;&#x307E;&#x3059;
      * @return {ConvertContainer} &#x81EA;&#x8EAB;&#x306E;&#x30A4;&#x30F3;&#x30B9;&#x30BF;&#x30F3;&#x30B9;
-     * @see ../WEB-INF/classes/doc/JapaneseConvertServlet.html
+     * @see ../javadoc/servlet/JapaneseConvertServlet.html
      */
     backSpace() {
         const activeView = this.activeView();
