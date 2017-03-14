@@ -21,8 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 
-import sql.SQLDatabase;
-import sql.PreparedDatabase;
+import mysqlfacade.PreparedDatabase;
+import mysqlfacade.SQLDatabase;
 import sql.UserTable;
 import sql.FileTable;
 import test.util.Connector;

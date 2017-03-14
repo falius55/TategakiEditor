@@ -27,14 +27,15 @@ configurations {
 
 repositories {
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 
 dependencies {
         testCompile 'junit:junit:4.11'
         compile group:"org.apache.struts", name:"struts2-core", version:"2.3.16.3"
         providedCompile 'javax:javaee-web-api:6.0'
-        compile 'mysql:mysql-connector-java:6.0.5'
-        testCompile 'mysql:mysql-connector-java:6.0.5'
+        compile 'com.github.falius55:mysql-facade:1.0'
+        testCompile 'com.github.falius55:mysql-facade:1.0'
 
         def tomcatVersion = '7.0.59'
         tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",

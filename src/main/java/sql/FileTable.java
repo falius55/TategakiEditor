@@ -1,7 +1,9 @@
 package sql;
 
 import java.util.Map;
-import java .util.HashMap;
+import java.util.HashMap;
+
+import mysqlfacade.DatabaseColumn;
 
 public enum FileTable implements DatabaseColumn {
     ID("id", "int", "not null primary key auto_increment"),
