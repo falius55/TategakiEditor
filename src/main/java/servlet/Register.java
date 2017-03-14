@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
-import sql.SQLDatabase;
+import mysqlfacade.SQLDatabase;
+import mysqlfacade.SQLs;
 import sql.FileDBUpdater;
-import sql.SQLs;
 import sql.UserTable;
 
 /**

@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import sql.SQLDatabase;
+import datadir.UserDirectory;
+import mysqlfacade.SQLDatabase;
+import mysqlfacade.SQLs;
 import sql.FileDBUpdater;
 import sql.FileTable;
-import sql.SQLs;
-import datadir.UserDirectory;
 
 /**
  * <p>

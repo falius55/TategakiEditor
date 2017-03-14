@@ -7,6 +7,9 @@ import java.sql.SQLException;
 
 import servlet.AbstractServlet;
 
+import mysqlfacade.SQLDatabase;
+import mysqlfacade.SQLs;
+
 /**
  * 各メソッドは特に断りがない限り、ファイルだけでなくディレクトリにも適用できます。
  */
