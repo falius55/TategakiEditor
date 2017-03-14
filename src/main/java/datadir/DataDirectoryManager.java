@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
 
-import sql.SQLDatabase;
+import mysqlfacade.SQLDatabase;
 import sql.FileTable;
 
 public class DataDirectoryManager {

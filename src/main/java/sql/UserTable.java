@@ -3,6 +3,8 @@ package sql;
 import java.util.Map;
 import java.util.HashMap;
 
+import mysqlfacade.DatabaseColumn;
+
 public enum UserTable implements DatabaseColumn {
     ID("id", "int", "not null primary key auto_increment"),
     NAME("name", "varchar(255)", "not null unique key"),

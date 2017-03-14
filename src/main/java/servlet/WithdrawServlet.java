@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import sql.SQLDatabase;
+import mysqlfacade.SQLDatabase;
 import sql.UserTable;
 
 public class WithdrawServlet extends AbstractServlet {

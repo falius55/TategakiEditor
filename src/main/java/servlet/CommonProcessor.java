@@ -7,9 +7,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import sql.DatabaseColumn;
-import sql.SQLDatabase;
-import sql.PreparedDatabase;
+import mysqlfacade.DatabaseColumn;
+import mysqlfacade.SQLDatabase;
+import mysqlfacade.PreparedDatabase;
 import sql.UserTable;
 import sql.FileTable;
 
