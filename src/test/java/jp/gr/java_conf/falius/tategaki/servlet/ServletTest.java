@@ -37,7 +37,7 @@ public class ServletTest {
     @BeforeClass
     public static void setupDB() throws SQLException, IOException {
         mProperties = new Properties();
-        String propertiesPath = "build/resources/test/test.properties";
+        String propertiesPath = "build/resources/test/jp/gr/java_conf/falius/tategaki/servlet/test.properties";
         try (InputStream is = new FileInputStream(propertiesPath)) {
             mProperties.load(is);
         }

@@ -103,7 +103,7 @@ task copyPropToTest << {
         testProp.setProperty(paramName, value)
         }
 
-    File testPropFile = file('src/test/resources/test.properties')
+    File testPropFile = file('src/test/resources/jp/gr/java_conf/falius/tategaki/servlet/test.properties')
     new FileWriter(testPropFile).withCloseable {
         testProp.store(it, null)
         }
