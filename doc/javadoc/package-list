@@ -1,4 +1,4 @@
-datadir
-filter
-servlet
-sql
+jp.gr.java_conf.falius.tategaki.datadir
+jp.gr.java_conf.falius.tategaki.filter
+jp.gr.java_conf.falius.tategaki.servlet
+jp.gr.java_conf.falius.tategaki.sql
