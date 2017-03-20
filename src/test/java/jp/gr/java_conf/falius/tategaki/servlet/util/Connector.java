@@ -1,7 +1,7 @@
-package test.util;
+package jp.gr.java_conf.falius.tategaki.servlet.util;
 
-import java.util.Map;
 import java.io.IOException;
+import java.util.Map;
 
 public interface Connector {
 

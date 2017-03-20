@@ -1,33 +1,34 @@
-package test;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.After;
-import org.junit.BeforeClass;
 import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Properties;
-import java.io.InputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.Map;
 
-import mysqlfacade.PreparedDatabase;
-import mysqlfacade.SQLDatabase;
-import sql.UserTable;
-import sql.FileTable;
-import test.util.Connector;
-import test.util.GetConnector;
-import test.util.PostConnector;
+import jp.gr.java_conf.falius.mysqlfacade.PreparedDatabase;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+
+import jp.gr.java_conf.falius.tategaki.servlet.util.Connector;
+import jp.gr.java_conf.falius.tategaki.servlet.util.GetConnector;
+import jp.gr.java_conf.falius.tategaki.servlet.util.PostConnector;
+import jp.gr.java_conf.falius.tategaki.sql.FileTable;
+import jp.gr.java_conf.falius.tategaki.sql.UserTable;
 
 public class ServletTest {
     private static Properties mProperties;

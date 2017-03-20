@@ -1,4 +1,4 @@
-package test;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import org.junit.Test;
 
@@ -7,9 +7,9 @@ import java.util.HashMap;
 
 import java.io.IOException;
 
-import test.util.Connector;
-import test.util.PostConnector;
-import test.util.GetConnector;
+import jp.gr.java_conf.falius.tategaki.servlet.util.Connector;
+import jp.gr.java_conf.falius.tategaki.servlet.util.GetConnector;
+import jp.gr.java_conf.falius.tategaki.servlet.util.PostConnector;
 
 public class ConnectorTest {
 
