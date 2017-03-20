@@ -1,4 +1,4 @@
-package servlet;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,8 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletException;
 
-import mysqlfacade.SQLDatabase;
-import sql.UserTable;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+
+import jp.gr.java_conf.falius.tategaki.sql.UserTable;
 
 /**
  * ログインを試みて、成功するとメインページへ、失敗すると再度ログインページヘリダイレクトします。

@@ -1,4 +1,4 @@
-package servlet;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import java.util.Map;
 import java.util.EnumMap;
@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
-import mysqlfacade.SQLDatabase;
-import mysqlfacade.SQLs;
-import sql.FileDBUpdater;
-import sql.UserTable;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+import jp.gr.java_conf.falius.mysqlfacade.SQLs;
+
+import jp.gr.java_conf.falius.tategaki.sql.FileDBUpdater;
+import jp.gr.java_conf.falius.tategaki.sql.UserTable;
 
 /**
  * ユーザー登録を行うためのサーブレットです。

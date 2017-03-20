@@ -1,4 +1,4 @@
-package filter;
+package jp.gr.java_conf.falius.tategaki.filter;
 
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import servlet.AbstractServlet;
+import jp.gr.java_conf.falius.tategaki.servlet.AbstractServlet;
 
 /**
  * アクセスしたクライアントのセッションを確認し、セッションがまだ始まっていないか、ログインがされていなければログインページに飛ばすフィルター

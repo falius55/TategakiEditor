@@ -1,4 +1,4 @@
-package servlet;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -13,10 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datadir.DataDirectoryManager;
-import mysqlfacade.SQLDatabase;
-import mysqlfacade.PreparedDatabase;
-import sql.FileDBUpdater;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+import jp.gr.java_conf.falius.mysqlfacade.PreparedDatabase;
+
+import jp.gr.java_conf.falius.tategaki.datadir.DataDirectoryManager;
+import jp.gr.java_conf.falius.tategaki.sql.FileDBUpdater;
 
 abstract public class AbstractServlet extends HttpServlet  {
     private static final long serialVersionUID = 1L;

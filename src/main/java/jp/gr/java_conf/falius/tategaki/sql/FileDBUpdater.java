@@ -1,4 +1,4 @@
-package sql;
+package jp.gr.java_conf.falius.tategaki.sql;
 
 import java.util.Map;
 import java.util.EnumMap;
@@ -7,8 +7,8 @@ import java.sql.SQLException;
 
 import servlet.AbstractServlet;
 
-import mysqlfacade.SQLDatabase;
-import mysqlfacade.SQLs;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+import jp.gr.java_conf.falius.mysqlfacade.SQLs;
 
 /**
  * 各メソッドは特に断りがない限り、ファイルだけでなくディレクトリにも適用できます。

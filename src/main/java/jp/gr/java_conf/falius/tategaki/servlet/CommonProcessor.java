@@ -1,4 +1,4 @@
-package servlet;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import java.sql.SQLException;
 
@@ -7,11 +7,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import mysqlfacade.DatabaseColumn;
-import mysqlfacade.SQLDatabase;
-import mysqlfacade.PreparedDatabase;
-import sql.UserTable;
-import sql.FileTable;
+import jp.gr.java_conf.falius.mysqlfacade.DatabaseColumn;
+import jp.gr.java_conf.falius.mysqlfacade.PreparedDatabase;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+
+import jp.gr.java_conf.falius.tategaki.sql.FileTable;
+import jp.gr.java_conf.falius.tategaki.sql.UserTable;
 
 public class CommonProcessor implements ServletContextListener {
 

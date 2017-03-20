@@ -1,4 +1,4 @@
-package servlet;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import java.sql.SQLException;
 import java.io.IOException;
@@ -7,8 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import mysqlfacade.SQLDatabase;
-import sql.UserTable;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+
+import jp.gr.java_conf.falius.tategaki.sql.UserTable;
 
 public class WithdrawServlet extends AbstractServlet {
     private static final long serialVersionUID = 1L;

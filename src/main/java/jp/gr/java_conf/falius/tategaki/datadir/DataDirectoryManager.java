@@ -1,16 +1,17 @@
-package datadir;
+package jp.gr.java_conf.falius.tategaki.datadir;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import mysqlfacade.SQLDatabase;
-import sql.FileTable;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+
+import jp.gr.java_conf.falius.tategaki.sql.FileTable;
 
 public class DataDirectoryManager {
     private final SQLDatabase mDatabase;

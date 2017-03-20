@@ -1,4 +1,4 @@
-package servlet;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -11,11 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import datadir.UserDirectory;
-import mysqlfacade.SQLDatabase;
-import mysqlfacade.SQLs;
-import sql.FileDBUpdater;
-import sql.FileTable;
+import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
+import jp.gr.java_conf.falius.mysqlfacade.SQLs;
+
+import jp.gr.java_conf.falius.tategaki.datadir.UserDirectory;
+import jp.gr.java_conf.falius.tategaki.sql.FileDBUpdater;
+import jp.gr.java_conf.falius.tategaki.sql.FileTable;
 
 /**
  * <p>

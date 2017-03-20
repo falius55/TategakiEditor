@@ -1,9 +1,9 @@
-package sql;
+package jp.gr.java_conf.falius.tategaki.sql;
 
 import java.util.Map;
 import java.util.HashMap;
 
-import mysqlfacade.DatabaseColumn;
+import jp.gr.java_conf.falius.mysqlfacade.DatabaseColumn;
 
 public enum FileTable implements DatabaseColumn {
     ID("id", "int", "not null primary key auto_increment"),

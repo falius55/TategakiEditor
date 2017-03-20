@@ -1,4 +1,4 @@
-package servlet;
+package jp.gr.java_conf.falius.tategaki.servlet;
 
 import java.sql.SQLException;
 import java.io.IOException;
@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import sql.FileDBUpdater;
-import datadir.UserDirectory;
+import jp.gr.java_conf.falius.tategaki.datadir.UserDirectory;
+import jp.gr.java_conf.falius.tategaki.sql.FileDBUpdater;
 
 /**
  * <p>

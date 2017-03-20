@@ -1,4 +1,4 @@
-package datadir;
+package jp.gr.java_conf.falius.tategaki.datadir;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
