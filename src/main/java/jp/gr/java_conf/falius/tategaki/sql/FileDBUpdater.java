@@ -5,10 +5,10 @@ import java.util.EnumMap;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import servlet.AbstractServlet;
-
 import jp.gr.java_conf.falius.mysqlfacade.SQLDatabase;
 import jp.gr.java_conf.falius.mysqlfacade.SQLs;
+
+import jp.gr.java_conf.falius.tategaki.servlet.AbstractServlet;
 
 /**
  * 各メソッドは特に断りがない限り、ファイルだけでなくディレクトリにも適用できます。
