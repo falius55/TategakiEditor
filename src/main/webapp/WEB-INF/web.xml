@@ -17,11 +17,11 @@
     </context-param>
     <listener>
         <display-name>CommonProcessor</display-name>
-        <listener-class>servlet.CommonProcessor</listener-class>
+        <listener-class>jp.gr.java_conf.falius.tategaki.servlet.CommonProcessor</listener-class>
     </listener>
     <filter>
         <filter-name>UserCheckFilter</filter-name>
-        <filter-class>filter.UserCheckFilter</filter-class>
+        <filter-class>jp.gr.java_conf.falius.tategaki.filter.UserCheckFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>UserCheckFilter</filter-name>
@@ -29,7 +29,7 @@
     </filter-mapping>
     <servlet>
         <servlet-name>FileData</servlet-name>
-        <servlet-class>servlet.FileDataServlet</servlet-class>
+        <servlet-class>jp.gr.java_conf.falius.tategaki.servlet.FileDataServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FileData</servlet-name>
@@ -37,7 +37,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>FileList</servlet-name>
-        <servlet-class>servlet.FileListServlet</servlet-class>
+        <servlet-class>jp.gr.java_conf.falius.tategaki.servlet.FileListServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FileList</servlet-name>
@@ -45,7 +45,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Login</servlet-name>
-        <servlet-class>servlet.LoginServlet</servlet-class>
+        <servlet-class>jp.gr.java_conf.falius.tategaki.servlet.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -53,7 +53,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Register</servlet-name>
-        <servlet-class>servlet.Register</servlet-class>
+        <servlet-class>jp.gr.java_conf.falius.tategaki.servlet.Register</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
@@ -61,7 +61,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Logout</servlet-name>
-        <servlet-class>servlet.Logout</servlet-class>
+        <servlet-class>jp.gr.java_conf.falius.tategaki.servlet.Logout</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
@@ -69,7 +69,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Delete</servlet-name>
-        <servlet-class>servlet.DeleteServlet</servlet-class>
+        <servlet-class>jp.gr.java_conf.falius.tategaki.servlet.DeleteServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Delete</servlet-name>
@@ -77,7 +77,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Withdraw</servlet-name>
-        <servlet-class>servlet.WithdrawServlet</servlet-class>
+        <servlet-class>jp.gr.java_conf.falius.tategaki.servlet.WithdrawServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Withdraw</servlet-name>
@@ -85,7 +85,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Convert</servlet-name>
-        <servlet-class>servlet.JapaneseConvertServlet</servlet-class>
+        <servlet-class>jp.gr.java_conf.falius.tategaki.servlet.JapaneseConvertServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Convert</servlet-name>
